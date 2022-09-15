@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-09-15T10:34:40.073Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33" etag="To1bFYICmwCEAs8Fiz4y" version="20.3.0" type="github">
+<mxfile host="app.diagrams.net" modified="2022-09-15T11:11:51.818Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33" etag="lcsq48O-khMbZXyWlvL8" version="20.3.0" type="github">
   <diagram id="uSkm2N8a80j5IDCSkfjY" name="Página-1">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -30,6 +30,27 @@
         </mxCell>
         <mxCell id="WuyQ2u27ICyzMPzFgXhq-10" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;AngleGraph&lt;/font&gt;" style="shape=note;size=20;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="320" y="780" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="WuyQ2u27ICyzMPzFgXhq-13" value="Gráficos de acelerómetro, giroscopio y magnetómetro&amp;nbsp;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="710" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="WuyQ2u27ICyzMPzFgXhq-14" value="Gráficos de los ángulos entre dos dispositivos IMU" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="440" y="800" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="WuyQ2u27ICyzMPzFgXhq-15" value="Explorador de archivos" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="440" y="620" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="WuyQ2u27ICyzMPzFgXhq-16" value="Lista de dispositivos encontrados" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="540" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="WuyQ2u27ICyzMPzFgXhq-17" value="Menús de la aplicación (Connect, Measurement y About)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="440" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="WuyQ2u27ICyzMPzFgXhq-18" value="Botones de acceso rápido a los elementos de los menús" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="360" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="WuyQ2u27ICyzMPzFgXhq-19" value="Resto de código a parte de la UI" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="370" y="120" width="170" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
