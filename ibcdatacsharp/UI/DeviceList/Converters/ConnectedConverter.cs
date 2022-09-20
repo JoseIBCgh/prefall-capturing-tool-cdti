@@ -4,6 +4,7 @@ using System.Windows.Data;
 
 namespace ibcdatacsharp.UI.DeviceList.Converters
 {
+    //Clase para cambiar el formato del atributo connected
     [ValueConversion(typeof(bool), typeof(string))]
     public class ConnectedConverter: IValueConverter
     {

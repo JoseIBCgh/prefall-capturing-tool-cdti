@@ -4,6 +4,7 @@ using System.Windows.Data;
 
 namespace ibcdatacsharp.UI.DeviceList.Converters
 {
+    // clase para cambiar el formato del atributo battery
     [ValueConversion(typeof(int), typeof(string))]
     public class BatteryConverter : IValueConverter
     {
