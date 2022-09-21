@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="UI\ToolBar\Icons\connect-icon.png" />
     <None Remove="UI\ToolBar\Icons\scan-icon.png" />
   </ItemGroup>
 
@@ -20,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="UI\ToolBar\Icons\connect-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="UI\ToolBar\Icons\scan-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

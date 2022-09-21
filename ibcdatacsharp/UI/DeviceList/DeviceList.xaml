@@ -33,8 +33,13 @@
             <TextBlock Text="State" Grid.Column="2" TextAlignment="Center"/>
             <TextBlock Text="Connected" Grid.Column="3" TextAlignment="Center"/>
         </Grid>
-        <TreeView BorderThickness="0" ItemContainerStyle="{StaticResource TreeViewItemStyle}">
+        <TreeView BorderThickness="0" ItemContainerStyle="{StaticResource TreeViewItemStyle}" x:Name="treeView">
             <TreeViewItem ItemsSource="{Binding IMUs}" Visibility="Collapsed" x:Name="IMUs">
+                <TreeViewItem.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="onIMUDoubleClick" />
+                    </Style>
+                </TreeViewItem.ItemContainerStyle>
                 <TreeViewItem.Header>
                     <Grid Width="250">
                         <Grid.ColumnDefinitions>
@@ -67,6 +72,11 @@
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
             <TreeViewItem ItemsSource="{Binding cameras}" Visibility="Collapsed" x:Name="cameras">
+                <TreeViewItem.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="onCameraDoubleClick" />
+                    </Style>
+                </TreeViewItem.ItemContainerStyle>
                 <TreeViewItem.Header>
                     <Grid Width="250">
                         <Grid.ColumnDefinitions>

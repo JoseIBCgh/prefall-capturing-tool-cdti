@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Navigation;
 using ibcdatacsharp.DeviceList.TreeClasses;
 
@@ -22,7 +24,8 @@ namespace ibcdatacsharp
             toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
             {
                 ToolBar toolBarClass = toolBar.Content as ToolBar;
-                toolBarClass.scan.Click += new RoutedEventHandler(this.onScan);
+                toolBarClass.scan.Click += new RoutedEventHandler(onScan);
+                toolBarClass.connect.Click += new RoutedEventHandler(onConnect);
             };
         }
         // Conecta el boton scan
@@ -37,8 +40,6 @@ namespace ibcdatacsharp
                 deviceListClass.addIMU(new IMUInfo("IMU2", "BX"));
                 deviceListClass.addCamera(new CameraInfo(0));
                 ObservableCollection<IMUInfo> IMUs = deviceListClass.getIMUs();
-                IMUs[0].connected = true;
-                IMUs[0].battery = 34;
                 deviceListClass.showIMUs();
                 deviceListClass.showCameras();
                 deviceListClass.hideInsoles(); //Por defecto estan escondidos pero si los muestras una vez los tienes que volver a esconder
@@ -53,6 +54,40 @@ namespace ibcdatacsharp
             else
             {
                 onScanFunction();
+            }
+        }
+        // Conecta el boton connect
+        private void onConnect(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el boton connect
+            void onConnectFunction()
+            {
+                DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
+                object selected = deviceListClass.treeView.SelectedItem;
+                if(selected != null)
+                {
+                    if(selected is IMUInfo)
+                    {
+                        TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
+                        deviceListClass.connectIMU(treeViewItem);
+                    }
+                    else if(selected is CameraInfo)
+                    {
+                        TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.cameras.ItemContainerGenerator.ContainerFromItem(selected);
+                        deviceListClass.connectCamera(treeViewItem);
+                    }
+                }
+            }
+            if (deviceList.Content == null)
+            {
+                deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    onConnectFunction();
+                };
+            }
+            else
+            {
+                onConnectFunction();
             }
         }
     }
