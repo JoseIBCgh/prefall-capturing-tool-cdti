@@ -26,7 +26,23 @@ namespace ibcdatacsharp
                 ToolBar toolBarClass = toolBar.Content as ToolBar;
                 toolBarClass.scan.Click += new RoutedEventHandler(onScan);
                 toolBarClass.connect.Click += new RoutedEventHandler(onConnect);
+                toolBarClass.disconnect.Click += new RoutedEventHandler(onDisconnect);
             };
+        }
+        // Funcion que llaman todos los handlers del ToolBar. Por si acaso el device list no se ha cargado.
+        private void deviceListLoadedCheck(Action func)
+        {
+            if (deviceList.Content == null)
+            {
+                deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    func();
+                };
+            }
+            else
+            {
+                func();
+            }
         }
         // Conecta el boton scan
         private void onScan(object sender, EventArgs e)
@@ -44,17 +60,7 @@ namespace ibcdatacsharp
                 deviceListClass.showCameras();
                 deviceListClass.hideInsoles(); //Por defecto estan escondidos pero si los muestras una vez los tienes que volver a esconder
             }
-            if (deviceList.Content == null)
-            {
-                deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
-                {
-                    onScanFunction();
-                };
-            }
-            else
-            {
-                onScanFunction();
-            }
+            deviceListLoadedCheck(onScanFunction);
         }
         // Conecta el boton connect
         private void onConnect(object sender, EventArgs e)
@@ -78,17 +84,26 @@ namespace ibcdatacsharp
                     }
                 }
             }
-            if (deviceList.Content == null)
+            deviceListLoadedCheck(onConnectFunction);
+        }
+        // Conecta el boton disconnect
+        private void onDisconnect(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el boton disconnect
+            void onDisconnectFunction()
             {
-                deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
+                DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
+                object selected = deviceListClass.treeView.SelectedItem;
+                if (selected != null)
                 {
-                    onConnectFunction();
-                };
+                    if(selected is IMUInfo)
+                    {
+                        TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
+                        deviceListClass.disconnectIMU(treeViewItem);
+                    }
+                }
             }
-            else
-            {
-                onConnectFunction();
-            }
+            deviceListLoadedCheck(onDisconnectFunction);
         }
     }
 }

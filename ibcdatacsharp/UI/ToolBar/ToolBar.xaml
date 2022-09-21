@@ -10,19 +10,26 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="60"/>
         </Grid.ColumnDefinitions>
         <Button Grid.Column="0" x:Name="scan">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/scan-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center">Scan</TextBlock>
+                <TextBlock TextAlignment="Center" FontSize="11">Scan</TextBlock>
             </StackPanel>
         </Button>
         <Button Grid.Column="1" x:Name="connect">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/connect-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center">Connect</TextBlock>
+                <TextBlock TextAlignment="Center" FontSize="11">Connect</TextBlock>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="2" x:Name="disconnect">
+            <StackPanel>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/disconnect-icon.png" Width="40" Height="40"/>
+                <TextBlock TextAlignment="Center" FontSize="11">Disconnect</TextBlock>
             </StackPanel>
         </Button>
     </Grid>

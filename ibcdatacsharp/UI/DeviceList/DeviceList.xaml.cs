@@ -163,5 +163,12 @@ namespace ibcdatacsharp.DeviceList
             CameraInfo cameraInfo = treeViewItem.DataContext as CameraInfo;
             cameraInfo.fps = calculateFps(cameraInfo.number);
         }
+        // Funcion que se llama al desconectar un IMU para cambiar el TreeView
+        public void disconnectIMU(TreeViewItem treeViewItem)
+        {
+            IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
+            imuInfo.connected = false;
+            treeViewItem.Foreground = new SolidColorBrush(Colors.Black);
+        }
     }
 }
