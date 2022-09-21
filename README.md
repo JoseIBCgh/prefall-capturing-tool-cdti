@@ -4,3 +4,4 @@ Añadido el File Browser.<br/>
 Añadido el Device List y el boton de Scan. Cuando se clica el botón scan se ejecuta la funcion onScanFunction. Esta en el fichero MainWindow.xaml.cs<br/>
 Añadido el botón Connect. También se puede conectar haciendo doble click en el TreeView. En ambos casos se llama a las funciones connectIMU o connectCamera. Estan en el fichero DeviceList.xaml.cs<br/>
 Añadido el botón Disconnect. Llama a la función disconnectIMU. Esta en el fichero DeviceList.xaml.cs<br/>
+Añadido el botón Open Camera. Cuando se clica el botón se ejecuta la función onOpenCameraFunction. Esta en el fichero MainWindow.xaml.cs<br/>

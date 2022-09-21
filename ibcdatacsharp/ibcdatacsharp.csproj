@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="UI\ToolBar\Icons\connect-icon.png" />
     <None Remove="UI\ToolBar\Icons\disconnect-icon.png" />
+    <None Remove="UI\ToolBar\Icons\openCamera-icon.png" />
     <None Remove="UI\ToolBar\Icons\scan-icon.png" />
   </ItemGroup>
 
@@ -26,6 +27,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\disconnect-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\openCamera-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\scan-icon.png">

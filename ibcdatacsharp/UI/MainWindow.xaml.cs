@@ -27,6 +27,7 @@ namespace ibcdatacsharp
                 toolBarClass.scan.Click += new RoutedEventHandler(onScan);
                 toolBarClass.connect.Click += new RoutedEventHandler(onConnect);
                 toolBarClass.disconnect.Click += new RoutedEventHandler(onDisconnect);
+                toolBarClass.openCamera.Click += new RoutedEventHandler(onOpenCamera);
             };
         }
         // Funcion que llaman todos los handlers del ToolBar. Por si acaso el device list no se ha cargado.
@@ -94,16 +95,30 @@ namespace ibcdatacsharp
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 object selected = deviceListClass.treeView.SelectedItem;
-                if (selected != null)
+                if (selected != null && selected is IMUInfo)
                 {
-                    if(selected is IMUInfo)
-                    {
-                        TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
-                        deviceListClass.disconnectIMU(treeViewItem);
-                    }
+                    TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
+                    deviceListClass.disconnectIMU(treeViewItem);
                 }
             }
             deviceListLoadedCheck(onDisconnectFunction);
+        }
+        // Conecta el boton Open Camera
+        private void onOpenCamera(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el boton Open Camera
+            void onOpenCameraFunction()
+            {
+                DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
+                object selected = deviceListClass.treeView.SelectedItem;
+                if(selected != null && selected is CameraInfo)
+                {
+                    CameraInfo cameraInfo = (CameraInfo)selected;
+                    int id = cameraInfo.number; //Id de la camara
+                    Trace.WriteLine(id);
+                }
+            }
+            deviceListLoadedCheck(onOpenCameraFunction);
         }
     }
 }
