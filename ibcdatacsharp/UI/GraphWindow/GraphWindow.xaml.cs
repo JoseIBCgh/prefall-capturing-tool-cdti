@@ -76,7 +76,7 @@ namespace ibcdatacsharp.UI.GraphWindow
         }
         // Funcion que se llama al pulsar el boton pause. Pausa los graficos si se estan actualizando
         // y los vuelve a actualizar si estan pausados.
-        public PauseState pause()
+        public void pause(ToolBar.ToolBar toolBar)
         {
             if (timer != null)
             {
@@ -84,19 +84,18 @@ namespace ibcdatacsharp.UI.GraphWindow
                 {
                     timer.Stop();
                     pauseModels(); // Hace que los graficos se dejen de actualizar. Se tiene que llamar.
-                    return PauseState.Play; //Cambia a play. Se tiene que llamar.
+                    toolBar.ChangePauseState(PauseState.Play); //Cambia a play. Se tiene que llamar.
                 }
                 else
                 {
                     timer.Start();
                     startModels(); // Hace que los graficos se actualizen. Se tiene que llamar.
-                    return PauseState.Pause; //Cambia a pause. Se tiene que llamar.
+                    toolBar.ChangePauseState(PauseState.Pause); //Cambia a pause. Se tiene que llamar.
                 }
             }
-            return PauseState.Pause; //Al principio esta en pause. 
         }
         // Funcion que se llama al pulsar el boton stop.
-        public void stop()
+        public void stop(ToolBar.ToolBar toolBar)
         {
             if (timer != null)
             {
@@ -106,6 +105,7 @@ namespace ibcdatacsharp.UI.GraphWindow
                     pauseModels(); // Hace que los graficos se dejen de actualizar. Se tiene que llamar.
                 }
                 clearModels(); // Borra los datos de los graficos. El cambio se ve la proxima vez que se actualizen. Se tiene que llamar.
+                toolBar.ChangePauseState(PauseState.Pause); // Cambia a pause. Se tiene que llamar.
                 timer = null;
             }
         }

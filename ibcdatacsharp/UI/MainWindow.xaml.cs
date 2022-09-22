@@ -145,23 +145,8 @@ namespace ibcdatacsharp.UI
             void onPauseFunction()
             {
                 GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                PauseState pauseState = graphWindowClass.pause();
-                if(pauseState == PauseState.Pause)
-                {
-                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                    Image image = Helpers.GetChildOfType<Image>(toolBarClass.pause);
-                    image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
-                    TextBlock text = Helpers.GetChildOfType<TextBlock>(toolBarClass.pause);
-                    text.Text = "Pause";
-                }
-                else if(pauseState == PauseState.Play)
-                {
-                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                    Image image = Helpers.GetChildOfType<Image>(toolBarClass.pause);
-                    image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
-                    TextBlock text = Helpers.GetChildOfType<TextBlock>(toolBarClass.pause);
-                    text.Text = "Play";
-                }
+                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                graphWindowClass.pause(toolBarClass);
             }
             deviceListLoadedCheck(onPauseFunction);
         }
@@ -172,7 +157,8 @@ namespace ibcdatacsharp.UI
             void onStopFunction()
             {
                 GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                graphWindowClass.stop();
+                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                graphWindowClass.stop(toolBarClass);
             }
             deviceListLoadedCheck(onStopFunction);
         }
