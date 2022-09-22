@@ -5,8 +5,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using ibcdatacsharp.DeviceList.TreeClasses;
+using ibcdatacsharp.UI.ToolBar.Enums;
+using ibcdatacsharp.UI.Common;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
-namespace ibcdatacsharp
+namespace ibcdatacsharp.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,11 +27,14 @@ namespace ibcdatacsharp
         {
             toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
             {
-                ToolBar toolBarClass = toolBar.Content as ToolBar;
+                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
                 toolBarClass.scan.Click += new RoutedEventHandler(onScan);
                 toolBarClass.connect.Click += new RoutedEventHandler(onConnect);
                 toolBarClass.disconnect.Click += new RoutedEventHandler(onDisconnect);
                 toolBarClass.openCamera.Click += new RoutedEventHandler(onOpenCamera);
+                toolBarClass.capture.Click += new RoutedEventHandler(onCapture);
+                toolBarClass.pause.Click += new RoutedEventHandler(onPause);
+                toolBarClass.stop.Click += new RoutedEventHandler(onStop);
             };
         }
         // Funcion que llaman todos los handlers del ToolBar. Por si acaso el device list no se ha cargado.
@@ -119,6 +126,55 @@ namespace ibcdatacsharp
                 }
             }
             deviceListLoadedCheck(onOpenCameraFunction);
+        }
+        // Conecta el boton Capture
+        private void onCapture(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el boton Capture
+            void onCaptureFunction()
+            {
+                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                graphWindowClass.play();
+            }
+            deviceListLoadedCheck(onCaptureFunction);
+        }
+        // Conecta el boton Pause
+        private void onPause(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el boton Pause
+            void onPauseFunction()
+            {
+                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                PauseState pauseState = graphWindowClass.pause();
+                if(pauseState == PauseState.Pause)
+                {
+                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                    Image image = Helpers.GetChildOfType<Image>(toolBarClass.pause);
+                    image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
+                    TextBlock text = Helpers.GetChildOfType<TextBlock>(toolBarClass.pause);
+                    text.Text = "Pause";
+                }
+                else if(pauseState == PauseState.Play)
+                {
+                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                    Image image = Helpers.GetChildOfType<Image>(toolBarClass.pause);
+                    image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
+                    TextBlock text = Helpers.GetChildOfType<TextBlock>(toolBarClass.pause);
+                    text.Text = "Play";
+                }
+            }
+            deviceListLoadedCheck(onPauseFunction);
+        }
+        // Conecta el boton Stop
+        private void onStop(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el boton Stop
+            void onStopFunction()
+            {
+                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                graphWindowClass.stop();
+            }
+            deviceListLoadedCheck(onStopFunction);
         }
     }
 }

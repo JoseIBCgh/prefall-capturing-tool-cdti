@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ibcdatacsharp.DeviceList
+namespace ibcdatacsharp.UI.DeviceList
 {
     public partial class DeviceList : Page
     {

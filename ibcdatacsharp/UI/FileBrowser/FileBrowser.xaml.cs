@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using ibcdatacsharp.FileBrowser.ShellClasses;
+using ibcdatacsharp.UI.FileBrowser.ShellClasses;
 
-namespace ibcdatacsharp.FileBrowser
+namespace ibcdatacsharp.UI.FileBrowser
 {
     public partial class FileBrowser : Page
     {

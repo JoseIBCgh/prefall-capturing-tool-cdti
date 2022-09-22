@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace ibcdatacsharp.FileBrowser.Enums
+namespace ibcdatacsharp.UI.FileBrowser.Enums
 {
     [Flags]
     public enum ShellAttribute : uint

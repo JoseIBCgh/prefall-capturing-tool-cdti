@@ -8,13 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="UI\ToolBar\Icons\capture-icon.png" />
     <None Remove="UI\ToolBar\Icons\connect-icon.png" />
     <None Remove="UI\ToolBar\Icons\disconnect-icon.png" />
     <None Remove="UI\ToolBar\Icons\openCamera-icon.png" />
+    <None Remove="UI\ToolBar\Icons\pause-icon.png" />
+    <None Remove="UI\ToolBar\Icons\play-pause-icon.png" />
     <None Remove="UI\ToolBar\Icons\scan-icon.png" />
+    <None Remove="UI\ToolBar\Icons\stop-icon.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
@@ -23,6 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="UI\ToolBar\Icons\capture-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="UI\ToolBar\Icons\connect-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -32,7 +40,16 @@
     <Resource Include="UI\ToolBar\Icons\openCamera-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="UI\ToolBar\Icons\pause-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\play-pause-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="UI\ToolBar\Icons\scan-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\stop-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

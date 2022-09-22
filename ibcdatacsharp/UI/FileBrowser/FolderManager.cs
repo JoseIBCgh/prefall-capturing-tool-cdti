@@ -2,11 +2,11 @@
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ibcdatacsharp.FileBrowser.Enums;
+using ibcdatacsharp.UI.FileBrowser.Enums;
 
 
 // Devuelve los iconos de las carpetas
-namespace ibcdatacsharp.FileBrowser
+namespace ibcdatacsharp.UI.FileBrowser
 {
     public static class FolderManager
     {

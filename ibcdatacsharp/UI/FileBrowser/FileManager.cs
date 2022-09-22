@@ -3,11 +3,11 @@ using System.IO;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ibcdatacsharp.FileBrowser.Enums;
+using ibcdatacsharp.UI.FileBrowser.Enums;
 
 
 // Devuelve los iconos de los ficheros
-namespace ibcdatacsharp.FileBrowser
+namespace ibcdatacsharp.UI.FileBrowser
 {
     public static class FileManager
     {

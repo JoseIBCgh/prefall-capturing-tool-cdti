@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using ibcdatacsharp.FileBrowser.Enums;
-using ibcdatacsharp.FileBrowser.Structs;
+using ibcdatacsharp.UI.FileBrowser.Enums;
+using ibcdatacsharp.UI.FileBrowser.Structs;
 
 // Obtiene los iconos de los ficheros a partir del path
-namespace ibcdatacsharp.FileBrowser
+namespace ibcdatacsharp.UI.FileBrowser
 {
     public class ShellManager
     {

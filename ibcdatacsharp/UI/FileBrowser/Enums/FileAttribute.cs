@@ -1,4 +1,4 @@
-﻿namespace ibcdatacsharp.FileBrowser.Enums
+﻿namespace ibcdatacsharp.UI.FileBrowser.Enums
 {
     public enum FileAttribute : uint
     {

@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Media;
-using ibcdatacsharp.FileBrowser.Enums;
+using ibcdatacsharp.UI.FileBrowser.Enums;
 using ibcdatacsharp.Common;
 
 // Almacena todos los drives, carpetas y ficheros. Se encarga de la interacción entre el usuario y la UI.
-namespace ibcdatacsharp.FileBrowser.ShellClasses
+namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
 {
     public class FileSystemObjectInfo : BaseObject
     {

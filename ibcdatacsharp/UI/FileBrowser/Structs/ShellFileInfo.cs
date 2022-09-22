@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 // Esta clase almacena la información extraida de la shell
-namespace ibcdatacsharp.FileBrowser.Structs
+namespace ibcdatacsharp.UI.FileBrowser.Structs
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct ShellFileInfo

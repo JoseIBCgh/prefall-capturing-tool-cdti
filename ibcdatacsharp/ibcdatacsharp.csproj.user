@@ -13,6 +13,9 @@
     <Compile Update="UI\FileBrowser\FileBrowser.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\GraphWindow\GraphWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\ToolBar\ToolBar.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -22,6 +25,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\FileBrowser\FileBrowser.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\GraphWindow\GraphWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\MainWindow.xaml">

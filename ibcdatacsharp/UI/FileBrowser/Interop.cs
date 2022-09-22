@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using ibcdatacsharp.FileBrowser.Structs;
+using ibcdatacsharp.UI.FileBrowser.Structs;
 
-namespace ibcdatacsharp.FileBrowser
+namespace ibcdatacsharp.UI.FileBrowser
 {
     public static class Interop
     {
