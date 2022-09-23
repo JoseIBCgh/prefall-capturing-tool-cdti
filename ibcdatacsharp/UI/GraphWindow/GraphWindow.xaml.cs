@@ -1,6 +1,7 @@
 ﻿using ibcdatacsharp.UI.ToolBar.Enums;
+using OxyPlot.Series;
+using OxyPlot;
 using System;
-using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
@@ -12,57 +13,164 @@ namespace ibcdatacsharp.UI.GraphWindow
     public partial class GraphWindow : Page
     {
         DispatcherTimer timer; //Para los datos inventados
+        int framesAccelerometer = 0;
+        int framesGyroscope = 0;
+        int framesMagnetometer = 0;
+        const int MAX_POINTS = 100; 
         public GraphWindow()
         {
             InitializeComponent();
             initModels();
             DataContext = this;
         }
-        public Model model_accelerometer { get; private set; }
-        public Model model_gyroscope { get; private set; }
-        public Model model_magnetometer { get; private set; }
+        public Model modelAccelerometer { get; private set; }
+        public Model modelGyroscope { get; private set; }
+        public Model modelMagnetometer { get; private set; }
         // Funcion para inicializar los graficos
         private void initModels()
         {
-            model_accelerometer = new Model(-80, 80, titleY : "Accelerometer", units : "m/s^2");
-            model_gyroscope = new Model(-600, 600, titleY: "Gyroscope", units: "g/s^2");
-            model_magnetometer = new Model(-4, 4, titleY: "Magnetometer", units: "k(mT)");
-        }
-        // Hay que llamar a esta funcion para que los graficos se actualicen
-        private void startModels()
-        {
-            model_accelerometer.Start();
-            model_gyroscope.Start();
-            model_magnetometer.Start();
-        }
-        // Hace que los graficos se dejen de actualizar
-        private void pauseModels()
-        {
-            model_accelerometer.Pause();
-            model_gyroscope.Pause();
-            model_magnetometer.Pause();
+            modelAccelerometer = new Model(-80, 80, titleY : "Accelerometer", units : "m/s^2");
+            modelGyroscope = new Model(-600, 600, titleY: "Gyroscope", units: "g/s^2");
+            modelMagnetometer = new Model(-4, 4, titleY: "Magnetometer", units: "k(mT)");
         }
         // Borra el contenido de los graficos
         private void clearModels()
         {
-            model_accelerometer.ClearData();
-            model_gyroscope.ClearData();
-            model_magnetometer.ClearData();
+            clearAccelerometer();
+            clearGyroscope();
+            clearMagnetometer();
         }
         // Funcion para actualizar la grafica del acelerometro
-        public void updateAccelerometer(double x, double y, double z)
+        public async void updateAccelerometer(double x, double y, double z)
         {
-            model_accelerometer.Queue(new[] { x, y, z });
+            PlotModel model = modelAccelerometer.PlotModel;
+            await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            {
+                double kframes = framesAccelerometer / 1000.0;
+                (model.Series[0] as LineSeries).Points.Add(new DataPoint(kframes, x));
+                (model.Series[1] as LineSeries).Points.Add(new DataPoint(kframes, y));
+                (model.Series[2] as LineSeries).Points.Add(new DataPoint(kframes, z));
+                
+                framesAccelerometer++;
+                kframes = kframes + 1 / 1000.0;
+
+                model.InvalidatePlot(true);
+                if (framesAccelerometer > MAX_POINTS)
+                {
+                    double kmaxPoints = MAX_POINTS / 1000.0;
+                    model.Axes[1].Reset();
+                    model.Axes[1].Maximum = kframes;
+                    model.Axes[1].Minimum = (kframes - kmaxPoints);
+                    model.Axes[1].Zoom(model.Axes[1].Minimum, model.Axes[1].Maximum);
+                }
+                else
+                {
+                    model.Axes[1].Reset();
+                    model.Axes[1].Maximum = kframes;
+                    model.Axes[1].Minimum = 0;
+                }
+            });
+        }
+        // Funcion para borrar los datos del acelerometro
+        public async void clearAccelerometer()
+        {
+            PlotModel model = modelAccelerometer.PlotModel;
+            await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            {
+                (model.Series[0] as LineSeries).Points.Clear();
+                (model.Series[1] as LineSeries).Points.Clear();
+                (model.Series[2] as LineSeries).Points.Clear();
+
+                framesAccelerometer = 0;
+            });
         }
         // Funcion para actualizar la grafica del giroscopio
-        public void updateGyroscope(double x, double y, double z)
+        public async void updateGyroscope(double x, double y, double z)
         {
-            model_gyroscope.Queue(new[] { x, y, z });
+            PlotModel model = modelGyroscope.PlotModel;
+            await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            {
+                double kframes = framesGyroscope / 1000.0;
+                (model.Series[0] as LineSeries).Points.Add(new DataPoint(kframes, x));
+                (model.Series[1] as LineSeries).Points.Add(new DataPoint(kframes, y));
+                (model.Series[2] as LineSeries).Points.Add(new DataPoint(kframes, z));
+
+                framesGyroscope++;
+                kframes = kframes + 1 / 1000.0;
+
+                model.InvalidatePlot(true);
+                if (framesGyroscope > MAX_POINTS)
+                {
+                    double kmaxPoints = MAX_POINTS / 1000.0;
+                    model.Axes[1].Reset();
+                    model.Axes[1].Maximum = kframes;
+                    model.Axes[1].Minimum = (kframes - kmaxPoints);
+                    model.Axes[1].Zoom(model.Axes[1].Minimum, model.Axes[1].Maximum);
+                }
+                else
+                {
+                    model.Axes[1].Reset();
+                    model.Axes[1].Maximum = kframes;
+                    model.Axes[1].Minimum = 0;
+                }
+            });
+        }
+        // Funcion para borrar los datos del giroscopio
+        public async void clearGyroscope()
+        {
+            PlotModel model = modelGyroscope.PlotModel;
+            await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            {
+                (model.Series[0] as LineSeries).Points.Clear();
+                (model.Series[1] as LineSeries).Points.Clear();
+                (model.Series[2] as LineSeries).Points.Clear();
+
+                framesGyroscope = 0;
+            });
         }
         // Funcion para actualizar la grafica del magnetometro
-        public void updateMagnetometer(double x, double y, double z)
+        public async void updateMagnetometer(double x, double y, double z)
         {
-            model_magnetometer.Queue(new[] { x, y, z });
+            PlotModel model = modelMagnetometer.PlotModel;
+            await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            {
+                double kframes = framesMagnetometer / 1000.0;
+                (model.Series[0] as LineSeries).Points.Add(new DataPoint(kframes, x));
+                (model.Series[1] as LineSeries).Points.Add(new DataPoint(kframes, y));
+                (model.Series[2] as LineSeries).Points.Add(new DataPoint(kframes, z));
+
+                framesMagnetometer++;
+                kframes = kframes + 1 / 1000.0;
+
+                model.InvalidatePlot(true);
+                if (framesMagnetometer > MAX_POINTS)
+                {
+                    double kmaxPoints = MAX_POINTS / 1000.0;
+                    model.Axes[1].Reset();
+                    model.Axes[1].Maximum = kframes;
+                    model.Axes[1].Minimum = (kframes - kmaxPoints);
+                    model.Axes[1].Zoom(model.Axes[1].Minimum, model.Axes[1].Maximum);
+                }
+                else
+                {
+                    model.Axes[1].Reset();
+                    model.Axes[1].Maximum = kframes;
+                    model.Axes[1].Minimum = 0;
+                }
+            });
+        }
+        // Funcion para borrar los datos del magnetometro
+        public async void clearMagnetometer()
+        {
+            PlotModel model = modelMagnetometer.PlotModel;
+            await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            {
+                (model.Series[0] as LineSeries).Points.Clear();
+                (model.Series[1] as LineSeries).Points.Clear();
+                (model.Series[2] as LineSeries).Points.Clear();
+
+                framesMagnetometer = 0;
+            });
         }
         // Funcion que se llama al pulsar el boton capture. Activa la actualización de los graficos.
         public void play()
@@ -71,7 +179,6 @@ namespace ibcdatacsharp.UI.GraphWindow
             {
                 initTimer();
                 timer.Start(); 
-                startModels(); // Hace que los graficos se actualizen. Se tiene que llamar.
             }
         }
         // Funcion que se llama al pulsar el boton pause. Pausa los graficos si se estan actualizando
@@ -83,13 +190,11 @@ namespace ibcdatacsharp.UI.GraphWindow
                 if (timer.IsEnabled)
                 {
                     timer.Stop();
-                    pauseModels(); // Hace que los graficos se dejen de actualizar. Se tiene que llamar.
                     toolBar.ChangePauseState(PauseState.Play); //Cambia a play. Se tiene que llamar.
                 }
                 else
                 {
                     timer.Start();
-                    startModels(); // Hace que los graficos se actualizen. Se tiene que llamar.
                     toolBar.ChangePauseState(PauseState.Pause); //Cambia a pause. Se tiene que llamar.
                 }
             }
@@ -102,7 +207,6 @@ namespace ibcdatacsharp.UI.GraphWindow
                 if (timer.IsEnabled)
                 {
                     timer.Stop();
-                    pauseModels(); // Hace que los graficos se dejen de actualizar. Se tiene que llamar.
                 }
                 clearModels(); // Borra los datos de los graficos. El cambio se ve la proxima vez que se actualizen. Se tiene que llamar.
                 toolBar.ChangePauseState(PauseState.Pause); // Cambia a pause. Se tiene que llamar.

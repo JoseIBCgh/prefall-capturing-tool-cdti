@@ -15,8 +15,8 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <oxy:PlotView Grid.Row="0" x:Name="accelerometer" Model="{Binding model_accelerometer.PlotModel}"/>
-        <oxy:PlotView Grid.Row="1" x:Name="gyroscope" Model="{Binding model_gyroscope.PlotModel}"/>
-        <oxy:PlotView Grid.Row="2" x:Name="magnetometer" Model="{Binding model_magnetometer.PlotModel}"/>
+        <oxy:PlotView Grid.Row="0" x:Name="accelerometer" Model="{Binding modelAccelerometer.PlotModel}"/>
+        <oxy:PlotView Grid.Row="1" x:Name="gyroscope" Model="{Binding modelGyroscope.PlotModel}"/>
+        <oxy:PlotView Grid.Row="2" x:Name="magnetometer" Model="{Binding modelMagnetometer.PlotModel}"/>
     </Grid>
 </Page>
