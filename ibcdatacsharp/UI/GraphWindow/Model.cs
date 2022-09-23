@@ -34,15 +34,5 @@ namespace ibcdatacsharp.UI.GraphWindow
         }
 
         public PlotModel PlotModel { get; private set; }
-
-        // Borra todos los puntos del modelo
-        public void ClearData()
-        {
-            for (int i = 0; i < NUM_SERIES; i++)
-            {
-                var s = (LineSeries)PlotModel.Series[i];
-                s.Points.Clear();
-            }
-        }
     }
 }
