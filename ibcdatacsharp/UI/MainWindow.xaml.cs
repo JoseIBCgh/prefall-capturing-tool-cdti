@@ -21,6 +21,7 @@ namespace ibcdatacsharp.UI
         {
             InitializeComponent();
             initToolBarHandlers();
+            initMenuHandlers();
         }
         // Conecta los botones de la ToolBar
         private void initToolBarHandlers()
@@ -35,6 +36,21 @@ namespace ibcdatacsharp.UI
                 toolBarClass.capture.Click += new RoutedEventHandler(onCapture);
                 toolBarClass.pause.Click += new RoutedEventHandler(onPause);
                 toolBarClass.stop.Click += new RoutedEventHandler(onStop);
+            };
+        }
+        // Conecta los botones del Menu
+        private void initMenuHandlers()
+        {
+            menuBar.Navigated += delegate (object sender, NavigationEventArgs e)
+            {
+                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                menuBarClass.scan.Click += new RoutedEventHandler(onScan);
+                menuBarClass.connect.Click += new RoutedEventHandler(onConnect);
+                menuBarClass.disconnect.Click += new RoutedEventHandler(onDisconnect);
+                menuBarClass.openCamera.Click += new RoutedEventHandler(onOpenCamera);
+                menuBarClass.capture.Click += new RoutedEventHandler(onCapture);
+                menuBarClass.pause.Click += new RoutedEventHandler(onPause);
+                menuBarClass.stop.Click += new RoutedEventHandler(onStop);
             };
         }
         // Funcion que llaman todos los handlers del ToolBar. Por si acaso el device list no se ha cargado.
@@ -146,7 +162,8 @@ namespace ibcdatacsharp.UI
             {
                 GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
                 ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                graphWindowClass.pause(toolBarClass);
+                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                graphWindowClass.pause(toolBarClass, menuBarClass);
             }
             deviceListLoadedCheck(onPauseFunction);
         }
@@ -158,7 +175,8 @@ namespace ibcdatacsharp.UI
             {
                 GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
                 ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                graphWindowClass.stop(toolBarClass);
+                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                graphWindowClass.stop(toolBarClass, menuBarClass);
             }
             deviceListLoadedCheck(onStopFunction);
         }

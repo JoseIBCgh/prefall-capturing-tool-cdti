@@ -183,24 +183,26 @@ namespace ibcdatacsharp.UI.GraphWindow
         }
         // Funcion que se llama al pulsar el boton pause. Pausa los graficos si se estan actualizando
         // y los vuelve a actualizar si estan pausados.
-        public void pause(ToolBar.ToolBar toolBar)
+        public void pause(ToolBar.ToolBar toolBar, MenuBar.MenuBar menuBar)
         {
             if (timer != null)
             {
                 if (timer.IsEnabled)
                 {
                     timer.Stop();
-                    toolBar.ChangePauseState(PauseState.Play); //Cambia a play. Se tiene que llamar.
+                    toolBar.changePauseState(PauseState.Play); //Cambia la ToolBar a play. Se tiene que llamar.
+                    menuBar.changePauseState(PauseState.Play); //Cambia el Menu a play. Se tiene que llamar.
                 }
                 else
                 {
                     timer.Start();
-                    toolBar.ChangePauseState(PauseState.Pause); //Cambia a pause. Se tiene que llamar.
+                    toolBar.changePauseState(PauseState.Pause); //Cambia la ToolBar a pause. Se tiene que llamar.
+                    menuBar.changePauseState(PauseState.Pause); //Cambia el Menu a pause. Se tiene que llamar.
                 }
             }
         }
         // Funcion que se llama al pulsar el boton stop.
-        public void stop(ToolBar.ToolBar toolBar)
+        public void stop(ToolBar.ToolBar toolBar, MenuBar.MenuBar menuBar)
         {
             if (timer != null)
             {
@@ -209,7 +211,8 @@ namespace ibcdatacsharp.UI.GraphWindow
                     timer.Stop();
                 }
                 clearModels(); // Borra los datos de los graficos. El cambio se ve la proxima vez que se actualizen. Se tiene que llamar.
-                toolBar.ChangePauseState(PauseState.Pause); // Cambia a pause. Se tiene que llamar.
+                toolBar.changePauseState(PauseState.Pause); // Cambia la ToolBar a pause. Se tiene que llamar.
+                menuBar.changePauseState(PauseState.Pause); // Cambia el Menu a pause. Se tiene que llamar.
                 timer = null;
             }
         }

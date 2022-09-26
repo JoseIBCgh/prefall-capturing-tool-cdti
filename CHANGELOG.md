@@ -16,6 +16,9 @@ Añadido el botón Capture. (Cuando se clica el botón se ejecuta la función pl
 Añadido el botón Pause.  (Cuando se clica el botón se ejecuta la función pause. Esta en el fichero GraphWindow.xaml.cs)<br/>  
 Añadido el botón Stop.  (Cuando se clica el botón se ejecuta la función stop. Esta en el fichero GraphWindow.xaml.cs)<br/>
 Añadida funcion que plotea datos inventados. <br/>
-## v1.1.0
+## v1.1.1
 ### Modificado
 Arraglados problemas del scrolling de los graficos.<br/>
+## v1.2.0
+### Añadido
+Añadido el menú.<br/>

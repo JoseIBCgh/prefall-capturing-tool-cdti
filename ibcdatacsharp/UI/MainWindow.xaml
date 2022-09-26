@@ -12,6 +12,7 @@
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Frame Grid.Row="0" Source="pack://application:,,,/UI/MenuBar/MenuBar.xaml" x:Name="menuBar"/>
         <Frame Grid.Row="1" Source="pack://application:,,,/UI/ToolBar/ToolBar.xaml" x:Name="toolBar"/>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

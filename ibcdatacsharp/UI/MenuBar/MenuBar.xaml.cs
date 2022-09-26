@@ -1,17 +1,18 @@
 ﻿using ibcdatacsharp.UI.Common;
 using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
-namespace ibcdatacsharp.UI.ToolBar
+namespace ibcdatacsharp.UI.MenuBar
 {
     /// <summary>
-    /// Lógica de interacción para ToolBar.xaml
+    /// Lógica de interacción para MenuBar.xaml
     /// </summary>
-    public partial class ToolBar : Page
+    public partial class MenuBar : Page
     {
-        public ToolBar()
+        public MenuBar()
         {
             InitializeComponent();
         }
@@ -21,18 +22,24 @@ namespace ibcdatacsharp.UI.ToolBar
             {
                 Image image = Helpers.GetChildOfType<Image>(pause);
                 image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
-                TextBlock text = Helpers.GetChildOfType<TextBlock>(pause);
-                text.Text = "Pause";
+                pause.Header = "Pause";
             }
             else if (pauseState == PauseState.Play)
             {
                 Image image = Helpers.GetChildOfType<Image>(pause);
                 image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
-                TextBlock text = Helpers.GetChildOfType<TextBlock>(pause);
-                text.Text = "Play";
+                pause.Header = "Play";
             }
         }
+        private void showVersion(object sender, RoutedEventArgs e)
+        {
+            string messageBoxText = "(c) 2022 IBC Biomechanics\n\nIMU Data Adquisition Tool v0.9.3\n\nhttp://ibc.bio";
+            string caption = "IBC Biomechanics Research";
+            MessageBoxButton button = MessageBoxButton.OK;
+            MessageBoxImage icon = MessageBoxImage.Information;
+            MessageBoxResult result;
 
-
+            result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+        }
     }
 }

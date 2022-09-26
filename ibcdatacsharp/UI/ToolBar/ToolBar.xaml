@@ -8,7 +8,7 @@
       d:DesignHeight="60" d:DesignWidth="1000"
       Title="ToolBar">
 
-    <Grid>
+    <Grid Background="LightGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="70"/>
@@ -18,43 +18,43 @@
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="70"/>
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" x:Name="scan">
+        <Button Grid.Column="0" x:Name="scan" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/scan-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Scan</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="1" x:Name="connect">
+        <Button Grid.Column="1" x:Name="connect" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/connect-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Connect</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="2" x:Name="disconnect">
+        <Button Grid.Column="2" x:Name="disconnect" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/disconnect-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Disconnect</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="3" x:Name="openCamera">
+        <Button Grid.Column="3" x:Name="openCamera" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/openCamera-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Open Camera</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="4" x:Name="capture">
+        <Button Grid.Column="4" x:Name="capture" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/capture-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Capture</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="5" x:Name="pause">
+        <Button Grid.Column="5" x:Name="pause" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/pause-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Pause</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="6" x:Name="stop">
+        <Button Grid.Column="6" x:Name="stop" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/stop-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Stop</TextBlock>

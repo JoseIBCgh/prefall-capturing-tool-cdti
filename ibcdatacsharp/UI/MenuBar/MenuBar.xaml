@@ -1,0 +1,59 @@
+﻿<Page x:Class="ibcdatacsharp.UI.MenuBar.MenuBar"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ibcdatacsharp.UI.MenuBar"
+      mc:Ignorable="d" 
+      d:DesignHeight="30" d:DesignWidth="1000"
+      Title="MenuBar">
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Height="30">
+            <MenuItem Header="Connect" Height="30">
+                <MenuItem Header="Scan" x:Name="scan">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/UI/ToolBar/Icons/scan-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Connect" x:Name="connect">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/UI/ToolBar/Icons/connect-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Disconnect" x:Name="disconnect">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/UI/ToolBar/Icons/disconnect-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Exit" x:Name="exit"/>
+            </MenuItem>
+            <MenuItem Header="Measurement" Height="30">
+                <MenuItem Header="Capture" x:Name="capture">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/UI/ToolBar/Icons/capture-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Pause" x:Name="pause">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Stop" x:Name="stop">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/UI/ToolBar/Icons/stop-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Open Camera" x:Name="openCamera">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/UI/ToolBar/Icons/openCamera-icon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="About">
+                <MenuItem Header="Version" Click="showVersion"/>
+            </MenuItem>
+        </Menu>
+    </DockPanel>
+</Page>
