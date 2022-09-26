@@ -19,6 +19,9 @@
     <Compile Update="UI\MenuBar\MenuBar.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\MenuBar\Version.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\ToolBar\ToolBar.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -37,6 +40,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\MenuBar\MenuBar.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\MenuBar\Version.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\ToolBar\ToolBar.xaml">

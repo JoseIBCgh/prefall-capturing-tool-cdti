@@ -22,3 +22,6 @@ Arraglados problemas del scrolling de los graficos.<br/>
 ## v1.2.0
 ### Añadido
 Añadido el menú.<br/>
+## v1.2.1
+### Modificado
+Cambiado mensaje de version<br/>

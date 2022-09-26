@@ -51,6 +51,7 @@ namespace ibcdatacsharp.UI
                 menuBarClass.capture.Click += new RoutedEventHandler(onCapture);
                 menuBarClass.pause.Click += new RoutedEventHandler(onPause);
                 menuBarClass.stop.Click += new RoutedEventHandler(onStop);
+                menuBarClass.exit.Click += new RoutedEventHandler(onExit);
             };
         }
         // Funcion que llaman todos los handlers del ToolBar. Por si acaso el device list no se ha cargado.
@@ -94,14 +95,14 @@ namespace ibcdatacsharp.UI
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 object selected = deviceListClass.treeView.SelectedItem;
-                if(selected != null)
+                if (selected != null)
                 {
-                    if(selected is IMUInfo)
+                    if (selected is IMUInfo)
                     {
                         TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
                         deviceListClass.connectIMU(treeViewItem);
                     }
-                    else if(selected is CameraInfo)
+                    else if (selected is CameraInfo)
                     {
                         TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.cameras.ItemContainerGenerator.ContainerFromItem(selected);
                         deviceListClass.connectCamera(treeViewItem);
@@ -134,7 +135,7 @@ namespace ibcdatacsharp.UI
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 object selected = deviceListClass.treeView.SelectedItem;
-                if(selected != null && selected is CameraInfo)
+                if (selected != null && selected is CameraInfo)
                 {
                     CameraInfo cameraInfo = (CameraInfo)selected;
                     int id = cameraInfo.number; //Id de la camara
@@ -179,6 +180,16 @@ namespace ibcdatacsharp.UI
                 graphWindowClass.stop(toolBarClass, menuBarClass);
             }
             deviceListLoadedCheck(onStopFunction);
+        }
+        // Conecta el menu Exit
+        private void onExit(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el menú Exit
+            void onExitFunction()
+            {
+                Application.Current.Shutdown();
+            }
+            deviceListLoadedCheck(onExitFunction);
         }
     }
 }

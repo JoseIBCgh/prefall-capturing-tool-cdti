@@ -16,6 +16,7 @@ namespace ibcdatacsharp.UI.MenuBar
         {
             InitializeComponent();
         }
+        // Cambia el icono del boton pause
         public void changePauseState(PauseState pauseState)
         {
             if (pauseState == PauseState.Pause)
@@ -31,15 +32,11 @@ namespace ibcdatacsharp.UI.MenuBar
                 pause.Header = "Play";
             }
         }
+        // Muestra la ventana de la version
         private void showVersion(object sender, RoutedEventArgs e)
         {
-            string messageBoxText = "(c) 2022 IBC Biomechanics\n\nIMU Data Adquisition Tool v0.9.3\n\nhttp://ibc.bio";
-            string caption = "IBC Biomechanics Research";
-            MessageBoxButton button = MessageBoxButton.OK;
-            MessageBoxImage icon = MessageBoxImage.Information;
-            MessageBoxResult result;
-
-            result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+            Version version = new Version();
+            version.ShowDialog();
         }
     }
 }

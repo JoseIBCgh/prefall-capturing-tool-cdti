@@ -15,6 +15,7 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             InitializeComponent();
         }
+        // Cambia el icono del boton pause
         public void changePauseState(PauseState pauseState)
         {
             if (pauseState == PauseState.Pause)
