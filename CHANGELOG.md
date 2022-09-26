@@ -25,3 +25,7 @@ Añadido el menú.<br/>
 ## v1.2.1
 ### Modificado
 Cambiado mensaje de version<br/>
+## v1.2.2
+### Modificado
+Arreglado bug del boton pause del menú<br/>
+Simplificado codigo de los graficos<br/>

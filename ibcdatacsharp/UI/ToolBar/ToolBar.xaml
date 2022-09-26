@@ -50,8 +50,8 @@
         </Button>
         <Button Grid.Column="5" x:Name="pause" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/pause-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center" FontSize="11">Pause</TextBlock>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/pause-icon.png" Width="40" Height="40" x:Name="pauseImage"/>
+                <TextBlock TextAlignment="Center" FontSize="11" x:Name="pauseText">Pause</TextBlock>
             </StackPanel>
         </Button>
         <Button Grid.Column="6" x:Name="stop" Background="Transparent" BorderBrush="Transparent">

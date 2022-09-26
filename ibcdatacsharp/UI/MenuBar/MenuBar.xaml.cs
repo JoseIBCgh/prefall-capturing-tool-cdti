@@ -21,14 +21,12 @@ namespace ibcdatacsharp.UI.MenuBar
         {
             if (pauseState == PauseState.Pause)
             {
-                Image image = Helpers.GetChildOfType<Image>(pause);
-                image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
+                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
                 pause.Header = "Pause";
             }
             else if (pauseState == PauseState.Play)
             {
-                Image image = Helpers.GetChildOfType<Image>(pause);
-                image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
+                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
                 pause.Header = "Play";
             }
         }

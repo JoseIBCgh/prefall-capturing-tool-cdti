@@ -20,17 +20,13 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             if (pauseState == PauseState.Pause)
             {
-                Image image = Helpers.GetChildOfType<Image>(pause);
-                image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
-                TextBlock text = Helpers.GetChildOfType<TextBlock>(pause);
-                text.Text = "Pause";
+                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
+                pauseText.Text = "Pause";
             }
             else if (pauseState == PauseState.Play)
             {
-                Image image = Helpers.GetChildOfType<Image>(pause);
-                image.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
-                TextBlock text = Helpers.GetChildOfType<TextBlock>(pause);
-                text.Text = "Play";
+                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
+                pauseText.Text = "Play";
             }
         }
 
