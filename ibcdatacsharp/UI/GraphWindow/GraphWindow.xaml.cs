@@ -1,4 +1,5 @@
-﻿using ibcdatacsharp.UI.ToolBar.Enums;
+﻿using ibcdatacsharp.UI.Device;
+using ibcdatacsharp.UI.ToolBar.Enums;
 using OxyPlot;
 using System;
 using System.Windows.Controls;
@@ -11,7 +12,6 @@ namespace ibcdatacsharp.UI.GraphWindow
     /// </summary>
     public partial class GraphWindow : Page
     {
-        DispatcherTimer timer; //Para los datos inventados
         public GraphWindow()
         {
             InitializeComponent();
@@ -29,7 +29,7 @@ namespace ibcdatacsharp.UI.GraphWindow
             modelMagnetometer = new Model(-4, 4, titleY: "Magnetometer", units: "k(mT)");
         }
         // Borra el contenido de los graficos
-        private void clearModels()
+        public void clearModels()
         {
             clearAccelerometer();
             clearGyroscope();
@@ -84,75 +84,12 @@ namespace ibcdatacsharp.UI.GraphWindow
                 modelMagnetometer.clear();
             });
         }
-        // Funcion que se llama al pulsar el boton capture. Activa la actualización de los graficos.
-        public void play()
+        // Recive los datos del IMU inventado
+        public void onReceiveData(object sender, RawArgs args)
         {
-            if (timer == null)
-            {
-                initTimer();
-                timer.Start(); 
-            }
-        }
-        // Funcion que se llama al pulsar el boton pause. Pausa los graficos si se estan actualizando
-        // y los vuelve a actualizar si estan pausados.
-        public void pause(ToolBar.ToolBar toolBar, MenuBar.MenuBar menuBar)
-        {
-            if (timer != null)
-            {
-                if (timer.IsEnabled)
-                {
-                    timer.Stop();
-                    toolBar.changePauseState(PauseState.Play); //Cambia la ToolBar a play. Se tiene que llamar.
-                    menuBar.changePauseState(PauseState.Play); //Cambia el Menu a play. Se tiene que llamar.
-                }
-                else
-                {
-                    timer.Start();
-                    toolBar.changePauseState(PauseState.Pause); //Cambia la ToolBar a pause. Se tiene que llamar.
-                    menuBar.changePauseState(PauseState.Pause); //Cambia el Menu a pause. Se tiene que llamar.
-                }
-            }
-        }
-        // Funcion que se llama al pulsar el boton stop.
-        public void stop(ToolBar.ToolBar toolBar, MenuBar.MenuBar menuBar)
-        {
-            if (timer != null)
-            {
-                if (timer.IsEnabled)
-                {
-                    timer.Stop();
-                }
-                clearModels(); // Borra los datos de los graficos. El cambio se ve la proxima vez que se actualizen. Se tiene que llamar.
-                toolBar.changePauseState(PauseState.Pause); // Cambia la ToolBar a pause. Se tiene que llamar.
-                menuBar.changePauseState(PauseState.Pause); // Cambia el Menu a pause. Se tiene que llamar.
-                timer = null;
-            }
-        }
-        // Funcion para generar datos inventados
-        private void streamData(object sender, EventArgs e)
-        {
-            Random random = new Random();
-            double x = 50.0 + (random.NextDouble() - 0.5) * 20;
-            double y = 0.0 + (random.NextDouble() - 0.5) * 20;
-            double z = -50.0 + (random.NextDouble() - 0.5) * 20;
-            updateAccelerometer(x, y, z); // Llamar a esta funcion para actualizar el acelerometro
-
-            x = 300.0 + (random.NextDouble() - 0.5) * 100;
-            y = 0.0 + (random.NextDouble() - 0.5) * 100;
-            z = -300.0 + (random.NextDouble() - 0.5) * 100;
-            updateGyroscope(x, y, z); // Llamar a esta funcion para actualizar el giroscopio
-
-            x = 2.5 + (random.NextDouble() - 0.5);
-            y = 0.0 + (random.NextDouble() - 0.5);
-            z = -2.5 + (random.NextDouble() - 0.5);
-            updateMagnetometer(x, y, z); // Llamar a esta funcion para actualizar el magnetometro
-        }
-        // Funcion para inicializar el timer para los datos inventados
-        private void initTimer()
-        {
-            timer = new DispatcherTimer();
-            timer.Tick += new EventHandler(streamData);
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            updateAccelerometer(args.accelerometer[0], args.accelerometer[1], args.accelerometer[2]);
+            updateMagnetometer(args.magnetometer[0], args.magnetometer[1], args.magnetometer[2]);
+            updateGyroscope(args.gyroscope[0], args.gyroscope[1], args.gyroscope[2]);
         }
     }
 }

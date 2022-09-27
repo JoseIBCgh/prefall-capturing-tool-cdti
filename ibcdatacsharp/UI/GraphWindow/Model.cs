@@ -31,7 +31,7 @@ namespace ibcdatacsharp.UI.GraphWindow
         }
 
         public PlotModel PlotModel { get; private set; }
-
+        // Añade un punto por linea
         public void update(double[] data)
         {
             double kframes = frames / 1000.0;
@@ -57,7 +57,7 @@ namespace ibcdatacsharp.UI.GraphWindow
                 PlotModel.Axes[1].Minimum = 0;
             }
         }
-
+        // Borra todos los puntos de todas las lineas
         public void clear()
         {
             for(int i = 0; i < NUM_SERIES; i++)

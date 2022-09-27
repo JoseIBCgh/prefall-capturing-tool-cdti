@@ -15,6 +15,8 @@
     <None Remove="UI\ToolBar\Icons\openCamera-icon.png" />
     <None Remove="UI\ToolBar\Icons\pause-icon.png" />
     <None Remove="UI\ToolBar\Icons\play-pause-icon.png" />
+    <None Remove="UI\ToolBar\Icons\record-recording-icon.png" />
+    <None Remove="UI\ToolBar\Icons\record-stop-icon.png" />
     <None Remove="UI\ToolBar\Icons\scan-icon.png" />
     <None Remove="UI\ToolBar\Icons\stop-icon.png" />
   </ItemGroup>
@@ -48,6 +50,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\play-pause-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\record-recording-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\record-stop-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\scan-icon.png">

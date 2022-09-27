@@ -31,6 +31,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             PlotModel.Axes[1].Maximum = 1.0 / 1000.0;
             PlotModel.Axes[1].Minimum = 0;
         }
+        // Pinta el fondo
         private void paintAreas()
         {
             int separation12 = -170;
@@ -80,7 +81,7 @@ namespace ibcdatacsharp.UI.AngleGraph
         }
 
         public PlotModel PlotModel { get; private set; }
-
+        // Añade un punto
         public void update(double data)
         {
             double kframes = frames / 1000.0;
@@ -103,7 +104,7 @@ namespace ibcdatacsharp.UI.AngleGraph
                 PlotModel.Axes[1].Minimum = 0;
             }
         }
-
+        // Borra todos los puntos
         public void clear()
         {
             (PlotModel.Series[0] as LineSeries).Points.Clear();

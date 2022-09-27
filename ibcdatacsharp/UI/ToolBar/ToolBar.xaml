@@ -14,6 +14,7 @@
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="90"/>
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="70"/>
@@ -42,19 +43,25 @@
                 <TextBlock TextAlignment="Center" FontSize="11">Open Camera</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="4" x:Name="capture" Background="Transparent" BorderBrush="Transparent">
+        <Button Grid.Column="4" x:Name="record" Background="Transparent" BorderBrush="Transparent">
+            <StackPanel>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/record-stop-icon.png" Width="40" Height="40"/>
+                <TextBlock TextAlignment="Center" FontSize="11">Record Stopped</TextBlock>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="5" x:Name="capture" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/capture-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Capture</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="5" x:Name="pause" Background="Transparent" BorderBrush="Transparent">
+        <Button Grid.Column="6" x:Name="pause" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/pause-icon.png" Width="40" Height="40" x:Name="pauseImage"/>
                 <TextBlock TextAlignment="Center" FontSize="11" x:Name="pauseText">Pause</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="6" x:Name="stop" Background="Transparent" BorderBrush="Transparent">
+        <Button Grid.Column="7" x:Name="stop" Background="Transparent" BorderBrush="Transparent">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/stop-icon.png" Width="40" Height="40"/>
                 <TextBlock TextAlignment="Center" FontSize="11">Stop</TextBlock>

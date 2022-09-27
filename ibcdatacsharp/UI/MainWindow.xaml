@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ibcdatacsharp.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1000">
+        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 0.9.3]" Height="700" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

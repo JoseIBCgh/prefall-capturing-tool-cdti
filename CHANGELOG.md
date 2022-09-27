@@ -32,3 +32,6 @@ Simplificado codigo de los graficos<br/>
 ## v1.3.0
 ### Añadido
 Añadidos los graficos de angulos(AngleGraph)<br/>
+## v1.4.0
+### Añadido
+Añadido IMU falso que emite datos<br/>

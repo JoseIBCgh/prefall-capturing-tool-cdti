@@ -9,6 +9,7 @@ using ibcdatacsharp.UI.ToolBar.Enums;
 using ibcdatacsharp.UI.Common;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ibcdatacsharp.UI.Device;
 
 namespace ibcdatacsharp.UI
 {
@@ -17,11 +18,35 @@ namespace ibcdatacsharp.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Device.Device device;
         public MainWindow()
         {
             InitializeComponent();
+            initIcon();
             initToolBarHandlers();
             initMenuHandlers();
+            initDevice();
+        }
+        // Crea un IMU falso
+        private void initDevice()
+        {
+            device = new Device.Device();
+            graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
+            {
+                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                device.rawData += graphWindowClass.onReceiveData;
+            };
+            angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
+            {
+                AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                device.angleData += angleGraphClass.onReceiveData;
+            };
+        }
+        // Cambia el icono de la ventana
+        private void initIcon()
+        {
+            Uri iconUri = new Uri("pack://application:,,,/UI/MenuBar/Icons/ibc-logo.png", UriKind.RelativeOrAbsolute);
+            Icon = BitmapFrame.Create(iconUri);
         }
         // Conecta los botones de la ToolBar
         private void initToolBarHandlers()
@@ -36,6 +61,7 @@ namespace ibcdatacsharp.UI
                 toolBarClass.capture.Click += new RoutedEventHandler(onCapture);
                 toolBarClass.pause.Click += new RoutedEventHandler(onPause);
                 toolBarClass.stop.Click += new RoutedEventHandler(onStop);
+                toolBarClass.record.Click += new RoutedEventHandler(onRecord);
             };
         }
         // Conecta los botones del Menu
@@ -51,6 +77,7 @@ namespace ibcdatacsharp.UI
                 menuBarClass.capture.Click += new RoutedEventHandler(onCapture);
                 menuBarClass.pause.Click += new RoutedEventHandler(onPause);
                 menuBarClass.stop.Click += new RoutedEventHandler(onStop);
+                menuBarClass.record.Click += new RoutedEventHandler(onRecord);
                 menuBarClass.exit.Click += new RoutedEventHandler(onExit);
             };
         }
@@ -150,20 +177,7 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Capture
             void onCaptureFunction()
             {
-                //Activa la actualización del Graph Window
-                void playGraphWindow()
-                {
-                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                    graphWindowClass.play();
-                }
-                // Activa la actualización del Angle Graph
-                void playAngleGraph()
-                {
-                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
-                    angleGraphClass.play();
-                }
-                playGraphWindow();
-                playAngleGraph();
+                device.play();
             }
             deviceListLoadedCheck(onCaptureFunction);
         }
@@ -173,24 +187,9 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Pause
             void onPauseFunction()
             {
-                // Pausa el Graph Window
-                void pauseGraphWindow()
-                {
-                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                    MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                    graphWindowClass.pause(toolBarClass, menuBarClass);
-                }
-                // Pausa el Angle Graph
-                void pauseAngleGraph()
-                {
-                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
-                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                    MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                    angleGraphClass.pause(toolBarClass, menuBarClass);
-                }
-                pauseGraphWindow();
-                pauseAngleGraph();
+                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                device.pause(toolBarClass, menuBarClass);
             }
             deviceListLoadedCheck(onPauseFunction);
         }
@@ -200,26 +199,23 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Stop
             void onStopFunction()
             {
-                // Para el Graph Window
-                void stopGraphWindow()
-                {
-                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                    MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                    graphWindowClass.stop(toolBarClass, menuBarClass);
-                }
-                // Para el Angle Graph
-                void stopAngleGraph()
-                {
-                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
-                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                    MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                    angleGraphClass.stop(toolBarClass, menuBarClass);
-                }
-                stopGraphWindow();
-                stopAngleGraph();
+                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                device.stop(toolBarClass, menuBarClass, graphWindowClass, angleGraphClass);
             }
             deviceListLoadedCheck(onStopFunction);
+        }
+        // Conecta el boton Record
+        private void onRecord(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el boton Record
+            void onRecordFunction()
+            {
+
+            }
+            deviceListLoadedCheck(onRecordFunction);
         }
         // Conecta el menu Exit
         private void onExit(object sender, EventArgs e)
