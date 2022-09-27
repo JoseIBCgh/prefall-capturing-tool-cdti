@@ -150,8 +150,20 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Capture
             void onCaptureFunction()
             {
-                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                graphWindowClass.play();
+                //Activa la actualización del Graph Window
+                void playGraphWindow()
+                {
+                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    graphWindowClass.play();
+                }
+                // Activa la actualización del Angle Graph
+                void playAngleGraph()
+                {
+                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    angleGraphClass.play();
+                }
+                playGraphWindow();
+                playAngleGraph();
             }
             deviceListLoadedCheck(onCaptureFunction);
         }
@@ -161,10 +173,24 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Pause
             void onPauseFunction()
             {
-                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                graphWindowClass.pause(toolBarClass, menuBarClass);
+                // Pausa el Graph Window
+                void pauseGraphWindow()
+                {
+                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                    MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                    graphWindowClass.pause(toolBarClass, menuBarClass);
+                }
+                // Pausa el Angle Graph
+                void pauseAngleGraph()
+                {
+                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                    MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                    angleGraphClass.pause(toolBarClass, menuBarClass);
+                }
+                pauseGraphWindow();
+                pauseAngleGraph();
             }
             deviceListLoadedCheck(onPauseFunction);
         }
@@ -174,10 +200,24 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Stop
             void onStopFunction()
             {
-                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                graphWindowClass.stop(toolBarClass, menuBarClass);
+                // Para el Graph Window
+                void stopGraphWindow()
+                {
+                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                    MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                    graphWindowClass.stop(toolBarClass, menuBarClass);
+                }
+                // Para el Angle Graph
+                void stopAngleGraph()
+                {
+                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                    MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                    angleGraphClass.stop(toolBarClass, menuBarClass);
+                }
+                stopGraphWindow();
+                stopAngleGraph();
             }
             deviceListLoadedCheck(onStopFunction);
         }

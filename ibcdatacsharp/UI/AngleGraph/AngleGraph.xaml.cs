@@ -4,84 +4,84 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace ibcdatacsharp.UI.GraphWindow
+namespace ibcdatacsharp.UI.AngleGraph
 {
     /// <summary>
-    /// Lógica de interacción para GraphWindow.xaml
+    /// Lógica de interacción para AngleGraph.xaml
     /// </summary>
-    public partial class GraphWindow : Page
+    public partial class AngleGraph : Page
     {
         DispatcherTimer timer; //Para los datos inventados
-        public GraphWindow()
+        public AngleGraph()
         {
             InitializeComponent();
             initModels();
             DataContext = this;
         }
-        public Model modelAccelerometer { get; private set; }
-        public Model modelGyroscope { get; private set; }
-        public Model modelMagnetometer { get; private set; }
+        public Model modelX { get; private set; }
+        public Model modelY { get; private set; }
+        public Model modelZ { get; private set; }
         // Funcion para inicializar los graficos
         private void initModels()
         {
-            modelAccelerometer = new Model(-80, 80, titleY : "Accelerometer", units : "m/s^2");
-            modelGyroscope = new Model(-600, 600, titleY: "Gyroscope", units: "g/s^2");
-            modelMagnetometer = new Model(-4, 4, titleY: "Magnetometer", units: "k(mT)");
+            modelX = new Model(titleY: "X Angle");
+            modelY = new Model(titleY: "Y Angle");
+            modelZ = new Model(titleY: "Z Angle");
         }
         // Borra el contenido de los graficos
         private void clearModels()
         {
-            clearAccelerometer();
-            clearGyroscope();
-            clearMagnetometer();
+            clearX();
+            clearY();
+            clearZ();
         }
         // Funcion para actualizar la grafica del acelerometro
-        public async void updateAccelerometer(double x, double y, double z)
+        public async void updateX(double data)
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
-                modelAccelerometer.update(new double[] { x, y, z });
+                modelX.update(data);
             });
         }
         // Funcion para borrar los datos del acelerometro
-        public async void clearAccelerometer()
+        public async void clearX()
         {
-            PlotModel model = modelAccelerometer.PlotModel;
+            PlotModel model = modelX.PlotModel;
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
-                modelAccelerometer.clear();
+                modelX.clear();
             });
         }
         // Funcion para actualizar la grafica del giroscopio
-        public async void updateGyroscope(double x, double y, double z)
+        public async void updateY(double data)
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
-                modelGyroscope.update(new double[] { x, y, z });
+                modelY.update(data);
             });
         }
         // Funcion para borrar los datos del giroscopio
-        public async void clearGyroscope()
+        public async void clearY()
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
-                modelGyroscope.clear();
+                modelY.clear();
             });
         }
         // Funcion para actualizar la grafica del magnetometro
-        public async void updateMagnetometer(double x, double y, double z)
+        public async void updateZ(double data)
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
-                modelMagnetometer.update(new double[] { x, y, z });
+                modelZ.update(data);
             });
         }
         // Funcion para borrar los datos del magnetometro
-        public async void clearMagnetometer()
+        public async void clearZ()
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
-                modelMagnetometer.clear();
+                modelZ.clear();
             });
         }
         // Funcion que se llama al pulsar el boton capture. Activa la actualización de los graficos.
@@ -90,7 +90,7 @@ namespace ibcdatacsharp.UI.GraphWindow
             if (timer == null)
             {
                 initTimer();
-                timer.Start(); 
+                timer.Start();
             }
         }
         // Funcion que se llama al pulsar el boton pause. Pausa los graficos si se estan actualizando
@@ -132,20 +132,14 @@ namespace ibcdatacsharp.UI.GraphWindow
         private void streamData(object sender, EventArgs e)
         {
             Random random = new Random();
-            double x = 50.0 + (random.NextDouble() - 0.5) * 20;
-            double y = 0.0 + (random.NextDouble() - 0.5) * 20;
-            double z = -50.0 + (random.NextDouble() - 0.5) * 20;
-            updateAccelerometer(x, y, z); // Llamar a esta funcion para actualizar el acelerometro
+            double x = (random.NextDouble() - 0.5) * 400;
+            updateX(x); // Llamar a esta funcion para actualizar el angulo X
 
-            x = 300.0 + (random.NextDouble() - 0.5) * 100;
-            y = 0.0 + (random.NextDouble() - 0.5) * 100;
-            z = -300.0 + (random.NextDouble() - 0.5) * 100;
-            updateGyroscope(x, y, z); // Llamar a esta funcion para actualizar el giroscopio
+            double y = (random.NextDouble() - 0.5) * 400;
+            updateY(y); // Llamar a esta funcion para actualizar el angulo Y
 
-            x = 2.5 + (random.NextDouble() - 0.5);
-            y = 0.0 + (random.NextDouble() - 0.5);
-            z = -2.5 + (random.NextDouble() - 0.5);
-            updateMagnetometer(x, y, z); // Llamar a esta funcion para actualizar el magnetometro
+            double z = (random.NextDouble() - 0.5) * 400;
+            updateZ(z); // Llamar a esta funcion para actualizar el angulo Z
         }
         // Funcion para inicializar el timer para los datos inventados
         private void initTimer()

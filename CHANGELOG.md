@@ -18,7 +18,7 @@ Añadido el botón Stop.  (Cuando se clica el botón se ejecuta la función stop
 Añadida funcion que plotea datos inventados. <br/>
 ## v1.1.1
 ### Modificado
-Arraglados problemas del scrolling de los graficos.<br/>
+Arreglados problemas del scrolling de los graficos.<br/>
 ## v1.2.0
 ### Añadido
 Añadido el menú.<br/>
@@ -29,3 +29,6 @@ Cambiado mensaje de version<br/>
 ### Modificado
 Arreglado bug del boton pause del menú<br/>
 Simplificado codigo de los graficos<br/>
+## v1.3.0
+### Añadido
+Añadidos los graficos de angulos(AngleGraph)<br/>

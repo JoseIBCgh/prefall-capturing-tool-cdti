@@ -47,6 +47,9 @@
                 <TabItem Header="Data Raw">
                     <Frame Source="pack://application:,,,/UI/GraphWindow/GraphWindow.xaml" x:Name="graphWindow"/>
                 </TabItem>
+                <TabItem Header="Joint Angle">
+                    <Frame Source="pack://application:,,,/UI/AngleGraph/AngleGraph.xaml" x:Name="angleGraph"/>
+                </TabItem>
             </TabControl>
         </Grid>
     </Grid>
