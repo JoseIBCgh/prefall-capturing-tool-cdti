@@ -73,7 +73,7 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
         #endregion
 
         #region EventHandlers
-
+        // Explora directorios y archivos cuando se expande si es un directorio
         void FileSystemObjectInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (FileSystemInfo is DirectoryInfo)
