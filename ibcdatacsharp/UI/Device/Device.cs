@@ -8,7 +8,7 @@ namespace ibcdatacsharp.UI.Device
     internal class Device
     {
         private DispatcherTimer timer;
-        public bool recording { get; }
+        private bool recording;
         public delegate void RawDataEventHandler(object sender, RawArgs args);
         public delegate void AngleDataEventHandler(object sender, AngleArgs args);
         public event RawDataEventHandler rawData;
@@ -57,6 +57,22 @@ namespace ibcdatacsharp.UI.Device
                 graphWindow.clearModels(); // Borra los datos del Graph Window. Se tiene que llamar.
                 angleGraph.clearModels(); // Borra los datos del Angle Graph. Se tiene que llamar.
                 timer = null;
+            }
+        }
+        // Empieza o para el modo Record
+        public void record(ToolBar.ToolBar toolBar, MenuBar.MenuBar menuBar)
+        {
+            if (recording)
+            {
+                recording = false;
+                toolBar.changeRecordState(RecordState.RecordStopped); //Cambia la ToolBar a record stopped. Se tiene que llamar.
+                menuBar.changeRecordState(RecordState.RecordStopped); //Cambia el Menu a record stopped. Se tiene que llamar.
+            }
+            else
+            {
+                recording = true;
+                toolBar.changeRecordState(RecordState.Recording); //Cambia la ToolBar a recording. Se tiene que llamar.
+                menuBar.changeRecordState(RecordState.Recording); //Cambia el Menu a recording. Se tiene que llamar.
             }
         }
         // Emite datos inventados

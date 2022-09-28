@@ -15,7 +15,7 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             InitializeComponent();
         }
-        // Cambia el icono del boton pause
+        // Cambia el icono del boton Pause
         public void changePauseState(PauseState pauseState)
         {
             if (pauseState == PauseState.Pause)
@@ -29,7 +29,19 @@ namespace ibcdatacsharp.UI.ToolBar
                 pauseText.Text = "Play";
             }
         }
-
-
+        // Cambia el icono del boton Record
+        public void changeRecordState(RecordState recordState)
+        {
+            if (recordState == RecordState.RecordStopped)
+            {
+                recordImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/record-stop-icon.png"));
+                recordText.Text = "Record Stopped";
+            }
+            else if (recordState == RecordState.Recording)
+            {
+                recordImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/record-recording-icon.png"));
+                recordText.Text = "Recording...";
+            }
+        }
     }
 }

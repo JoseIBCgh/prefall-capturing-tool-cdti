@@ -5,11 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using ibcdatacsharp.DeviceList.TreeClasses;
-using ibcdatacsharp.UI.ToolBar.Enums;
-using ibcdatacsharp.UI.Common;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ibcdatacsharp.UI.Device;
 
 namespace ibcdatacsharp.UI
 {
@@ -213,7 +209,9 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Record
             void onRecordFunction()
             {
-
+                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                device.record(toolBarClass, menuBarClass);
             }
             deviceListLoadedCheck(onRecordFunction);
         }

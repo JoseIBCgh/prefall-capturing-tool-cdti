@@ -35,3 +35,6 @@ Añadidos los graficos de angulos(AngleGraph)<br/>
 ## v1.4.0
 ### Añadido
 Añadido IMU falso que emite datos<br/>
+## v1.4.1
+### Añadido
+Añadido botón record<br/>
