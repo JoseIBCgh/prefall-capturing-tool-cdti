@@ -38,3 +38,4 @@ Añadido IMU falso que emite datos<br/>
 ## v1.4.1
 ### Añadido
 Añadido botón record<br/>
+Añadido botón Show Captured Files<br/>
