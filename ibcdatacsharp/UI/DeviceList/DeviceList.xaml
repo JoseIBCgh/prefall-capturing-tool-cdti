@@ -34,6 +34,12 @@
             <TextBlock Text="Connected" Grid.Column="3" TextAlignment="Center"/>
         </Grid>
         <TreeView BorderThickness="0" ItemContainerStyle="{StaticResource TreeViewItemStyle}" x:Name="treeView">
+            <TreeView.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                      Color="LightSkyBlue" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                      Color="LightSkyBlue" />
+            </TreeView.Resources>
             <TreeViewItem ItemsSource="{Binding IMUs}" Visibility="Collapsed" x:Name="IMUs">
                 <TreeViewItem.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
