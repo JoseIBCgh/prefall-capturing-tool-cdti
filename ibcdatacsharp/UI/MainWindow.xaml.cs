@@ -58,6 +58,7 @@ namespace ibcdatacsharp.UI
                 toolBarClass.pause.Click += new RoutedEventHandler(onPause);
                 toolBarClass.stop.Click += new RoutedEventHandler(onStop);
                 toolBarClass.record.Click += new RoutedEventHandler(onRecord);
+                toolBarClass.capturedFiles.Click += new RoutedEventHandler(onCapturedFiles);
             };
         }
         // Conecta los botones del Menu
@@ -74,6 +75,7 @@ namespace ibcdatacsharp.UI
                 menuBarClass.pause.Click += new RoutedEventHandler(onPause);
                 menuBarClass.stop.Click += new RoutedEventHandler(onStop);
                 menuBarClass.record.Click += new RoutedEventHandler(onRecord);
+                menuBarClass.capturedFiles.Click += new RoutedEventHandler(onCapturedFiles);
                 menuBarClass.exit.Click += new RoutedEventHandler(onExit);
             };
         }
@@ -214,6 +216,16 @@ namespace ibcdatacsharp.UI
                 device.record(toolBarClass, menuBarClass);
             }
             deviceListLoadedCheck(onRecordFunction);
+        }
+        // Conecta el boton Show Captured Files
+        private void onCapturedFiles(object sender, EventArgs e)
+        {
+            // Funcion que se ejecuta al clicar el boton Show Captured Files
+            void onCapturedFilesFunction()
+            {
+                Trace.WriteLine("Show Captured Files");
+            }
+            deviceListLoadedCheck(onCapturedFilesFunction);
         }
         // Conecta el menu Exit
         private void onExit(object sender, EventArgs e)

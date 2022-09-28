@@ -8,64 +8,78 @@
       d:DesignHeight="60" d:DesignWidth="1000"
       Title="ToolBar">
 
-    <Grid Background="LightGray">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="90"/>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="70"/>
-        </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" x:Name="scan" Background="Transparent" BorderBrush="Transparent">
+    <StackPanel Background="LightGray" Orientation="Horizontal">
+        <StackPanel.Resources>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Margin" Value="5, 0, 5, 0"/>
+            </Style>
+            <Style TargetType="{x:Type Image}">
+                <Setter Property="Width" Value="40"/>
+                <Setter Property="Height" Value="40"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="11"/>
+            </Style>
+        </StackPanel.Resources>
+        <Button x:Name="scan">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/scan-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center" FontSize="11">Scan</TextBlock>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/scan-icon.png"/>
+                <TextBlock>Scan</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="1" x:Name="connect" Background="Transparent" BorderBrush="Transparent">
+        <Button x:Name="connect">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/connect-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center" FontSize="11">Connect</TextBlock>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/connect-icon.png"/>
+                <TextBlock>Connect</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="2" x:Name="disconnect" Background="Transparent" BorderBrush="Transparent">
+        <Button x:Name="disconnect">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/disconnect-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center" FontSize="11">Disconnect</TextBlock>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/disconnect-icon.png"/>
+                <TextBlock>Disconnect</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="3" x:Name="openCamera" Background="Transparent" BorderBrush="Transparent">
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+        <Button x:Name="openCamera">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/openCamera-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center" FontSize="11">Open Camera</TextBlock>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/openCamera-icon.png"/>
+                <TextBlock>Open Camera</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="4" x:Name="record" Background="Transparent" BorderBrush="Transparent">
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+        <Button x:Name="record">
             <StackPanel>
-                <Image x:Name="recordImage" Source="pack://application:,,,/UI/ToolBar/Icons/record-stop-icon.png" Width="40" Height="40"/>
-                <TextBlock x:Name="recordText" TextAlignment="Center" FontSize="11">Record Stopped</TextBlock>
+                <Image x:Name="recordImage" Source="pack://application:,,,/UI/ToolBar/Icons/record-stop-icon.png"/>
+                <TextBlock x:Name="recordText">Record Stopped</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="5" x:Name="capture" Background="Transparent" BorderBrush="Transparent">
+        <Button x:Name="capture">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/capture-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center" FontSize="11">Capture</TextBlock>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/capture-icon.png"/>
+                <TextBlock>Capture</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="6" x:Name="pause" Background="Transparent" BorderBrush="Transparent">
+        <Button x:Name="pause">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/pause-icon.png" Width="40" Height="40" x:Name="pauseImage"/>
-                <TextBlock TextAlignment="Center" FontSize="11" x:Name="pauseText">Pause</TextBlock>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/pause-icon.png" x:Name="pauseImage"/>
+                <TextBlock x:Name="pauseText">Pause</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="7" x:Name="stop" Background="Transparent" BorderBrush="Transparent">
+        <Button Grid.Column="7" x:Name="stop">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/stop-icon.png" Width="40" Height="40"/>
-                <TextBlock TextAlignment="Center" FontSize="11">Stop</TextBlock>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/stop-icon.png"/>
+                <TextBlock>Stop</TextBlock>
             </StackPanel>
         </Button>
-    </Grid>
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+        <Button x:Name="capturedFiles">
+            <StackPanel>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/capturedFiles-icon.png"/>
+                <TextBlock>Show Captured Files</TextBlock>
+            </StackPanel>
+        </Button>
+    </StackPanel>
 </Page>

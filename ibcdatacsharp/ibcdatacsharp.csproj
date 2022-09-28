@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="UI\MenuBar\Icons\ibc-logo.png" />
     <None Remove="UI\ToolBar\Icons\capture-icon.png" />
+    <None Remove="UI\ToolBar\Icons\capturedFiles-icon.png" />
     <None Remove="UI\ToolBar\Icons\connect-icon.png" />
     <None Remove="UI\ToolBar\Icons\disconnect-icon.png" />
     <None Remove="UI\ToolBar\Icons\openCamera-icon.png" />
@@ -35,6 +36,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\capture-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\capturedFiles-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\connect-icon.png">
