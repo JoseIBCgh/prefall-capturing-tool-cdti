@@ -14,6 +14,7 @@
             <Style TargetType="{x:Type TreeViewItem}">
                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                 <Setter Property="KeyboardNavigation.AcceptsReturn" Value="True" />
+                <EventSetter Event="MouseDoubleClick" Handler="onItemDoubleClick" />
             </Style>
         </TreeView.ItemContainerStyle>
         <TreeView.Resources>

@@ -10,11 +10,12 @@ namespace ibcdatacsharp.UI.FileBrowser
 {
     public static class FolderManager
     {
+        // Devuelve el icono de una carpeta
         public static ImageSource GetImageSource(string directory, ItemState folderType)
         {
             return GetImageSource(directory, new Size(16, 16), folderType);
         }
-
+        // Devuelve el icono de una carpeta de tamaño size
         public static ImageSource GetImageSource(string directory, Size size, ItemState folderType)
         {
             using (var icon = ShellManager.GetIcon(directory, ItemType.Folder, IconSize.Large, folderType))

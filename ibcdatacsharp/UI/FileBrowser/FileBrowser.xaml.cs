@@ -2,9 +2,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using ibcdatacsharp.UI.FileBrowser.ShellClasses;
+using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.FileBrowser
 {
@@ -26,11 +26,30 @@ namespace ibcdatacsharp.UI.FileBrowser
         {
             Cursor = Cursors.Wait;
         }
+        // Funcion que se ejecuta al hacer doble click sobre un fichero
+        private void onItemDoubleClick(object sender, EventArgs e)
+        {
+            if (sender is TreeViewItem)
+            {
+                if (!((TreeViewItem)sender).IsSelected)
+                {
+                    return;
+                }
+            }
+            FileSystemObjectInfo fileSystemObjectInfo = ((TreeViewItem)sender).DataContext as FileSystemObjectInfo;
+            FileSystemInfo fileSystemInfo = fileSystemObjectInfo.FileSystemInfo;
+            if(fileSystemInfo is DirectoryInfo)
+            {
+                return;
+            }
+            string path = fileSystemInfo.FullName; // Usar este path para acceder al fichero
+            Trace.WriteLine(path);
+        }
 
         #endregion
 
         #region Methods
-
+        // Inicializa los drives y expande el Escritorio
         private void InitializeFileSystemObjects()
         {
             var drives = DriveInfo.GetDrives();
@@ -46,7 +65,7 @@ namespace ibcdatacsharp.UI.FileBrowser
                 });
             PreSelect(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
         }
-
+        // Carpeta seleccionada por defecto
         private void PreSelect(string path)
         {
             if (!Directory.Exists(path))
@@ -57,7 +76,7 @@ namespace ibcdatacsharp.UI.FileBrowser
             driveFileSystemObjectInfo.IsExpanded = true;
             PreSelect(driveFileSystemObjectInfo, path);
         }
-
+        // Funcion auxiliar recursiva de Preselect
         private void PreSelect(FileSystemObjectInfo fileSystemObjectInfo,
             string path)
         {
@@ -68,7 +87,8 @@ namespace ibcdatacsharp.UI.FileBrowser
                 {
                     if (string.Equals(childFileSystemObjectInfo.FileSystemInfo.FullName, path))
                     {
-                        /* We found the item for pre-selection */
+                        childFileSystemObjectInfo.IsExpanded = true;
+                        /* Fichero encontrado */
                     }
                     else
                     {
@@ -82,7 +102,7 @@ namespace ibcdatacsharp.UI.FileBrowser
         #endregion
 
         #region Helpers
-
+        // Obtiene el drive de un path
         private FileSystemObjectInfo GetDriveFileSystemObjectInfo(string path)
         {
             var directory = new DirectoryInfo(path);
@@ -92,7 +112,7 @@ namespace ibcdatacsharp.UI.FileBrowser
                 .FirstOrDefault();
             return GetDriveFileSystemObjectInfo(drive);
         }
-
+        // Devuelve el FileSystemObjectInfo de un drive a partir del DriveInfo
         private FileSystemObjectInfo GetDriveFileSystemObjectInfo(DriveInfo drive)
         {
             foreach (var fso in treeView.Items.OfType<FileSystemObjectInfo>())

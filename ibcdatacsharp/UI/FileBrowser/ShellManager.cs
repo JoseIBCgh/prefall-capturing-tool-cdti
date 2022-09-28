@@ -9,6 +9,7 @@ namespace ibcdatacsharp.UI.FileBrowser
 {
     public class ShellManager
     {
+        // Devuelve el icono de un fichero o carpeta
         public static Icon GetIcon(string path, ItemType type, IconSize iconSize, ItemState state)
         {
             var attributes = (uint)(type == ItemType.Folder ? FileAttribute.Directory : FileAttribute.File);
