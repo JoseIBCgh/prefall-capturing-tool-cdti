@@ -6,6 +6,11 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
     // Guarda la información de una camara
     public class CameraInfo : BaseObject
     {
+        public string name
+        {
+            get { return GetValue<string>("name"); }
+            set { SetValue("name", value); }
+        }
         public int number
         {
             get { return GetValue<int>("number"); }
@@ -16,9 +21,10 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<int?>("fps"); }
             set { SetValue("fps", value); }
         }
-        public CameraInfo(int number)
+        public CameraInfo(int number, string name)
         {
             this.number = number;
+            this.name = name;
             this.fps = null;
         }
     }

@@ -106,6 +106,7 @@
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                             </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Path=name}" Grid.Column="0" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=number}" Grid.Column="1" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=fps}" Grid.Column="2" TextAlignment="Center"/>
                         </Grid>

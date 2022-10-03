@@ -14,13 +14,8 @@ namespace ibcdatacsharp.UI.DeviceList
         public DeviceList()
         {
             InitializeComponent();
-            lastSelectedItem = null;
         }
-        public TreeViewItem? lastSelectedItem
-        {
-            get;
-            set;
-        }
+
         // Funciones para eliminar todos los elementos de IMU, camara y Insoles
         #region clear
         public void clearAll()

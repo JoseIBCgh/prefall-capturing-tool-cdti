@@ -39,3 +39,7 @@ Añadido IMU falso que emite datos<br/>
 ### Añadido
 Añadido botón record<br/>
 Añadido botón Show Captured Files<br/>
+## v1.5.0
+### Añadido
+Scaneo de las camaras<br/>
+Abrir una camara<br/>

@@ -1,18 +1,21 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using ibcdatacsharp.DeviceList.TreeClasses;
 using System.Windows.Media.Imaging;
+using DirectShowLib;
+using System.Collections.Generic;
+using OpenCvSharp;
+using System.Threading.Tasks;
 
 namespace ibcdatacsharp.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         private Device.Device device;
         public MainWindow()
@@ -100,13 +103,52 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton scan
             void onScanFunction()
             {
+                // Añade las camaras al TreeView
+                async void addCameras(DeviceList.DeviceList deviceListClass)
+                {
+                    // Devuelve el nombre de todas las camaras conectadas
+                    async Task<List<string>> cameraNames()
+                    {
+                        List<DsDevice> devices = new List<DsDevice>(DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice));
+                        List<string> cameraNames = new List<string>();
+                        foreach (DsDevice device in devices)
+                        {
+                            cameraNames.Add(device.Name);
+                        }
+                        return cameraNames;
+                    }
+                    // Devuelve una lista de indice OpenCV de las camaras disponibles
+                    async Task<List<int>> cameraIndices(int maxIndex = 10)
+                    {
+                        List<int> indices = new List<int>();
+                        VideoCapture capture = new VideoCapture();
+                        for(int index = 0; index < maxIndex; index++)
+                        {
+                            capture.Open(index, VideoCaptureAPIs.DSHOW);
+                            if (capture.IsOpened())
+                            {
+                                indices.Add(index);
+                                capture.Release();
+                            }
+                        }
+                        return indices;
+                    }
+                    List<string> names = await Task.Run(() => cameraNames());
+                    //names.ForEach(n => Trace.WriteLine(n));
+                    List<int> indices = await Task.Run(() => cameraIndices(names.Count));
+                    //indices.ForEach(i => Trace.WriteLine(i));
+                    for (int i = 0; i < names.Count; i++)
+                    {
+                        if (indices.Contains(i))
+                        {
+                            deviceListClass.addCamera(new CameraInfo(i, names[i]));
+                        }
+                    }
+                }
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 deviceListClass.clearAll();
-                deviceListClass.addIMU(new IMUInfo("IMU1", "AX"));
-                deviceListClass.addIMU(new IMUInfo("IMU2", "BX"));
-                deviceListClass.addCamera(new CameraInfo(0));
-                ObservableCollection<IMUInfo> IMUs = deviceListClass.getIMUs();
-                deviceListClass.showIMUs();
+                addCameras(deviceListClass);
+                deviceListClass.hideIMUs();
                 deviceListClass.showCameras();
                 deviceListClass.hideInsoles(); //Por defecto estan escondidos pero si los muestras una vez los tienes que volver a esconder
             }
@@ -164,7 +206,9 @@ namespace ibcdatacsharp.UI
                 {
                     CameraInfo cameraInfo = (CameraInfo)selected;
                     int id = cameraInfo.number; //Id de la camara
-                    Trace.WriteLine(id);
+                    CamaraViewport camaraViewport = new CamaraViewport();
+                    camaraViewport.Show();
+                    camaraViewport.initializeCamara(id);
                 }
             }
             deviceListLoadedCheck(onOpenCameraFunction);

@@ -10,6 +10,9 @@
     <Compile Update="UI\AngleGraph\AngleGraph.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\CamaraViewport.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\DeviceList\DeviceList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -31,6 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\AngleGraph\AngleGraph.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\CamaraViewport.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\DeviceList\DeviceList.xaml">
