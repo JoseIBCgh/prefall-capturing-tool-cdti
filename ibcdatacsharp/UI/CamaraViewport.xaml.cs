@@ -12,10 +12,15 @@ namespace ibcdatacsharp.UI
     // Ventana que muestra la grabacion de la camara
     public partial class CamaraViewport : System.Windows.Window
     {
+        private const int VIDEO_FPS = 30;
+
         private VideoCapture videoCapture;
+        private VideoWriter videoWriter;
+
+        private bool recordPaused = false;
+
         private CancellationTokenSource cancellationTokenSource;
         private CancellationToken cancellationToken;
-
         private Task cameraTask;
         public CamaraViewport()
         {
@@ -29,21 +34,25 @@ namespace ibcdatacsharp.UI
             videoCapture = new VideoCapture(index, VideoCaptureAPIs.DSHOW);
             cameraTask = captureCameraCallback();
         }
+        private void closingTasks()
+        {
+            videoCapture.Release();
+            cancellationTokenSource.Cancel();
+            if (videoWriter != null)
+            {
+                videoWriter.Dispose();
+            }
+        }
         // Cierra la camara y la ventana
         private void onClose(object sender, RoutedEventArgs e)
         {
-            videoCapture.Release();
-
-            cancellationTokenSource.Cancel();
-
+            closingTasks();
             Close();
         }
         // Cierra la camara al cerrar la ventana
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            videoCapture.Release();
-
-            cancellationTokenSource.Cancel();
+            closingTasks();
 
             base.OnClosing(e);
         }
@@ -59,21 +68,66 @@ namespace ibcdatacsharp.UI
                 }
                 Mat frame = new Mat();
                 videoCapture.Read(frame);
-                if (frame.Empty())
+                if (!frame.Empty())
                 {
-                    return;
+                    await Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
+                    {
+                        imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
+                    }
+                    );
+                    if(videoWriter != null && !recordPaused)
+                    {
+                        videoWriter.Write(frame);
+                    }
                 }
-                await Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
-                {
-                    imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
-                }
-                );
             }
         }
         // Empieza a grabar
         private void onRecord(object sender, RoutedEventArgs e)
         {
-
+            string getPath()
+            {
+                DateTime now = DateTime.Now;
+                string year = now.Year.ToString();
+                string month = now.Month.ToString().PadLeft(2, '0');
+                string day = now.Day.ToString().PadLeft(2, '0');
+                string hour = now.Hour.ToString().PadLeft(2, '0');
+                string minute = now.Minute.ToString().PadLeft(2, '0');
+                string second = now.Second.ToString().PadLeft(2, '0');
+                string milisecond = now.Millisecond.ToString().PadLeft(3, '0');
+                string filename = year + month + day + '-' + hour + '-' + minute + '-' + second + '-' + milisecond + ".avi";
+                string folder = "C:\\Temp";
+                return folder + "\\" + filename;
+            }
+            string path = getPath();
+            videoWriter = new VideoWriter(path, FourCC.MJPG, VIDEO_FPS, new OpenCvSharp.Size(videoCapture.FrameWidth, videoCapture.FrameHeight));
+            pause.IsEnabled = true;
+            record.IsEnabled = false;
+        }
+        // Pausa la grabacion
+        private void onPause(object sender, RoutedEventArgs e)
+        {
+            if(videoWriter != null)
+            {
+                recordPaused = !recordPaused;
+            }
+        }
+        // Acaba la grabacion
+        private void onStop(object sender, RoutedEventArgs e)
+        {
+            if (videoWriter != null)
+            {
+                videoWriter.Dispose();
+                videoWriter = null;
+                if (recordPaused)
+                {
+                    recordPaused = false;
+                    pause.IsChecked = false;
+                }
+                pause.IsEnabled = false;
+                record.IsEnabled = true;
+                record.IsChecked = false;
+            }
         }
     }
 }

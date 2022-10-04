@@ -43,3 +43,8 @@ Añadido botón Show Captured Files<br/>
 ### Añadido
 Scaneo de las camaras<br/>
 Abrir una camara<br/>
+## v1.6.0
+### Añadido
+Grabar video<br/>
+### Modificado
+Tareas asincronas para capturar la imagen<br/>
