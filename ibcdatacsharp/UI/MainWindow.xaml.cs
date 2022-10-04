@@ -208,6 +208,7 @@ namespace ibcdatacsharp.UI
                     int id = cameraInfo.number; //Id de la camara
                     CamaraViewport camaraViewport = new CamaraViewport();
                     camaraViewport.Show();
+                    camaraViewport.Title = cameraInfo.name + " CAM " + id;
                     camaraViewport.initializeCamara(id);
                 }
             }

@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ibcdatacsharp.UI"
         mc:Ignorable="d"
-        Title="CamaraViewport" Height="720" Width="1280">
+        Title="CamaraViewport" Height="900" Width="1280">
     <Grid>
         <StackPanel Orientation="Vertical">
+            <Button Click="onClose" Height="50" Width="100" HorizontalAlignment="Center">Close</Button>
             <Image Name="imgViewport" Height="720" Width="1280"/>
         </StackPanel>
     </Grid>
