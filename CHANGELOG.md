@@ -48,3 +48,8 @@ Abrir una camara<br/>
 Grabar video<br/>
 ### Modificado
 Tareas asincronas para capturar la imagen<br/>
+## v1.7.0
+### Añadido
+Tool Bar virtual para manejar el estado (record, pause) de la tool bar y el menu bar<br/>
+### Modificado
+Video incrustado en la ventana principal<br/>

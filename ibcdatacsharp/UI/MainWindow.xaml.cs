@@ -9,6 +9,7 @@ using DirectShowLib;
 using System.Collections.Generic;
 using OpenCvSharp;
 using System.Threading.Tasks;
+using ibcdatacsharp.UI.ToolBar;
 
 namespace ibcdatacsharp.UI
 {
@@ -17,7 +18,8 @@ namespace ibcdatacsharp.UI
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private Device.Device device;
+        private Device.Device device = new Device.Device();
+        private VirtualToolBar virtualToolBar = new VirtualToolBar();
         public MainWindow()
         {
             InitializeComponent();
@@ -25,20 +27,44 @@ namespace ibcdatacsharp.UI
             initToolBarHandlers();
             initMenuHandlers();
             initDevice();
+            initVirtualToolBar();
+        }
+        // Configura la tool bar virtual
+        private void initVirtualToolBar()
+        {
+            toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
+            {
+                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
+                virtualToolBar.setToolBar(toolBarClass);
+            };
+            menuBar.Navigated += delegate (object sender, NavigationEventArgs e)
+            {
+                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
+                virtualToolBar.setMenuBar(menuBarClass);
+            };
+            virtualToolBar.pauseEvent += device.onPause;
+            virtualToolBar.stopEvent += device.onStop;
+            camaraViewport.Navigated += delegate (object sender, NavigationEventArgs e)
+            {
+                CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;
+                virtualToolBar.pauseEvent += camaraViewportClass.onPause;
+                virtualToolBar.recordEvent += camaraViewportClass.onRecord;
+            };
         }
         // Crea un IMU falso
         private void initDevice()
         {
-            device = new Device.Device();
             graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
             {
                 GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
                 device.rawData += graphWindowClass.onReceiveData;
+                device.clearData += graphWindowClass.onClearData;
             };
             angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
             {
                 AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
                 device.angleData += angleGraphClass.onReceiveData;
+                device.clearData += angleGraphClass.onClearData;
             };
         }
         // Cambia el icono de la ventana
@@ -206,10 +232,12 @@ namespace ibcdatacsharp.UI
                 {
                     CameraInfo cameraInfo = (CameraInfo)selected;
                     int id = cameraInfo.number; //Id de la camara
-                    CamaraViewport camaraViewport = new CamaraViewport();
-                    camaraViewport.Show();
-                    camaraViewport.Title = cameraInfo.name + " CAM " + id;
-                    camaraViewport.initializeCamara(id);
+                    CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;
+                    if (!camaraViewportClass.someCameraOpened())
+                    {
+                        camaraViewportClass.Title = cameraInfo.name + " CAM " + id;
+                        camaraViewportClass.initializeCamara(id);
+                    }
                 }
             }
             deviceListLoadedCheck(onOpenCameraFunction);
@@ -222,7 +250,7 @@ namespace ibcdatacsharp.UI
             {
                 device.play();
             }
-            deviceListLoadedCheck(onCaptureFunction);
+            onCaptureFunction();
         }
         // Conecta el boton Pause
         private void onPause(object sender, EventArgs e)
@@ -230,11 +258,9 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Pause
             void onPauseFunction()
             {
-                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                device.pause(toolBarClass, menuBarClass);
+                virtualToolBar.pauseClick();
             }
-            deviceListLoadedCheck(onPauseFunction);
+            onPauseFunction();
         }
         // Conecta el boton Stop
         private void onStop(object sender, EventArgs e)
@@ -242,13 +268,9 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Stop
             void onStopFunction()
             {
-                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
-                device.stop(toolBarClass, menuBarClass, graphWindowClass, angleGraphClass);
+                virtualToolBar.stopClick();
             }
-            deviceListLoadedCheck(onStopFunction);
+            onStopFunction();
         }
         // Conecta el boton Record
         private void onRecord(object sender, EventArgs e)
@@ -256,11 +278,9 @@ namespace ibcdatacsharp.UI
             // Funcion que se ejecuta al clicar el boton Record
             void onRecordFunction()
             {
-                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                device.record(toolBarClass, menuBarClass);
+                virtualToolBar.recordClick();
             }
-            deviceListLoadedCheck(onRecordFunction);
+            onRecordFunction();
         }
         // Conecta el boton Show Captured Files
         private void onCapturedFiles(object sender, EventArgs e)
@@ -281,6 +301,13 @@ namespace ibcdatacsharp.UI
                 Application.Current.Shutdown();
             }
             deviceListLoadedCheck(onExitFunction);
+        }
+        // Funcion que se ejecuta al cerrar la ventana
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;
+            camaraViewportClass.onCloseApplication();
+            base.OnClosing(e);
         }
     }
 }

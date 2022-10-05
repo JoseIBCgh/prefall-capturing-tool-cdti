@@ -28,13 +28,6 @@ namespace ibcdatacsharp.UI.AngleGraph
             modelY = new Model(titleY: "Y Angle");
             modelZ = new Model(titleY: "Z Angle");
         }
-        // Borra el contenido de los graficos
-        public void clearModels()
-        {
-            clearX();
-            clearY();
-            clearZ();
-        }
         // Funcion para actualizar la grafica del acelerometro
         public async void updateX(double data)
         {
@@ -90,6 +83,13 @@ namespace ibcdatacsharp.UI.AngleGraph
             updateX(args.angle[0]);
             updateY(args.angle[1]);
             updateZ(args.angle[2]);
+        }
+        // Borra el contenido de los graficos
+        public void onClearData(object sender)
+        {
+            clearX();
+            clearY();
+            clearZ();
         }
     }
 }

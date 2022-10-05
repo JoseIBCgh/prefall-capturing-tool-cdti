@@ -10,6 +10,7 @@ namespace ibcdatacsharp.UI.FileBrowser
 {
     public partial class FileBrowser : Page
     {
+        private const string INITIAL_PATH = "C:\\Temp";
         public FileBrowser()
         {
             InitializeComponent();
@@ -63,7 +64,7 @@ namespace ibcdatacsharp.UI.FileBrowser
                     fileSystemObject.AfterExplore += FileSystemObject_AfterExplore;
                     treeView.Items.Add(fileSystemObject);
                 });
-            PreSelect(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+            PreSelect(INITIAL_PATH);
         }
         // Carpeta seleccionada por defecto
         private void PreSelect(string path)

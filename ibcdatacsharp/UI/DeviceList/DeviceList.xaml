@@ -21,17 +21,35 @@
     </Page.Resources>
 
     <StackPanel>
-        <Grid Width="250" HorizontalAlignment="Left" Margin="20,0,0,0">
+        <Grid Width="250" HorizontalAlignment="Left" Margin="26,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition SharedSizeGroup="A"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition SharedSizeGroup="A"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition SharedSizeGroup="A"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition SharedSizeGroup="A"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Device" Grid.Column="0" TextAlignment="Center"/>
-            <TextBlock Text="Description" Grid.Column="1" TextAlignment="Center"/>
-            <TextBlock Text="State" Grid.Column="2" TextAlignment="Center"/>
-            <TextBlock Text="Connected" Grid.Column="3" TextAlignment="Center"/>
+            <Separator Grid.Column="1">
+                <Separator.LayoutTransform>
+                    <RotateTransform Angle="90" />
+                </Separator.LayoutTransform>
+            </Separator>
+            <TextBlock Text="Description" Grid.Column="2" TextAlignment="Center"/>
+            <Separator Grid.Column="3">
+                <Separator.LayoutTransform>
+                    <RotateTransform Angle="90" />
+                </Separator.LayoutTransform>
+            </Separator>
+            <TextBlock Text="State" Grid.Column="4" TextAlignment="Center"/>
+            <Separator Grid.Column="5">
+                <Separator.LayoutTransform>
+                    <RotateTransform Angle="90" />
+                </Separator.LayoutTransform>
+            </Separator>
+            <TextBlock Text="Connected" Grid.Column="6" TextAlignment="Center"/>
         </Grid>
         <TreeView BorderThickness="0" ItemContainerStyle="{StaticResource TreeViewItemStyle}" x:Name="treeView">
             <TreeView.Resources>
@@ -50,29 +68,65 @@
                     <Grid Width="250">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="IMU" Grid.Column="0" TextAlignment="Center"/>
-                        <TextBlock Text="Address" Grid.Column="1" TextAlignment="Center"/>
-                        <TextBlock Text="Battery" Grid.Column="2" TextAlignment="Center"/>
-                        <TextBlock Text="" Grid.Column="3" TextAlignment="Center"/>
+                        <Separator Grid.Column="1">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="Address" Grid.Column="2" TextAlignment="Center"/>
+                        <Separator Grid.Column="3">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="Battery" Grid.Column="4" TextAlignment="Center"/>
+                        <Separator Grid.Column="5">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="" Grid.Column="6" TextAlignment="Center"/>
                     </Grid>
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:IMUInfo}">
-                        <Grid Margin="-20,0,0,0" Width="250">
+                        <Grid Margin="-19,0,0,0" Width="250">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="0" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=adress}" Grid.Column="1" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="2" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=connected, Converter={StaticResource connectedConverter}}" Grid.Column="3" TextAlignment="Center"/>
+                            <Separator Grid.Column="1">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
+                            <TextBlock Text="{Binding Path=adress}" Grid.Column="2" TextAlignment="Center"/>
+                            <Separator Grid.Column="3">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
+                            <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="4" TextAlignment="Center"/>
+                            <Separator Grid.Column="5">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
+                            <TextBlock Text="{Binding Path=connected, Converter={StaticResource connectedConverter}}" Grid.Column="6" TextAlignment="Center"/>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
@@ -87,28 +141,64 @@
                     <Grid Width="250">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Cameras" Grid.Column="0" TextAlignment="Center"/>
-                        <TextBlock Text="Device Number" Grid.Column="1" TextAlignment="Center" TextWrapping="Wrap"/>
-                        <TextBlock Text="FPS" Grid.Column="2" TextAlignment="Center"/>
-                        <TextBlock Text="" Grid.Column="3" TextAlignment="Center"/>
+                        <Separator Grid.Column="1">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="Device Number" Grid.Column="2" TextAlignment="Center" TextWrapping="Wrap"/>
+                        <Separator Grid.Column="3">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="FPS" Grid.Column="4" TextAlignment="Center"/>
+                        <Separator Grid.Column="5">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="" Grid.Column="6" TextAlignment="Center"/>
                     </Grid>
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:CameraInfo}">
-                        <Grid Margin="-20,0,0,0" Width="250">
+                        <Grid Margin="-19,0,0,0" Width="250">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="0" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=number}" Grid.Column="1" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=fps}" Grid.Column="2" TextAlignment="Center"/>
+                            <Separator Grid.Column="1">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
+                            <TextBlock Text="{Binding Path=number}" Grid.Column="2" TextAlignment="Center"/>
+                            <Separator Grid.Column="3">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
+                            <TextBlock Text="{Binding Path=fps}" Grid.Column="4" TextAlignment="Center"/>
+                            <Separator Grid.Column="5">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
@@ -118,27 +208,63 @@
                     <Grid Width="250">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="IMU-Insoles" Grid.Column="0" TextAlignment="Center"/>
-                        <TextBlock Text="SIDE" Grid.Column="1" TextAlignment="Center"/>
-                        <TextBlock Text="" Grid.Column="2" TextAlignment="Center"/>
-                        <TextBlock Text="" Grid.Column="3" TextAlignment="Center"/>
+                        <Separator Grid.Column="1">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="SIDE" Grid.Column="2" TextAlignment="Center"/>
+                        <Separator Grid.Column="3">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="" Grid.Column="4" TextAlignment="Center"/>
+                        <Separator Grid.Column="5">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
+                        <TextBlock Text="" Grid.Column="6" TextAlignment="Center"/>
                     </Grid>
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:InsolesInfo}">
-                        <Grid Margin="-20,0,0,0" Width="250">
+                        <Grid Margin="-19,0,0,0" Width="250">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="0" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=side}" Grid.Column="1" TextAlignment="Center"/>
+                            <Separator Grid.Column="1">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
+                            <TextBlock Text="{Binding Path=side}" Grid.Column="2" TextAlignment="Center"/>
+                            <Separator Grid.Column="3">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
+                            <Separator Grid.Column="5">
+                                <Separator.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </Separator.LayoutTransform>
+                            </Separator>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>

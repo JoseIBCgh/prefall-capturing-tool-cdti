@@ -28,13 +28,6 @@ namespace ibcdatacsharp.UI.GraphWindow
             modelGyroscope = new Model(-600, 600, titleY: "Gyroscope", units: "g/s^2");
             modelMagnetometer = new Model(-4, 4, titleY: "Magnetometer", units: "k(mT)");
         }
-        // Borra el contenido de los graficos
-        public void clearModels()
-        {
-            clearAccelerometer();
-            clearGyroscope();
-            clearMagnetometer();
-        }
         // Funcion para actualizar la grafica del acelerometro
         public async void updateAccelerometer(double x, double y, double z)
         {
@@ -90,6 +83,13 @@ namespace ibcdatacsharp.UI.GraphWindow
             updateAccelerometer(args.accelerometer[0], args.accelerometer[1], args.accelerometer[2]);
             updateMagnetometer(args.magnetometer[0], args.magnetometer[1], args.magnetometer[2]);
             updateGyroscope(args.gyroscope[0], args.gyroscope[1], args.gyroscope[2]);
+        }
+        // Borra el contenido de los graficos
+        public void onClearData(object sender)
+        {
+            clearAccelerometer();
+            clearGyroscope();
+            clearMagnetometer();
         }
     }
 }

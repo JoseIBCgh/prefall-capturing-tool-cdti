@@ -1,4 +1,6 @@
-﻿using ibcdatacsharp.UI.ToolBar.Enums;
+﻿using ibcdatacsharp.UI.AngleGraph;
+using ibcdatacsharp.UI.GraphWindow;
+using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.Windows.Threading;
 
@@ -8,11 +10,17 @@ namespace ibcdatacsharp.UI.Device
     internal class Device
     {
         private DispatcherTimer timer;
-        private bool recording;
+        private bool paused;
         public delegate void RawDataEventHandler(object sender, RawArgs args);
         public delegate void AngleDataEventHandler(object sender, AngleArgs args);
+        public delegate void ClearDataEventHandler(object sender);
         public event RawDataEventHandler rawData;
         public event AngleDataEventHandler angleData;
+        public event ClearDataEventHandler clearData;
+        public Device()
+        {
+            paused = false;
+        }
         // Empieza a emitir datos
         public void play()
         {
@@ -21,58 +29,41 @@ namespace ibcdatacsharp.UI.Device
                 timer = new DispatcherTimer();
                 timer.Tick += new EventHandler(emitData);
                 timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-                timer.Start();
-            }
-        }
-        // Pausa la emision de datos
-        public void pause(ToolBar.ToolBar toolBar, MenuBar.MenuBar menuBar)
-        {
-            if (timer != null)
-            {
-                if (timer.IsEnabled)
-                {
-                    timer.Stop();
-                    toolBar.changePauseState(PauseState.Play); //Cambia la ToolBar a play. Se tiene que llamar.
-                    menuBar.changePauseState(PauseState.Play); //Cambia el Menu a play. Se tiene que llamar.
-                }
-                else
+                if (!paused)
                 {
                     timer.Start();
-                    toolBar.changePauseState(PauseState.Pause); //Cambia la ToolBar a pause. Se tiene que llamar.
-                    menuBar.changePauseState(PauseState.Pause); //Cambia el Menu a pause. Se tiene que llamar.
                 }
             }
         }
-        // Detiene la emision de datos y borra los graficos.
-        public void stop(ToolBar.ToolBar toolBar, MenuBar.MenuBar menuBar, GraphWindow.GraphWindow graphWindow, AngleGraph.AngleGraph angleGraph)
+        public void onPause(object sender, PauseState pauseState)
         {
-            if (timer != null)
+            if(pauseState == PauseState.Pause)
+            {
+                paused = true;
+                if(timer != null)
+                {
+                    timer.Stop();
+                }
+            }
+            else if(pauseState == PauseState.Play)
+            {
+                paused = false;
+                if(timer != null)
+                {
+                    timer.Start();
+                }
+            }
+        }
+        public void onStop(object sender)
+        {
+            if(timer != null)
             {
                 if (timer.IsEnabled)
                 {
                     timer.Stop();
                 }
-                toolBar.changePauseState(PauseState.Pause); // Cambia la ToolBar a pause. Se tiene que llamar.
-                menuBar.changePauseState(PauseState.Pause); // Cambia el Menu a pause. Se tiene que llamar.
-                graphWindow.clearModels(); // Borra los datos del Graph Window. Se tiene que llamar.
-                angleGraph.clearModels(); // Borra los datos del Angle Graph. Se tiene que llamar.
+                clearData?.Invoke(this); //Borra los datos de los graficos. Se tiene que llamar.
                 timer = null;
-            }
-        }
-        // Empieza o para el modo Record
-        public void record(ToolBar.ToolBar toolBar, MenuBar.MenuBar menuBar)
-        {
-            if (recording)
-            {
-                recording = false;
-                toolBar.changeRecordState(RecordState.RecordStopped); //Cambia la ToolBar a record stopped. Se tiene que llamar.
-                menuBar.changeRecordState(RecordState.RecordStopped); //Cambia el Menu a record stopped. Se tiene que llamar.
-            }
-            else
-            {
-                recording = true;
-                toolBar.changeRecordState(RecordState.Recording); //Cambia la ToolBar a recording. Se tiene que llamar.
-                menuBar.changeRecordState(RecordState.Recording); //Cambia el Menu a recording. Se tiene que llamar.
             }
         }
         // Emite datos inventados
