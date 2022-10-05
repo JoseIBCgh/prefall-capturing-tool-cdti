@@ -83,7 +83,8 @@ namespace ibcdatacsharp.UI.CamaraViewport
                     );
                     if (videoWriter != null && !recordPaused)
                     {
-                        videoWriter.Write(frame);
+                        Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                        videoWriter.Write(frameResized);
                     }
                 }
             }
