@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using System.Diagnostics;
+using static System.Math;
 
 namespace ibcdatacsharp.UI.CamaraViewport
 {
@@ -24,9 +26,13 @@ namespace ibcdatacsharp.UI.CamaraViewport
 
         private bool recordPaused;
 
-        private CancellationTokenSource cancellationTokenSource;
-        private CancellationToken cancellationToken;
-        private Task cameraTask;
+        private CancellationTokenSource cancellationTokenSourceDisplay;
+        private CancellationToken cancellationTokenDisplay;
+        private CancellationTokenSource cancellationTokenSourceRecord;
+        private CancellationToken cancellationTokenRecord;
+        private Task displayTask;
+        private Task recordTask;
+
         public CamaraViewport()
         {
             InitializeComponent();
@@ -46,28 +52,28 @@ namespace ibcdatacsharp.UI.CamaraViewport
         // Empieza a grabar la camara
         public void initializeCamara(int index)
         {
-            cancellationTokenSource = new CancellationTokenSource();
-            cancellationToken = cancellationTokenSource.Token;
+            cancellationTokenSourceDisplay = new CancellationTokenSource();
+            cancellationTokenDisplay = cancellationTokenSourceDisplay.Token;
             videoCapture = new VideoCapture(index, VideoCaptureAPIs.DSHOW);
-            cameraTask = captureCameraCallback();
+            displayTask = displayCameraCallback();
         }
         // Cierra la camara y la ventana
         private void onClose(object sender, RoutedEventArgs e)
         {
             if (videoCapture != null)
             {
-                videoCapture.Release();
-                cancellationTokenSource.Cancel();
+                cancellationTokenSourceDisplay.Cancel();
             }
         }
-        // Ejecuta continuamente
-        private async Task captureCameraCallback()
+        // Actualiza la imagen
+        private async Task displayCameraCallback()
         {
             while (true)
             {
-                if (cancellationToken.IsCancellationRequested)
+                if (cancellationTokenDisplay.IsCancellationRequested)
                 {
-                    videoCapture = null; //Si se hace en onClose puede dar errores de referencia
+                    videoCapture.Release();
+                    videoCapture = null;
                     setBlackImage();
                     return;
                 }
@@ -80,13 +86,39 @@ namespace ibcdatacsharp.UI.CamaraViewport
                         imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
                     }
                     );
-                    if (videoWriter != null && !recordPaused)
-                    {
-                        Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                        videoWriter.Write(frameResized);
-                    }
                 }
-                await Task.Delay(1000/VIDEO_FPS);
+                await Task.Delay(1000 / VIDEO_FPS);
+            }
+        }
+        // Guarda el video
+        private async Task recordCameraCallBack()
+        {
+            while (true)
+            {
+                if (cancellationTokenRecord.IsCancellationRequested)
+                {
+                    videoWriter.Release();
+                    videoWriter = null;
+                    return;
+                }
+                if (recordPaused)
+                {
+                    await Task.Delay(1000 / VIDEO_FPS);
+                }
+                else
+                {
+                    if (videoCapture != null)
+                    {
+                        Mat frame = new Mat();
+                        videoCapture.Read(frame);
+                        if (!frame.Empty())
+                        {
+                            Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                            videoWriter.Write(frameResized);
+                        }
+                    }
+                    await Task.Delay(1000 / VIDEO_FPS);
+                }
             }
         }
         // Se ejecuta al cambiar el estado del boton pause
@@ -123,14 +155,13 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 }
                 string path = getPath();
                 videoWriter = new VideoWriter(path, FourCC.MJPG, VIDEO_FPS, new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                cancellationTokenSourceRecord = new CancellationTokenSource();
+                cancellationTokenRecord = cancellationTokenSourceRecord.Token;
+                recordTask = recordCameraCallBack();
             }
             if (recordState == RecordState.RecordStopped)
             {
-                if (videoWriter != null)
-                {
-                    videoWriter.Dispose();
-                    videoWriter = null;
-                }
+                cancellationTokenSourceRecord.Cancel();
             }
             else if (recordState == RecordState.Recording)
             {
@@ -146,7 +177,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
             }
             if(videoWriter != null)
             {
-                videoWriter.Dispose();
+                videoWriter.Release();
             }
         }
     }

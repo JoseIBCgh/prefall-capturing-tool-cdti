@@ -40,7 +40,6 @@ namespace ibcdatacsharp.UI.GraphWindow
         // Funcion para borrar los datos del acelerometro
         public async Task clearAccelerometer()
         {
-            PlotModel model = modelAccelerometer.PlotModel;
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
                 modelAccelerometer.clear();
