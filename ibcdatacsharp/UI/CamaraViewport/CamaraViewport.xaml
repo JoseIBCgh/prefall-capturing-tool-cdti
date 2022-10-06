@@ -9,17 +9,17 @@
       Title="CamaraViewport">
 
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <StackPanel.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="Height" Value="20"/>
-                        <Setter Property="Width" Value="60"/>
-                    </Style>
-                </StackPanel.Resources>
-                <Button Click="onClose">Close</Button>
-            </StackPanel>
-            <Image Name="imgViewport" Height="720" Width="1280"/>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Height" Value="20"/>
+                <Setter Property="Width" Value="60"/>
+            </Style>
+        </Grid.Resources>
+        <Button Grid.Row="0" Click="onClose">Close</Button>
+        <Image Grid.Row="1" Name="imgViewport" Stretch="UniformToFill"/>
     </Grid>
 </Page>
