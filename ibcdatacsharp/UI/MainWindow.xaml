@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dock="https://github.com/Dirkster99/AvalonDock"
         xmlns:local="clr-namespace:ibcdatacsharp.UI"
         mc:Ignorable="d"
-        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 0.9.3]" Height="700" Width="1000">
+        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 0.9.3]" Height="700" Width="1280">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -14,54 +15,56 @@
         </Grid.RowDefinitions>
         <Frame Grid.Row="0" Source="pack://application:,,,/UI/MenuBar/MenuBar.xaml" x:Name="menuBar"/>
         <Frame Grid.Row="1" Source="pack://application:,,,/UI/ToolBar/ToolBar.xaml" x:Name="toolBar"/>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="320"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TabControl Grid.Column="0" TabStripPlacement="Left">
-                <TabControl.Resources>
-                    <Style TargetType="{x:Type TabItem}">
-                        <Setter Property="HeaderTemplate">
-                            <Setter.Value>
-                                <DataTemplate>
-                                    <ContentPresenter Content="{TemplateBinding Content}">
-                                        <ContentPresenter.LayoutTransform>
-                                            <RotateTransform Angle="270" />
-                                        </ContentPresenter.LayoutTransform>
-                                    </ContentPresenter>
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="Padding" Value="3" />
-                    </Style>
-                </TabControl.Resources>
-                <TabItem Header="Devices">
-                    <Frame Source="pack://application:,,,/UI/DeviceList/DeviceList.xaml" x:Name="deviceList"/>
-                </TabItem>
-                <TabItem Header="Sessions">
-                    <Frame Source="pack://application:,,,/UI/FileBrowser/FileBrowser.xaml" x:Name="sessions"/>
-                </TabItem>
-            </TabControl>
-            <GridSplitter Grid.Column="1" Width="1" ResizeBehavior="PreviousAndNext"/>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="320"/>
-                    <RowDefinition Height="1"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TabControl Grid.Row="0">
-                    <TabItem Header="Data Raw">
-                        <Frame Source="pack://application:,,,/UI/GraphWindow/GraphWindow.xaml" x:Name="graphWindow"/>
-                    </TabItem>
-                    <TabItem Header="Joint Angle">
-                        <Frame Source="pack://application:,,,/UI/AngleGraph/AngleGraph.xaml" x:Name="angleGraph"/>
-                    </TabItem>
-                </TabControl>
-                <GridSplitter Grid.Row="1" Height="1" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
-                <Frame Grid.Row="2" Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
-            </Grid>
-        </Grid>
+        <dock:DockingManager  Grid.Row="2">
+            <dock:LayoutRoot>
+                <dock:LayoutPanel Orientation="Horizontal" DockHeight="*" DockWidth="*">
+                    <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                        <dock:LayoutAnchorable CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
+                            <TabControl Grid.Column="0" TabStripPlacement="Left">
+                                <TabControl.Resources>
+                                    <Style TargetType="{x:Type TabItem}">
+                                        <Setter Property="HeaderTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{TemplateBinding Content}">
+                                                        <ContentPresenter.LayoutTransform>
+                                                            <RotateTransform Angle="270" />
+                                                        </ContentPresenter.LayoutTransform>
+                                                    </ContentPresenter>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Padding" Value="3" />
+                                    </Style>
+                                </TabControl.Resources>
+                                <TabItem Header="Devices">
+                                    <Frame Source="pack://application:,,,/UI/DeviceList/DeviceList.xaml" x:Name="deviceList"/>
+                                </TabItem>
+                                <TabItem Header="Sessions">
+                                    <Frame Source="pack://application:,,,/UI/FileBrowser/FileBrowser.xaml" x:Name="sessions"/>
+                                </TabItem>
+                            </TabControl>
+                        </dock:LayoutAnchorable>
+                    </dock:LayoutAnchorablePane>
+                    <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                        <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
+                            <TabControl Grid.Row="0">
+                                <TabItem Header="Data Raw">
+                                    <Frame Source="pack://application:,,,/UI/GraphWindow/GraphWindow.xaml" x:Name="graphWindow"/>
+                                </TabItem>
+                                <TabItem Header="Joint Angle">
+                                    <Frame Source="pack://application:,,,/UI/AngleGraph/AngleGraph.xaml" x:Name="angleGraph"/>
+                                </TabItem>
+                            </TabControl>
+                        </dock:LayoutAnchorable>
+                    </dock:LayoutAnchorablePane>
+                    <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                        <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False">
+                            <Frame Grid.Row="2" Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
+                        </dock:LayoutAnchorable>
+                    </dock:LayoutAnchorablePane>
+                </dock:LayoutPanel>
+            </dock:LayoutRoot>
+        </dock:DockingManager>
     </Grid>
 </Window>

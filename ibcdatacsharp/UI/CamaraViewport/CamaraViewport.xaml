@@ -20,6 +20,6 @@
             </Style>
         </Grid.Resources>
         <Button Grid.Row="0" Click="onClose">Close</Button>
-        <Image Grid.Row="1" Name="imgViewport" Stretch="UniformToFill"/>
+        <Image Grid.Row="1" Name="imgViewport" Stretch="Uniform"/>
     </Grid>
 </Page>

@@ -65,7 +65,6 @@ namespace ibcdatacsharp.UI.CamaraViewport
         {
             while (true)
             {
-
                 if (cancellationToken.IsCancellationRequested)
                 {
                     videoCapture = null; //Si se hace en onClose puede dar errores de referencia
@@ -87,6 +86,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                         videoWriter.Write(frameResized);
                     }
                 }
+                await Task.Delay(1000/VIDEO_FPS);
             }
         }
         // Se ejecuta al cambiar el estado del boton pause

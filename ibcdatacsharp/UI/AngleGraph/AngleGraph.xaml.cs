@@ -2,6 +2,7 @@
 using ibcdatacsharp.UI.ToolBar.Enums;
 using OxyPlot;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
@@ -29,7 +30,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             modelZ = new Model(titleY: "Z Angle");
         }
         // Funcion para actualizar la grafica del acelerometro
-        public async void updateX(double data)
+        public async Task updateX(double data)
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
@@ -37,7 +38,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             });
         }
         // Funcion para borrar los datos del acelerometro
-        public async void clearX()
+        public async Task clearX()
         {
             PlotModel model = modelX.PlotModel;
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
@@ -46,7 +47,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             });
         }
         // Funcion para actualizar la grafica del giroscopio
-        public async void updateY(double data)
+        public async Task updateY(double data)
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
@@ -54,7 +55,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             });
         }
         // Funcion para borrar los datos del giroscopio
-        public async void clearY()
+        public async Task clearY()
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
@@ -62,7 +63,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             });
         }
         // Funcion para actualizar la grafica del magnetometro
-        public async void updateZ(double data)
+        public async Task updateZ(double data)
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
@@ -70,7 +71,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             });
         }
         // Funcion para borrar los datos del magnetometro
-        public async void clearZ()
+        public async Task clearZ()
         {
             await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
@@ -78,18 +79,18 @@ namespace ibcdatacsharp.UI.AngleGraph
             });
         }
         // Recive los datos del IMU inventado
-        public void onReceiveData(object sender, AngleArgs args)
+        public async void onReceiveData(object sender, AngleArgs args)
         {
-            updateX(args.angle[0]);
-            updateY(args.angle[1]);
-            updateZ(args.angle[2]);
+            await updateX(args.angle[0]);
+            await updateY(args.angle[1]);
+            await updateZ(args.angle[2]);
         }
         // Borra el contenido de los graficos
-        public void onClearData(object sender)
+        public async void onClearData(object sender)
         {
-            clearX();
-            clearY();
-            clearZ();
+            await clearX();
+            await clearY();
+            await clearZ();
         }
     }
 }
