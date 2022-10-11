@@ -6,7 +6,7 @@
         xmlns:dock="https://github.com/Dirkster99/AvalonDock"
         xmlns:local="clr-namespace:ibcdatacsharp.UI"
         mc:Ignorable="d"
-        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 0.9.3]" Height="700" Width="1280">
+        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 0.9.3]" Height="900" Width="1280">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -18,8 +18,8 @@
         <dock:DockingManager  Grid.Row="2">
             <dock:LayoutRoot>
                 <dock:LayoutPanel Orientation="Vertical" DockHeight="*" DockWidth="*">
-                    <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="*" DockWidth="*">
-                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                    <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.5*">
                             <dock:LayoutAnchorable CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
                                 <TabControl Grid.Column="0" TabStripPlacement="Left">
                                     <TabControl.Resources>
@@ -59,13 +59,13 @@
                                 </TabControl>
                             </dock:LayoutAnchorable>
                         </dock:LayoutAnchorablePane>
-                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.5*">
                             <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
                                 <Frame Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
                             </dock:LayoutAnchorable>
                         </dock:LayoutAnchorablePane>
                     </dock:LayoutAnchorablePaneGroup>
-                    <dock:LayoutAnchorablePane DockWidth="*" DockHeight="Auto">
+                    <dock:LayoutAnchorablePane DockWidth="*" DockHeight="0.5*">
                         <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False">
                             <Frame Source="pack://application:,,,/UI/TimeLine/TimeLine.xaml" x:Name="timeLine"/>
                         </dock:LayoutAnchorable>
