@@ -1,0 +1,29 @@
+﻿<Page x:Class="ibcdatacsharp.UI.TimeLine.TimeLine"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ibcdatacsharp.UI.TimeLine"
+      xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
+      mc:Ignorable="d" 
+      d:DesignHeight="100" d:DesignWidth="800"
+      Title="TimeLine">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button x:Name="pause" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Height="40" Background="Transparent" BorderBrush="Transparent" Click="onPause">
+                <Image x:Name="pauseImage" Grid.Row="0" Source="pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"/>
+            </Button>
+            <TextBlock x:Name="frame" Grid.Row="1" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="0 10 0 0" Text="{Binding modelTime.currentFrame}"/>
+        </Grid>
+        <oxy:PlotView Grid.Column="1" x:Name="timeLine" Model="{Binding modelTime.PlotModel}"/>
+    </Grid>
+</Page>

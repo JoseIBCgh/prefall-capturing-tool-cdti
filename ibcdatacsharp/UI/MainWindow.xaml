@@ -17,50 +17,57 @@
         <Frame Grid.Row="1" Source="pack://application:,,,/UI/ToolBar/ToolBar.xaml" x:Name="toolBar"/>
         <dock:DockingManager  Grid.Row="2">
             <dock:LayoutRoot>
-                <dock:LayoutPanel Orientation="Horizontal" DockHeight="*" DockWidth="*">
-                    <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
-                        <dock:LayoutAnchorable CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
-                            <TabControl Grid.Column="0" TabStripPlacement="Left">
-                                <TabControl.Resources>
-                                    <Style TargetType="{x:Type TabItem}">
-                                        <Setter Property="HeaderTemplate">
-                                            <Setter.Value>
-                                                <DataTemplate>
-                                                    <ContentPresenter Content="{TemplateBinding Content}">
-                                                        <ContentPresenter.LayoutTransform>
-                                                            <RotateTransform Angle="270" />
-                                                        </ContentPresenter.LayoutTransform>
-                                                    </ContentPresenter>
-                                                </DataTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Padding" Value="3" />
-                                    </Style>
-                                </TabControl.Resources>
-                                <TabItem Header="Devices">
-                                    <Frame Source="pack://application:,,,/UI/DeviceList/DeviceList.xaml" x:Name="deviceList"/>
-                                </TabItem>
-                                <TabItem Header="Sessions">
-                                    <Frame Source="pack://application:,,,/UI/FileBrowser/FileBrowser.xaml" x:Name="sessions"/>
-                                </TabItem>
-                            </TabControl>
-                        </dock:LayoutAnchorable>
-                    </dock:LayoutAnchorablePane>
-                    <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
-                        <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
-                            <TabControl Grid.Row="0">
-                                <TabItem Header="Data Raw">
-                                    <Frame Source="pack://application:,,,/UI/GraphWindow/GraphWindow.xaml" x:Name="graphWindow"/>
-                                </TabItem>
-                                <TabItem Header="Joint Angle">
-                                    <Frame Source="pack://application:,,,/UI/AngleGraph/AngleGraph.xaml" x:Name="angleGraph"/>
-                                </TabItem>
-                            </TabControl>
-                        </dock:LayoutAnchorable>
-                    </dock:LayoutAnchorablePane>
-                    <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                <dock:LayoutPanel Orientation="Vertical" DockHeight="*" DockWidth="*">
+                    <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="*" DockWidth="*">
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                            <dock:LayoutAnchorable CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
+                                <TabControl Grid.Column="0" TabStripPlacement="Left">
+                                    <TabControl.Resources>
+                                        <Style TargetType="{x:Type TabItem}">
+                                            <Setter Property="HeaderTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <ContentPresenter Content="{TemplateBinding Content}">
+                                                            <ContentPresenter.LayoutTransform>
+                                                                <RotateTransform Angle="270" />
+                                                            </ContentPresenter.LayoutTransform>
+                                                        </ContentPresenter>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Padding" Value="3" />
+                                        </Style>
+                                    </TabControl.Resources>
+                                    <TabItem Header="Devices">
+                                        <Frame Source="pack://application:,,,/UI/DeviceList/DeviceList.xaml" x:Name="deviceList"/>
+                                    </TabItem>
+                                    <TabItem Header="Sessions">
+                                        <Frame Source="pack://application:,,,/UI/FileBrowser/FileBrowser.xaml" x:Name="sessions"/>
+                                    </TabItem>
+                                </TabControl>
+                            </dock:LayoutAnchorable>
+                        </dock:LayoutAnchorablePane>
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                            <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
+                                <TabControl Grid.Row="0">
+                                    <TabItem Header="Data Raw">
+                                        <Frame Source="pack://application:,,,/UI/GraphWindow/GraphWindow.xaml" x:Name="graphWindow"/>
+                                    </TabItem>
+                                    <TabItem Header="Joint Angle">
+                                        <Frame Source="pack://application:,,,/UI/AngleGraph/AngleGraph.xaml" x:Name="angleGraph"/>
+                                    </TabItem>
+                                </TabControl>
+                            </dock:LayoutAnchorable>
+                        </dock:LayoutAnchorablePane>
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                            <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
+                                <Frame Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
+                            </dock:LayoutAnchorable>
+                        </dock:LayoutAnchorablePane>
+                    </dock:LayoutAnchorablePaneGroup>
+                    <dock:LayoutAnchorablePane DockWidth="*" DockHeight="Auto">
                         <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False">
-                            <Frame Grid.Row="2" Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
+                            <Frame Source="pack://application:,,,/UI/TimeLine/TimeLine.xaml" x:Name="timeLine"/>
                         </dock:LayoutAnchorable>
                     </dock:LayoutAnchorablePane>
                 </dock:LayoutPanel>

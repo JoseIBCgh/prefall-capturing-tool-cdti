@@ -1,5 +1,4 @@
-﻿using ibcdatacsharp.UI.Common;
-using ibcdatacsharp.UI.ToolBar.Enums;
+﻿using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
