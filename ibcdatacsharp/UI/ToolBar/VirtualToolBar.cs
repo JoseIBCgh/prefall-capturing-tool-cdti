@@ -1,9 +1,12 @@
-﻿using ibcdatacsharp.UI.ToolBar.Enums;
+﻿using ibcdatacsharp.UI.FileSaver;
+using ibcdatacsharp.UI.ToolBar.Enums;
+using System;
+using System.Windows;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
     // Mantiene el estado para la ToolBar y la MenuBar
-    internal class VirtualToolBar
+    public class VirtualToolBar
     {
         public PauseState pauseState { get; set; } 
         public RecordState recordState { get; set; }
@@ -11,12 +14,15 @@ namespace ibcdatacsharp.UI.ToolBar
         private ToolBar toolBar;
         private MenuBar.MenuBar menuBar;
 
+        private SavingMenu menu;
+
         public delegate void PauseEventHandler(object sender, PauseState args);
         public delegate void RecordEventHandler(object sender, RecordState args);
         public delegate void StopEventHandler(object sender);
         public event PauseEventHandler pauseEvent;
         public event RecordEventHandler recordEvent;
         public event StopEventHandler stopEvent;
+        public event EventHandler<SaveArgs> saveEvent;
 
         public VirtualToolBar()
         {
@@ -60,15 +66,29 @@ namespace ibcdatacsharp.UI.ToolBar
         // Se ejecuta al clicar record
         public void recordClick()
         {
-            if (recordState == RecordState.RecordStopped)
+            if(recordState == RecordState.RecordStopped)
             {
-                recordState = RecordState.Recording;
-                toolBar.changeRecordState(RecordState.Recording);
-                menuBar.changeRecordState(RecordState.Recording);
-                if(recordEvent != null)
-                {
-                    recordEvent?.Invoke(this, RecordState.Recording);
-                }
+                menu = new SavingMenu();
+                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                menu.Owner = mainWindow;
+                menu.ok.Click += continueRecord;
+                menu.Show();
+            }
+        }
+        private void continueRecord(object sender, RoutedEventArgs e)
+        {
+            if(saveEvent != null)
+            {
+                saveEvent?.Invoke(this, new SaveArgs { directory = menu.route.Text, csv = (bool)menu.csv.IsChecked, video = (bool)menu.video.IsChecked });
+            }
+            menu.Close();
+            ((MainWindow)Application.Current.MainWindow).Focus();
+            recordState = RecordState.Recording;
+            toolBar.changeRecordState(RecordState.Recording);
+            menuBar.changeRecordState(RecordState.Recording);
+            if (recordEvent != null)
+            {
+                recordEvent?.Invoke(this, RecordState.Recording);
             }
         }
         // Se ejecuta al clicar stop

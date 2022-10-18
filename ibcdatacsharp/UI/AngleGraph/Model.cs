@@ -8,8 +8,7 @@ namespace ibcdatacsharp.UI.AngleGraph
     // Modelo de los graficos del acelerometro, giroscopio y magnetometro
     public class Model
     {
-        private int frames = 0;
-        private const int MAX_POINTS = 100;
+        private const int MAX_POINTS = 300;
         private OxyColor color = OxyColors.Red;
 
         public Model(string titleY = "")
@@ -82,14 +81,13 @@ namespace ibcdatacsharp.UI.AngleGraph
 
         public PlotModel PlotModel { get; private set; }
         // Añade un punto
-        public void update(double data)
+        public void update(int frame, double data)
         {
-            double kframes = frames / 1000.0;
+            double kframes = frame / 1000.0;
             (PlotModel.Series[0] as LineSeries).Points.Add(new DataPoint(kframes, data));
-            frames++;
             kframes += 1.0 / 1000.0;
             PlotModel.InvalidatePlot(true);
-            if (frames > MAX_POINTS)
+            if (frame > MAX_POINTS)
             {
                 double kmaxPoints = MAX_POINTS / 1000.0;
                 PlotModel.Axes[1].Reset();
@@ -108,7 +106,6 @@ namespace ibcdatacsharp.UI.AngleGraph
         public void clear()
         {
             (PlotModel.Series[0] as LineSeries).Points.Clear();
-            frames = 0;
         }
     }
 }

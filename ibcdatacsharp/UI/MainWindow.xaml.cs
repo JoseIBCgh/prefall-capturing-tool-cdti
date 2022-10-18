@@ -1,4 +1,6 @@
-﻿using System;
+﻿# define CAPTURE_MULTIMEDIA_TIMER
+
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,8 @@ using System.Collections.Generic;
 using OpenCvSharp;
 using System.Threading.Tasks;
 using ibcdatacsharp.UI.ToolBar;
+using ibcdatacsharp.UI.Timer;
+using ibcdatacsharp.UI.ToolBar.Enums;
 
 namespace ibcdatacsharp.UI
 {
@@ -18,20 +22,139 @@ namespace ibcdatacsharp.UI
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private Device.Device device = new Device.Device();
-        private VirtualToolBar virtualToolBar = new VirtualToolBar();
+        private const int CAPTURE_MS = 15;
+        public Device.Device device;
+        public VirtualToolBar virtualToolBar;
+
+#if CAPTURE_MULTIMEDIA_TIMER
+        private Timer.Timer timerCapture;
+#else
+        private System.Timers.Timer timerCapture;
+#endif
+        private FileSaver.FileSaver fileSaver;
         public MainWindow()
         {
             InitializeComponent();
+            device = new Device.Device();
+            virtualToolBar = new VirtualToolBar();
+            fileSaver = new FileSaver.FileSaver();
             initIcon();
             initToolBarHandlers();
             initMenuHandlers();
-            initDevice();
             initVirtualToolBar();
+        }
+        // Configura el timer capture
+        private void initTimerCapture()
+        {
+            if (timerCapture == null)
+            {
+#if CAPTURE_MULTIMEDIA_TIMER
+                timerCapture = new Timer.Timer();
+                timerCapture.Mode = TimerMode.Periodic;
+                timerCapture.Period = CAPTURE_MS;
+                if (graphWindow.Content == null)
+                {
+                    graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                        timerCapture.Tick += graphWindowClass.onTick;
+                    };
+                }
+                else
+                {
+                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    timerCapture.Tick += graphWindowClass.onTick;
+                }
+                if (angleGraph.Content == null)
+                {
+                    angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                        timerCapture.Tick += angleGraphClass.onTick;
+                    };
+                }
+                else
+                {
+                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    timerCapture.Tick += angleGraphClass.onTick;
+                }
+                timerCapture.Tick += device.generateData;
+
+                virtualToolBar.pauseEvent += timerCapture.onPause;
+                virtualToolBar.stopEvent += timerCapture.stopAndReset;
+#else
+                timerCapture = new System.Timers.Timer(CAPTURE_MS);
+                timerCapture.AutoReset = true;
+                timerCapture.Enabled = true;
+                if (graphWindow.Content == null)
+                {
+                    graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                        timerCapture.Elapsed += graphWindowClass.onTick;
+                    };
+                }
+                else
+                {
+                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    timerCapture.Elapsed += graphWindowClass.onTick;
+                }
+                if (angleGraph.Content == null)
+                {
+                    angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                        timerCapture.Elapsed += angleGraphClass.onTick;
+                    };
+                }
+                else
+                {
+                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    timerCapture.Elapsed += angleGraphClass.onTick;
+                }
+                device.initTimer();
+
+                virtualToolBar.pauseEvent += delegate (object sender, PauseState pauseState)
+                {
+                    if (timerCapture != null)
+                    {
+                        if (pauseState == PauseState.Pause)
+                        {
+                            timerCapture.Stop();
+                        }
+                        else if (pauseState == PauseState.Play)
+                        {
+                            timerCapture.Start();
+                        }
+                    }
+                };
+                virtualToolBar.stopEvent += delegate (object sender)
+                {
+                    if (timerCapture != null)
+                    {
+                        timerCapture.Stop();
+                    }
+                };
+#endif
+            }
+            timerCapture.Start();
         }
         // Configura la tool bar virtual
         private void initVirtualToolBar()
         {
+            void clearDataOnStop()
+            {
+                graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    virtualToolBar.stopEvent += graphWindowClass.onClearData;
+                };
+                angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    virtualToolBar.stopEvent += angleGraphClass.onClearData;
+                };
+            }
             toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
             {
                 ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
@@ -42,30 +165,9 @@ namespace ibcdatacsharp.UI
                 MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
                 virtualToolBar.setMenuBar(menuBarClass);
             };
-            virtualToolBar.pauseEvent += device.onPause;
-            virtualToolBar.stopEvent += device.onStop;
-            camaraViewport.Navigated += delegate (object sender, NavigationEventArgs e)
-            {
-                CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;
-                virtualToolBar.pauseEvent += camaraViewportClass.onPause;
-                virtualToolBar.recordEvent += camaraViewportClass.onRecord;
-            };
-        }
-        // Crea un IMU falso
-        private void initDevice()
-        {
-            graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
-            {
-                GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                device.rawData += graphWindowClass.onReceiveData;
-                device.clearData += graphWindowClass.onClearData;
-            };
-            angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
-            {
-                AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
-                device.angleData += angleGraphClass.onReceiveData;
-                device.clearData += angleGraphClass.onClearData;
-            };
+            clearDataOnStop();
+            virtualToolBar.saveEvent += fileSaver.onSaveInfo;
+            virtualToolBar.recordEvent += fileSaver.onRecord;
         }
         // Cambia el icono de la ventana
         private void initIcon()
@@ -242,71 +344,42 @@ namespace ibcdatacsharp.UI
             }
             deviceListLoadedCheck(onOpenCameraFunction);
         }
-        // Conecta el boton Capture
+        // Funcion que se ejecuta al clicar el boton Capture
         private void onCapture(object sender, EventArgs e)
         {
-            // Funcion que se ejecuta al clicar el boton Capture
-            void onCaptureFunction()
-            {
-                device.play();
-            }
-            onCaptureFunction();
+            initTimerCapture(); 
         }
-        // Conecta el boton Pause
+        // Funcion que se ejecuta al clicar el boton Pause
         private void onPause(object sender, EventArgs e)
         {
-            // Funcion que se ejecuta al clicar el boton Pause
-            void onPauseFunction()
-            {
-                virtualToolBar.pauseClick();
-            }
-            onPauseFunction();
+            virtualToolBar.pauseClick();
         }
-        // Conecta el boton Stop
+        // Funcion que se ejecuta al clicar el boton Stop
         private void onStop(object sender, EventArgs e)
         {
-            // Funcion que se ejecuta al clicar el boton Stop
-            void onStopFunction()
-            {
-                virtualToolBar.stopClick();
-            }
-            onStopFunction();
+            virtualToolBar.stopClick();
         }
-        // Conecta el boton Record
+        // Funcion que se ejecuta al clicar el boton Record
         private void onRecord(object sender, EventArgs e)
         {
-            // Funcion que se ejecuta al clicar el boton Record
-            void onRecordFunction()
-            {
-                virtualToolBar.recordClick();
-            }
-            onRecordFunction();
+            virtualToolBar.recordClick();
         }
-        // Conecta el boton Show Captured Files
+        // Funcion que se ejecuta al clicar el boton Show Captured Files
         private void onCapturedFiles(object sender, EventArgs e)
         {
-            // Funcion que se ejecuta al clicar el boton Show Captured Files
-            void onCapturedFilesFunction()
-            {
-                Trace.WriteLine("Show Captured Files");
-            }
-            deviceListLoadedCheck(onCapturedFilesFunction);
+            Trace.WriteLine("Show Captured Files");
         }
-        // Conecta el menu Exit
+        // Funcion que se ejecuta al clicar el menú Exit
         private void onExit(object sender, EventArgs e)
         {
-            // Funcion que se ejecuta al clicar el menú Exit
-            void onExitFunction()
-            {
-                Application.Current.Shutdown();
-            }
-            deviceListLoadedCheck(onExitFunction);
+            Application.Current.Shutdown();
         }
         // Funcion que se ejecuta al cerrar la ventana
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;
             camaraViewportClass.onCloseApplication();
+            fileSaver.onCloseApplication();
             base.OnClosing(e);
         }
     }

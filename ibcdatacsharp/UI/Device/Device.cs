@@ -1,82 +1,36 @@
-﻿using ibcdatacsharp.UI.AngleGraph;
-using ibcdatacsharp.UI.GraphWindow;
-using ibcdatacsharp.UI.ToolBar.Enums;
+﻿using ibcdatacsharp.UI.Timer;
 using System;
-using System.Windows.Threading;
 
 namespace ibcdatacsharp.UI.Device
 {
     // Clase que simula un IMU para hacer pruebas
-    internal class Device
+    public class Device
     {
-        private DispatcherTimer timer;
-        private bool paused;
-        public delegate void RawDataEventHandler(object sender, RawArgs args);
-        public delegate void AngleDataEventHandler(object sender, AngleArgs args);
-        public delegate void ClearDataEventHandler(object sender);
-        public event RawDataEventHandler rawData;
-        public event AngleDataEventHandler angleData;
-        public event ClearDataEventHandler clearData;
+        public int frame { get; private set; }
+        private const int DEVICE_MS = 10;
+        private Timer.Timer timerDevice;
+        public RawArgs rawData { get; set; }
+        public AngleArgs angleData { get; set; }
         public Device()
         {
-            paused = false;
+            rawData = generateRandomRawData();
+            angleData = generateRandomAngleData();
         }
-        // Empieza a emitir datos
-        public void play()
+        // Inicializa el timer
+        public void initTimer()
         {
-            if (timer == null)
-            {
-                timer = new DispatcherTimer();
-                timer.Tick += new EventHandler(emitData);
-                timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-                if (!paused)
-                {
-                    timer.Start();
-                }
-            }
+            timerDevice = new Timer.Timer();
+            timerDevice.Mode = TimerMode.Periodic;
+            timerDevice.Period = DEVICE_MS;
+            timerDevice.Tick += generateData;
+            timerDevice.Start();
         }
-        public void onPause(object sender, PauseState pauseState)
+        // Genera datos inventados
+        public void generateData(object sender, FrameArgs frameArgs)
         {
-            if(pauseState == PauseState.Pause)
-            {
-                paused = true;
-                if(timer != null)
-                {
-                    timer.Stop();
-                }
-            }
-            else if(pauseState == PauseState.Play)
-            {
-                paused = false;
-                if(timer != null)
-                {
-                    timer.Start();
-                }
-            }
-        }
-        public void onStop(object sender)
-        {
-            if(timer != null)
-            {
-                if (timer.IsEnabled)
-                {
-                    timer.Stop();
-                }
-                clearData?.Invoke(this); //Borra los datos de los graficos. Se tiene que llamar.
-                timer = null;
-            }
-        }
-        // Emite datos inventados
-        public void emitData(object sender, EventArgs e)
-        {
-            if(rawData != null)
-            {
-                rawData?.Invoke(this, generateRandomRawData());
-            }
-            if(angleData != null)
-            {
-                angleData?.Invoke(this, generateRandomAngleData());
-            }
+            rawData = generateRandomRawData();
+            angleData = generateRandomAngleData();
+            frame = frameArgs.frame;
         }
         // Genera datos inventados para el Graph Window
         private RawArgs generateRandomRawData()

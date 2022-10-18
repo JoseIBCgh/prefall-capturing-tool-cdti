@@ -1,8 +1,6 @@
-﻿//#define TASKS
-//#define RECORD_THREAD
-#define THREADS
+﻿//#define TASK
+#define THREAD
 
-using ibcdatacsharp.UI.ToolBar.Enums;
 using OpenCvSharp.WpfExtensions;
 using OpenCvSharp;
 using System;
@@ -11,8 +9,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using System.Diagnostics;
-using static System.Math;
 
 
 namespace ibcdatacsharp.UI.CamaraViewport
@@ -22,7 +18,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
     /// </summary>
     // Task version
 
-#if TASKS
+#if TASK
     public partial class CamaraViewport : Page
     {
         private const int FRAME_HEIGHT = 480;
@@ -30,21 +26,15 @@ namespace ibcdatacsharp.UI.CamaraViewport
         private const int VIDEO_FPS = 30;
 
         private VideoCapture videoCapture;
-        private VideoWriter videoWriter;
-
-        private bool recordPaused = false;
 
         private CancellationTokenSource cancellationTokenSourceDisplay;
         private CancellationToken cancellationTokenDisplay;
-        private CancellationTokenSource cancellationTokenSourceRecord;
-        private CancellationToken cancellationTokenRecord;
         private Task displayTask;
-        private Task recordTask;
 
         public CamaraViewport()
         {
             InitializeComponent();
-            setBlackImage();
+            imgViewport.Source = BitmapSourceConverter.ToBitmapSource(getBlackImage());
         }
         // Comprueba si se esta grabano alguna camara
         public bool someCameraOpened()
@@ -52,10 +42,10 @@ namespace ibcdatacsharp.UI.CamaraViewport
             return videoCapture != null;
         }
         // Pantalla en negro cuando no se graba
-        private void setBlackImage()
+        private Mat getBlackImage()
         {
             Mat frame = new Mat(FRAME_HEIGHT, FRAME_WIDTH, MatType.CV_32F);
-            imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
+            return frame;
         }
         // Empieza a grabar la camara
         public void initializeCamara(int index)
@@ -73,6 +63,28 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 cancellationTokenSourceDisplay.Cancel();
             }
         }
+        // Devuelve el frame de la camara o negro si no esta encendida
+        public Mat getCurrentFrame()
+        {
+            if (videoCapture != null)
+            {
+                Mat frame = new Mat();
+                videoCapture.Read(frame);
+                if (!frame.Empty())
+                {
+                    Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                    return frameResized;
+                }
+                else
+                {
+                    return getBlackImage();
+                }
+            }
+            else
+            {
+                return getBlackImage();
+            }
+        }
         // Actualiza la imagen
         private async Task displayCameraCallback()
         {
@@ -82,7 +94,10 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 {
                     videoCapture.Release();
                     videoCapture = null;
-                    setBlackImage();
+                    await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+                    {
+                        imgViewport.Source = BitmapSourceConverter.ToBitmapSource(getBlackImage());
+                    });
                     return;
                 }
                 Mat frame = new Mat();
@@ -96,84 +111,6 @@ namespace ibcdatacsharp.UI.CamaraViewport
                     );
                 }
                 await Task.Delay(1000 / VIDEO_FPS);
-            }
-        }
-        // Guarda el video
-        private async Task recordCameraCallBack()
-        {
-            while (true)
-            {
-                if (cancellationTokenRecord.IsCancellationRequested)
-                {
-                    videoWriter.Release();
-                    videoWriter = null;
-                    return;
-                }
-                if (recordPaused)
-                {
-                    await Task.Delay(1000 / VIDEO_FPS);
-                }
-                else
-                {
-                    if (videoCapture != null)
-                    {
-                        Mat frame = new Mat();
-                        videoCapture.Read(frame);
-                        if (!frame.Empty())
-                        {
-                            Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                            videoWriter.Write(frameResized);
-                        }
-                    }
-                    await Task.Delay(1000 / VIDEO_FPS);
-                }
-            }
-        }
-        // Se ejecuta al cambiar el estado del boton pause
-        public void onPause(object sender, PauseState pauseState)
-        {
-            if (pauseState == PauseState.Pause)
-            {
-                recordPaused = true;
-            }
-            else if (pauseState == PauseState.Play)
-            {
-                recordPaused = false;
-            }
-        }
-        // Se ejecuta al cambiar el estado del boton record
-        public void onRecord(object sender, RecordState recordState)
-        {
-            // Empieza a grabar
-            void startRecord()
-            {
-                string getPath()
-                {
-                    DateTime now = DateTime.Now;
-                    string year = now.Year.ToString();
-                    string month = now.Month.ToString().PadLeft(2, '0');
-                    string day = now.Day.ToString().PadLeft(2, '0');
-                    string hour = now.Hour.ToString().PadLeft(2, '0');
-                    string minute = now.Minute.ToString().PadLeft(2, '0');
-                    string second = now.Second.ToString().PadLeft(2, '0');
-                    string milisecond = now.Millisecond.ToString().PadLeft(3, '0');
-                    string filename = year + month + day + '-' + hour + '-' + minute + '-' + second + '-' + milisecond + ".avi";
-                    string folder = "C:\\Temp";
-                    return folder + "\\" + filename;
-                }
-                string path = getPath();
-                videoWriter = new VideoWriter(path, FourCC.MJPG, VIDEO_FPS, new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                cancellationTokenSourceRecord = new CancellationTokenSource();
-                cancellationTokenRecord = cancellationTokenSourceRecord.Token;
-                recordTask = recordCameraCallBack();
-            }
-            if (recordState == RecordState.RecordStopped)
-            {
-                cancellationTokenSourceRecord.Cancel();
-            }
-            else if (recordState == RecordState.Recording)
-            {
-                startRecord();
             }
         }
         // Cierra la camara y el video writer al cerrar la aplicacion
@@ -183,218 +120,25 @@ namespace ibcdatacsharp.UI.CamaraViewport
             {
                 videoCapture.Release();
             }
-            if(videoWriter != null)
-            {
-                videoWriter.Release();
-            }
         }
     }
-    // Record Thread
-#elif RECORD_THREAD
+#elif THREAD
     public partial class CamaraViewport : Page
     {
-        private const int FRAME_HEIGHT = 480;
-        private const int FRAME_WIDTH = 640;
+        public const int FRAME_HEIGHT = 480;
+        public const int FRAME_WIDTH = 640;
         private const int VIDEO_FPS = 30;
 
         private VideoCapture videoCapture;
-        private VideoWriter videoWriter;
-
-        private bool recordPaused = false;
 
         private CancellationTokenSource cancellationTokenSourceDisplay;
         private CancellationToken cancellationTokenDisplay;
-        private CancellationTokenSource cancellationTokenSourceRecord;
-        private CancellationToken cancellationTokenRecord;
-        private Task displayTask;
-        //private Task recordTask;
-        private ManualResetEvent manualResetEventRecord;
-        private Thread recordThread;
-
-        public CamaraViewport()
-        {
-            InitializeComponent();
-            setBlackImage();
-        }
-        // Comprueba si se esta grabano alguna camara
-        public bool someCameraOpened()
-        {
-            return videoCapture != null;
-        }
-        // Pantalla en negro cuando no se graba
-        private void setBlackImage()
-        {
-            Mat frame = new Mat(FRAME_HEIGHT, FRAME_WIDTH, MatType.CV_32F);
-            imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
-        }
-        // Empieza a grabar la camara
-        public void initializeCamara(int index)
-        {
-            cancellationTokenSourceDisplay = new CancellationTokenSource();
-            cancellationTokenDisplay = cancellationTokenSourceDisplay.Token;
-            videoCapture = new VideoCapture(index, VideoCaptureAPIs.DSHOW);
-            displayTask = displayCameraCallback();
-        }
-        // Cierra la camara y la ventana
-        private void onClose(object sender, RoutedEventArgs e)
-        {
-            if (videoCapture != null)
-            {
-                cancellationTokenSourceDisplay.Cancel();
-            }
-        }
-        // Actualiza la imagen
-        private async Task displayCameraCallback()
-        {
-            while (true)
-            {
-                if (cancellationTokenDisplay.IsCancellationRequested)
-                {
-                    videoCapture.Release();
-                    videoCapture = null;
-                    setBlackImage();
-                    return;
-                }
-                Mat frame = new Mat();
-                videoCapture.Read(frame);
-                if (!frame.Empty())
-                {
-                    await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-                    {
-                        imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
-                    }
-                    );
-                }
-                await Task.Delay(1000 / VIDEO_FPS);
-            }
-        }
-        // Guarda el video
-        private void recordCameraCallBack()
-        {
-            while (true)
-            {
-                manualResetEventRecord.WaitOne();
-                if (cancellationTokenRecord.IsCancellationRequested)
-                {
-                    videoWriter.Release();
-                    videoWriter = null;
-                    return;
-                }
-                else
-                {
-                    if (videoCapture != null)
-                    {
-                        Mat frame = new Mat();
-                        videoCapture.Read(frame);
-                        if (!frame.Empty())
-                        {
-                            Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                            videoWriter.Write(frameResized);
-                        }
-                    }
-                    Thread.Sleep(1000 / VIDEO_FPS);
-                }
-            }
-        }
-        // Se ejecuta al cambiar el estado del boton pause
-        public void onPause(object sender, PauseState pauseState)
-        {
-            if (pauseState == PauseState.Pause)
-            {
-                recordPaused = true;
-                if (manualResetEventRecord != null)
-                {
-                    manualResetEventRecord.Reset();
-                }
-            }
-            else if (pauseState == PauseState.Play)
-            {
-                recordPaused = false;
-                if (manualResetEventRecord != null)
-                {
-                    manualResetEventRecord.Set();
-                }
-            }
-        }
-        // Se ejecuta al cambiar el estado del boton record
-        public void onRecord(object sender, RecordState recordState)
-        {
-            // Empieza a grabar
-            void startRecord()
-            {
-                string getPath()
-                {
-                    DateTime now = DateTime.Now;
-                    string year = now.Year.ToString();
-                    string month = now.Month.ToString().PadLeft(2, '0');
-                    string day = now.Day.ToString().PadLeft(2, '0');
-                    string hour = now.Hour.ToString().PadLeft(2, '0');
-                    string minute = now.Minute.ToString().PadLeft(2, '0');
-                    string second = now.Second.ToString().PadLeft(2, '0');
-                    string milisecond = now.Millisecond.ToString().PadLeft(3, '0');
-                    string filename = year + month + day + '-' + hour + '-' + minute + '-' + second + '-' + milisecond + ".avi";
-                    string folder = "C:\\Temp";
-                    return folder + "\\" + filename;
-                }
-                string path = getPath();
-                videoWriter = new VideoWriter(path, FourCC.MJPG, VIDEO_FPS, new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                cancellationTokenSourceRecord = new CancellationTokenSource();
-                cancellationTokenRecord = cancellationTokenSourceRecord.Token;
-                //recordTask = recordCameraCallBack();
-                manualResetEventRecord = new ManualResetEvent(!recordPaused);
-                recordThread = new Thread(recordCameraCallBack);
-                recordThread.IsBackground = true;
-                recordThread.Start();
-            }
-            if (recordState == RecordState.RecordStopped)
-            {
-                cancellationTokenSourceRecord.Cancel();
-                manualResetEventRecord.Set();
-            }
-            else if (recordState == RecordState.Recording)
-            {
-                startRecord();
-            }
-        }
-        // Cierra la camara y el video writer al cerrar la aplicacion
-        public void onCloseApplication()
-        {
-            if (videoCapture != null)
-            {
-                videoCapture.Release();
-            }
-            if (videoWriter != null)
-            {
-                videoWriter.Release();
-            }
-        }
-    }
-#elif THREADS
-    public partial class CamaraViewport : Page
-    {
-        private const int FRAME_HEIGHT = 480;
-        private const int FRAME_WIDTH = 640;
-        private const int VIDEO_FPS = 30;
-
-        private VideoCapture videoCapture;
-        private VideoWriter videoWriter;
-
-        private bool recordPaused = false;
-
-        private CancellationTokenSource cancellationTokenSourceDisplay;
-        private CancellationToken cancellationTokenDisplay;
-        private CancellationTokenSource cancellationTokenSourceRecord;
-        private CancellationToken cancellationTokenRecord;
-        //private Task displayTask;
         private Thread displayThread;
-        //private Task recordTask;
-        private ManualResetEvent manualResetEventRecord;
-        private Thread recordThread;
 
         public CamaraViewport()
         {
             InitializeComponent();
-            setBlackImage();
+            imgViewport.Source = BitmapSourceConverter.ToBitmapSource(getBlackImage());
         }
         // Comprueba si se esta grabano alguna camara
         public bool someCameraOpened()
@@ -402,10 +146,10 @@ namespace ibcdatacsharp.UI.CamaraViewport
             return videoCapture != null;
         }
         // Pantalla en negro cuando no se graba
-        private void setBlackImage()
+        private Mat getBlackImage()
         {
             Mat frame = new Mat(FRAME_HEIGHT, FRAME_WIDTH, MatType.CV_32F);
-            imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
+            return frame;
         }
         // Empieza a grabar la camara
         public void initializeCamara(int index)
@@ -425,6 +169,28 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 cancellationTokenSourceDisplay.Cancel();
             }
         }
+        // Devuelve el frame de la camara o negro si no esta encendida
+        public Mat getCurrentFrame()
+        {
+            if(videoCapture != null)
+            {
+                Mat frame = new Mat();
+                videoCapture.Read(frame);
+                if (!frame.Empty())
+                {
+                    Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                    return frameResized;
+                }
+                else
+                {
+                    return getBlackImage();
+                }
+            }
+            else
+            {
+                return getBlackImage();
+            }
+        }
         // Actualiza la imagen
         private void displayCameraCallback()
         {
@@ -434,9 +200,9 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 {
                     videoCapture.Release();
                     videoCapture = null;
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
                     {
-                        setBlackImage();
+                        imgViewport.Source = BitmapSourceConverter.ToBitmapSource(getBlackImage());
                     });
                     return;
                 }
@@ -444,7 +210,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 videoCapture.Read(frame);
                 if (!frame.Empty())
                 {
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+                    Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
                     {
                         imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
                     }
@@ -453,104 +219,12 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 Thread.Sleep(1000 / VIDEO_FPS);
             }
         }
-        // Guarda el video
-        private void recordCameraCallBack()
-        {
-            while (true)
-            {
-                manualResetEventRecord.WaitOne();
-                if (cancellationTokenRecord.IsCancellationRequested)
-                {
-                    videoWriter.Release();
-                    videoWriter = null;
-                    return;
-                }
-                else
-                {
-                    if (videoCapture != null)
-                    {
-                        Mat frame = new Mat();
-                        videoCapture.Read(frame);
-                        if (!frame.Empty())
-                        {
-                            Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                            videoWriter.Write(frameResized);
-                        }
-                    }
-                    Thread.Sleep(1000 / VIDEO_FPS);
-                }
-            }
-        }
-        // Se ejecuta al cambiar el estado del boton pause
-        public void onPause(object sender, PauseState pauseState)
-        {
-            if (pauseState == PauseState.Pause)
-            {
-                recordPaused = true;
-                if (manualResetEventRecord != null)
-                {
-                    manualResetEventRecord.Reset();
-                }
-            }
-            else if (pauseState == PauseState.Play)
-            {
-                recordPaused = false;
-                if (manualResetEventRecord != null)
-                {
-                    manualResetEventRecord.Set();
-                }
-            }
-        }
-        // Se ejecuta al cambiar el estado del boton record
-        public void onRecord(object sender, RecordState recordState)
-        {
-            // Empieza a grabar
-            void startRecord()
-            {
-                string getPath()
-                {
-                    DateTime now = DateTime.Now;
-                    string year = now.Year.ToString();
-                    string month = now.Month.ToString().PadLeft(2, '0');
-                    string day = now.Day.ToString().PadLeft(2, '0');
-                    string hour = now.Hour.ToString().PadLeft(2, '0');
-                    string minute = now.Minute.ToString().PadLeft(2, '0');
-                    string second = now.Second.ToString().PadLeft(2, '0');
-                    string milisecond = now.Millisecond.ToString().PadLeft(3, '0');
-                    string filename = year + month + day + '-' + hour + '-' + minute + '-' + second + '-' + milisecond + ".avi";
-                    string folder = "C:\\Temp";
-                    return folder + "\\" + filename;
-                }
-                string path = getPath();
-                videoWriter = new VideoWriter(path, FourCC.MJPG, VIDEO_FPS, new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                cancellationTokenSourceRecord = new CancellationTokenSource();
-                cancellationTokenRecord = cancellationTokenSourceRecord.Token;
-                //recordTask = recordCameraCallBack();
-                manualResetEventRecord = new ManualResetEvent(!recordPaused);
-                recordThread = new Thread(recordCameraCallBack);
-                recordThread.IsBackground = true;
-                recordThread.Start();
-            }
-            if (recordState == RecordState.RecordStopped)
-            {
-                cancellationTokenSourceRecord.Cancel();
-                manualResetEventRecord.Set();
-            }
-            else if (recordState == RecordState.Recording)
-            {
-                startRecord();
-            }
-        }
         // Cierra la camara y el video writer al cerrar la aplicacion
         public void onCloseApplication()
         {
             if (videoCapture != null)
             {
                 videoCapture.Release();
-            }
-            if (videoWriter != null)
-            {
-                videoWriter.Release();
             }
         }
     }

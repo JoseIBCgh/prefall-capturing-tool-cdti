@@ -8,8 +8,7 @@ namespace ibcdatacsharp.UI.GraphWindow
     public class Model
     {
         private const int NUM_SERIES = 3;
-        private int frames = 0;
-        private const int MAX_POINTS = 100;
+        private const int MAX_POINTS = 300;
         private OxyColor[] colors = new OxyColor[] {OxyColors.Red, OxyColors.Green, OxyColors.Blue };
 
         public Model(double minY, double maxY, string titleY = "", string units = "")
@@ -32,17 +31,15 @@ namespace ibcdatacsharp.UI.GraphWindow
 
         public PlotModel PlotModel { get; private set; }
         // Añade un punto por linea
-        public void update(double[] data)
+        public void update(int frame, double[] data)
         {
-            double kframes = frames / 1000.0;
+            double kframes = frame / 1000.0;
             for(int i = 0; i < NUM_SERIES; i++)
             {
                 (PlotModel.Series[i] as LineSeries).Points.Add(new DataPoint(kframes, data[i]));
             }
-            frames++;
-            kframes += 1.0 / 1000.0;
             PlotModel.InvalidatePlot(true);
-            if (frames > MAX_POINTS)
+            if (frame > MAX_POINTS)
             {
                 double kmaxPoints = MAX_POINTS / 1000.0;
                 PlotModel.Axes[1].Reset();
@@ -64,7 +61,6 @@ namespace ibcdatacsharp.UI.GraphWindow
             {
                 (PlotModel.Series[i] as LineSeries).Points.Clear();
             }
-            frames = 0;
         }
     }
 }

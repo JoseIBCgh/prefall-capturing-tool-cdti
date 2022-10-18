@@ -19,6 +19,9 @@
     <Compile Update="UI\FileBrowser\FileBrowser.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\FileSaver\SavingMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\GraphWindow\GraphWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -46,6 +49,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\FileBrowser\FileBrowser.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\FileSaver\SavingMenu.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\GraphWindow\GraphWindow.xaml">
