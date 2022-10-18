@@ -1,5 +1,6 @@
 ﻿using ibcdatacsharp.UI.Timer;
 using System;
+using System.Windows;
 
 namespace ibcdatacsharp.UI.Device
 {
@@ -8,7 +9,7 @@ namespace ibcdatacsharp.UI.Device
     {
         public int frame { get; private set; }
         private const int DEVICE_MS = 10;
-        private Timer.Timer timerDevice;
+        public Timer.TimerMeasure timer { get; private set; }
         public RawArgs rawData { get; set; }
         public AngleArgs angleData { get; set; }
         public Device()
@@ -19,11 +20,28 @@ namespace ibcdatacsharp.UI.Device
         // Inicializa el timer
         public void initTimer()
         {
-            timerDevice = new Timer.Timer();
-            timerDevice.Mode = TimerMode.Periodic;
-            timerDevice.Period = DEVICE_MS;
-            timerDevice.Tick += generateData;
-            timerDevice.Start();
+            void onStop(object sender)
+            {
+                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                mainWindow.virtualToolBar.pauseEvent -= timer.onPause;
+                timer.Dispose();
+                timer = null;
+                mainWindow.virtualToolBar.stopEvent -= onStop;
+            }
+            if (timer == null)
+            {
+                timer = new Timer.TimerMeasure();
+                timer.Mode = TimerMode.Periodic;
+                timer.Period = DEVICE_MS;
+                timer.Tick += generateData;
+                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                mainWindow.virtualToolBar.pauseEvent += timer.onPause;
+                mainWindow.virtualToolBar.stopEvent += onStop;
+                if (mainWindow.virtualToolBar.pauseState == ToolBar.Enums.PauseState.Play)
+                {
+                    timer.Start();
+                }
+            }
         }
         // Genera datos inventados
         public void generateData(object sender, FrameArgs frameArgs)

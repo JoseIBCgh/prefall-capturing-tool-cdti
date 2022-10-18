@@ -1,4 +1,5 @@
 ﻿using ibcdatacsharp.UI.Device;
+using System;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -95,8 +96,19 @@ namespace ibcdatacsharp.UI.GraphWindow
                 updateGyroscope(frame, rawArgs.gyroscope[0], rawArgs.gyroscope[1], rawArgs.gyroscope[2])
             });
         }
+        // Recive los datos del IMU inventado media timer
+        public async void onTick(object sender, EventArgs e)
+        {
+            RawArgs rawArgs = device.rawData;
+            int frame = device.frame;
+            await Task.WhenAll(new Task[] {
+                updateAccelerometer(frame, rawArgs.accelerometer[0], rawArgs.accelerometer[1], rawArgs.accelerometer[2]),
+                updateMagnetometer(frame, rawArgs.magnetometer[0], rawArgs.magnetometer[1], rawArgs.magnetometer[2]),
+                updateGyroscope(frame, rawArgs.gyroscope[0], rawArgs.gyroscope[1], rawArgs.gyroscope[2])
+            });
+        }
         // Borra el contenido de los graficos
-        public async void onClearData(object sender)
+        public async void clearData()
         {
             //await clearAccelerometer();
             //await clearGyroscope();

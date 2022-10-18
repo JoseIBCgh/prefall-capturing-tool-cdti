@@ -1,5 +1,6 @@
 ﻿using ibcdatacsharp.UI.Device;
 using OxyPlot;
+using System;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -98,8 +99,20 @@ namespace ibcdatacsharp.UI.AngleGraph
                 updateZ(frame, angleArgs.angle[2])
             });
         }
+        // Recive los datos del IMU inventado media timer
+        public async void onTick(object sender, EventArgs e)
+        {
+            AngleArgs angleArgs = device.angleData;
+            int frame = device.frame;
+            await Task.WhenAll(new Task[]
+            {
+                updateX(frame, angleArgs.angle[0]),
+                updateY(frame, angleArgs.angle[1]),
+                updateZ(frame, angleArgs.angle[2])
+            });
+        }
         // Borra el contenido de los graficos
-        public async void onClearData(object sender)
+        public async void clearData()
         {
             //await clearX();
             //await clearY();

@@ -1,4 +1,4 @@
-﻿# define CAPTURE_MULTIMEDIA_TIMER
+﻿//# define CAPTURE_MULTIMEDIA_TIMER
 
 using System;
 using System.Diagnostics;
@@ -35,17 +35,34 @@ namespace ibcdatacsharp.UI
         public MainWindow()
         {
             InitializeComponent();
-            device = new Device.Device();
             virtualToolBar = new VirtualToolBar();
+            device = new Device.Device();
             fileSaver = new FileSaver.FileSaver();
             initIcon();
             initToolBarHandlers();
             initMenuHandlers();
-            initVirtualToolBar();
         }
         // Configura el timer capture
         private void initTimerCapture()
         {
+            void onPause(object sender, PauseState pauseState)
+            {
+                if (pauseState == PauseState.Pause)
+                {
+                    timerCapture.Stop();
+                }
+                else if (pauseState == PauseState.Play)
+                {
+                    timerCapture.Start();
+                }
+            }
+            void onStop(object sender)
+            {
+                virtualToolBar.pauseEvent -= onPause;
+                virtualToolBar.stopEvent -= onStop;
+                timerCapture.Dispose();
+                timerCapture = null;
+            }
             if (timerCapture == null)
             {
 #if CAPTURE_MULTIMEDIA_TIMER
@@ -57,12 +74,14 @@ namespace ibcdatacsharp.UI
                     graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
                         GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                        graphWindowClass.clearData();
                         timerCapture.Tick += graphWindowClass.onTick;
                     };
                 }
                 else
                 {
                     GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    graphWindowClass.clearData();
                     timerCapture.Tick += graphWindowClass.onTick;
                 }
                 if (angleGraph.Content == null)
@@ -70,33 +89,40 @@ namespace ibcdatacsharp.UI
                     angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
                         AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                        angleGraphClass.clearData();
                         timerCapture.Tick += angleGraphClass.onTick;
                     };
                 }
                 else
                 {
                     AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    angleGraphClass.clearData();
                     timerCapture.Tick += angleGraphClass.onTick;
                 }
-                timerCapture.Tick += device.generateData;
 
-                virtualToolBar.pauseEvent += timerCapture.onPause;
-                virtualToolBar.stopEvent += timerCapture.stopAndReset;
+                virtualToolBar.pauseEvent += onPause; //funcion local
+                virtualToolBar.stopEvent += onStop; //funcion local
+                if (virtualToolBar.pauseState == PauseState.Play)
+                {
+                    timerCapture.Start();
+                }
+                device.initTimer();
 #else
                 timerCapture = new System.Timers.Timer(CAPTURE_MS);
                 timerCapture.AutoReset = true;
-                timerCapture.Enabled = true;
                 if (graphWindow.Content == null)
                 {
                     graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
                         GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                        graphWindowClass.clearData();
                         timerCapture.Elapsed += graphWindowClass.onTick;
                     };
                 }
                 else
                 {
                     GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    graphWindowClass.clearData();
                     timerCapture.Elapsed += graphWindowClass.onTick;
                 }
                 if (angleGraph.Content == null)
@@ -104,70 +130,25 @@ namespace ibcdatacsharp.UI
                     angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
                         AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                        angleGraphClass.clearData();
                         timerCapture.Elapsed += angleGraphClass.onTick;
                     };
                 }
                 else
                 {
                     AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    angleGraphClass.clearData();
                     timerCapture.Elapsed += angleGraphClass.onTick;
                 }
+                virtualToolBar.pauseEvent += onPause; //funcion local
+                virtualToolBar.stopEvent += onStop; //funcion local
+                if (virtualToolBar.pauseState == PauseState.Play)
+                {
+                    timerCapture.Start();
+                }
                 device.initTimer();
-
-                virtualToolBar.pauseEvent += delegate (object sender, PauseState pauseState)
-                {
-                    if (timerCapture != null)
-                    {
-                        if (pauseState == PauseState.Pause)
-                        {
-                            timerCapture.Stop();
-                        }
-                        else if (pauseState == PauseState.Play)
-                        {
-                            timerCapture.Start();
-                        }
-                    }
-                };
-                virtualToolBar.stopEvent += delegate (object sender)
-                {
-                    if (timerCapture != null)
-                    {
-                        timerCapture.Stop();
-                    }
-                };
 #endif
             }
-            timerCapture.Start();
-        }
-        // Configura la tool bar virtual
-        private void initVirtualToolBar()
-        {
-            void clearDataOnStop()
-            {
-                graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
-                {
-                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
-                    virtualToolBar.stopEvent += graphWindowClass.onClearData;
-                };
-                angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
-                {
-                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
-                    virtualToolBar.stopEvent += angleGraphClass.onClearData;
-                };
-            }
-            toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
-            {
-                ToolBar.ToolBar toolBarClass = toolBar.Content as ToolBar.ToolBar;
-                virtualToolBar.setToolBar(toolBarClass);
-            };
-            menuBar.Navigated += delegate (object sender, NavigationEventArgs e)
-            {
-                MenuBar.MenuBar menuBarClass = menuBar.Content as MenuBar.MenuBar;
-                virtualToolBar.setMenuBar(menuBarClass);
-            };
-            clearDataOnStop();
-            virtualToolBar.saveEvent += fileSaver.onSaveInfo;
-            virtualToolBar.recordEvent += fileSaver.onRecord;
         }
         // Cambia el icono de la ventana
         private void initIcon()

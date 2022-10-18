@@ -23,7 +23,6 @@
 
 #endregion
 
-using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -32,19 +31,17 @@ using System.Runtime.InteropServices;
 namespace ibcdatacsharp.UI.Timer
 {
     // Timer que puede bajar de 10 ms y de alta precision
-    public class Timer : IComponent
+    public sealed class Timer : IComponent
     {
         #region Timer Members
 
         #region Delegates
 
         // Represents the method that is called by Windows when a timer event occurs.
-        protected delegate void TimeProc(int id, int msg, int user, int param1, int param2);
+        private delegate void TimeProc(int id, int msg, int user, int param1, int param2);
 
         // Represents methods that raise events.
-        protected delegate void EventRaiser(EventArgs e);
-
-        private delegate void FrameEventRaiser(FrameArgs e);
+        private delegate void EventRaiser(EventArgs e);
 
         #endregion
 
@@ -52,63 +49,60 @@ namespace ibcdatacsharp.UI.Timer
 
         // Gets timer capabilities.
         [DllImport("winmm.dll")]
-        protected static extern int timeGetDevCaps(ref TimerCaps caps,
+        private static extern int timeGetDevCaps(ref TimerCaps caps,
             int sizeOfTimerCaps);
 
         // Creates and starts the timer.
         [DllImport("winmm.dll")]
-        protected static extern int timeSetEvent(int delay, int resolution,
+        private static extern int timeSetEvent(int delay, int resolution,
             TimeProc proc, int user, int mode);
 
         // Stops and destroys the timer.
         [DllImport("winmm.dll")]
-        protected static extern int timeKillEvent(int id);
+        private static extern int timeKillEvent(int id);
 
         // Indicates that the operation was successful.
-        protected const int TIMERR_NOERROR = 0;
+        private const int TIMERR_NOERROR = 0;
 
         #endregion
 
         #region Fields
 
-        private const int INIT_FRAME = 0;
-        private int frame;
-        private Stopwatch stopwatch;
         // Timer identifier.
-        protected int timerID;
+        private int timerID;
 
         // Timer mode.
-        protected volatile TimerMode mode;
+        private volatile TimerMode mode;
 
         // Period between timer events in milliseconds.
-        protected volatile int period;
+        private volatile int period;
 
         // Timer resolution in milliseconds.
-        protected volatile int resolution;
+        private volatile int resolution;
 
         // Called by Windows when a timer periodic event occurs.
-        protected TimeProc timeProcPeriodic;
+        private TimeProc timeProcPeriodic;
 
         // Called by Windows when a timer one shot event occurs.
-        protected TimeProc timeProcOneShot;
+        private TimeProc timeProcOneShot;
 
         // Represents the method that raises the Tick event.
-        protected EventRaiser tickRaiser;
+        private EventRaiser tickRaiser;
 
         // Indicates whether or not the timer is running.
-        protected bool running = false;
+        private bool running = false;
 
         // Indicates whether or not the timer has been disposed.
-        protected volatile bool disposed = false;
+        private volatile bool disposed = false;
 
         // The ISynchronizeInvoke object to use for marshaling events.
-        protected ISynchronizeInvoke synchronizingObject = null;
+        private ISynchronizeInvoke synchronizingObject = null;
 
         // For implementing IComponent.
-        protected ISite site = null;
+        private ISite site = null;
 
         // Multimedia timer capabilities.
-        protected static TimerCaps caps;
+        private static TimerCaps caps;
 
         #endregion
 
@@ -127,7 +121,7 @@ namespace ibcdatacsharp.UI.Timer
         /// <summary>
         /// Occurs when the time period has elapsed.
         /// </summary>
-        public event EventHandler<FrameArgs> Tick;
+        public event EventHandler Tick;
 
         #endregion
 
@@ -184,12 +178,9 @@ namespace ibcdatacsharp.UI.Timer
 
             running = false;
 
-            frame = INIT_FRAME;
-            stopwatch = new Stopwatch();
-
             timeProcPeriodic = new TimeProc(TimerPeriodicEventCallback);
             timeProcOneShot = new TimeProc(TimerOneShotEventCallback);
-            tickRaiser = new FrameEventRaiser(OnTick);
+            tickRaiser = new EventRaiser(OnTick);
         }
 
         #endregion
@@ -259,25 +250,7 @@ namespace ibcdatacsharp.UI.Timer
                 throw new TimerStartException("Unable to start multimedia Timer.");
             }
         }
-        // Se llama al clicar el boton pause. Pausa o inicia el timer
-        public void onPause(object sender, PauseState pauseState)
-        {
-            if (pauseState == PauseState.Pause)
-            {
-                Stop();
-            }
-            else if (pauseState == PauseState.Play)
-            {
-                Start();
-            }
-        }
-        // Se llama al clicar el boton stop. Detiene el timer y reinicia la cuenta de tiempo.
-        public void stopAndReset(object sender)
-        {
-            Stop();
-            stopwatch.Reset();
-            frame = INIT_FRAME;
-        }
+
         /// <summary>
         /// Stops timer.
         /// </summary>
@@ -310,7 +283,6 @@ namespace ibcdatacsharp.UI.Timer
             Debug.Assert(result == TIMERR_NOERROR);
 
             running = false;
-            stopwatch.Stop();
 
             if (SynchronizingObject != null && SynchronizingObject.InvokeRequired)
             {
@@ -330,34 +302,30 @@ namespace ibcdatacsharp.UI.Timer
         // periodic event occurs.
         private void TimerPeriodicEventCallback(int id, int msg, int user, int param1, int param2)
         {
-            FrameArgs frameArgs = new FrameArgs { frame = frame, elapsed = stopwatch.Elapsed.TotalMilliseconds };
             if (synchronizingObject != null)
             {
-                synchronizingObject.BeginInvoke(tickRaiser, new object[] { frameArgs });
+                synchronizingObject.BeginInvoke(tickRaiser, new object[] { EventArgs.Empty });
             }
             else
             {
-                OnTick(frameArgs);
+                OnTick(EventArgs.Empty);
             }
-            frame++;
         }
 
         // Callback method called by the Win32 multimedia timer when a timer
         // one shot event occurs.
         private void TimerOneShotEventCallback(int id, int msg, int user, int param1, int param2)
         {
-            FrameArgs frameArgs = new FrameArgs { frame = frame, elapsed = stopwatch.Elapsed.TotalMilliseconds };
             if (synchronizingObject != null)
             {
-                synchronizingObject.BeginInvoke(tickRaiser, new object[] { frameArgs });
+                synchronizingObject.BeginInvoke(tickRaiser, new object[] { EventArgs.Empty });
                 Stop();
             }
             else
             {
-                OnTick(frameArgs);
+                OnTick(EventArgs.Empty);
                 Stop();
             }
-            frame++;
         }
 
         #endregion
@@ -378,8 +346,6 @@ namespace ibcdatacsharp.UI.Timer
         // Raises the Started event.
         private void OnStarted(EventArgs e)
         {
-            stopwatch.Start();
-
             EventHandler handler = Started;
 
             if (handler != null)
@@ -400,9 +366,9 @@ namespace ibcdatacsharp.UI.Timer
         }
 
         // Raises the Tick event.
-        private void OnTick(FrameArgs e)
+        private void OnTick(EventArgs e)
         {
-            EventHandler<FrameArgs> handler = Tick;
+            EventHandler handler = Tick;
 
             if (handler != null)
             {

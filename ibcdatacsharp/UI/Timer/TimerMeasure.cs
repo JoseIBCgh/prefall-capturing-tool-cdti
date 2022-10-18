@@ -2,59 +2,33 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace ibcdatacsharp.UI.Timer
 {
     // Timer que puede bajar de 10 ms y de alta precision
-    public class TimerMeasure : Timer
+    public class TimerMeasure
     {
         #region Timer Members
 
-        #region Delegates
-
-        private delegate void FrameEventRaiser(FrameArgs e);
-
-        #endregion
-
         #region Fields
 
+        private Timer timer;
         private const int INIT_FRAME = 0;
         private int frame;
         private Stopwatch stopwatch;
 
-        // Represents the method that raises the Tick event.
-        private FrameEventRaiser tickRaiser;
         #endregion
 
         #region Events
 
         /// <summary>
-        /// Occurs when the Timer has started;
-        /// </summary>
-        public new event EventHandler Started;
-
-        /// <summary>
-        /// Occurs when the Timer has stopped;
-        /// </summary>
-        public new event EventHandler Stopped;
-        /// <summary>
         /// Occurs when the time period has elapsed.
         /// </summary>
-        public new event EventHandler<FrameArgs> Tick;
+        public event EventHandler<FrameArgs> Tick;
 
         #endregion
 
         #region Construction
-
-        /// <summary>
-        /// Initialize class.
-        /// </summary>
-        static TimerMeasure()
-        {
-            // Get multimedia timer capabilities.
-            timeGetDevCaps(ref caps, Marshal.SizeOf(caps));
-        }
 
         /// <summary>
         /// Initializes a new instance of the Timer class with the specified IContainer.
@@ -62,34 +36,32 @@ namespace ibcdatacsharp.UI.Timer
         /// <param name="container">
         /// The IContainer to which the Timer will add itself.
         /// </param>
-        public TimerMeasure(IContainer container): base(container)
+        public TimerMeasure(IContainer container)
         {
-            
+            timer = new Timer(container);
+            Initialize();
         }
 
         /// <summary>
         /// Initializes a new instance of the Timer class.
         /// </summary>
-        public TimerMeasure(): base()
+        public TimerMeasure()
         {
-            
+            timer = new Timer();
+            Initialize();
         }
 
         // Initialize timer with default values.
-        protected void Initialize()
+        private void Initialize()
         {
-            this.mode = TimerMode.Periodic;
-            this.period = Capabilities.periodMin;
-            this.resolution = 1;
-
-            running = false;
-
             frame = INIT_FRAME;
             stopwatch = new Stopwatch();
 
-            timeProcPeriodic = new TimeProc(TimerPeriodicEventCallback);
-            timeProcOneShot = new TimeProc(TimerOneShotEventCallback);
-            tickRaiser = new FrameEventRaiser(OnTick);
+            timer.Tick += delegate (object sender, EventArgs e)
+            {
+                Tick?.Invoke(this, new FrameArgs { frame = frame, elapsed = stopwatch.Elapsed.TotalMilliseconds });
+                frame++;
+            };
         }
 
         #endregion
@@ -99,9 +71,26 @@ namespace ibcdatacsharp.UI.Timer
         // Se llama al clicar el boton stop. Detiene el timer y reinicia la cuenta de tiempo.
         public void stopAndReset(object sender)
         {
-            Stop();
+            timer.Stop();
             stopwatch.Reset();
             frame = INIT_FRAME;
+        }
+        public void Start()
+        {
+            timer.Start();
+            stopwatch.Start();
+        }
+        // Se llama al clicar el boton pause. Pausa o inicia el timer
+        public void onPause(object sender, PauseState pauseState)
+        {
+            if (pauseState == PauseState.Pause)
+            {
+                Stop();
+            }
+            else if (pauseState == PauseState.Play)
+            {
+                Start();
+            }
         }
         /// <summary>
         /// Stops timer.
@@ -109,129 +98,111 @@ namespace ibcdatacsharp.UI.Timer
         /// <exception cref="ObjectDisposedException">
         /// If the timer has already been disposed.
         /// </exception>
-        public new void Stop()
+        public void Stop()
         {
-            #region Require
-
-            if (disposed)
-            {
-                throw new ObjectDisposedException("Timer");
-            }
-
-            #endregion
-
-            #region Guard
-
-            if (!running)
-            {
-                return;
-            }
-
-            #endregion
-
-            // Stop and destroy timer.
-            int result = timeKillEvent(timerID);
-
-            Debug.Assert(result == TIMERR_NOERROR);
-
-            running = false;
+            timer.Stop();
             stopwatch.Stop();
-
-            if (SynchronizingObject != null && SynchronizingObject.InvokeRequired)
-            {
-                SynchronizingObject.BeginInvoke(
-                    new EventRaiser(OnStopped),
-                    new object[] { EventArgs.Empty });
-            }
-            else
-            {
-                OnStopped(EventArgs.Empty);
-            }
-        }
-
-        #region Callbacks
-
-        // Callback method called by the Win32 multimedia timer when a timer
-        // periodic event occurs.
-        protected void TimerPeriodicEventCallback(int id, int msg, int user, int param1, int param2)
-        {
-            FrameArgs frameArgs = new FrameArgs { frame = frame, elapsed = stopwatch.Elapsed.TotalMilliseconds };
-            if (synchronizingObject != null)
-            {
-                synchronizingObject.BeginInvoke(tickRaiser, new object[] { frameArgs });
-            }
-            else
-            {
-                OnTick(frameArgs);
-            }
-            frame++;
-        }
-
-        // Callback method called by the Win32 multimedia timer when a timer
-        // one shot event occurs.
-        protected void TimerOneShotEventCallback(int id, int msg, int user, int param1, int param2)
-        {
-            FrameArgs frameArgs = new FrameArgs { frame = frame, elapsed = stopwatch.Elapsed.TotalMilliseconds };
-            if (synchronizingObject != null)
-            {
-                synchronizingObject.BeginInvoke(tickRaiser, new object[] { frameArgs });
-                Stop();
-            }
-            else
-            {
-                OnTick(frameArgs);
-                Stop();
-            }
-            frame++;
         }
 
         #endregion
 
-        #region Event Raiser Methods
+        #region Properties
 
-        // Raises the Disposed event.
-        protected void OnDisposed(EventArgs e)
+        /// <summary>
+        /// Gets or sets the object used to marshal event-handler calls.
+        /// </summary>
+        public ISynchronizeInvoke SynchronizingObject
         {
-            EventHandler handler = Disposed;
-
-            if (handler != null)
+            get
             {
-                handler(this, e);
+                return timer.SynchronizingObject;
+            }
+            set
+            {
+                timer.SynchronizingObject = value;
             }
         }
 
-        // Raises the Started event.
-        protected void OnStarted(EventArgs e)
+        /// <summary>
+        /// Gets or sets the time between Tick events.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">
+        /// If the timer has already been disposed.
+        /// </exception>   
+        public int Period
         {
-            stopwatch.Start();
-
-            EventHandler handler = Started;
-
-            if (handler != null)
+            get
             {
-                handler(this, e);
+                return timer.Period;
+            }
+            set
+            {
+                timer.Period = value;
             }
         }
 
-        // Raises the Stopped event.
-        protected void OnStopped(EventArgs e)
+        /// <summary>
+        /// Gets or sets the timer resolution.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">
+        /// If the timer has already been disposed.
+        /// </exception>        
+        /// <remarks>
+        /// The resolution is in milliseconds. The resolution increases 
+        /// with smaller values; a resolution of 0 indicates periodic events 
+        /// should occur with the greatest possible accuracy. To reduce system 
+        /// overhead, however, you should use the maximum value appropriate 
+        /// for your application.
+        /// </remarks>
+        public int Resolution
         {
-            EventHandler handler = Stopped;
-
-            if (handler != null)
+            get
             {
-                handler(this, e);
+                return timer.Resolution;
+            }
+            set
+            {
+                timer.Resolution = value;
             }
         }
 
-        // Raises the Tick event.
-        protected void OnTick(FrameArgs e)
+        /// <summary>
+        /// Gets the timer mode.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">
+        /// If the timer has already been disposed.
+        /// </exception>
+        public TimerMode Mode
         {
-            EventHandler<FrameArgs> handler = Tick;
-
-            if (handler != null)
+            get
             {
-                handler(this, e);
+                return timer.Mode;
+            }
+            set
+            {
+                timer.Mode = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the Timer is running.
+        /// </summary>
+        public bool IsRunning
+        {
+            get
+            {
+                return timer.IsRunning;
+            }
+        }
+
+        /// <summary>
+        /// Gets the timer capabilities.
+        /// </summary>
+        public static TimerCaps Capabilities
+        {
+            get
+            {
+                return Timer.Capabilities;
             }
         }
 
@@ -239,11 +210,15 @@ namespace ibcdatacsharp.UI.Timer
 
         #endregion
 
-        #endregion
+        #region IDisposable Members
 
-        #region IComponent Members
-
-        public new event System.EventHandler Disposed;
+        /// <summary>
+        /// Frees timer resources.
+        /// </summary>
+        public void Dispose()
+        {
+            timer.Dispose();
+        }
 
         #endregion
     }

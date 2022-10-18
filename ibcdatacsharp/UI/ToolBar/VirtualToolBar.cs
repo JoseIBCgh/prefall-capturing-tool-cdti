@@ -2,6 +2,7 @@
 using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -28,6 +29,29 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             pauseState = PauseState.Play;
             recordState = RecordState.RecordStopped;
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.toolBar.Content == null)
+            {
+                mainWindow.toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    toolBar = mainWindow.toolBar.Content as ToolBar;
+                };
+            }
+            else
+            {
+                toolBar = mainWindow.toolBar.Content as ToolBar;
+            }
+            if(mainWindow.menuBar.Content == null)
+            {
+                mainWindow.menuBar.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    menuBar = mainWindow.menuBar.Content as MenuBar.MenuBar;
+                };
+            }
+            else
+            {
+                menuBar = mainWindow.menuBar.Content as MenuBar.MenuBar;
+            }
         }
         // Pasa referencia
         public void setToolBar(ToolBar toolBar)
@@ -94,6 +118,12 @@ namespace ibcdatacsharp.UI.ToolBar
         // Se ejecuta al clicar stop
         public void stopClick()
         {
+            if(pauseState == PauseState.Pause)
+            {
+                pauseState = PauseState.Play;
+                toolBar.changePauseState(PauseState.Pause);
+                menuBar.changePauseState(PauseState.Pause);
+            }
             if(recordState == RecordState.Recording)
             {
                 recordState = RecordState.RecordStopped;
