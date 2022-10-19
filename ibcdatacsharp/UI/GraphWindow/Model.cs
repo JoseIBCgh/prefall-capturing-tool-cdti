@@ -1,6 +1,7 @@
 ﻿using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.GraphWindow
 {
@@ -8,7 +9,7 @@ namespace ibcdatacsharp.UI.GraphWindow
     public class Model
     {
         private const int NUM_SERIES = 3;
-        private const int MAX_POINTS = 300;
+        private const int MAX_POINTS = 100;
         private OxyColor[] colors = new OxyColor[] {OxyColors.Red, OxyColors.Green, OxyColors.Blue };
 
         public Model(double minY, double maxY, string titleY = "", string units = "")
@@ -38,7 +39,20 @@ namespace ibcdatacsharp.UI.GraphWindow
             {
                 (PlotModel.Series[i] as LineSeries).Points.Add(new DataPoint(kframes, data[i]));
             }
+            if((PlotModel.Series[0] as LineSeries).Points.Count > MAX_POINTS)
+            {
+                for (int i = 0; i < NUM_SERIES; i++)
+                {
+                    (PlotModel.Series[i] as LineSeries).Points.RemoveAt(0);
+                }
+            }
             PlotModel.InvalidatePlot(true);
+            double minkframes = (PlotModel.Series[0] as LineSeries).Points[0].X;
+            PlotModel.Axes[1].Reset();
+            PlotModel.Axes[1].Maximum = kframes;
+            PlotModel.Axes[1].Minimum = minkframes;
+            //PlotModel.Axes[1].Zoom(minkframes, kframes);
+            /*
             if (frame > MAX_POINTS)
             {
                 double kmaxPoints = MAX_POINTS / 1000.0;
@@ -52,7 +66,7 @@ namespace ibcdatacsharp.UI.GraphWindow
                 PlotModel.Axes[1].Reset();
                 PlotModel.Axes[1].Maximum = kframes;
                 PlotModel.Axes[1].Minimum = 0;
-            }
+            }*/
         }
         // Borra todos los puntos de todas las lineas
         public void clear()

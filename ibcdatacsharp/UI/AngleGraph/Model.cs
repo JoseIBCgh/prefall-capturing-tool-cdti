@@ -85,8 +85,17 @@ namespace ibcdatacsharp.UI.AngleGraph
         {
             double kframes = frame / 1000.0;
             (PlotModel.Series[0] as LineSeries).Points.Add(new DataPoint(kframes, data));
-            kframes += 1.0 / 1000.0;
+            if ((PlotModel.Series[0] as LineSeries).Points.Count > MAX_POINTS)
+            {
+                (PlotModel.Series[0] as LineSeries).Points.RemoveAt(0);
+            }
             PlotModel.InvalidatePlot(true);
+            double minkframes = (PlotModel.Series[0] as LineSeries).Points[0].X;
+            PlotModel.Axes[1].Reset();
+            PlotModel.Axes[1].Maximum = kframes;
+            PlotModel.Axes[1].Minimum = minkframes;
+            //PlotModel.Axes[1].Zoom(minkframes, kframes);
+            /*
             if (frame > MAX_POINTS)
             {
                 double kmaxPoints = MAX_POINTS / 1000.0;
@@ -100,7 +109,7 @@ namespace ibcdatacsharp.UI.AngleGraph
                 PlotModel.Axes[1].Reset();
                 PlotModel.Axes[1].Maximum = kframes;
                 PlotModel.Axes[1].Minimum = 0;
-            }
+            }*/
         }
         // Borra todos los puntos
         public void clear()
