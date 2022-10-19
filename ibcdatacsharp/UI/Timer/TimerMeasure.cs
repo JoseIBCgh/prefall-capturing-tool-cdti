@@ -59,7 +59,7 @@ namespace ibcdatacsharp.UI.Timer
 
             timer.Tick += delegate (object sender, EventArgs e)
             {
-                Tick?.Invoke(this, new FrameArgs { frame = frame, elapsed = stopwatch.Elapsed.TotalMilliseconds });
+                Tick?.Invoke(this, new FrameArgs { frame = frame, elapsed = stopwatch.Elapsed.TotalSeconds });
                 frame++;
             };
         }
