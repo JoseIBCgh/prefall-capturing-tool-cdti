@@ -1,4 +1,4 @@
-﻿//# define CAPTURE_MULTIMEDIA_TIMER
+﻿# define CAPTURE_MULTIMEDIA_TIMER
 
 using System;
 using System.Diagnostics;
@@ -15,6 +15,12 @@ using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.Timer;
 using ibcdatacsharp.UI.ToolBar.Enums;
 
+using GraphWindowClass = ibcdatacsharp.UI.RealTimeGraphX.GraphWindow.GraphWindow;
+//using GraphWindowClass = ibcdatacsharp.UI.GraphWindow.GraphWindow;
+using AngleGraphClass = ibcdatacsharp.UI.RealTimeGraphX.AngleGraph.AngleGraph;
+using System.Windows.Threading;
+//using AngleGraphClass = ibcdatacsharp.UI.AngleGraph.AngleGraph;
+
 namespace ibcdatacsharp.UI
 {
     /// <summary>
@@ -22,12 +28,12 @@ namespace ibcdatacsharp.UI
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private const int CAPTURE_MS = 15;
+        private const int CAPTURE_MS = 20;
         public Device.Device device;
         public VirtualToolBar virtualToolBar;
 
 #if CAPTURE_MULTIMEDIA_TIMER
-        private Timer.Timer timerCapture;
+        private Timer.Timer? timerCapture;
 #else
         private System.Timers.Timer timerCapture;
 #endif
@@ -41,6 +47,34 @@ namespace ibcdatacsharp.UI
             initIcon();
             initToolBarHandlers();
             initMenuHandlers();
+            loadAllGraphs();
+        }
+        // Si se captura antes de visitar una pestaña sale un error
+        private void loadAllGraphs()
+        {
+            void changeToAngle()
+            {
+                graphsTabControl.SelectedIndex = 1;
+                DispatcherTimer timer = new DispatcherTimer();
+                timer.Interval = TimeSpan.FromMilliseconds(15);
+                timer.Tick += (sender, e) =>
+                {
+                    graphsTabControl.SelectedIndex = 0;
+                    timer.Stop();
+                };
+                timer.Start();
+            }
+            if (angleGraph.Content == null)
+            {
+                angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    changeToAngle();
+                };
+            }
+            else
+            {
+                changeToAngle();
+            }
         }
         // Configura el timer capture
         private void initTimerCapture()
@@ -73,14 +107,14 @@ namespace ibcdatacsharp.UI
                 {
                     graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
-                        GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                        GraphWindowClass graphWindowClass = graphWindow.Content as GraphWindowClass;
                         graphWindowClass.clearData();
                         timerCapture.Tick += graphWindowClass.onTick;
                     };
                 }
                 else
                 {
-                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    GraphWindowClass graphWindowClass = graphWindow.Content as GraphWindowClass;
                     graphWindowClass.clearData();
                     timerCapture.Tick += graphWindowClass.onTick;
                 }
@@ -88,14 +122,14 @@ namespace ibcdatacsharp.UI
                 {
                     angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
-                        AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                        AngleGraphClass angleGraphClass = angleGraph.Content as AngleGraphClass;
                         angleGraphClass.clearData();
                         timerCapture.Tick += angleGraphClass.onTick;
                     };
                 }
                 else
                 {
-                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    AngleGraphClass angleGraphClass = angleGraph.Content as AngleGraphClass;
                     angleGraphClass.clearData();
                     timerCapture.Tick += angleGraphClass.onTick;
                 }
@@ -114,14 +148,14 @@ namespace ibcdatacsharp.UI
                 {
                     graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
-                        GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                        GraphWindowClass graphWindowClass = graphWindow.Content as GraphWindowClass;
                         graphWindowClass.clearData();
                         timerCapture.Elapsed += graphWindowClass.onTick;
                     };
                 }
                 else
                 {
-                    GraphWindow.GraphWindow graphWindowClass = graphWindow.Content as GraphWindow.GraphWindow;
+                    GraphWindowClass graphWindowClass = graphWindow.Content as GraphWindowClass;
                     graphWindowClass.clearData();
                     timerCapture.Elapsed += graphWindowClass.onTick;
                 }
@@ -129,14 +163,14 @@ namespace ibcdatacsharp.UI
                 {
                     angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
-                        AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                        AngleGraphClass angleGraphClass = angleGraph.Content as AngleGraphClass;
                         angleGraphClass.clearData();
                         timerCapture.Elapsed += angleGraphClass.onTick;
                     };
                 }
                 else
                 {
-                    AngleGraph.AngleGraph angleGraphClass = angleGraph.Content as AngleGraph.AngleGraph;
+                    AngleGraphClass angleGraphClass = angleGraph.Content as AngleGraphClass;
                     angleGraphClass.clearData();
                     timerCapture.Elapsed += angleGraphClass.onTick;
                 }

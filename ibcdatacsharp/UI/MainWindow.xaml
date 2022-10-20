@@ -49,12 +49,12 @@
                         </dock:LayoutAnchorablePane>
                         <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
                             <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
-                                <TabControl Grid.Row="0">
+                                <TabControl x:Name="graphsTabControl" Grid.Row="0">
                                     <TabItem Header="Data Raw">
-                                        <Frame Source="pack://application:,,,/UI/GraphWindow/GraphWindow.xaml" x:Name="graphWindow"/>
+                                        <Frame Source="pack://application:,,,/UI/RealTimeGraphX/GraphWindow/GraphWindow.xaml" x:Name="graphWindow"/>
                                     </TabItem>
                                     <TabItem Header="Joint Angle">
-                                        <Frame Source="pack://application:,,,/UI/AngleGraph/AngleGraph.xaml" x:Name="angleGraph"/>
+                                        <Frame Source="pack://application:,,,/UI/RealTimeGraphX/AngleGraph/AngleGraph.xaml" x:Name="angleGraph"/>
                                     </TabItem>
                                 </TabControl>
                             </dock:LayoutAnchorable>

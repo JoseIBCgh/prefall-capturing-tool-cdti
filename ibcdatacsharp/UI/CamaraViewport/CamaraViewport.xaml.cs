@@ -1,6 +1,6 @@
-﻿//#define TASK
-#define THREAD
-//#define TIMER
+﻿#define TASK
+//#define THREAD
+//#define TIMER // no funciona bien
 
 using OpenCvSharp.WpfExtensions;
 using OpenCvSharp;
@@ -73,8 +73,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 videoCapture.Read(frame);
                 if (!frame.Empty())
                 {
-                    Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                    return frameResized;
+                    return frame;
                 }
                 else
                 {

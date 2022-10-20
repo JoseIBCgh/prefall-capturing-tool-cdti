@@ -1,4 +1,5 @@
 ﻿# define VIDEO_MULTIMEDIA_TIMER
+# define VIDEO_BUFFER
 
 using ibcdatacsharp.UI.Device;
 using ibcdatacsharp.UI.Timer;
@@ -20,17 +21,21 @@ namespace ibcdatacsharp.UI.FileSaver
         private const int RECORD_VIDEO_MS = 1000 / FPS;
         private const int FRAME_HEIGHT = 480;
         private const int FRAME_WIDTH = 640;
-        private TimerMeasure timerCsv;
+        private TimerMeasure? timerCsv;
 #if VIDEO_MULTIMEDIA_TIMER
-        private Timer.Timer timerVideo;
+        private Timer.Timer? timerVideo;
 #else
         private System.Windows.Threading.DispatcherTimer timerVideo;
 #endif
         private CamaraViewport.CamaraViewport camaraViewport;
         private Device.Device device;
-        private VideoWriter videoWriter;
-        private string path;
-        private string csvFile;
+#if VIDEO_BUFFER
+        private VideoBuffer videoBuffer;
+#else
+        private VideoWriter? videoWriter;
+#endif
+        private string? path;
+        private string? csvFile;
         private bool recordCSV;
         private bool recordVideo;
         private const string csvHeader = @"DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT
@@ -39,7 +44,7 @@ namespace ibcdatacsharp.UI.FileSaver
             ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL
         ITEM	0	0	x	x	x	x	x	x	x	x	x
 ";
-        private StringBuilder csvData;
+        private StringBuilder? csvData;
         public FileSaver()
         {
             recordCSV = false;
@@ -59,6 +64,9 @@ namespace ibcdatacsharp.UI.FileSaver
             device = mainWindow.device;
             mainWindow.virtualToolBar.saveEvent += onSaveInfo;
             mainWindow.virtualToolBar.recordEvent += onRecord;
+#if VIDEO_BUFFER
+            videoBuffer = new VideoBuffer(FRAME_WIDTH, FRAME_HEIGHT);
+#endif
         }
         // Inicializa el timer para grabar CSV
         private void initTimerRecordCsv()
@@ -94,16 +102,14 @@ namespace ibcdatacsharp.UI.FileSaver
         private void initTimerRecordVideo()
         {
             if (timerVideo == null)
-#if VIDEO_MULTIMEDIA_TIMER
             {
+#if VIDEO_MULTIMEDIA_TIMER
                 timerVideo = new Timer.Timer();
                 timerVideo.Mode = TimerMode.Periodic;
                 timerVideo.Period = RECORD_VIDEO_MS;
                 timerVideo.Tick += appendVideo;
 
 #else
-            if (timerVideo == null)
-            {
                 timerVideo = new System.Windows.Threading.DispatcherTimer(System.Windows.Threading.DispatcherPriority.Send);
                 timerVideo.Tick += appendVideo;
                 timerVideo.Interval = new TimeSpan(0, 0, 0, 0, RECORD_VIDEO_MS);
@@ -119,7 +125,7 @@ namespace ibcdatacsharp.UI.FileSaver
             }
         }
         // Se llama cuando se empieza o termina de grabar
-        public async void onRecord(object sender, RecordState recordState)
+        public void onRecord(object sender, RecordState recordState)
         {
             if(recordState == RecordState.Recording)
             {
@@ -148,9 +154,12 @@ namespace ibcdatacsharp.UI.FileSaver
 #endif
                 mainWindow.virtualToolBar.pauseEvent -= onPauseVideo;
                 timerVideo = null;
-
+#if VIDEO_BUFFER
+                videoBuffer.saveFrames();
+#else
                 videoWriter.Release();
                 videoWriter = null;
+#endif
                 recordVideo = false;
             }
         }
@@ -182,7 +191,11 @@ namespace ibcdatacsharp.UI.FileSaver
             {
                 string videoFile = baseFilename + ".avi";
                 string pathVideoFile = path + "\\" + videoFile;
-                videoWriter = new VideoWriter(pathVideoFile, FourCC.MJPG, FPS, new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+#if VIDEO_BUFFER
+                videoBuffer.initVideoWriter(pathVideoFile, FourCC.DIVX, FPS);
+#else
+                videoWriter = new VideoWriter(pathVideoFile, FourCC.DIVX, FPS, new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+#endif
                 initTimerRecordVideo();
             }
         }
@@ -201,15 +214,20 @@ namespace ibcdatacsharp.UI.FileSaver
         // Añade un frame al video
         private void appendVideo(object sender, EventArgs e)
         {
+#if VIDEO_BUFFER
+            Mat frame = camaraViewport.getCurrentFrame();
+            videoBuffer.addFrame(frame, resize:false);
+#else
             if (videoWriter != null)
             {
                 Mat frame = camaraViewport.getCurrentFrame();
                 Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
                 if (videoWriter != null)
                 {
-                    videoWriter.Write(frameResized);
+                    Task.Run(() => { videoWriter.Write(frameResized); });
                 }
             }
+#endif
         }
         // Guarda el csv
         private async Task saveCsvFile()

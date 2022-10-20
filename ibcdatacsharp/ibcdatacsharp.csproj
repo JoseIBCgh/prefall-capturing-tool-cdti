@@ -31,6 +31,8 @@
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.6.0.20220608" />
     <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.6.0.20220608" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
+    <PackageReference Include="RealTimeGraphX" Version="1.0.17" />
+    <PackageReference Include="RealTimeGraphX.WPF" Version="1.0.17" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
