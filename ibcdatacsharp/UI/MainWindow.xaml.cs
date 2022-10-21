@@ -1,7 +1,7 @@
 ﻿# define CAPTURE_MULTIMEDIA_TIMER //Usar un multimedia timer para los graficos
 // Opciones para los graficos, solo dejar sin comentar una
 # define REAL_TIME_GRAPH_X //Usar RealTimeGraphX para los graficos
-# define OXYPLOT //Usar OxyPlot para los graficos
+//# define OXYPLOT //Usar OxyPlot para los graficos
 
 using System;
 using System.Diagnostics;

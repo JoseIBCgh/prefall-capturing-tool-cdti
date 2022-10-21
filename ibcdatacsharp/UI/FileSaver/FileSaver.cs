@@ -1,5 +1,5 @@
-﻿# define VIDEO_MULTIMEDIA_TIMER
-# define VIDEO_BUFFER
+﻿# define VIDEO_MULTIMEDIA_TIMER // Usar un multimedia timer para grabar el video
+//# define VIDEO_BUFFER // Guardar los frames en memoria y guardarlos en disco al final
 
 using ibcdatacsharp.UI.Device;
 using ibcdatacsharp.UI.Timer;
@@ -222,10 +222,10 @@ namespace ibcdatacsharp.UI.FileSaver
             if (videoWriter != null)
             {
                 Mat frame = camaraViewport.getCurrentFrame();
-                Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                //Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
                 if (videoWriter != null)
                 {
-                    Task.Run(() => { videoWriter.Write(frameResized); });
+                    Task.Run(() => { videoWriter.Write(frame); });
                 }
             }
 #endif
