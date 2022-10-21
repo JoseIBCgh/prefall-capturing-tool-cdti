@@ -6,9 +6,9 @@ using System.Windows.Media;
 
 namespace ibcdatacsharp.UI.RealTimeGraphX.GraphWindow
 {
+    // Modelos para el grfico acc, gyr, mag version RealTimeGraphX
     public class ViewModel
     {
-        //Graph controller with timespan as X axis and double as Y.
         public WpfGraphController<DoubleDataPoint, DoubleDataPoint> Controller { get; set; }
 
         public ViewModel(double minY, double maxY)
@@ -33,11 +33,8 @@ namespace ibcdatacsharp.UI.RealTimeGraphX.GraphWindow
             Controller.Range.MinimumY = minY;
             Controller.Range.MaximumY = maxY;
             Controller.Range.MaximumX = 1;
-            
-
-            //We will attach the surface using WPF binding...
-            //Controller.Surface = null;
         }
+        // Añade un punto
         public void update(int frame, double[] data)
         {
             double kframes = frame / 1000.0;
@@ -51,6 +48,7 @@ namespace ibcdatacsharp.UI.RealTimeGraphX.GraphWindow
             }
             Controller.PushData(kframesList, dataList);
         }
+        // Elimina todos los puntos
         public void clear()
         {
             Controller.Clear();

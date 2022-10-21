@@ -136,6 +136,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 stopRecording();
             }
         }
+        // Acciones para terminar de grabar
         private async void stopRecording()
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;

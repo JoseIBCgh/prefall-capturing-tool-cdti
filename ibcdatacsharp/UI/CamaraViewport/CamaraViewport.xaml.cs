@@ -1,4 +1,5 @@
-﻿#define TASK
+﻿// Dejar sin comentar solo una
+#define TASK
 //#define THREAD
 //#define TIMER // no funciona bien
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace ibcdatacsharp.UI.FileSaver
 {
+    // Clase para guardar los frames en memoria y guardarlos en disco al final. Mejora algo el rendimiento
     internal class VideoBuffer
     {
         private List<Mat> frames;
@@ -20,6 +21,7 @@ namespace ibcdatacsharp.UI.FileSaver
             saving = false;
             framesWithoutResize = false;
         }
+        // Guarda un frame (no hace falta que tenga las dimensiones correctas)
         public void addFrame(Mat frame, bool resize=true)
         {
             if (!saving)
@@ -39,10 +41,12 @@ namespace ibcdatacsharp.UI.FileSaver
                 }
             }
         }
+        // Inicializa el video writer
         public void initVideoWriter(string path, FourCC codec, int fps = 30)
         {
             writer = new VideoWriter(path, codec, fps, new Size(frameWidth, frameHeight));
         }
+        // Graba todos los frames en memoria
         public void saveFrames()
         {
             if (writer == null)
@@ -70,6 +74,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 saving = false;
             }
         }
+        // Inicializa un video writer y graba todos los frames en memoria
         public void saveFrames(string path, FourCC codec, int fps = 30)
         {
             saving = true;

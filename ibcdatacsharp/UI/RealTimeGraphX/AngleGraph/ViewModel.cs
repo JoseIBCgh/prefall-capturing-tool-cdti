@@ -5,9 +5,9 @@ using System.Windows.Media;
 
 namespace ibcdatacsharp.UI.RealTimeGraphX.AngleGraph
 {
+    // Modelo para el angle graph version RealTimeGraphX
     public class ViewModel
     {
-        //Graph controller with timespan as X axis and double as Y.
         public WpfGraphController<DoubleDataPoint, DoubleDataPoint> Controller { get; set; }
 
         public ViewModel()
@@ -22,16 +22,14 @@ namespace ibcdatacsharp.UI.RealTimeGraphX.AngleGraph
             Controller.Range.MinimumY = -200;
             Controller.Range.MaximumY = 200;
             Controller.Range.MaximumX = 1;
-
-
-            //We will attach the surface using WPF binding...
-            //Controller.Surface = null;
         }
+        // Añade un punto
         public void update(int frame, double data)
         {
             double kframes = frame / 1000.0;
             Controller.PushData(kframes, data);
         }
+        // Elimina todos los puntos
         public void clear()
         {
             Controller.Clear();

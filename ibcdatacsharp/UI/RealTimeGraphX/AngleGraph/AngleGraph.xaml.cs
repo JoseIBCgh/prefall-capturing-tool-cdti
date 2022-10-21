@@ -9,7 +9,7 @@ using System.Windows.Threading;
 namespace ibcdatacsharp.UI.RealTimeGraphX.AngleGraph
 {
     /// <summary>
-    /// Lógica de interacción para AngleGraph.xaml
+    /// Version de angle graph con la libreria RealTimeGraphX
     /// </summary>
     public partial class AngleGraph : Page
     {
@@ -27,6 +27,7 @@ namespace ibcdatacsharp.UI.RealTimeGraphX.AngleGraph
         public ViewModel modelX { get; private set; }
         public ViewModel modelY { get; private set; }
         public ViewModel modelZ { get; private set; }
+        // Funcion para incializar los graficos
         private void initModels()
         {
             modelX = new ViewModel();

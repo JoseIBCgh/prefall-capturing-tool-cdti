@@ -51,10 +51,10 @@
                             <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
                                 <TabControl x:Name="graphsTabControl" Grid.Row="0">
                                     <TabItem Header="Data Raw">
-                                        <Frame Source="pack://application:,,,/UI/RealTimeGraphX/GraphWindow/GraphWindow.xaml" x:Name="graphWindow"/>
+                                        <Frame x:Name="graphWindow"/>
                                     </TabItem>
                                     <TabItem Header="Joint Angle">
-                                        <Frame Source="pack://application:,,,/UI/RealTimeGraphX/AngleGraph/AngleGraph.xaml" x:Name="angleGraph"/>
+                                        <Frame x:Name="angleGraph"/>
                                     </TabItem>
                                 </TabControl>
                             </dock:LayoutAnchorable>

@@ -1,8 +1,12 @@
-﻿# define CAPTURE_MULTIMEDIA_TIMER
+﻿# define CAPTURE_MULTIMEDIA_TIMER //Usar un multimedia timer para los graficos
+// Opciones para los graficos, solo dejar sin comentar una
+# define REAL_TIME_GRAPH_X //Usar RealTimeGraphX para los graficos
+# define OXYPLOT //Usar OxyPlot para los graficos
 
 using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using ibcdatacsharp.DeviceList.TreeClasses;
@@ -15,11 +19,13 @@ using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.Timer;
 using ibcdatacsharp.UI.ToolBar.Enums;
 
+#if REAL_TIME_GRAPH_X
 using GraphWindowClass = ibcdatacsharp.UI.RealTimeGraphX.GraphWindow.GraphWindow;
-//using GraphWindowClass = ibcdatacsharp.UI.GraphWindow.GraphWindow;
 using AngleGraphClass = ibcdatacsharp.UI.RealTimeGraphX.AngleGraph.AngleGraph;
-using System.Windows.Threading;
-//using AngleGraphClass = ibcdatacsharp.UI.AngleGraph.AngleGraph;
+#elif OXYPLOT
+using GraphWindowClass = ibcdatacsharp.UI.GraphWindow.GraphWindow;
+using AngleGraphClass = ibcdatacsharp.UI.AngleGraph.AngleGraph;
+#endif
 
 namespace ibcdatacsharp.UI
 {
@@ -28,7 +34,11 @@ namespace ibcdatacsharp.UI
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private const int CAPTURE_MS = 20;
+#if REAL_TIME_GRAPH_X
+        private const int CAPTURE_MS = 20; //Con RealTimeGraphX puede bajar a 10 ms
+#elif OXYPLOT
+        private const int CAPTURE_MS = 20; //Si baja mas con OxyPlot puede problemas (minimo 15-16 ms)
+#endif
         public Device.Device device;
         public VirtualToolBar virtualToolBar;
 
@@ -41,6 +51,7 @@ namespace ibcdatacsharp.UI
         public MainWindow()
         {
             InitializeComponent();
+            setGraphLibraries();
             virtualToolBar = new VirtualToolBar();
             device = new Device.Device();
             fileSaver = new FileSaver.FileSaver();
@@ -49,7 +60,17 @@ namespace ibcdatacsharp.UI
             initMenuHandlers();
             loadAllGraphs();
         }
-        // Si se captura antes de visitar una pestaña sale un error
+        private void setGraphLibraries()
+        {
+#if REAL_TIME_GRAPH_X
+            graphWindow.Source = new Uri("pack://application:,,,/UI/RealTimeGraphX/GraphWindow/GraphWindow.xaml");
+            angleGraph.Source = new Uri("pack://application:,,,/UI/RealTimeGraphX/AngleGraph/AngleGraph.xaml");
+#elif OXYPLOT
+            graphWindow.Source = new Uri("pack://application:,,,/UI/GraphWindow/GraphWindow.xaml");
+            angleGraph.Source = new Uri("pack://application:,,,/UI/AngleGraph/AngleGraph.xaml");
+#endif
+        }
+        // Si se captura antes de visitar una pestaña sale un error (RealTimeGraphX)
         private void loadAllGraphs()
         {
             void changeToAngle()

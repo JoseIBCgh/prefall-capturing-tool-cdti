@@ -9,7 +9,7 @@ using System.Windows.Threading;
 namespace ibcdatacsharp.UI.RealTimeGraphX.GraphWindow
 {
     /// <summary>
-    /// Lógica de interacción para GraphWindow.xaml
+    /// Version del grafico acc, mag, gyr con la libreria RealTimeGraphX
     /// </summary>
     public partial class GraphWindow : Page
     {
@@ -27,7 +27,7 @@ namespace ibcdatacsharp.UI.RealTimeGraphX.GraphWindow
         public ViewModel modelAccelerometer { get; private set; }
         public ViewModel modelGyroscope { get; private set; }
         public ViewModel modelMagnetometer { get; private set; }
-
+        // Inicializa los modelos
         private void initModels()
         {
             modelAccelerometer = new ViewModel(-80, 80);
