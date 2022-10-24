@@ -1,7 +1,6 @@
 ﻿using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.Timer
 {
@@ -15,7 +14,7 @@ namespace ibcdatacsharp.UI.Timer
         private Timer timer;
         private const int INIT_FRAME = 0;
         private int frame;
-        private Stopwatch stopwatch;
+        private DateTime? initTime;
 
         #endregion
 
@@ -55,11 +54,10 @@ namespace ibcdatacsharp.UI.Timer
         private void Initialize()
         {
             frame = INIT_FRAME;
-            stopwatch = new Stopwatch();
 
             timer.Tick += delegate (object sender, EventArgs e)
             {
-                Tick?.Invoke(this, new FrameArgs { frame = frame, elapsed = stopwatch.Elapsed.TotalSeconds });
+                Tick?.Invoke(this, new FrameArgs { frame = frame, elapsed = DateTime.Now.Subtract((DateTime)initTime).TotalSeconds });
                 frame++;
             };
         }
@@ -72,13 +70,16 @@ namespace ibcdatacsharp.UI.Timer
         public void stopAndReset(object sender)
         {
             timer.Stop();
-            stopwatch.Reset();
             frame = INIT_FRAME;
+            initTime = null;
         }
         public void Start()
         {
             timer.Start();
-            stopwatch.Start();
+            if(initTime == null)
+            {
+                initTime = DateTime.Now;
+            }
         }
         // Se llama al clicar el boton pause. Pausa o inicia el timer
         public void onPause(object sender, PauseState pauseState)
@@ -101,7 +102,6 @@ namespace ibcdatacsharp.UI.Timer
         public void Stop()
         {
             timer.Stop();
-            stopwatch.Stop();
         }
 
         #endregion

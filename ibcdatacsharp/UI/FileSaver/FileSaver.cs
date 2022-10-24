@@ -137,7 +137,7 @@ namespace ibcdatacsharp.UI.FileSaver
             }
         }
         // Acciones para terminar de grabar
-        private async void stopRecording()
+        private void stopRecording()
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             if (recordCSV)
@@ -145,7 +145,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 timerCsv.Dispose();
                 mainWindow.virtualToolBar.pauseEvent -= timerCsv.onPause;
                 timerCsv = null;
-                await saveCsvFile();
+                saveCsvFile();
                 recordCSV = false;
             }
             if (recordVideo)
@@ -225,13 +225,13 @@ namespace ibcdatacsharp.UI.FileSaver
                 //Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
                 if (videoWriter != null)
                 {
-                    Task.Run(() => { videoWriter.Write(frame); });
+                    videoWriter.Write(frame);
                 }
             }
 #endif
         }
         // Guarda el csv
-        private async Task saveCsvFile()
+        private async void saveCsvFile()
         {
             string filePath = path + "\\" + csvFile;
             await File.WriteAllTextAsync(filePath, csvData.ToString());
