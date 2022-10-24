@@ -1,5 +1,4 @@
-﻿# define VIDEO_MULTIMEDIA_TIMER // Usar un multimedia timer para grabar el video
-//# define VIDEO_BUFFER // Guardar los frames en memoria y guardarlos en disco al final
+﻿//# define VIDEO_BUFFER // Guardar los frames en memoria y guardarlos en disco al final
 
 using ibcdatacsharp.UI.Device;
 using ibcdatacsharp.UI.Timer;
@@ -21,12 +20,11 @@ namespace ibcdatacsharp.UI.FileSaver
         private const int RECORD_VIDEO_MS = 1000 / FPS;
         private const int FRAME_HEIGHT = 480;
         private const int FRAME_WIDTH = 640;
-        private TimerMeasure? timerCsv;
-#if VIDEO_MULTIMEDIA_TIMER
-        private Timer.Timer? timerVideo;
-#else
-        private System.Windows.Threading.DispatcherTimer timerVideo;
-#endif
+        private System.Windows.Forms.Timer timerCsv;
+        private DateTime? startCsv;
+        private int frameCsv;
+        private System.Windows.Forms.Timer timerVideo;
+
         private CamaraViewport.CamaraViewport camaraViewport;
         private Device.Device device;
 #if VIDEO_BUFFER
@@ -68,23 +66,39 @@ namespace ibcdatacsharp.UI.FileSaver
             videoBuffer = new VideoBuffer(FRAME_WIDTH, FRAME_HEIGHT);
 #endif
         }
+        private void onPauseCsv(object sender, PauseState pauseState)
+        {
+            if (pauseState == PauseState.Pause)
+            {
+                timerCsv.Stop();
+            }
+            else if (pauseState == PauseState.Play)
+            {
+                timerCsv.Start();
+                if(startCsv == null)
+                {
+                    startCsv = DateTime.Now;
+                }
+            }
+        }
         // Inicializa el timer para grabar CSV
         private void initTimerRecordCsv()
         {
             if (timerCsv == null)
             {
-                timerCsv = new TimerMeasure();
-                timerCsv.Mode = TimerMode.Periodic;
-                timerCsv.Period = RECORD_CSV_MS;
-                timerCsv.Tick += appendCSV;
+                timerCsv = new System.Windows.Forms.Timer();
+                timerCsv.Interval = RECORD_CSV_MS;
+                timerCsv.Tick += new EventHandler(appendCSV);
 
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                mainWindow.virtualToolBar.pauseEvent += timerCsv.onPause;
+                mainWindow.virtualToolBar.pauseEvent += onPauseCsv;
 
                 if (mainWindow.virtualToolBar.pauseState == PauseState.Play)
                 {
                     timerCsv.Start();
+                    startCsv = DateTime.Now;
                 }
+                frameCsv = 0;
             }
         }
         private void onPauseVideo(object sender, PauseState pauseState)
@@ -103,18 +117,11 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             if (timerVideo == null)
             {
-#if VIDEO_MULTIMEDIA_TIMER
-                timerVideo = new Timer.Timer();
-                timerVideo.Mode = TimerMode.Periodic;
-                timerVideo.Period = RECORD_VIDEO_MS;
-                timerVideo.Tick += appendVideo;
+                timerVideo = new System.Windows.Forms.Timer();
+                timerVideo.Interval = RECORD_VIDEO_MS;
+                timerVideo.Tick += new EventHandler(appendVideo);
 
-#else
-                timerVideo = new System.Windows.Threading.DispatcherTimer(System.Windows.Threading.DispatcherPriority.Send);
-                timerVideo.Tick += appendVideo;
-                timerVideo.Interval = new TimeSpan(0, 0, 0, 0, RECORD_VIDEO_MS);
 
-#endif
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
                 mainWindow.virtualToolBar.pauseEvent += onPauseVideo;
 
@@ -143,18 +150,17 @@ namespace ibcdatacsharp.UI.FileSaver
             if (recordCSV)
             {
                 timerCsv.Dispose();
-                mainWindow.virtualToolBar.pauseEvent -= timerCsv.onPause;
-                timerCsv = null;
+                mainWindow.virtualToolBar.pauseEvent -= onPauseCsv;
                 saveCsvFile();
                 recordCSV = false;
             }
             if (recordVideo)
             {
-#if VIDEO_MULTIMEDIA
+
                 timerVideo.Dispose();
-#endif
                 mainWindow.virtualToolBar.pauseEvent -= onPauseVideo;
-                timerVideo = null;
+
+
 #if VIDEO_BUFFER
                 videoBuffer.saveFrames();
 #else
@@ -201,11 +207,12 @@ namespace ibcdatacsharp.UI.FileSaver
             }
         }
         // Añade una fila al csv
-        private void appendCSV(object sender, FrameArgs frameArgs)
+        private void appendCSV(object sender, EventArgs e)
         {
             RawArgs rawArgs = device.rawData;
             //AngleArgs angleArgs = device.angleData;
-            string newLine = "1 " + frameArgs.elapsed.ToString() + " " + frameArgs.frame.ToString() + " " +
+            double elapsed = DateTime.Now.Subtract((DateTime)startCsv).TotalSeconds;
+            string newLine = "1 " + elapsed.ToString() + " " + frameCsv.ToString() + " " +
                 rawArgs.accelerometer[0].ToString() + " " + rawArgs.accelerometer[1].ToString() + " " + rawArgs.accelerometer[2].ToString() + " " +
                 rawArgs.gyroscope[0].ToString() + " " + rawArgs.gyroscope[1].ToString() + " " + rawArgs.gyroscope[2].ToString() + " " +
                 rawArgs.magnetometer[0].ToString() + " " + rawArgs.magnetometer[1].ToString() + " " + rawArgs.magnetometer[2].ToString() + "\n";
