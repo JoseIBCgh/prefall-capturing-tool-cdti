@@ -271,7 +271,7 @@ namespace ibcdatacsharp.UI
                 async void addCameras(DeviceList.DeviceList deviceListClass)
                 {
                     // Devuelve el nombre de todas las camaras conectadas
-                    async Task<List<string>> cameraNames()
+                    List<string> cameraNames()
                     {
                         List<DsDevice> devices = new List<DsDevice>(DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice));
                         List<string> cameraNames = new List<string>();
@@ -282,7 +282,7 @@ namespace ibcdatacsharp.UI
                         return cameraNames;
                     }
                     // Devuelve una lista de indice OpenCV de las camaras disponibles
-                    async Task<List<int>> cameraIndices(int maxIndex = 10)
+                    List<int> cameraIndices(int maxIndex = 10)
                     {
                         List<int> indices = new List<int>();
                         VideoCapture capture = new VideoCapture();
