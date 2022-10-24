@@ -20,26 +20,28 @@
         </Style>
     </Page.Resources>
 
-    <StackPanel>
-        <Grid Width="250" HorizontalAlignment="Left" Margin="26,0,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition SharedSizeGroup="A"/>
-                <ColumnDefinition SharedSizeGroup="A"/>
-                <ColumnDefinition SharedSizeGroup="A"/>
-                <ColumnDefinition SharedSizeGroup="A"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Device" Grid.Column="0" TextAlignment="Center"/>
-            <TextBlock Text="Description" Grid.Column="1" TextAlignment="Center"/>
-            <TextBlock Text="State" Grid.Column="2" TextAlignment="Center"/>
-            <TextBlock Text="Connected" Grid.Column="3" TextAlignment="Center"/>
-        </Grid>
-        <TreeView BorderThickness="0" ItemContainerStyle="{StaticResource TreeViewItemStyle}" x:Name="treeView">
-            <TreeView.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
-                      Color="LightSkyBlue" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
-                      Color="LightSkyBlue" />
-            </TreeView.Resources>
+    <TreeView BorderThickness="0" ItemContainerStyle="{StaticResource TreeViewItemStyle}" x:Name="treeView">
+        <TreeView.Resources>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                        Color="LightSkyBlue" />
+            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                        Color="LightSkyBlue" />
+        </TreeView.Resources>
+        <TreeViewItem x:Name="baseItem">
+            <TreeViewItem.Header>
+                <Grid Margin="19,0,0,0" Width="250">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                        <ColumnDefinition SharedSizeGroup="A"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Device" Grid.Column="0" TextAlignment="Center"/>
+                    <TextBlock Text="Description" Grid.Column="1" TextAlignment="Center"/>
+                    <TextBlock Text="State" Grid.Column="2" TextAlignment="Center"/>
+                    <TextBlock Text="Connected" Grid.Column="3" TextAlignment="Center"/>
+                </Grid>
+            </TreeViewItem.Header>
             <TreeViewItem ItemsSource="{Binding IMUs}" Visibility="Collapsed" x:Name="IMUs">
                 <TreeViewItem.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
@@ -143,6 +145,6 @@
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
-        </TreeView>
-    </StackPanel>
+        </TreeViewItem>
+    </TreeView>
 </Page>

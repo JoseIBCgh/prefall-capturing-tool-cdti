@@ -282,7 +282,7 @@ namespace ibcdatacsharp.UI
                         return cameraNames;
                     }
                     // Devuelve una lista de indice OpenCV de las camaras disponibles
-                    List<int> cameraIndices(int maxIndex = 10)
+                     List<int> cameraIndices(int maxIndex = 10)
                     {
                         List<int> indices = new List<int>();
                         VideoCapture capture = new VideoCapture();
@@ -315,6 +315,12 @@ namespace ibcdatacsharp.UI
                 deviceListClass.hideIMUs();
                 deviceListClass.showCameras();
                 deviceListClass.hideInsoles(); //Por defecto estan escondidos pero si los muestras una vez los tienes que volver a esconder
+                /*
+                deviceListClass.showIMUs();
+                deviceListClass.showInsoles();
+                deviceListClass.addIMU(new IMUInfo("IMU", "AD:DS"));
+                deviceListClass.addInsole(new InsolesInfo("Insole", "Left"));
+                */
             }
             deviceListLoadedCheck(onScanFunction);
         }

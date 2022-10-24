@@ -14,6 +14,7 @@ namespace ibcdatacsharp.UI.DeviceList
         public DeviceList()
         {
             InitializeComponent();
+            baseItem.IsExpanded = true;
         }
 
         // Funciones para eliminar todos los elementos de IMU, camara y Insoles
