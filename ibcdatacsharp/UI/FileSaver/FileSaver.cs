@@ -5,11 +5,13 @@ using ibcdatacsharp.UI.Timer;
 using ibcdatacsharp.UI.ToolBar.Enums;
 using OpenCvSharp;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 
 namespace ibcdatacsharp.UI.FileSaver
 {
@@ -20,10 +22,10 @@ namespace ibcdatacsharp.UI.FileSaver
         private const int RECORD_VIDEO_MS = 1000 / FPS;
         private const int FRAME_HEIGHT = 480;
         private const int FRAME_WIDTH = 640;
-        private System.Windows.Forms.Timer timerCsv;
+        private DispatcherTimer timerCsv;
         private DateTime? startCsv;
         private int frameCsv;
-        private System.Windows.Forms.Timer timerVideo;
+        private DispatcherTimer timerVideo;
 
         private CamaraViewport.CamaraViewport camaraViewport;
         private Device.Device device;
@@ -86,8 +88,8 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             if (timerCsv == null)
             {
-                timerCsv = new System.Windows.Forms.Timer();
-                timerCsv.Interval = RECORD_CSV_MS;
+                timerCsv = new DispatcherTimer();
+                timerCsv.Interval = TimeSpan.FromMilliseconds(RECORD_CSV_MS);
                 timerCsv.Tick += new EventHandler(appendCSV);
 
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
@@ -117,8 +119,8 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             if (timerVideo == null)
             {
-                timerVideo = new System.Windows.Forms.Timer();
-                timerVideo.Interval = RECORD_VIDEO_MS;
+                timerVideo = new DispatcherTimer();
+                timerVideo.Interval = TimeSpan.FromMilliseconds(RECORD_VIDEO_MS);
                 timerVideo.Tick += new EventHandler(appendVideo);
 
 
@@ -149,7 +151,7 @@ namespace ibcdatacsharp.UI.FileSaver
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             if (recordCSV)
             {
-                timerCsv.Dispose();
+                timerCsv = null;
                 mainWindow.virtualToolBar.pauseEvent -= onPauseCsv;
                 saveCsvFile();
                 recordCSV = false;
@@ -157,7 +159,7 @@ namespace ibcdatacsharp.UI.FileSaver
             if (recordVideo)
             {
 
-                timerVideo.Dispose();
+                timerVideo = null;
                 mainWindow.virtualToolBar.pauseEvent -= onPauseVideo;
 
 
@@ -212,11 +214,14 @@ namespace ibcdatacsharp.UI.FileSaver
             RawArgs rawArgs = device.rawData;
             //AngleArgs angleArgs = device.angleData;
             double elapsed = DateTime.Now.Subtract((DateTime)startCsv).TotalSeconds;
+            Trace.WriteLine(elapsed);
+            /*
             string newLine = "1 " + elapsed.ToString() + " " + frameCsv.ToString() + " " +
                 rawArgs.accelerometer[0].ToString() + " " + rawArgs.accelerometer[1].ToString() + " " + rawArgs.accelerometer[2].ToString() + " " +
                 rawArgs.gyroscope[0].ToString() + " " + rawArgs.gyroscope[1].ToString() + " " + rawArgs.gyroscope[2].ToString() + " " +
                 rawArgs.magnetometer[0].ToString() + " " + rawArgs.magnetometer[1].ToString() + " " + rawArgs.magnetometer[2].ToString() + "\n";
             csvData.Append(newLine);
+            */
         }
 
         // Añade un frame al video
