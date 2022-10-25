@@ -1,7 +1,4 @@
-﻿# define CAPTURE_MULTIMEDIA_TIMER //Usar un multimedia timer para los graficos
-// Opciones para los graficos, solo dejar sin comentar una
-# define REAL_TIME_GRAPH_X //Usar RealTimeGraphX para los graficos
-//# define OXYPLOT //Usar OxyPlot para los graficos
+﻿# define REAL_TIME_GRAPH_X //Usar RealTimeGraphX para los graficos
 
 using System;
 using System.Diagnostics;
@@ -22,7 +19,7 @@ using ibcdatacsharp.UI.ToolBar.Enums;
 #if REAL_TIME_GRAPH_X
 using GraphWindowClass = ibcdatacsharp.UI.RealTimeGraphX.GraphWindow.GraphWindow;
 using AngleGraphClass = ibcdatacsharp.UI.RealTimeGraphX.AngleGraph.AngleGraph;
-#elif OXYPLOT
+#else
 using GraphWindowClass = ibcdatacsharp.UI.GraphWindow.GraphWindow;
 using AngleGraphClass = ibcdatacsharp.UI.AngleGraph.AngleGraph;
 #endif
@@ -34,19 +31,13 @@ namespace ibcdatacsharp.UI
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-#if REAL_TIME_GRAPH_X
-        private const int CAPTURE_MS = 20; //Con RealTimeGraphX puede bajar a 10 ms
-#elif OXYPLOT
-        private const int CAPTURE_MS = 20; //Si baja mas con OxyPlot puede problemas (minimo 15-16 ms)
-#endif
+
+        private const int CAPTURE_MS = 10; //Con RealTimeGraphX puede bajar a 10 ms
+
         public Device.Device device;
         public VirtualToolBar virtualToolBar;
 
-#if CAPTURE_MULTIMEDIA_TIMER
-        private Timer.Timer? timerCapture;
-#else
         private System.Timers.Timer timerCapture;
-#endif
         private FileSaver.FileSaver fileSaver;
         public MainWindow()
         {
@@ -120,49 +111,6 @@ namespace ibcdatacsharp.UI
             }
             if (timerCapture == null)
             {
-#if CAPTURE_MULTIMEDIA_TIMER
-                timerCapture = new Timer.Timer();
-                timerCapture.Mode = TimerMode.Periodic;
-                timerCapture.Period = CAPTURE_MS;
-                if (graphWindow.Content == null)
-                {
-                    graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
-                    {
-                        GraphWindowClass graphWindowClass = graphWindow.Content as GraphWindowClass;
-                        graphWindowClass.clearData();
-                        timerCapture.Tick += graphWindowClass.onTick;
-                    };
-                }
-                else
-                {
-                    GraphWindowClass graphWindowClass = graphWindow.Content as GraphWindowClass;
-                    graphWindowClass.clearData();
-                    timerCapture.Tick += graphWindowClass.onTick;
-                }
-                if (angleGraph.Content == null)
-                {
-                    angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
-                    {
-                        AngleGraphClass angleGraphClass = angleGraph.Content as AngleGraphClass;
-                        angleGraphClass.clearData();
-                        timerCapture.Tick += angleGraphClass.onTick;
-                    };
-                }
-                else
-                {
-                    AngleGraphClass angleGraphClass = angleGraph.Content as AngleGraphClass;
-                    angleGraphClass.clearData();
-                    timerCapture.Tick += angleGraphClass.onTick;
-                }
-
-                virtualToolBar.pauseEvent += onPause; //funcion local
-                virtualToolBar.stopEvent += onStop; //funcion local
-                if (virtualToolBar.pauseState == PauseState.Play)
-                {
-                    timerCapture.Start();
-                }
-                device.initTimer();
-#else
                 timerCapture = new System.Timers.Timer(CAPTURE_MS);
                 timerCapture.AutoReset = true;
                 if (graphWindow.Content == null)
@@ -202,7 +150,6 @@ namespace ibcdatacsharp.UI
                     timerCapture.Start();
                 }
                 device.initTimer();
-#endif
             }
         }
         // Cambia el icono de la ventana
