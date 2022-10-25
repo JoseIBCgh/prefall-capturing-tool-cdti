@@ -1,39 +1,38 @@
-﻿//# define VIDEO_BUFFER // Guardar los frames en memoria y guardarlos en disco al final
-
-using ibcdatacsharp.UI.Device;
-using ibcdatacsharp.UI.Timer;
+﻿using ibcdatacsharp.UI.Device;
+using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
 using OpenCvSharp;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
-using System.Windows.Threading;
 
 namespace ibcdatacsharp.UI.FileSaver
 {
     internal class FileSaver
     {
-        private const int FPS = 30;
+        private const int FPS = 25;
         private const int RECORD_CSV_MS = 10;
         private const int RECORD_VIDEO_MS = 1000 / FPS;
+        private const int PAUSE_VIDEO_POOL_MS = 10;
         private const int FRAME_HEIGHT = 480;
         private const int FRAME_WIDTH = 640;
         private System.Timers.Timer timerCsv;
-        private DateTime? startCsv;
+        private Stopwatch stopwatchCSV;
         private int frameCsv;
-        private System.Timers.Timer timerVideo;
+        private CancellationTokenSource cancellationTokenSourceVideo;
+        private CancellationToken cancellationTokenVideo;
+        private Task videoTask;
 
         private CamaraViewport.CamaraViewport camaraViewport;
+        private VirtualToolBar virtualToolBar;
         private Device.Device device;
-#if VIDEO_BUFFER
-        private VideoBuffer videoBuffer;
-#else
         private VideoWriter? videoWriter;
-#endif
+
         private string? path;
         private string? csvFile;
         private bool recordCSV;
@@ -61,77 +60,48 @@ namespace ibcdatacsharp.UI.FileSaver
             {
                 camaraViewport = mainWindow.camaraViewport.Content as CamaraViewport.CamaraViewport;
             }
+            virtualToolBar = mainWindow.virtualToolBar;
             device = mainWindow.device;
             mainWindow.virtualToolBar.saveEvent += onSaveInfo;
             mainWindow.virtualToolBar.recordEvent += onRecord;
-#if VIDEO_BUFFER
-            videoBuffer = new VideoBuffer(FRAME_WIDTH, FRAME_HEIGHT);
-#endif
         }
         private void onPauseCsv(object sender, PauseState pauseState)
         {
             if (pauseState == PauseState.Pause)
             {
                 timerCsv.Stop();
+                stopwatchCSV.Stop();
             }
             else if (pauseState == PauseState.Play)
             {
                 timerCsv.Start();
-                if(startCsv == null)
-                {
-                    startCsv = DateTime.Now;
-                }
+                stopwatchCSV.Start();
             }
         }
         // Inicializa el timer para grabar CSV
-        private void initTimerRecordCsv()
+        private void initRecordCsv()
         {
-            if (timerCsv == null)
-            {
-                timerCsv = new System.Timers.Timer();
-                timerCsv.Interval = RECORD_CSV_MS;
-                timerCsv.Elapsed += (sender, e) => appendCSV();
+            timerCsv = new System.Timers.Timer();
+            timerCsv.Interval = RECORD_CSV_MS;
+            timerCsv.Elapsed += (sender, e) => appendCSV();
 
-                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                mainWindow.virtualToolBar.pauseEvent += onPauseCsv;
+            virtualToolBar.pauseEvent += onPauseCsv;
 
-                if (mainWindow.virtualToolBar.pauseState == PauseState.Play)
-                {
-                    timerCsv.Start();
-                    startCsv = DateTime.Now;
-                }
-                frameCsv = 0;
-            }
-        }
-        private void onPauseVideo(object sender, PauseState pauseState)
-        {
-            if (pauseState == PauseState.Pause)
+            if(stopwatchCSV == null)
             {
-                timerVideo.Stop();
+                stopwatchCSV = new Stopwatch();
             }
-            else if (pauseState == PauseState.Play)
+            if (virtualToolBar.pauseState == PauseState.Play)
             {
-                timerVideo.Start();
+                timerCsv.Start();
+                stopwatchCSV.Restart();
             }
+            frameCsv = 0;
         }
         // Inicializa el timer para grabar video
-        private void initTimerRecordVideo()
+        private void initRecordVideo()
         {
-            if (timerVideo == null)
-            {
-                timerVideo = new System.Timers.Timer();
-                timerVideo.Interval = RECORD_VIDEO_MS;
-                timerVideo.Elapsed += (sender, e) => appendVideo();
-
-
-                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                mainWindow.virtualToolBar.pauseEvent += onPauseVideo;
-
-                if (mainWindow.virtualToolBar.pauseState == PauseState.Play)
-                {
-                    timerVideo.Start();
-                }
-            }
+            videoTask = appendVideoCallback();
         }
         // Se llama cuando se empieza o termina de grabar
         public void onRecord(object sender, RecordState recordState)
@@ -151,24 +121,16 @@ namespace ibcdatacsharp.UI.FileSaver
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             if (recordCSV)
             {
+                timerCsv.Stop();
                 timerCsv = null;
                 mainWindow.virtualToolBar.pauseEvent -= onPauseCsv;
                 saveCsvFile();
                 recordCSV = false;
             }
             if (recordVideo)
-            {
+            { 
+                cancellationTokenSourceVideo.Cancel();
 
-                timerVideo = null;
-                mainWindow.virtualToolBar.pauseEvent -= onPauseVideo;
-
-
-#if VIDEO_BUFFER
-                videoBuffer.saveFrames();
-#else
-                videoWriter.Release();
-                videoWriter = null;
-#endif
                 recordVideo = false;
             }
         }
@@ -194,18 +156,16 @@ namespace ibcdatacsharp.UI.FileSaver
                 csvFile = baseFilename + ".csv";
                 csvData = new StringBuilder();
                 csvData.Append(csvHeader);
-                initTimerRecordCsv();
+                initRecordCsv();
             }
             if (recordVideo)
             {
                 string videoFile = baseFilename + ".avi";
                 string pathVideoFile = path + "\\" + videoFile;
-#if VIDEO_BUFFER
-                videoBuffer.initVideoWriter(pathVideoFile, FourCC.DIVX, FPS);
-#else
                 videoWriter = new VideoWriter(pathVideoFile, FourCC.DIVX, FPS, new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-#endif
-                initTimerRecordVideo();
+                cancellationTokenSourceVideo = new CancellationTokenSource();
+                cancellationTokenVideo = cancellationTokenSourceVideo.Token;
+                initRecordVideo();
             }
         }
         // Añade una fila al csv
@@ -213,48 +173,47 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             RawArgs rawArgs = device.rawData;
             //AngleArgs angleArgs = device.angleData;
-            double elapsed = DateTime.Now.Subtract((DateTime)startCsv).TotalSeconds;
-            Trace.WriteLine(elapsed);
-            /*
+            double elapsed = stopwatchCSV.Elapsed.TotalSeconds;
             string newLine = "1 " + elapsed.ToString() + " " + frameCsv.ToString() + " " +
                 rawArgs.accelerometer[0].ToString() + " " + rawArgs.accelerometer[1].ToString() + " " + rawArgs.accelerometer[2].ToString() + " " +
                 rawArgs.gyroscope[0].ToString() + " " + rawArgs.gyroscope[1].ToString() + " " + rawArgs.gyroscope[2].ToString() + " " +
                 rawArgs.magnetometer[0].ToString() + " " + rawArgs.magnetometer[1].ToString() + " " + rawArgs.magnetometer[2].ToString() + "\n";
             csvData.Append(newLine);
-            */
+            frameCsv++;
         }
 
-        // Añade un frame al video
-        private void appendVideo()
-        {
-#if VIDEO_BUFFER
-            Mat frame = camaraViewport.getCurrentFrame();
-            videoBuffer.addFrame(frame, resize:false);
-#else
-            Trace.WriteLine("appendVideo");
-            if (videoWriter != null)
-            {
-                Trace.WriteLine("videoWriter != null");
-                Mat frame = camaraViewport.getCurrentFrame();
-                Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
-                if (videoWriter != null)
-                {
-                    videoWriter.Write(frameResized);
-                }
-            }
-#endif
-        }
         private async Task appendVideoCallback()
         {
+            Stopwatch stopwatch = new Stopwatch();
             while (true)
             {
-                if (videoWriter != null)
+                if (cancellationTokenVideo.IsCancellationRequested)
                 {
-                    Mat frame = camaraViewport.getCurrentFrame();
-                    Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                    videoWriter.Release();
+                    videoWriter = null;
+                    return;
+                }
+                if (virtualToolBar.pauseState == PauseState.Pause)
+                {
+                    await Task.Delay(PAUSE_VIDEO_POOL_MS);
+                }
+                else
+                {
+                    stopwatch.Restart();
                     if (videoWriter != null)
                     {
-                        videoWriter.Write(frameResized);
+                        Mat frame = camaraViewport.getCurrentFrame();
+                        Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                        if (videoWriter != null)
+                        {
+                            videoWriter.Write(frameResized);
+                        }
+                    }
+                    double elapsed = stopwatch.Elapsed.TotalSeconds;
+                    int waitTime = (int)(RECORD_VIDEO_MS - elapsed);
+                    if (waitTime > 0)
+                    {
+                        await Task.Delay(waitTime);
                     }
                 }
             }
@@ -275,7 +234,16 @@ namespace ibcdatacsharp.UI.FileSaver
         // Se llama cuando se cierra la aplicacion. Para guardar lo grabado
         public void onCloseApplication()
         {
-            stopRecording();
+            if (recordCSV)
+            {
+                timerCsv.Stop();
+                saveCsvFile();
+            }
+            if (recordVideo)
+            {
+                videoWriter.Dispose();
+                videoWriter = null;
+            }
         }
     }
 }
