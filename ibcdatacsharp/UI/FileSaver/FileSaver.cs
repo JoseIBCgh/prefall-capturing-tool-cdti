@@ -22,10 +22,10 @@ namespace ibcdatacsharp.UI.FileSaver
         private const int RECORD_VIDEO_MS = 1000 / FPS;
         private const int FRAME_HEIGHT = 480;
         private const int FRAME_WIDTH = 640;
-        private DispatcherTimer timerCsv;
+        private System.Timers.Timer timerCsv;
         private DateTime? startCsv;
         private int frameCsv;
-        private DispatcherTimer timerVideo;
+        private System.Timers.Timer timerVideo;
 
         private CamaraViewport.CamaraViewport camaraViewport;
         private Device.Device device;
@@ -88,9 +88,9 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             if (timerCsv == null)
             {
-                timerCsv = new DispatcherTimer();
-                timerCsv.Interval = TimeSpan.FromMilliseconds(RECORD_CSV_MS);
-                timerCsv.Tick += new EventHandler(appendCSV);
+                timerCsv = new System.Timers.Timer();
+                timerCsv.Interval = RECORD_CSV_MS;
+                timerCsv.Elapsed += (sender, e) => appendCSV();
 
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
                 mainWindow.virtualToolBar.pauseEvent += onPauseCsv;
@@ -119,9 +119,9 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             if (timerVideo == null)
             {
-                timerVideo = new DispatcherTimer();
-                timerVideo.Interval = TimeSpan.FromMilliseconds(RECORD_VIDEO_MS);
-                timerVideo.Tick += new EventHandler(appendVideo);
+                timerVideo = new System.Timers.Timer();
+                timerVideo.Interval = RECORD_VIDEO_MS;
+                timerVideo.Elapsed += (sender, e) => appendVideo();
 
 
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
@@ -209,7 +209,7 @@ namespace ibcdatacsharp.UI.FileSaver
             }
         }
         // Añade una fila al csv
-        private void appendCSV(object sender, EventArgs e)
+        private void appendCSV()
         {
             RawArgs rawArgs = device.rawData;
             //AngleArgs angleArgs = device.angleData;
@@ -225,22 +225,39 @@ namespace ibcdatacsharp.UI.FileSaver
         }
 
         // Añade un frame al video
-        private void appendVideo(object sender, EventArgs e)
+        private void appendVideo()
         {
 #if VIDEO_BUFFER
             Mat frame = camaraViewport.getCurrentFrame();
             videoBuffer.addFrame(frame, resize:false);
 #else
+            Trace.WriteLine("appendVideo");
             if (videoWriter != null)
             {
+                Trace.WriteLine("videoWriter != null");
                 Mat frame = camaraViewport.getCurrentFrame();
-                //Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
                 if (videoWriter != null)
                 {
-                    videoWriter.Write(frame);
+                    videoWriter.Write(frameResized);
                 }
             }
 #endif
+        }
+        private async Task appendVideoCallback()
+        {
+            while (true)
+            {
+                if (videoWriter != null)
+                {
+                    Mat frame = camaraViewport.getCurrentFrame();
+                    Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                    if (videoWriter != null)
+                    {
+                        videoWriter.Write(frameResized);
+                    }
+                }
+            }
         }
         // Guarda el csv
         private async void saveCsvFile()
