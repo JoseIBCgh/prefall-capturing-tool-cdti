@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "dgSpecHash": "XDKuBJHy1XfMwae6zQvSJud3ZN9s26731QzNOxDVgNvsXfmpa5yrTd16sGy2GgNQ6Hzts7jDZ90jp3jMcgSDWw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\ibcdatacsharp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Deva\\.nuget\\packages\\directshowlib\\1.0.0\\directshowlib.1.0.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\directshowlib.standard\\2.1.0\\directshowlib.standard.2.1.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\dirkster.avalondock\\4.70.2\\dirkster.avalondock.4.70.2.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\opencvsharp4\\4.6.0.20220608\\opencvsharp4.4.6.0.20220608.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\opencvsharp4.extensions\\4.6.0.20220608\\opencvsharp4.extensions.4.6.0.20220608.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\opencvsharp4.runtime.win\\4.6.0.20220608\\opencvsharp4.runtime.win.4.6.0.20220608.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\opencvsharp4.wpfextensions\\4.6.0.20220608\\opencvsharp4.wpfextensions.4.6.0.20220608.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\oxyplot.core\\2.1.0\\oxyplot.core.2.1.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\oxyplot.wpf\\2.1.0\\oxyplot.wpf.2.1.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\oxyplot.wpf.shared\\2.1.0\\oxyplot.wpf.shared.2.1.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\realtimegraphx\\1.0.17\\realtimegraphx.1.0.17.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\realtimegraphx.wpf\\1.0.17\\realtimegraphx.wpf.1.0.17.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\scottplot\\4.1.58\\scottplot.4.1.58.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\scottplot.wpf\\4.1.58\\scottplot.wpf.4.1.58.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'DirectShowLib 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "DirectShowLib",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'RealTimeGraphX.WPF 1.0.17' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "RealTimeGraphX.WPF",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    }
+  ]
+}
