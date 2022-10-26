@@ -33,10 +33,13 @@ namespace ibcdatacsharp.UI.CamaraViewport
         private CancellationToken cancellationTokenDisplay;
         private Task displayTask;
 
+        private Mat currentFrame;
+
         public CamaraViewport()
         {
             InitializeComponent();
-            imgViewport.Source = BitmapSourceConverter.ToBitmapSource(getBlackImage());
+            currentFrame = getBlackImage();
+            imgViewport.Source = BitmapSourceConverter.ToBitmapSource(currentFrame);
         }
         // Comprueba si se esta grabano alguna camara
         public bool someCameraOpened()
@@ -68,23 +71,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
         // Devuelve el frame de la camara o negro si no esta encendida
         public Mat getCurrentFrame()
         {
-            if (videoCapture != null)
-            {
-                Mat frame = new Mat();
-                videoCapture.Read(frame);
-                if (!frame.Empty())
-                {
-                    return frame;
-                }
-                else
-                {
-                    return getBlackImage();
-                }
-            }
-            else
-            {
-                return getBlackImage();
-            }
+            return currentFrame;
         }
         // Actualiza la imagen
         private async Task displayCameraCallback()
@@ -95,19 +82,21 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 {
                     videoCapture.Release();
                     videoCapture = null;
+                    currentFrame = getBlackImage();
                     await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
                     {
                         imgViewport.Source = BitmapSourceConverter.ToBitmapSource(getBlackImage());
                     });
                     return;
                 }
-                Mat frame = new Mat();
-                videoCapture.Read(frame);
-                if (!frame.Empty())
+                //Mat frame = new Mat();
+                videoCapture.Read(currentFrame);
+                if (!currentFrame.Empty())
                 {
+                    //currentFrame = frame;
                     await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
                     {
-                        imgViewport.Source = BitmapSourceConverter.ToBitmapSource(frame);
+                        imgViewport.Source = BitmapSourceConverter.ToBitmapSource(currentFrame);
                     }
                     );
                 }
