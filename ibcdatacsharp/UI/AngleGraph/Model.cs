@@ -1,10 +1,8 @@
-﻿using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
+﻿//#define MOVE_DATA
+
 using ScottPlot;
 using System;
 using System.Drawing;
-using System.Windows.Controls;
 
 namespace ibcdatacsharp.UI.AngleGraph
 {
@@ -12,14 +10,24 @@ namespace ibcdatacsharp.UI.AngleGraph
     public class Model
     {
         private const int MAX_POINTS = 100;
-        private const int CAPACITY = 100000;
-        readonly double[] values = new double[CAPACITY];
+
+#if MOVE_DATA
+        private const int EXTRA = 20;
+        private const int CAPACITY = MAX_POINTS + EXTRA;
+        readonly double[] values;
         readonly ScottPlot.Plottable.SignalPlot signalPlot;
+#else
+        private int CAPACITY = 100000; //Usar un valor sufientemente grande para que en la mayoria de los casos no haya que cambiar el tamaño de los arrays
+        private const int GROW_FACTOR = 2;
+        double[] values;
+        ScottPlot.Plottable.SignalPlot signalPlot;
+#endif 
         private int nextIndex = 0;
         private WpfPlot plot;
 
         public Model(WpfPlot plot,string titleY = "")
         {
+            values = new double[CAPACITY];
             this.plot = plot;
             signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
             SetupModel(titleY);
@@ -95,9 +103,54 @@ namespace ibcdatacsharp.UI.AngleGraph
         }
         */
 
-        // Añade un punto
+#if MOVE_DATA
         public void updateData(double data)
         {
+            if(nextIndex >= CAPACITY) //No deberia de pasar
+            {
+                moveData();
+            }
+            values[nextIndex] = data;
+            nextIndex++;
+        }
+        private void moveData()
+        {
+            int displacement = nextIndex - MAX_POINTS;
+            if(displacement > 0)
+            {
+                for (int i = 0; i < MAX_POINTS; i++)
+                {
+                    int index_replacement = i + displacement;
+                    int index_replaced = i;
+                    values[index_replaced] = values[index_replacement];
+                }
+                nextIndex = MAX_POINTS;
+            }
+        }
+        public void render()
+        {
+            if (nextIndex <= MAX_POINTS)
+            {
+                int index = nextIndex - 1;
+                signalPlot.MaxRenderIndex = index;
+                plot.Plot.SetAxisLimits(xMin: 0, xMax: index);
+            }
+            else
+            {
+                moveData();
+            }
+            plot.Render();
+        }
+#else
+        public void updateData(double data)
+        {
+            if (nextIndex >= CAPACITY) // No deberia pasar
+            {
+                CAPACITY = CAPACITY * GROW_FACTOR;
+                Array.Resize(ref values, CAPACITY);
+                plot.Plot.Remove(signalPlot);
+                signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
+            }
             values[nextIndex] = data;
             nextIndex++;
         }
@@ -108,6 +161,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS), xMax: index);
             plot.Render();
         }
+#endif
         // Borra todos los puntos
         public void clear()
         {
