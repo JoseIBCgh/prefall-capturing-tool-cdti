@@ -33,6 +33,7 @@
     <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
     <PackageReference Include="RealTimeGraphX" Version="1.0.17" />
     <PackageReference Include="RealTimeGraphX.WPF" Version="1.0.17" />
+    <PackageReference Include="ScottPlot.WPF" Version="4.1.58" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 

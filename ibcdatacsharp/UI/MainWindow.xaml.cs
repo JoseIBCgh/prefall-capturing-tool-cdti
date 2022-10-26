@@ -1,4 +1,4 @@
-﻿# define REAL_TIME_GRAPH_X //Usar RealTimeGraphX para los graficos
+﻿//# define REAL_TIME_GRAPH_X //Usar RealTimeGraphX para los graficos
 
 using System;
 using System.Diagnostics;
@@ -32,12 +32,14 @@ namespace ibcdatacsharp.UI
     public partial class MainWindow : System.Windows.Window
     {
 
-        private const int CAPTURE_MS = 10; //Con RealTimeGraphX puede bajar a 10 ms
+        private const int CAPTURE_MS = 10;
+        private const int RENDER_MS = 100;
 
         public Device.Device device;
         public VirtualToolBar virtualToolBar;
 
         private System.Timers.Timer timerCapture;
+        private System.Timers.Timer timerRender;
         private FileSaver.FileSaver fileSaver;
         public MainWindow()
         {
@@ -49,14 +51,14 @@ namespace ibcdatacsharp.UI
             initIcon();
             initToolBarHandlers();
             initMenuHandlers();
-            loadAllGraphs();
+            //loadAllGraphs();
         }
         private void setGraphLibraries()
         {
 #if REAL_TIME_GRAPH_X
             graphWindow.Source = new Uri("pack://application:,,,/UI/RealTimeGraphX/GraphWindow/GraphWindow.xaml");
             angleGraph.Source = new Uri("pack://application:,,,/UI/RealTimeGraphX/AngleGraph/AngleGraph.xaml");
-#elif OXYPLOT
+#else
             graphWindow.Source = new Uri("pack://application:,,,/UI/GraphWindow/GraphWindow.xaml");
             angleGraph.Source = new Uri("pack://application:,,,/UI/AngleGraph/AngleGraph.xaml");
 #endif
@@ -96,10 +98,12 @@ namespace ibcdatacsharp.UI
                 if (pauseState == PauseState.Pause)
                 {
                     timerCapture.Stop();
+                    timerRender.Stop();
                 }
                 else if (pauseState == PauseState.Play)
                 {
                     timerCapture.Start();
+                    timerRender.Start();
                 }
             }
             void onStop(object sender)
@@ -108,11 +112,15 @@ namespace ibcdatacsharp.UI
                 virtualToolBar.stopEvent -= onStop;
                 timerCapture.Dispose();
                 timerCapture = null;
+                timerRender.Dispose();
+                timerRender = null;
             }
             if (timerCapture == null)
             {
                 timerCapture = new System.Timers.Timer(CAPTURE_MS);
                 timerCapture.AutoReset = true;
+                timerRender = new System.Timers.Timer(RENDER_MS);
+                timerRender.AutoReset = true;
                 if (graphWindow.Content == null)
                 {
                     graphWindow.Navigated += delegate (object sender, NavigationEventArgs e)
@@ -120,6 +128,7 @@ namespace ibcdatacsharp.UI
                         GraphWindowClass graphWindowClass = graphWindow.Content as GraphWindowClass;
                         graphWindowClass.clearData();
                         timerCapture.Elapsed += graphWindowClass.onTick;
+                        timerRender.Elapsed += graphWindowClass.onRender;
                     };
                 }
                 else
@@ -127,6 +136,7 @@ namespace ibcdatacsharp.UI
                     GraphWindowClass graphWindowClass = graphWindow.Content as GraphWindowClass;
                     graphWindowClass.clearData();
                     timerCapture.Elapsed += graphWindowClass.onTick;
+                    timerRender.Elapsed += graphWindowClass.onRender;
                 }
                 if (angleGraph.Content == null)
                 {
@@ -135,6 +145,7 @@ namespace ibcdatacsharp.UI
                         AngleGraphClass angleGraphClass = angleGraph.Content as AngleGraphClass;
                         angleGraphClass.clearData();
                         timerCapture.Elapsed += angleGraphClass.onTick;
+                        timerRender.Elapsed += angleGraphClass.onRender;
                     };
                 }
                 else
@@ -142,12 +153,14 @@ namespace ibcdatacsharp.UI
                     AngleGraphClass angleGraphClass = angleGraph.Content as AngleGraphClass;
                     angleGraphClass.clearData();
                     timerCapture.Elapsed += angleGraphClass.onTick;
+                    timerRender.Elapsed += angleGraphClass.onRender;
                 }
                 virtualToolBar.pauseEvent += onPause; //funcion local
                 virtualToolBar.stopEvent += onStop; //funcion local
                 if (virtualToolBar.pauseState == PauseState.Play)
                 {
                     timerCapture.Start();
+                    timerRender.Start();
                 }
                 device.initTimer();
             }

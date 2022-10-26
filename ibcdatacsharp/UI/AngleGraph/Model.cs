@@ -1,6 +1,9 @@
 ﻿using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using ScottPlot;
+using System;
+using System.Drawing;
 using System.Windows.Controls;
 
 namespace ibcdatacsharp.UI.AngleGraph
@@ -8,16 +11,26 @@ namespace ibcdatacsharp.UI.AngleGraph
     // Modelo de los graficos del acelerometro, giroscopio y magnetometro
     public class Model
     {
-        private const int MAX_POINTS = 300;
-        private OxyColor color = OxyColors.Red;
+        private const int MAX_POINTS = 100;
+        private const int CAPACITY = 100000;
+        readonly double[] values = new double[CAPACITY];
+        readonly ScottPlot.Plottable.SignalPlot signalPlot;
+        private int nextIndex = 0;
+        private WpfPlot plot;
 
-        public Model(string titleY = "")
+        public Model(WpfPlot plot,string titleY = "")
         {
+            this.plot = plot;
+            signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
             SetupModel(titleY);
+            signalPlot.MaxRenderIndex = nextIndex;
+            plot.Refresh();
         }
         // Inicializa el modelo
         private void SetupModel(string titleY)
         {
+            plot.Plot.SetAxisLimits(yMin: -200, yMax: 200);
+            /*
             PlotModel = new PlotModel();
             PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = -200, Maximum = 200, Title = titleY, Unit = "degrees", FontSize = 10, IntervalLength = 20 });
             PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "frames", Unit = "kFreq", FontSize = 10, IntervalLength = 200 });
@@ -29,8 +42,10 @@ namespace ibcdatacsharp.UI.AngleGraph
             PlotModel.Axes[1].Reset();
             PlotModel.Axes[1].Maximum = 1.0 / 1000.0;
             PlotModel.Axes[1].Minimum = 0;
+            */
         }
         // Pinta el fondo
+        /*
         private void paintAreas()
         {
             int separation12 = -170;
@@ -78,43 +93,25 @@ namespace ibcdatacsharp.UI.AngleGraph
             area5.Points2.Add(new DataPoint(int.MaxValue, PlotModel.Axes[0].Maximum));
             PlotModel.Series.Add(area5);
         }
+        */
 
-        public PlotModel PlotModel { get; private set; }
         // Añade un punto
-        public void update(int frame, double data)
+        public void updateData(double data)
         {
-            double kframes = frame / 1000.0;
-            (PlotModel.Series[0] as LineSeries).Points.Add(new DataPoint(kframes, data));
-            if ((PlotModel.Series[0] as LineSeries).Points.Count > MAX_POINTS)
-            {
-                (PlotModel.Series[0] as LineSeries).Points.RemoveAt(0);
-            }
-            PlotModel.InvalidatePlot(true);
-            double minkframes = (PlotModel.Series[0] as LineSeries).Points[0].X;
-            PlotModel.Axes[1].Reset();
-            PlotModel.Axes[1].Maximum = kframes;
-            PlotModel.Axes[1].Minimum = minkframes;
-            //PlotModel.Axes[1].Zoom(minkframes, kframes);
-            /*
-            if (frame > MAX_POINTS)
-            {
-                double kmaxPoints = MAX_POINTS / 1000.0;
-                PlotModel.Axes[1].Reset();
-                PlotModel.Axes[1].Maximum = kframes;
-                PlotModel.Axes[1].Minimum = (kframes - kmaxPoints);
-                PlotModel.Axes[1].Zoom(PlotModel.Axes[1].Minimum, PlotModel.Axes[1].Maximum);
-            }
-            else
-            {
-                PlotModel.Axes[1].Reset();
-                PlotModel.Axes[1].Maximum = kframes;
-                PlotModel.Axes[1].Minimum = 0;
-            }*/
+            values[nextIndex] = data;
+            nextIndex++;
+        }
+        public void render()
+        {
+            int index = nextIndex - 1;
+            signalPlot.MaxRenderIndex = index;
+            plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS), xMax: index);
+            plot.Render();
         }
         // Borra todos los puntos
         public void clear()
         {
-            (PlotModel.Series[0] as LineSeries).Points.Clear();
+            nextIndex = 0;
         }
     }
 }

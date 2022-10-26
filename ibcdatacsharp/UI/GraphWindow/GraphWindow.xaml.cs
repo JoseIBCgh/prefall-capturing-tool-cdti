@@ -30,16 +30,16 @@ namespace ibcdatacsharp.UI.GraphWindow
         // Funcion para inicializar los graficos
         private void initModels()
         {
-            modelAccelerometer = new Model(-80, 80, titleY : "Accelerometer", units : "m/s^2");
-            modelGyroscope = new Model(-600, 600, titleY: "Gyroscope", units: "g/s^2");
-            modelMagnetometer = new Model(-4, 4, titleY: "Magnetometer", units: "k(mT)");
+            modelAccelerometer = new Model(accelerometer ,-80, 80, titleY : "Accelerometer", units : "m/s^2");
+            modelGyroscope = new Model(gyroscope ,-600, 600, titleY: "Gyroscope", units: "g/s^2");
+            modelMagnetometer = new Model(magnetometer ,-4, 4, titleY: "Magnetometer", units: "k(mT)");
         }
         // Funcion para actualizar la grafica del acelerometro
         public async Task updateAccelerometer(int frame, double x, double y, double z)
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                modelAccelerometer.update(frame, new double[] { x, y, z });
+                modelAccelerometer.updateData(new double[] { x, y, z });
             });
         }
         // Funcion para borrar los datos del acelerometro
@@ -55,7 +55,7 @@ namespace ibcdatacsharp.UI.GraphWindow
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                modelGyroscope.update(frame, new double[] { x, y, z });
+                modelGyroscope.updateData(new double[] { x, y, z });
             });
         }
         // Funcion para borrar los datos del giroscopio
@@ -71,7 +71,7 @@ namespace ibcdatacsharp.UI.GraphWindow
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                modelMagnetometer.update(frame, new double[] { x, y, z });
+                modelMagnetometer.updateData(new double[] { x, y, z });
             });
         }
         // Funcion para borrar los datos del magnetometro
@@ -117,6 +117,36 @@ namespace ibcdatacsharp.UI.GraphWindow
                 clearAccelerometer(),
                 clearGyroscope(),
                 clearMagnetometer(),
+            });
+        }
+        public async Task renderAcceletometer()
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelAccelerometer.render();
+            });
+        }
+        public async Task renderGyroscope()
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelGyroscope.render();
+            });
+        }
+        public async Task renderMagnetometer()
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelMagnetometer.render();
+            });
+        }
+        public async void onRender(object sender, EventArgs e)
+        {
+            await Task.WhenAll(new Task[]
+            {
+                renderAcceletometer(),
+                renderGyroscope(),
+                renderMagnetometer(),
             });
         }
     }

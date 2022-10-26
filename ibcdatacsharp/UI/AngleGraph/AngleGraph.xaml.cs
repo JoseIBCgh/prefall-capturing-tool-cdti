@@ -1,5 +1,6 @@
 ﻿using ibcdatacsharp.UI.Device;
 using OxyPlot;
+using OxyPlot.Axes;
 using System;
 using System.Threading.Tasks;
 using System.Timers;
@@ -31,22 +32,21 @@ namespace ibcdatacsharp.UI.AngleGraph
         // Funcion para inicializar los graficos
         private void initModels()
         {
-            modelX = new Model(titleY: "X Angle");
-            modelY = new Model(titleY: "Y Angle");
-            modelZ = new Model(titleY: "Z Angle");
+            modelX = new Model(angleX, titleY: "X Angle");
+            modelY = new Model(angleY, titleY: "Y Angle");
+            modelZ = new Model(angleZ, titleY: "Z Angle");
         }
         // Funcion para actualizar la grafica del acelerometro
         public async Task updateX(int frame, double data)
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                modelX.update(frame, data);
+                modelX.updateData(data);
             });
         }
         // Funcion para borrar los datos del acelerometro
         public async Task clearX()
         {
-            PlotModel model = modelX.PlotModel;
             await Dispatcher.BeginInvoke(CLEAR_PRIORITY, () =>
             {
                 modelX.clear();
@@ -57,7 +57,7 @@ namespace ibcdatacsharp.UI.AngleGraph
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                modelY.update(frame, data);
+                modelY.updateData(data);
             });
         }
         // Funcion para borrar los datos del giroscopio
@@ -73,7 +73,7 @@ namespace ibcdatacsharp.UI.AngleGraph
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                modelZ.update(frame, data);
+                modelZ.updateData(data);
             });
         }
         // Funcion para borrar los datos del magnetometro
@@ -121,6 +121,36 @@ namespace ibcdatacsharp.UI.AngleGraph
                 clearX(),
                 clearY(),
                 clearZ(),
+            });
+        }
+        public async Task renderX()
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelX.render();
+            });
+        }
+        public async Task renderY()
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelY.render();
+            });
+        }
+        public async Task renderZ()
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelZ.render();
+            });
+        }
+        public async void onRender(object sender, EventArgs e)
+        {
+            await Task.WhenAll(new Task[]
+            {
+                renderX(),
+                renderY(),
+                renderZ(),
             });
         }
     }
