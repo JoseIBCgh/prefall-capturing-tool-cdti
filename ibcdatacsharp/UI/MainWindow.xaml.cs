@@ -1,6 +1,4 @@
-﻿//# define REAL_TIME_GRAPH_X //Usar RealTimeGraphX para los graficos
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
@@ -16,13 +14,8 @@ using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.Timer;
 using ibcdatacsharp.UI.ToolBar.Enums;
 
-#if REAL_TIME_GRAPH_X
-using GraphWindowClass = ibcdatacsharp.UI.RealTimeGraphX.GraphWindow.GraphWindow;
-using AngleGraphClass = ibcdatacsharp.UI.RealTimeGraphX.AngleGraph.AngleGraph;
-#else
 using GraphWindowClass = ibcdatacsharp.UI.GraphWindow.GraphWindow;
 using AngleGraphClass = ibcdatacsharp.UI.AngleGraph.AngleGraph;
-#endif
 
 namespace ibcdatacsharp.UI
 {
@@ -55,40 +48,8 @@ namespace ibcdatacsharp.UI
         }
         private void setGraphLibraries()
         {
-#if REAL_TIME_GRAPH_X
-            graphWindow.Source = new Uri("pack://application:,,,/UI/RealTimeGraphX/GraphWindow/GraphWindow.xaml");
-            angleGraph.Source = new Uri("pack://application:,,,/UI/RealTimeGraphX/AngleGraph/AngleGraph.xaml");
-#else
             graphWindow.Source = new Uri("pack://application:,,,/UI/GraphWindow/GraphWindow.xaml");
             angleGraph.Source = new Uri("pack://application:,,,/UI/AngleGraph/AngleGraph.xaml");
-#endif
-        }
-        // Si se captura antes de visitar una pestaña sale un error (RealTimeGraphX)
-        private void loadAllGraphs()
-        {
-            void changeToAngle()
-            {
-                graphsTabControl.SelectedIndex = 1;
-                DispatcherTimer timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromMilliseconds(15);
-                timer.Tick += (sender, e) =>
-                {
-                    graphsTabControl.SelectedIndex = 0;
-                    timer.Stop();
-                };
-                timer.Start();
-            }
-            if (angleGraph.Content == null)
-            {
-                angleGraph.Navigated += delegate (object sender, NavigationEventArgs e)
-                {
-                    changeToAngle();
-                };
-            }
-            else
-            {
-                changeToAngle();
-            }
         }
         // Configura el timer capture
         private void initTimerCapture()
