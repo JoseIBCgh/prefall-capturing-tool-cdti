@@ -38,6 +38,7 @@ namespace ibcdatacsharp.UI.AngleGraph
         private void SetupModel(string titleY)
         {
             plot.Plot.SetAxisLimits(yMin: -200, yMax: 200);
+            paintAreas();
             /*
             PlotModel = new PlotModel();
             PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = -200, Maximum = 200, Title = titleY, Unit = "degrees", FontSize = 10, IntervalLength = 20 });
@@ -53,7 +54,6 @@ namespace ibcdatacsharp.UI.AngleGraph
             */
         }
         // Pinta el fondo
-        /*
         private void paintAreas()
         {
             int separation12 = -170;
@@ -62,46 +62,16 @@ namespace ibcdatacsharp.UI.AngleGraph
             int separation45 = -separation12;
             byte alpha = 96;
 
-            OxyColor color15 = OxyColor.FromAColor(alpha, OxyColors.Yellow);
-            OxyColor color24 = OxyColor.FromAColor(alpha, OxyColors.YellowGreen);
-            OxyColor color3 = OxyColor.FromAColor(alpha, OxyColors.MediumPurple);
+            Color color15 = Color.FromArgb(96, Color.Yellow);
+            Color color24 = Color.FromArgb(96, Color.YellowGreen);
+            Color color3 = Color.FromArgb(96, Color.MediumPurple);
 
-            AreaSeries area1 = new AreaSeries { Fill = color15, StrokeThickness = 0 };
-            area1.Points.Add(new DataPoint(0, PlotModel.Axes[0].Minimum));
-            area1.Points.Add(new DataPoint(int.MaxValue, PlotModel.Axes[0].Minimum));
-            area1.Points2.Add(new DataPoint(0, separation12));
-            area1.Points2.Add(new DataPoint(int.MaxValue, separation12));
-            PlotModel.Series.Add(area1);
-
-            AreaSeries area2 = new AreaSeries { Fill = color24, StrokeThickness = 0 };
-            area2.Points.Add(new DataPoint(0, separation12));
-            area2.Points.Add(new DataPoint(int.MaxValue, separation12));
-            area2.Points2.Add(new DataPoint(0, separation23));
-            area2.Points2.Add(new DataPoint(int.MaxValue, separation23));
-            PlotModel.Series.Add(area2);
-
-            AreaSeries area3 = new AreaSeries {Fill = color3, StrokeThickness=0 };
-            area3.Points.Add(new DataPoint(0, separation23));
-            area3.Points.Add(new DataPoint(int.MaxValue, separation23));
-            area3.Points2.Add(new DataPoint(0, separation34));
-            area3.Points2.Add(new DataPoint(int.MaxValue, separation34));
-            PlotModel.Series.Add(area3);
-
-            AreaSeries area4 = new AreaSeries { Fill = color24, StrokeThickness = 0 };
-            area4.Points.Add(new DataPoint(0, separation34));
-            area4.Points.Add(new DataPoint(int.MaxValue, separation34));
-            area4.Points2.Add(new DataPoint(0, separation45));
-            area4.Points2.Add(new DataPoint(int.MaxValue, separation45));
-            PlotModel.Series.Add(area4);
-
-            AreaSeries area5 = new AreaSeries { Fill = color15, StrokeThickness = 0 };
-            area5.Points.Add(new DataPoint(0, separation45));
-            area5.Points.Add(new DataPoint(int.MaxValue, separation45));
-            area5.Points2.Add(new DataPoint(0, PlotModel.Axes[0].Maximum));
-            area5.Points2.Add(new DataPoint(int.MaxValue, PlotModel.Axes[0].Maximum));
-            PlotModel.Series.Add(area5);
+            plot.Plot.AddVerticalSpan(double.MinValue, separation12, color15);
+            plot.Plot.AddVerticalSpan(separation12, separation23, color24);
+            plot.Plot.AddVerticalSpan(separation23, separation34, color3);
+            plot.Plot.AddVerticalSpan(separation34, separation45, color24);
+            plot.Plot.AddVerticalSpan(separation45, double.MaxValue, color15);
         }
-        */
 
 #if MOVE_DATA
         public void updateData(double data)
