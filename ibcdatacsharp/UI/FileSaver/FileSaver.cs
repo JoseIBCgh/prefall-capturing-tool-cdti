@@ -202,7 +202,7 @@ namespace ibcdatacsharp.UI.FileSaver
                     stopwatch.Restart();
                     if (videoWriter != null)
                     {
-                        Mat frame = camaraViewport.getCurrentFrame();
+                        Mat frame = camaraViewport.currentFrame;
                         Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
                         if (videoWriter != null)
                         {

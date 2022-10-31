@@ -33,12 +33,29 @@ namespace ibcdatacsharp.UI.CamaraViewport
         private CancellationToken cancellationTokenDisplay;
         private Task displayTask;
 
-        private Mat currentFrame;
+        private Mat _currentFrame;
+        public Mat currentFrame
+        {
+            get
+            {
+                lock (_currentFrame)
+                {
+                    return _currentFrame;
+                }
+            }
+            set
+            {
+                lock (_currentFrame)
+                {
+                    _currentFrame = value;
+                }
+            }
+        }
 
         public CamaraViewport()
         {
             InitializeComponent();
-            currentFrame = getBlackImage();
+            _currentFrame = getBlackImage();
             imgViewport.Source = BitmapSourceConverter.ToBitmapSource(currentFrame);
         }
         // Comprueba si se esta grabano alguna camara
@@ -68,11 +85,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 cancellationTokenSourceDisplay.Cancel();
             }
         }
-        // Devuelve el frame de la camara o negro si no esta encendida
-        public Mat getCurrentFrame()
-        {
-            return currentFrame;
-        }
+
         // Actualiza la imagen
         private async Task displayCameraCallback()
         {
