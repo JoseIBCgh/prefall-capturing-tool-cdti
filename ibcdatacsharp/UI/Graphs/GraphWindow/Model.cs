@@ -44,7 +44,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green);
             signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue);
             plot.Plot.SetAxisLimits(yMin: minY, yMax: maxY);
-            plot.Plot.Title(title);
+            //plot.Plot.Title(title);
             signalPlotX.MaxRenderIndex = nextIndex;
             signalPlotY.MaxRenderIndex = nextIndex;
             signalPlotZ.MaxRenderIndex = nextIndex;
