@@ -10,12 +10,14 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <WpfPlot Grid.Row="0"  x:Name="angleX"/>
-        <WpfPlot Grid.Row="1"  x:Name="angleY"/>
-        <WpfPlot Grid.Row="2"  x:Name="angleZ"/>
+        <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Center">Angle</TextBlock>
+        <WpfPlot Grid.Row="1"  x:Name="angleX"/>
+        <WpfPlot Grid.Row="2"  x:Name="angleY"/>
+        <WpfPlot Grid.Row="3"  x:Name="angleZ"/>
     </Grid>
 </Page>

@@ -18,7 +18,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         public GraphMagnetometer()
         {
             InitializeComponent();
-            model = new Model(plot, -4, 4, titleY: "Magnetometer", units: "k(mT)");
+            model = new Model(plot, -4, 4, title: "Magnetometer", units: "k(mT)");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;

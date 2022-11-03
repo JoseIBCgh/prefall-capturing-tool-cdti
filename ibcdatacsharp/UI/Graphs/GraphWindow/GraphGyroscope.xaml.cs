@@ -18,7 +18,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         public GraphGyroscope()
         {
             InitializeComponent();
-            model = new Model(plot, -600, 600, titleY: "Gyroscope", units: "g/s^2");
+            model = new Model(plot, -600, 600, title: "Gyroscope", units: "g/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;

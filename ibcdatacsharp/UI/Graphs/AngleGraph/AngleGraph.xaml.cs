@@ -29,9 +29,9 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         // Funcion para inicializar los graficos
         private void initModels()
         {
-            modelX = new Model(angleX, titleY: "X Angle");
-            modelY = new Model(angleY, titleY: "Y Angle");
-            modelZ = new Model(angleZ, titleY: "Z Angle");
+            modelX = new Model(angleX);
+            modelY = new Model(angleY);
+            modelZ = new Model(angleZ);
         }
         // Funcion para actualizar la grafica X
         public async Task updateX(double data)

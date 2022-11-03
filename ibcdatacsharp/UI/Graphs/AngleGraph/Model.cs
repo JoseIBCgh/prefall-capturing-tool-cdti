@@ -25,17 +25,17 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         private int nextIndex = 0;
         private WpfPlot plot;
 
-        public Model(WpfPlot plot,string titleY = "")
+        public Model(WpfPlot plot)
         {
             values = new double[CAPACITY];
             this.plot = plot;
             signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
-            SetupModel(titleY);
+            SetupModel();
             signalPlot.MaxRenderIndex = nextIndex;
             plot.Refresh();
         }
         // Inicializa el modelo
-        private void SetupModel(string titleY)
+        private void SetupModel()
         {
             plot.Plot.SetAxisLimits(yMin: -200, yMax: 200);
             plot.Plot.XAxis2.SetSizeLimit(max: 5, pad:0);
