@@ -1,19 +1,16 @@
 ﻿using ibcdatacsharp.UI.Device;
-using OxyPlot;
-using OxyPlot.Axes;
 using System;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace ibcdatacsharp.UI.AngleGraph
+namespace ibcdatacsharp.UI.Graphs.AngleGraph
 {
     /// <summary>
     /// Lógica de interacción para AngleGraph.xaml
     /// </summary>
-    public partial class AngleGraph : Page
+    public partial class AngleGraph : Page, GraphInterface
     {
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
@@ -36,15 +33,15 @@ namespace ibcdatacsharp.UI.AngleGraph
             modelY = new Model(angleY, titleY: "Y Angle");
             modelZ = new Model(angleZ, titleY: "Z Angle");
         }
-        // Funcion para actualizar la grafica del acelerometro
-        public async Task updateX(int frame, double data)
+        // Funcion para actualizar la grafica X
+        public async Task updateX(double data)
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
                 modelX.updateData(data);
             });
         }
-        // Funcion para borrar los datos del acelerometro
+        // Funcion para borrar los datos X
         public async Task clearX()
         {
             await Dispatcher.BeginInvoke(CLEAR_PRIORITY, () =>
@@ -52,15 +49,15 @@ namespace ibcdatacsharp.UI.AngleGraph
                 modelX.clear();
             });
         }
-        // Funcion para actualizar la grafica del giroscopio
-        public async Task updateY(int frame, double data)
+        // Funcion para actualizar la grafica Y
+        public async Task updateY(double data)
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
                 modelY.updateData(data);
             });
         }
-        // Funcion para borrar los datos del giroscopio
+        // Funcion para borrar los datos Y
         public async Task clearY()
         {
             await Dispatcher.BeginInvoke(CLEAR_PRIORITY, () =>
@@ -68,15 +65,15 @@ namespace ibcdatacsharp.UI.AngleGraph
                 modelY.clear();
             });
         }
-        // Funcion para actualizar la grafica del magnetometro
-        public async Task updateZ(int frame, double data)
+        // Funcion para actualizar la grafica Z
+        public async Task updateZ(double data)
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
                 modelZ.updateData(data);
             });
         }
-        // Funcion para borrar los datos del magnetometro
+        // Funcion para borrar los datos Z
         public async Task clearZ()
         {
             await Dispatcher.BeginInvoke(CLEAR_PRIORITY, () =>
@@ -84,45 +81,27 @@ namespace ibcdatacsharp.UI.AngleGraph
                 modelZ.clear();
             });
         }
-        // Recive los datos del IMU inventado
-        public async void onTick(object sender, ElapsedEventArgs e)
-        {
-            AngleArgs angleArgs = device.angleData;
-            int frame = device.frame;
-            //await updateX(frame, angleArgs.angle[0]);
-            //await updateY(frame, angleArgs.angle[1]);
-            //await updateZ(frame, angleArgs.angle[2]);
-            await Task.WhenAll(new Task[]
-            {
-                updateX(frame, angleArgs.angle[0]),
-                updateY(frame, angleArgs.angle[1]),
-                updateZ(frame, angleArgs.angle[2])
-            });
-        }
-        // Recive los datos del IMU inventado media timer
+        // Actualiza los datos de los grafos
         public async void onTick(object sender, EventArgs e)
         {
             AngleArgs angleArgs = device.angleData;
-            int frame = device.frame;
             await Task.WhenAll(new Task[]
             {
-                updateX(frame, angleArgs.angle[0]),
-                updateY(frame, angleArgs.angle[1]),
-                updateZ(frame, angleArgs.angle[2])
+                updateX(angleArgs.angle[0]),
+                updateY(angleArgs.angle[1]),
+                updateZ(angleArgs.angle[2])
             });
         }
         // Borra el contenido de los graficos
         public async void clearData()
         {
-            //await clearX();
-            //await clearY();
-            //await clearZ();
             await Task.WhenAll(new Task[] {
                 clearX(),
                 clearY(),
                 clearZ(),
             });
         }
+        // Actualiza el render del grafo X
         public async Task renderX()
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
@@ -130,6 +109,7 @@ namespace ibcdatacsharp.UI.AngleGraph
                 modelX.render();
             });
         }
+        // Actualiza el render del grafo Y
         public async Task renderY()
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
@@ -137,6 +117,7 @@ namespace ibcdatacsharp.UI.AngleGraph
                 modelY.render();
             });
         }
+        // Actualiza el render del grafo Z
         public async Task renderZ()
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
@@ -144,6 +125,7 @@ namespace ibcdatacsharp.UI.AngleGraph
                 modelZ.render();
             });
         }
+        // Actualiza el render de los grafos
         public async void onRender(object sender, EventArgs e)
         {
             await Task.WhenAll(new Task[]

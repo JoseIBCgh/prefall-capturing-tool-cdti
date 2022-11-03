@@ -4,7 +4,7 @@ using ScottPlot;
 using System;
 using System.Drawing;
 
-namespace ibcdatacsharp.UI.AngleGraph
+namespace ibcdatacsharp.UI.Graphs.AngleGraph
 {
     // Modelo de los graficos del acelerometro, giroscopio y magnetometro
     public class Model
@@ -38,20 +38,9 @@ namespace ibcdatacsharp.UI.AngleGraph
         private void SetupModel(string titleY)
         {
             plot.Plot.SetAxisLimits(yMin: -200, yMax: 200);
+            plot.Plot.XAxis2.SetSizeLimit(max: 5, pad:0);
+            plot.Plot.XAxis.SetSizeLimit(pad: 0);
             paintAreas();
-            /*
-            PlotModel = new PlotModel();
-            PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = -200, Maximum = 200, Title = titleY, Unit = "degrees", FontSize = 10, IntervalLength = 20 });
-            PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "frames", Unit = "kFreq", FontSize = 10, IntervalLength = 200 });
-
-            PlotModel.Series.Add(new LineSeries { LineStyle = LineStyle.Solid, Color = color });
-
-            paintAreas();
-
-            PlotModel.Axes[1].Reset();
-            PlotModel.Axes[1].Maximum = 1.0 / 1000.0;
-            PlotModel.Axes[1].Minimum = 0;
-            */
         }
         // Pinta el fondo
         private void paintAreas()
@@ -62,9 +51,9 @@ namespace ibcdatacsharp.UI.AngleGraph
             int separation45 = -separation12;
             byte alpha = 96;
 
-            Color color15 = Color.FromArgb(96, Color.Yellow);
-            Color color24 = Color.FromArgb(96, Color.YellowGreen);
-            Color color3 = Color.FromArgb(96, Color.MediumPurple);
+            Color color15 = Color.FromArgb(alpha, Color.Yellow);
+            Color color24 = Color.FromArgb(alpha, Color.YellowGreen);
+            Color color3 = Color.FromArgb(alpha, Color.MediumPurple);
 
             plot.Plot.AddVerticalSpan(double.MinValue, separation12, color15);
             plot.Plot.AddVerticalSpan(separation12, separation23, color24);
@@ -74,6 +63,7 @@ namespace ibcdatacsharp.UI.AngleGraph
         }
 
 #if MOVE_DATA
+        // Añade un punto
         public void updateData(double data)
         {
             if(nextIndex >= CAPACITY) //No deberia de pasar
@@ -83,6 +73,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             values[nextIndex] = data;
             nextIndex++;
         }
+        // Desplaza los datos
         private void moveData()
         {
             int displacement = nextIndex - MAX_POINTS;
@@ -97,6 +88,7 @@ namespace ibcdatacsharp.UI.AngleGraph
                 nextIndex = MAX_POINTS;
             }
         }
+        // Actualiza el renderizado
         public void render()
         {
             if (nextIndex <= MAX_POINTS)
@@ -112,6 +104,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             plot.Render();
         }
 #else
+        // Añade un punto
         public void updateData(double data)
         {
             if (nextIndex >= CAPACITY) // No deberia pasar
@@ -124,6 +117,7 @@ namespace ibcdatacsharp.UI.AngleGraph
             values[nextIndex] = data;
             nextIndex++;
         }
+        // Actualiza el renderizado
         public void render()
         {
             int index = nextIndex - 1;

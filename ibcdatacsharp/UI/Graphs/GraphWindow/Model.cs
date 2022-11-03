@@ -4,7 +4,7 @@ using ScottPlot;
 using System;
 using System.Drawing;
 
-namespace ibcdatacsharp.UI.GraphWindow
+namespace ibcdatacsharp.UI.Graphs.GraphWindow
 {
     // Modelo de los graficos del acelerometro, giroscopio y magnetometro
     public class Model
@@ -53,11 +53,9 @@ namespace ibcdatacsharp.UI.GraphWindow
         private void SetupModel(double minY, double maxY, string titleY, string units)
         {
             plot.Plot.SetAxisLimits(yMin: minY, yMax:maxY);
-            //PlotModel = new PlotModel();
-            //PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = minY, Maximum = maxY, Title = titleY, Unit = units, FontSize = 10 , IntervalLength = 20 });
-            //PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "frames", Unit = "kFreq", FontSize = 10, IntervalLength = 200});
         }
 #if MOVE_DATA
+        // Actualiza los datos
         public void updateData(double[] data)
         {
             if(nextIndex >= CAPACITY) //No deberia de pasar
@@ -69,6 +67,7 @@ namespace ibcdatacsharp.UI.GraphWindow
             valuesZ[nextIndex] = data[2];
             nextIndex++;
         }
+        // Desplaza los datos
         private void moveData()
         {
             int displacement = nextIndex - MAX_POINTS;
@@ -85,6 +84,7 @@ namespace ibcdatacsharp.UI.GraphWindow
                 nextIndex = MAX_POINTS;
             }
         }
+        // Actualiza el renderizado
         public void render()
         {
             if (nextIndex <= MAX_POINTS)
@@ -103,6 +103,8 @@ namespace ibcdatacsharp.UI.GraphWindow
         }
 #else
         // Esta version funciona mejor pero usa mas memoria. Si se sobrepasa la memoria incial hay que modificar el tamaño de las arrays.
+
+        // Actualiza los datos
         public void updateData(double[] data)
         {
             if(nextIndex >= CAPACITY) // No deberia pasar
@@ -123,6 +125,7 @@ namespace ibcdatacsharp.UI.GraphWindow
             valuesZ[nextIndex] = data[2];
             nextIndex++;
         }
+        // Actualiza el renderizado
         public void render()
         {
             int index = nextIndex - 1;

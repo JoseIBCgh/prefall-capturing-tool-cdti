@@ -19,7 +19,7 @@
             <dock:LayoutRoot>
                 <dock:LayoutPanel Orientation="Vertical" DockHeight="*" DockWidth="*">
                     <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
-                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.5*">
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
                             <dock:LayoutAnchorable CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
                                 <TabControl Grid.Column="0" TabStripPlacement="Left">
                                     <TabControl.Resources>
@@ -47,23 +47,39 @@
                                 </TabControl>
                             </dock:LayoutAnchorable>
                         </dock:LayoutAnchorablePane>
-                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
-                            <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
-                                <TabControl x:Name="graphsTabControl" Grid.Row="0">
-                                    <TabItem Header="Data Raw">
-                                        <Frame x:Name="graphWindow"/>
-                                    </TabItem>
-                                    <TabItem Header="Joint Angle">
-                                        <Frame x:Name="angleGraph"/>
-                                    </TabItem>
-                                </TabControl>
-                            </dock:LayoutAnchorable>
-                        </dock:LayoutAnchorablePane>
-                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.5*">
-                            <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
-                                <Frame Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
-                            </dock:LayoutAnchorable>
-                        </dock:LayoutAnchorablePane>
+                        <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="*" DockWidth="2.5*">
+                            <dock:LayoutAnchorablePaneGroup Orientation="Vertical" DockHeight="*" DockWidth="1.75*">
+                                <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
+                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphWindow/GraphAccelerometer.xaml" x:Name="accelerometer"/>
+                                    </dock:LayoutAnchorable>
+                                </dock:LayoutAnchorablePane>
+                                <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
+                                    <dock:LayoutAnchorablePane>
+                                        <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
+                                            <Frame Source="pack://application:,,,/UI/Graphs/GraphWindow/GraphGyroscope.xaml" x:Name="gyroscope"/>
+                                        </dock:LayoutAnchorable>
+                                    </dock:LayoutAnchorablePane>
+                                    <dock:LayoutAnchorablePane>
+                                        <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
+                                            <Frame Source="pack://application:,,,/UI/Graphs/GraphWindow/GraphMagnetometer.xaml" x:Name="magnetometer"/>
+                                        </dock:LayoutAnchorable>
+                                    </dock:LayoutAnchorablePane>
+                                </dock:LayoutAnchorablePaneGroup>
+                            </dock:LayoutAnchorablePaneGroup>
+                            <dock:LayoutAnchorablePaneGroup Orientation="Vertical" DockHeight="*" DockWidth="*">
+                                <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
+                                        <Frame Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
+                                    </dock:LayoutAnchorable>
+                                </dock:LayoutAnchorablePane>
+                                <dock:LayoutAnchorablePane>
+                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" >
+                                        <Frame Source="pack://application:,,,/UI/Graphs/AngleGraph/AngleGraph.xaml" x:Name="angle"/>
+                                    </dock:LayoutAnchorable>
+                                </dock:LayoutAnchorablePane>
+                            </dock:LayoutAnchorablePaneGroup>
+                        </dock:LayoutAnchorablePaneGroup>
                     </dock:LayoutAnchorablePaneGroup>
                     <dock:LayoutAnchorablePane DockWidth="*" DockHeight="0.5*">
                         <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False">

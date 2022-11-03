@@ -7,7 +7,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="UI\AngleGraph\AngleGraph.xaml.cs">
+    <Compile Update="UI\Graphs\AngleGraph\AngleGraph.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\CamaraViewport\CamaraViewport.xaml.cs">
@@ -22,19 +22,19 @@
     <Compile Update="UI\FileSaver\SavingMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\GraphWindow\GraphWindow.xaml.cs">
+    <Compile Update="UI\Graphs\GraphWindow\GraphAccelerometer.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Graphs\GraphWindow\GraphGyroscope.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Graphs\GraphWindow\GraphMagnetometer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\MenuBar\MenuBar.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\MenuBar\Version.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="UI\RealTimeGraphX\AngleGraph\AngleGraph.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="UI\RealTimeGraphX\GraphWindow\GraphWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\TimeLine\TimeLine.xaml.cs">
@@ -45,7 +45,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="UI\AngleGraph\AngleGraph.xaml">
+    <Page Update="UI\Graphs\AngleGraph\AngleGraph.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\CamaraViewport\CamaraViewport.xaml">
@@ -60,7 +60,13 @@
     <Page Update="UI\FileSaver\SavingMenu.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UI\GraphWindow\GraphWindow.xaml">
+    <Page Update="UI\Graphs\GraphWindow\GraphAccelerometer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\GraphWindow\GraphGyroscope.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\GraphWindow\GraphMagnetometer.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\MainWindow.xaml">
@@ -70,12 +76,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\MenuBar\Version.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="UI\RealTimeGraphX\AngleGraph\AngleGraph.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="UI\RealTimeGraphX\GraphWindow\GraphWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\TimeLine\TimeLine.xaml">
