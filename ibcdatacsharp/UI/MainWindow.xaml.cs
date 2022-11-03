@@ -143,9 +143,9 @@ namespace ibcdatacsharp.UI
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 deviceListClass.clearAll();
                 addCameras(deviceListClass);
-                deviceListClass.hideIMUs();
+                deviceListClass.showIMUs();
                 deviceListClass.showCameras();
-                deviceListClass.hideInsoles(); //Por defecto estan escondidos pero si los muestras una vez los tienes que volver a esconder
+                deviceListClass.showInsoles(); //Por defecto estan escondidos pero si los muestras una vez los tienes que volver a esconder
                 /*
                 deviceListClass.showIMUs();
                 deviceListClass.showInsoles();
