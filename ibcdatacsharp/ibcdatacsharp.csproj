@@ -9,6 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="UI\DeviceList\Icons\camera-blue-icon-small.png" />
+    <None Remove="UI\DeviceList\Icons\camera-blue-icon.png" />
+    <None Remove="UI\DeviceList\Icons\camera-icon.png" />
+    <None Remove="UI\DeviceList\Icons\imu-blue-icon-small.png" />
+    <None Remove="UI\DeviceList\Icons\imu-blue-icon.png" />
+    <None Remove="UI\DeviceList\Icons\imu-icon.png" />
+    <None Remove="UI\DeviceList\Icons\insole-blue-icon-small.png" />
+    <None Remove="UI\DeviceList\Icons\insole-blue-icon.png" />
+    <None Remove="UI\DeviceList\Icons\insole-icon.png" />
     <None Remove="UI\MenuBar\Icons\ibc-logo.png" />
     <None Remove="UI\ToolBar\Icons\capture-icon.png" />
     <None Remove="UI\ToolBar\Icons\capturedFiles-icon.png" />
@@ -43,6 +52,33 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="UI\DeviceList\Icons\camera-blue-icon-small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\camera-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\camera-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\imu-blue-icon-small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\imu-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\imu-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\insole-blue-icon-small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\insole-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\insole-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="UI\MenuBar\Icons\ibc-logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

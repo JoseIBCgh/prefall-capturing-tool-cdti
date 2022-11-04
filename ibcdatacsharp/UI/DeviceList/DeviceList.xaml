@@ -31,105 +31,114 @@
             <TreeViewItem.Header>
                 <TextBlock>IBC DA System</TextBlock>
             </TreeViewItem.Header>
-            <TreeViewItem ItemsSource="{Binding IMUs}" Visibility="Collapsed" x:Name="IMUs">
+            <TreeViewItem ItemsSource="{Binding IMUs}" Visibility="Collapsed" x:Name="IMUs" Padding="0 10 0 2.5">
                 <TreeViewItem.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <EventSetter Event="MouseDoubleClick" Handler="onIMUDoubleClick" />
                     </Style>
                 </TreeViewItem.ItemContainerStyle>
                 <TreeViewItem.Header>
-                    <Grid Width="250">
+                    <Grid Width="280">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="IMU" Grid.Column="0" TextAlignment="Center"/>
-                        <TextBlock Text="Address" Grid.Column="1" TextAlignment="Center"/>
-                        <TextBlock Text="Battery" Grid.Column="2" TextAlignment="Center"/>
-                        <TextBlock Text="" Grid.Column="3" TextAlignment="Center"/>
+                        <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/imu-blue-icon-small.png" Height="20" Width="20"/>
+                        <TextBlock Text="IMU" Grid.Column="1" TextAlignment="Center"/>
+                        <TextBlock Text="Address" Grid.Column="2" TextAlignment="Center"/>
+                        <TextBlock Text="Battery" Grid.Column="3" TextAlignment="Center"/>
+                        <TextBlock Text="" Grid.Column="4" TextAlignment="Center"/>
                     </Grid>
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:IMUInfo}">
-                        <Grid Margin="-19,0,0,0" Width="250">
+                        <Grid Margin="-19,0,0,0" Width="280">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Path=name}" Grid.Column="0" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=adress}" Grid.Column="1" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="2" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=connected, Converter={StaticResource connectedConverter}}" Grid.Column="3" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=name}" Grid.Column="1" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=adress}" Grid.Column="2" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="3" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=connected, Converter={StaticResource connectedConverter}}" Grid.Column="4" TextAlignment="Center"/>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
-            <TreeViewItem ItemsSource="{Binding cameras}" Visibility="Collapsed" x:Name="cameras">
+            <TreeViewItem ItemsSource="{Binding cameras}" Visibility="Collapsed" x:Name="cameras" Padding="0 10 0 2.5">
                 <TreeViewItem.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <EventSetter Event="MouseDoubleClick" Handler="onCameraDoubleClick" />
                     </Style>
                 </TreeViewItem.ItemContainerStyle>
                 <TreeViewItem.Header>
-                    <Grid Width="250">
+                    <Grid Width="280">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Cameras" Grid.Column="0" TextAlignment="Center"/>
-                        <TextBlock Text="Device Number" Grid.Column="1" TextAlignment="Center" TextWrapping="Wrap"/>
-                        <TextBlock Text="FPS" Grid.Column="2" TextAlignment="Center"/>
-                        <TextBlock Text="" Grid.Column="3" TextAlignment="Center"/>
+                        <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/camera-blue-icon-small.png" Height="20" Width="20"/>
+                        <TextBlock Text="Cameras" Grid.Column="1" TextAlignment="Center"/>
+                        <TextBlock Text="Device Number" Grid.Column="2" TextAlignment="Center" TextWrapping="Wrap"/>
+                        <TextBlock Text="FPS" Grid.Column="3" TextAlignment="Center"/>
+                        <TextBlock Text="" Grid.Column="4" TextAlignment="Center"/>
                     </Grid>
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:CameraInfo}">
-                        <Grid Margin="-19,0,0,0" Width="250">
+                        <Grid Margin="-19,0,0,0" Width="280">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Path=name}" Grid.Column="0" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=number}" Grid.Column="1" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=fps}" Grid.Column="2" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=name}" Grid.Column="1" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=number}" Grid.Column="2" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=fps}" Grid.Column="3" TextAlignment="Center"/>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
-            <TreeViewItem ItemsSource="{Binding insoles}" Visibility="Collapsed" x:Name="insoles">
+            <TreeViewItem ItemsSource="{Binding insoles}" Visibility="Collapsed" x:Name="insoles" Padding="0 10 0 2.5">
                 <TreeViewItem.Header>
-                    <Grid Width="250">
+                    <Grid Width="280">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                             <ColumnDefinition SharedSizeGroup="A"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="IMU-Insoles" Grid.Column="0" TextAlignment="Center"/>
-                        <TextBlock Text="SIDE" Grid.Column="1" TextAlignment="Center"/>
-                        <TextBlock Text="" Grid.Column="2" TextAlignment="Center"/>
+                        <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/insole-blue-icon-small.png" Height="20" Width="20"/>
+                        <TextBlock Text="IMU-Insoles" Grid.Column="1" TextAlignment="Center"/>
+                        <TextBlock Text="SIDE" Grid.Column="2" TextAlignment="Center"/>
                         <TextBlock Text="" Grid.Column="3" TextAlignment="Center"/>
+                        <TextBlock Text="" Grid.Column="4" TextAlignment="Center"/>
                     </Grid>
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:InsolesInfo}">
-                        <Grid Margin="-19,0,0,0" Width="250">
+                        <Grid Margin="-19,0,0,0" Width="280">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                                 <ColumnDefinition SharedSizeGroup="A"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Path=name}" Grid.Column="0" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=side}" Grid.Column="1" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=name}" Grid.Column="1" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=side}" Grid.Column="2" TextAlignment="Center"/>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>

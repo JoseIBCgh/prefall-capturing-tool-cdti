@@ -143,15 +143,13 @@ namespace ibcdatacsharp.UI
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 deviceListClass.clearAll();
                 addCameras(deviceListClass);
-                deviceListClass.showIMUs();
                 deviceListClass.showCameras();
-                deviceListClass.showInsoles(); //Por defecto estan escondidos pero si los muestras una vez los tienes que volver a esconder
-                /*
+                // Añade datos inventados quitar
                 deviceListClass.showIMUs();
                 deviceListClass.showInsoles();
                 deviceListClass.addIMU(new IMUInfo("IMU", "AD:DS"));
                 deviceListClass.addInsole(new InsolesInfo("Insole", "Left"));
-                */
+                
             }
             deviceListLoadedCheck(onScanFunction);
         }
