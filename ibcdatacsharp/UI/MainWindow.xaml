@@ -6,7 +6,7 @@
         xmlns:dock="https://github.com/Dirkster99/AvalonDock"
         xmlns:local="clr-namespace:ibcdatacsharp.UI"
         mc:Ignorable="d"
-        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 0.9.3]" Height="900" Width="1280">
+        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 0.9.3]" Height="900" Width="1400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -19,7 +19,7 @@
             <dock:LayoutRoot>
                 <dock:LayoutPanel Orientation="Vertical" DockHeight="*" DockWidth="*">
                     <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
-                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.5*">
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
                             <dock:LayoutAnchorable CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
                                 <TabControl Grid.Column="0" TabStripPlacement="Top">
                                     <TabItem Header="Devices">
@@ -31,14 +31,14 @@
                                 </TabControl>
                             </dock:LayoutAnchorable>
                         </dock:LayoutAnchorablePane>
-                        <dock:LayoutAnchorablePaneGroup Orientation="Vertical" DockHeight="*" DockWidth="2*">
+                        <dock:LayoutAnchorablePaneGroup Orientation="Vertical" DockHeight="*" DockWidth="4*">
                             <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
-                                <dock:LayoutAnchorablePane DockHeight="*" DockWidth="2*">
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Angle">
+                                <dock:LayoutAnchorablePane DockHeight="*" DockWidth="1.8*">
+                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle">
                                         <Frame Source="pack://application:,,,/UI/Graphs/AngleGraph/AngleGraph.xaml" x:Name="angle"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
-                                <dock:LayoutAnchorablePane DockHeight="*" DockWidth="1.25*">
+                                <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
                                     <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Camera">
                                         <Frame Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
                                     </dock:LayoutAnchorable>

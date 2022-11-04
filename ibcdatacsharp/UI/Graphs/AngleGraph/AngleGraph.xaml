@@ -16,6 +16,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <!--<TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Center">Angle</TextBlock> -->
+        <Separator Grid.Row="0" Background="Transparent" Height="20"/>
         <WpfPlot Grid.Row="1"  x:Name="angleX"/>
         <WpfPlot Grid.Row="2"  x:Name="angleY"/>
         <WpfPlot Grid.Row="3"  x:Name="angleZ"/>
