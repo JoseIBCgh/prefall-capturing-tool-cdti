@@ -20,12 +20,12 @@ namespace ibcdatacsharp.UI.MenuBar
         {
             if (pauseState == PauseState.Pause)
             {
-                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
+                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/Blue/pause-blue-icon.png"));
                 pause.Header = "Pause";
             }
             else if (pauseState == PauseState.Play)
             {
-                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
+                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/Blue/play-pause-blue-icon.png"));
                 pause.Header = "Play";
             }
         }
@@ -34,7 +34,7 @@ namespace ibcdatacsharp.UI.MenuBar
         {
             if (recordState == RecordState.RecordStopped)
             {
-                recordImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/record-stop-icon.png"));
+                recordImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/Blue/record-stop-blue-icon.png"));
                 record.Header = "Record Stopped";
             }
             else if (recordState == RecordState.Recording)

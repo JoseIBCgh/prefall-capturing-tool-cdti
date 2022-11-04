@@ -19,6 +19,16 @@
     <None Remove="UI\DeviceList\Icons\insole-blue-icon.png" />
     <None Remove="UI\DeviceList\Icons\insole-icon.png" />
     <None Remove="UI\MenuBar\Icons\ibc-logo.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\capture-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\capturedFiles-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\connect-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\disconnect-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\openCamera-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\pause-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\play-pause-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\record-stop-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\scan-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\stop-blue-icon.png" />
     <None Remove="UI\ToolBar\Icons\capture-icon.png" />
     <None Remove="UI\ToolBar\Icons\capturedFiles-icon.png" />
     <None Remove="UI\ToolBar\Icons\connect-icon.png" />
@@ -80,6 +90,36 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\MenuBar\Icons\ibc-logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\capture-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\capturedFiles-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\connect-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\disconnect-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\openCamera-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\pause-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\play-pause-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\record-stop-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\scan-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\stop-blue-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\capture-icon.png">

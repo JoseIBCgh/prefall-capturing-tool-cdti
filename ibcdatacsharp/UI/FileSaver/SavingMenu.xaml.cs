@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 
 namespace ibcdatacsharp.UI.FileSaver
@@ -6,7 +7,7 @@ namespace ibcdatacsharp.UI.FileSaver
     /// <summary>
     /// Lógica de interacción para SavingMenu.xaml
     /// </summary>
-    public partial class SavingMenu : Window
+    public partial class SavingMenu : Page
     {
         public SavingMenu()
         {

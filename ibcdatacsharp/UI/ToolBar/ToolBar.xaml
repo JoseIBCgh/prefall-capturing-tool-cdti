@@ -8,8 +8,8 @@
       d:DesignHeight="60" d:DesignWidth="1000"
       Title="ToolBar">
 
-    <StackPanel Background="LightGray" Orientation="Horizontal">
-        <StackPanel.Resources>
+    <DockPanel Background="LightGray">
+        <DockPanel.Resources>
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
@@ -23,63 +23,64 @@
                 <Setter Property="TextAlignment" Value="Center"/>
                 <Setter Property="FontSize" Value="11"/>
             </Style>
-        </StackPanel.Resources>
-        <Button x:Name="scan">
+        </DockPanel.Resources>
+        <Button x:Name="scan" DockPanel.Dock="Left">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/scan-icon.png"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/scan-blue-icon.png"/>
                 <TextBlock>Scan</TextBlock>
             </StackPanel>
         </Button>
-        <Button x:Name="connect">
+        <Button x:Name="connect" DockPanel.Dock="Left">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/connect-icon.png"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/connect-blue-icon.png"/>
                 <TextBlock>Connect</TextBlock>
             </StackPanel>
         </Button>
-        <Button x:Name="disconnect">
+        <Button x:Name="disconnect" DockPanel.Dock="Left">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/disconnect-icon.png"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/disconnect-blue-icon.png"/>
                 <TextBlock>Disconnect</TextBlock>
             </StackPanel>
         </Button>
-        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-        <Button x:Name="openCamera">
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" DockPanel.Dock="Left"/>
+        <Button x:Name="openCamera" DockPanel.Dock="Left">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/openCamera-icon.png"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/openCamera-blue-icon.png"/>
                 <TextBlock>Open Camera</TextBlock>
             </StackPanel>
         </Button>
-        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-        <Button x:Name="record">
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" DockPanel.Dock="Left"/>
+        <Button x:Name="record" DockPanel.Dock="Left">
             <StackPanel>
-                <Image x:Name="recordImage" Source="pack://application:,,,/UI/ToolBar/Icons/record-stop-icon.png"/>
+                <Image x:Name="recordImage" Source="pack://application:,,,/UI/ToolBar/Icons/Blue/record-stop-blue-icon.png"/>
                 <TextBlock x:Name="recordText">Record Stopped</TextBlock>
             </StackPanel>
         </Button>
-        <Button x:Name="capture">
+        <Button x:Name="capture" DockPanel.Dock="Left">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/capture-icon.png"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/capture-blue-icon.png"/>
                 <TextBlock>Capture</TextBlock>
             </StackPanel>
         </Button>
-        <Button x:Name="pause">
+        <Button x:Name="pause" DockPanel.Dock="Left">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/pause-icon.png" x:Name="pauseImage"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/pause-blue-icon.png" x:Name="pauseImage"/>
                 <TextBlock x:Name="pauseText">Pause</TextBlock>
             </StackPanel>
         </Button>
-        <Button Grid.Column="7" x:Name="stop">
+        <Button Grid.Column="7" x:Name="stop" DockPanel.Dock="Left">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/stop-icon.png"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/stop-blue-icon.png"/>
                 <TextBlock>Stop</TextBlock>
             </StackPanel>
         </Button>
-        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-        <Button x:Name="capturedFiles">
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" DockPanel.Dock="Left"/>
+        <Button x:Name="capturedFiles" DockPanel.Dock="Left">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/capturedFiles-icon.png"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/capturedFiles-blue-icon.png"/>
                 <TextBlock>Show Captured Files</TextBlock>
             </StackPanel>
         </Button>
-    </StackPanel>
+        <Frame Visibility="Collapsed" Source="pack://application:,,,/UI/FileSaver/SavingMenu.xaml" x:Name="savingMenu" DockPanel.Dock="Right"/>
+    </DockPanel>
 </Page>

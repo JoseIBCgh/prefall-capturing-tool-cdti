@@ -15,7 +15,7 @@ namespace ibcdatacsharp.UI.ToolBar
         private ToolBar toolBar;
         private MenuBar.MenuBar menuBar;
 
-        private SavingMenu menu;
+        private SavingMenu saveMenu;
 
         public delegate void PauseEventHandler(object sender, PauseState args);
         public delegate void RecordEventHandler(object sender, RecordState args);
@@ -35,11 +35,33 @@ namespace ibcdatacsharp.UI.ToolBar
                 mainWindow.toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
                 {
                     toolBar = mainWindow.toolBar.Content as ToolBar;
+                    if(toolBar.savingMenu.Content == null)
+                    {
+                        toolBar.savingMenu.Navigated += delegate (object sender, NavigationEventArgs e)
+                        {
+                            saveMenu = toolBar.savingMenu.Content as SavingMenu;
+                        };
+                    }
+                    else
+                    {
+                        saveMenu = toolBar.savingMenu.Content as SavingMenu;
+                    }
                 };
             }
             else
             {
                 toolBar = mainWindow.toolBar.Content as ToolBar;
+                if (toolBar.savingMenu.Content == null)
+                {
+                    toolBar.savingMenu.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        saveMenu = toolBar.savingMenu.Content as SavingMenu;
+                    };
+                }
+                else
+                {
+                    saveMenu = toolBar.savingMenu.Content as SavingMenu;
+                }
             }
             if(mainWindow.menuBar.Content == null)
             {
@@ -52,16 +74,6 @@ namespace ibcdatacsharp.UI.ToolBar
             {
                 menuBar = mainWindow.menuBar.Content as MenuBar.MenuBar;
             }
-        }
-        // Pasa referencia
-        public void setToolBar(ToolBar toolBar)
-        {
-            this.toolBar = toolBar;
-        }
-        // Pasa referencia
-        public void setMenuBar(MenuBar.MenuBar menuBar)
-        {
-            this.menuBar = menuBar;
         }
         // Se ejecuta al clicar el boton pause
         public void pauseClick()
@@ -92,20 +104,18 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             if(recordState == RecordState.RecordStopped)
             {
-                menu = new SavingMenu();
-                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                menu.Owner = mainWindow;
-                menu.ok.Click += continueRecord;
-                menu.Show();
+                toolBar.savingMenu.Visibility = Visibility.Visible;
+                saveMenu.ok.Click += continueRecord;
             }
         }
         private void continueRecord(object sender, RoutedEventArgs e)
         {
             if(saveEvent != null)
             {
-                saveEvent?.Invoke(this, new SaveArgs { directory = menu.route.Text, csv = (bool)menu.csv.IsChecked, video = (bool)menu.video.IsChecked });
+                saveEvent?.Invoke(this, new SaveArgs { directory = saveMenu.route.Text, csv = (bool)saveMenu.csv.IsChecked, video = (bool)saveMenu.video.IsChecked });
             }
-            menu.Close();
+            saveMenu.ok.Click -= continueRecord;
+            toolBar.savingMenu.Visibility = Visibility.Collapsed;
             ((MainWindow)Application.Current.MainWindow).Focus();
             recordState = RecordState.Recording;
             toolBar.changeRecordState(RecordState.Recording);
