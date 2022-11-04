@@ -65,6 +65,14 @@ namespace ibcdatacsharp.UI.FileBrowser
                     treeView.Items.Add(fileSystemObject);
                 });
             PreSelect(INITIAL_PATH);
+            /*
+            FileInfo temp = new FileInfo("C:\\Temp");
+            FileSystemObjectInfo fileSystemObject = new FileSystemObjectInfo(temp);
+            fileSystemObject.BeforeExplore += FileSystemObject_BeforeExplore;
+            fileSystemObject.AfterExplore += FileSystemObject_AfterExplore;
+            treeView.Items.Add(fileSystemObject);
+            PreSelect(fileSystemObject, INITIAL_PATH);
+            */
         }
         // Carpeta seleccionada por defecto
         private void PreSelect(string path)

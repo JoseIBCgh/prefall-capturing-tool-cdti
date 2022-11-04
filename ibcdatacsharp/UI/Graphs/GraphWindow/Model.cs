@@ -34,7 +34,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         private int nextIndex = 0;
         private WpfPlot plot;
 
-        public Model(WpfPlot plot,double minY, double maxY, string titleY = "", string units = "")
+        public Model(WpfPlot plot,double minY, double maxY, string title = "", string units = "")
         {
             valuesX = new double[CAPACITY];
             valuesY = new double[CAPACITY];
@@ -43,16 +43,12 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             signalPlotX = plot.Plot.AddSignal(valuesX, color:Color.Red);
             signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green);
             signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue);
-            SetupModel(minY, maxY, titleY, units);
+            plot.Plot.SetAxisLimits(yMin: minY, yMax: maxY);
+            //plot.Plot.Title(title);
             signalPlotX.MaxRenderIndex = nextIndex;
             signalPlotY.MaxRenderIndex = nextIndex;
             signalPlotZ.MaxRenderIndex = nextIndex;
             plot.Refresh();
-        }
-        // Inicializa el modelo
-        private void SetupModel(double minY, double maxY, string titleY, string units)
-        {
-            plot.Plot.SetAxisLimits(yMin: minY, yMax:maxY);
         }
 #if MOVE_DATA
         // Actualiza los datos

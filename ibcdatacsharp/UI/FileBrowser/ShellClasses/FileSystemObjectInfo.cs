@@ -205,12 +205,17 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
                 foreach (var file in files.OrderBy(d => d.Name))
                 {
                     if ((file.Attributes & FileAttributes.System) != FileAttributes.System &&
-                        (file.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                        (file.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden && showFile(file))
                     {
                         Children.Add(new FileSystemObjectInfo(file));
                     }
                 }
             }
+        }
+        // Devuelve true si se tiene que mostrar el fichero
+        private bool showFile(FileInfo file)
+        {
+            return Config.allowedExtensions.Contains(file.Extension);
         }
 
         #endregion
