@@ -151,6 +151,7 @@ namespace ibcdatacsharp.UI
                 
             }
             deviceListLoadedCheck(onScanFunction);
+            virtualToolBar.onScanClick();
         }
         // Conecta el boton connect
         private void onConnect(object sender, EventArgs e)

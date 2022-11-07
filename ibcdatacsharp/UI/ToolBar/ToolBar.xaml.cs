@@ -13,6 +13,29 @@ namespace ibcdatacsharp.UI.ToolBar
         public ToolBar()
         {
             InitializeComponent();
+            deactivateButtons();
+        }
+        private void deactivateButtons()
+        {
+            connect.IsEnabled = false;
+            disconnect.IsEnabled = false;
+            openCamera.IsEnabled = false;
+            record.IsEnabled = false;
+            capture.IsEnabled = false;
+            pause.IsEnabled = false;
+            stop.IsEnabled = false;
+            capturedFiles.IsEnabled = false;
+        }
+        public void activateButtons()
+        {
+            connect.IsEnabled = true;
+            disconnect.IsEnabled = true;
+            openCamera.IsEnabled = true;
+            record.IsEnabled = true;
+            capture.IsEnabled = true;
+            pause.IsEnabled = true;
+            stop.IsEnabled = true;
+            capturedFiles.IsEnabled = true;
         }
         // Cambia el icono del boton Pause
         public void changePauseState(PauseState pauseState)

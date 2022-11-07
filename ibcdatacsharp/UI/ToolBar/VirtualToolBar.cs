@@ -25,6 +25,8 @@ namespace ibcdatacsharp.UI.ToolBar
         public event StopEventHandler stopEvent;
         public event EventHandler<SaveArgs> saveEvent;
 
+        private bool buttonsEnabled = false;
+
         public VirtualToolBar()
         {
             pauseState = PauseState.Play;
@@ -73,6 +75,15 @@ namespace ibcdatacsharp.UI.ToolBar
             else
             {
                 menuBar = mainWindow.menuBar.Content as MenuBar.MenuBar;
+            }
+        }
+        public void onScanClick()
+        {
+            if (!buttonsEnabled)
+            {
+                toolBar.activateButtons();
+                menuBar.activateButtons();
+                buttonsEnabled = true;
             }
         }
         // Se ejecuta al clicar el boton pause
