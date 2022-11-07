@@ -10,7 +10,6 @@ namespace ibcdatacsharp.UI.FileBrowser
 {
     public partial class FileBrowser : Page
     {
-        private const string INITIAL_PATH = "C:\\Temp";
         public FileBrowser()
         {
             InitializeComponent();
@@ -53,26 +52,41 @@ namespace ibcdatacsharp.UI.FileBrowser
         // Inicializa los drives y expande el Escritorio
         private void InitializeFileSystemObjects()
         {
-            var drives = DriveInfo.GetDrives();
+            if (Config.showOnlyInitialPath)
+            {
+                initializeOnlyInitialPath(Config.INITIAL_PATH);
+                PreSelect(Config.INITIAL_PATH);
+            }
+            else {
+                var drives = DriveInfo.GetDrives();
+                DriveInfo
+                    .GetDrives()
+                    .ToList()
+                    .ForEach(drive =>
+                    {
+                        var fileSystemObject = new FileSystemObjectInfo(drive);
+                        fileSystemObject.BeforeExplore += FileSystemObject_BeforeExplore;
+                        fileSystemObject.AfterExplore += FileSystemObject_AfterExplore;
+                        treeView.Items.Add(fileSystemObject);
+                    });
+                PreSelect(Config.INITIAL_PATH);
+            }
+        }
+        private void initializeOnlyInitialPath(string path)
+        {
             DriveInfo
                 .GetDrives()
                 .ToList()
                 .ForEach(drive =>
                 {
                     var fileSystemObject = new FileSystemObjectInfo(drive);
-                    fileSystemObject.BeforeExplore += FileSystemObject_BeforeExplore;
-                    fileSystemObject.AfterExplore += FileSystemObject_AfterExplore;
-                    treeView.Items.Add(fileSystemObject);
+                    if (IsParentPath(path, fileSystemObject.FileSystemInfo.FullName))
+                    {
+                        fileSystemObject.BeforeExplore += FileSystemObject_BeforeExplore;
+                        fileSystemObject.AfterExplore += FileSystemObject_AfterExplore;
+                        treeView.Items.Add(fileSystemObject);
+                    }     
                 });
-            PreSelect(INITIAL_PATH);
-            /*
-            FileInfo temp = new FileInfo("C:\\Temp");
-            FileSystemObjectInfo fileSystemObject = new FileSystemObjectInfo(temp);
-            fileSystemObject.BeforeExplore += FileSystemObject_BeforeExplore;
-            fileSystemObject.AfterExplore += FileSystemObject_AfterExplore;
-            treeView.Items.Add(fileSystemObject);
-            PreSelect(fileSystemObject, INITIAL_PATH);
-            */
         }
         // Carpeta seleccionada por defecto
         private void PreSelect(string path)
@@ -134,7 +148,7 @@ namespace ibcdatacsharp.UI.FileBrowser
             return null;
         }
 
-        private bool IsParentPath(string path,
+        public static bool IsParentPath(string path,
             string targetPath)
         {
             return path.StartsWith(targetPath);

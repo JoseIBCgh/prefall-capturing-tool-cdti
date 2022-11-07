@@ -171,13 +171,16 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
                 var directories = ((DirectoryInfo)FileSystemInfo).GetDirectories();
                 foreach (var directory in directories.OrderBy(d => d.Name))
                 {
-                    if ((directory.Attributes & FileAttributes.System) != FileAttributes.System &&
-                        (directory.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
-                    {
-                        var fileSystemObject = new FileSystemObjectInfo(directory);
-                        fileSystemObject.BeforeExplore += FileSystemObject_BeforeExplore;
-                        fileSystemObject.AfterExplore += FileSystemObject_AfterExplore;
-                        Children.Add(fileSystemObject);
+                    if (!Config.showOnlyInitialPath || FileBrowser.IsParentPath(Config.INITIAL_PATH, directory.FullName) ||
+                        FileBrowser.IsParentPath(directory.FullName, Config.INITIAL_PATH)) {
+                        if ((directory.Attributes & FileAttributes.System) != FileAttributes.System &&
+                            (directory.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                        {
+                            var fileSystemObject = new FileSystemObjectInfo(directory);
+                            fileSystemObject.BeforeExplore += FileSystemObject_BeforeExplore;
+                            fileSystemObject.AfterExplore += FileSystemObject_AfterExplore;
+                            Children.Add(fileSystemObject);
+                        }
                     }
                 }
             }
@@ -204,10 +207,13 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
                 var files = ((DirectoryInfo)FileSystemInfo).GetFiles();
                 foreach (var file in files.OrderBy(d => d.Name))
                 {
-                    if ((file.Attributes & FileAttributes.System) != FileAttributes.System &&
-                        (file.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden && showFile(file))
+                    if (!Config.showOnlyInitialPath || FileBrowser.IsParentPath(file.FullName, Config.INITIAL_PATH))
                     {
-                        Children.Add(new FileSystemObjectInfo(file));
+                        if ((file.Attributes & FileAttributes.System) != FileAttributes.System &&
+                        (file.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden && showFile(file))
+                        {
+                            Children.Add(new FileSystemObjectInfo(file));
+                        }
                     }
                 }
             }
