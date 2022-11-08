@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="UI\DeviceList\Icons\arrow-icon.png" />
     <None Remove="UI\DeviceList\Icons\camera-blue-icon-small.png" />
     <None Remove="UI\DeviceList\Icons\camera-blue-icon.png" />
     <None Remove="UI\DeviceList\Icons\camera-icon.png" />
@@ -19,6 +20,9 @@
     <None Remove="UI\DeviceList\Icons\insole-blue-icon.png" />
     <None Remove="UI\DeviceList\Icons\insole-icon.png" />
     <None Remove="UI\MenuBar\Icons\ibc-logo.png" />
+    <None Remove="UI\TimeLine\Icons\fast-backward-icon.png" />
+    <None Remove="UI\TimeLine\Icons\fast-forward-icon.png" />
+    <None Remove="UI\TimeLine\Icons\play-icon.png" />
     <None Remove="UI\ToolBar\Icons\Blue\capture-blue-icon.png" />
     <None Remove="UI\ToolBar\Icons\Blue\capturedFiles-blue-icon.png" />
     <None Remove="UI\ToolBar\Icons\Blue\connect-blue-icon.png" />
@@ -62,6 +66,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="UI\DeviceList\Icons\arrow-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="UI\DeviceList\Icons\camera-blue-icon-small.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -90,6 +97,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\MenuBar\Icons\ibc-logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\TimeLine\Icons\fast-backward-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\TimeLine\Icons\fast-forward-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\TimeLine\Icons\play-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\Blue\capture-blue-icon.png">
