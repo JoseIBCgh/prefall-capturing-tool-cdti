@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -12,19 +13,43 @@ namespace ibcdatacsharp.UI.TimeLine
     public partial class TimeLine : Page
     {
         private bool paused = true;
-        private DispatcherTimer timer;
+        private System.Timers.Timer timer;
+        private Stopwatch stopwatch;
+        private double deltaTime = 0;
+        private const double PLAY_MS = 10;
+        private const double UPDATE_TIME_MS = 50;
+
         public TimeLine()
         {
             InitializeComponent();
-            modelTime = new Model(0, 1000);
-            modelTime.currentFrameEvent += onCurrentFrameMove;
-            timer = new DispatcherTimer();
-            timer.Tick += new EventHandler(increaseFrame);
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-
+            model = new Model(timeLine, time, UPDATE_TIME_MS);
             DataContext = this;
+            startPlay();
+        }
+        private void startPlay()
+        {
+            timer = new System.Timers.Timer();
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+            timer.Interval = PLAY_MS;
+            timer.Elapsed += (sender, e) => tickPlay();
+            timer.Start();
+            deltaTime = 0;
+            model.timeEvent -= onDrag;
+            model.timeEvent += onDrag;
+        }
+        private void startCapture()
+        {
+            timer = new System.Timers.Timer();
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+            timer.Interval = UPDATE_TIME_MS;
+            timer.Elapsed += (sender, e) => tickCapture();
+            timer.Start();
+            model.timeEvent -= onDrag;
         }
         public Model modelTime { get; private set; }
+        public Model model { get; private set; }
         // Se ejecuta al pulsar el boton de pausa
         public void onPause(object sender, EventArgs e)
         {
@@ -41,25 +66,26 @@ namespace ibcdatacsharp.UI.TimeLine
                 timer.Stop();
             }
         }
-        // Mientras se mueve la linea manualmente detiene el timer
-        private void onCurrentFrameMove(object sender, CurrentFrameArgs e)
+        private void onDrag(object sender, TimeArgs e)
         {
-            if (e.start && !paused)
-            {
-                timer.Stop();
-            }
-            else if(e.end && !paused)
-            {
-                timer.Start();
-            }
+            deltaTime = e.time;
+            stopwatch.Restart();
         }
-        // Funcion periodica que avanza al siguiente frame
-        public async void increaseFrame(object sender, EventArgs e)
+        public void tickPlay()
         {
-            await Task.Run(async () => await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            TimeSpan time = stopwatch.Elapsed;
+            double totalTime = time.TotalSeconds + deltaTime;
+            Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
             {
-                modelTime.increaseFrame();
-            }));
+                model.setTime(totalTime);
+            });
+        }
+        public void tickCapture()
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+            {
+                time.Text = model.formatTimer(stopwatch.Elapsed);
+            });
         }
     }
 }

@@ -2,183 +2,129 @@
 using OxyPlot;
 using OxyPlot.Annotations;
 using System.ComponentModel;
+using ScottPlot;
+using System;
+using System.Drawing;
+using ScottPlot.Plottable;
+using System.Windows.Controls;
 
 namespace ibcdatacsharp.UI.TimeLine
 {
-    public class Model : INotifyPropertyChanged
+    public class Model
     {
-        private const int MIN_MAX_MIN_DISTANCE = 5;
-        public event PropertyChangedEventHandler PropertyChanged;
-        public delegate void CurrentFrameEventHandler(object sender, CurrentFrameArgs args);
-        public event CurrentFrameEventHandler currentFrameEvent;
-        private LineAnnotation currentFrameLine;
-        private LineAnnotation minFrameLine;
-        private LineAnnotation maxFrameLine;
+        public delegate void TimeEventHandler(object sender, TimeArgs args);
+        public event TimeEventHandler timeEvent;
+
+        private TextBlock timer;
+        private WpfPlot plot;
+        private HSpan line;
+        private double pos = 0;
+        private double width = 0.5;
+        private double minX = 0;
+        private double maxX = 100;
+        private double minY = 0;
+        private double maxY = 1;
+        private double lastTime;
+        private double MIN_CHANGE_TO_NOTIFY;
 
         // Crea los ejes y las lineas
-        public Model(int minFrame=0, int maxFrame=100)
+        public Model(WpfPlot plot, TextBlock timer, double UPDATE_TIME_MS)
         {
-            PlotModel = new PlotModel();
-            PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 100, IntervalLength = 20, IsAxisVisible=false });
-            PlotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = minFrame - 1, Maximum = maxFrame + 1, Title = "frames", Unit = "kFreq", FontSize = 10, IntervalLength = 200 });
-            minFrameLine = new LineAnnotation()
+            this.timer = timer;
+            this.plot = plot;
+            plot.Plot.SetInnerViewLimits(xMin: minX, xMax: maxX, yMin:minY, yMax:maxY);
+            plot.Plot.SetOuterViewLimits(xMin: minX, xMax: maxX, yMin: minY, yMax: maxY);
+            line = plot.Plot.AddHorizontalSpan(pos - width, pos + width, Color.LightSkyBlue);
+            line.DragEnabled = true;
+            line.DragFixedSize = true;
+            line.DragLimitMin = minX;
+            line.DragLimitMax = maxX;
+            plot.Plot.SetAxisLimitsX(minX, maxX);
+            plot.Plot.SetAxisLimitsY(minY, maxY);
+            plot.Plot.XAxis.TickLabelFormat(formatAxis);
+            plot.Plot.YAxis.TickLabelFormat((_) => 
             {
-                Type = LineAnnotationType.Vertical,
-                X = minFrame,
-                Color = OxyColors.DeepSkyBlue,
-                StrokeThickness = 1,
-            };
-            maxFrameLine = new LineAnnotation()
+                return "";
+            });
+            plot.Refresh();
+            line.Dragged += (sender, e) =>
             {
-                Type = LineAnnotationType.Vertical,
-                X = maxFrame,
-                Color = OxyColors.DeepSkyBlue,
-                StrokeThickness = 1,
+                timeEvent?.Invoke(this, new TimeArgs() { time=line.X1 + width});
+                NotifyTimeChanged();
             };
-            currentFrameLine = new LineAnnotation(){
-                Type = LineAnnotationType.Vertical,
-                X=minFrame,
-                Color = OxyColors.Blue,
-                StrokeThickness=1,
-            };
-            // minFrameLine handlers
-            minFrameLine.MouseDown += (sender, e) =>
-            {
-                e.Handled = true;
-            };
-            minFrameLine.MouseMove += (sender, e) =>
-            {
-                minFrameLine.X = minFrameLine.InverseTransform(e.Position).X;
-                if (minFrameLine.X < minFrame)
-                {
-                    minFrameLine.X = minFrame;
-                }
-                if(minFrameLine.X > maxFrameLine.X - MIN_MAX_MIN_DISTANCE)
-                {
-                    maxFrameLine.X = minFrameLine.X + MIN_MAX_MIN_DISTANCE;
-                    if(maxFrameLine.X > maxFrame)
-                    {
-                        maxFrameLine.X = maxFrame;
-                        minFrameLine.X = maxFrameLine.X - MIN_MAX_MIN_DISTANCE;
-                    }
-                }
-                if (minFrameLine.X > currentFrameLine.X)
-                {
-                    currentFrameLine.X = minFrameLine.X;
-                    NotifyCurrentFrameChanged();
-                }
-                PlotModel.InvalidatePlot(false);
-                e.Handled = true;
-            };
-            minFrameLine.MouseUp += (sender, e) =>
-            {
-                PlotModel.InvalidatePlot(false);
-                e.Handled = true;
-            };
-            // maxFrameLine handlers
-            maxFrameLine.MouseDown += (sender, e) =>
-            {
-                e.Handled = true;
-            };
-            maxFrameLine.MouseMove += (sender, e) =>
-            {
-                maxFrameLine.X = maxFrameLine.InverseTransform(e.Position).X;
-                if (maxFrameLine.X > maxFrame)
-                {
-                    maxFrameLine.X = maxFrame;
-                }
-                if(maxFrameLine.X < minFrameLine.X + MIN_MAX_MIN_DISTANCE)
-                {
-                    minFrameLine.X = maxFrameLine.X - MIN_MAX_MIN_DISTANCE;
-                    if(minFrameLine.X < minFrame)
-                    {
-                        minFrameLine.X = minFrame;
-                        maxFrameLine.X = minFrameLine.X + MIN_MAX_MIN_DISTANCE;
-                    }
-                }
-                if (maxFrameLine.X < currentFrameLine.X)
-                {
-                    currentFrameLine.X = maxFrameLine.X;
-                    NotifyCurrentFrameChanged();
-                }
-                PlotModel.InvalidatePlot(false);
-                e.Handled = true;
-            };
-            maxFrameLine.MouseUp += (sender, e) =>
-            {
-                PlotModel.InvalidatePlot(false);
-                e.Handled = true;
-            };
-            // currentFrameLine handlers
-            currentFrameLine.MouseDown += (sender, e) =>
-            {
-                CurrentFrameArgs args = new CurrentFrameArgs();
-                args.start = true;
-                emitCurrentFrame(args);
-                e.Handled = true;
-            };
-            currentFrameLine.MouseMove += (sender, e) =>
-            {
-                currentFrameLine.X = currentFrameLine.InverseTransform(e.Position).X;
-                if(currentFrameLine.X < minFrameLine.X)
-                {
-                    currentFrameLine.X = minFrameLine.X;
-                }
-                if(currentFrameLine.X > maxFrameLine.X)
-                {
-                    currentFrameLine.X = maxFrameLine.X;
-                }
-                NotifyCurrentFrameChanged();
-                PlotModel.InvalidatePlot(false);
-                e.Handled = true;
-            };
-            currentFrameLine.MouseUp += (sender, e) =>
-            {
-                CurrentFrameArgs args = new CurrentFrameArgs();
-                args.end = true;
-                emitCurrentFrame(args);
-                PlotModel.InvalidatePlot(false);
-                e.Handled = true;
-            };
-            PlotModel.Annotations.Add(minFrameLine);
-            PlotModel.Annotations.Add(maxFrameLine);
-            PlotModel.Annotations.Add(currentFrameLine);
-            NotifyCurrentFrameChanged();
+            MIN_CHANGE_TO_NOTIFY = UPDATE_TIME_MS / 1000;
         }
-        // Avanza al siguiente frame
-        public void increaseFrame()
+        public void setTime(double time)
         {
-            if(currentFrameLine.X < maxFrameLine.X)
+            if (time > maxX)
             {
-                currentFrameLine.X = currentFrameLine.X + 1;
+                this.time = maxX;
             }
             else
             {
-                currentFrameLine.X = minFrameLine.X;
+                this.time = time;
             }
-            NotifyCurrentFrameChanged();
-            PlotModel.InvalidatePlot(false);
+            plot.Render();
+            NotifyTimeChanged();
         }
-        private void NotifyCurrentFrameChanged()
+        private void NotifyTimeChanged()
         {
-            if(PropertyChanged!= null)
+            if (hasToNotify())
             {
-                PropertyChanged(this, new PropertyChangedEventArgs("currentFrame"));
+                timer.Text = formatTimer(TimeSpan.FromSeconds(time));
+                lastTime = time;
             }
         }
-        // Emite los datos de la currentFrameLine cuando se mueve manualmente
-        private void emitCurrentFrame(CurrentFrameArgs e) { 
-            if(currentFrameEvent != null)
+        private bool hasToNotify()
+        {
+            return Math.Abs(time - lastTime) > MIN_CHANGE_TO_NOTIFY;
+        }
+        private string formatAxis(double time)
+        {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(time);
+            if (time < 60 * 60)
             {
-                currentFrameEvent?.Invoke(this, e);
+                return string.Format("{0:D2}:{1:D2}",
+                timeSpan.Minutes,
+                timeSpan.Seconds);
             }
-        } 
-        public PlotModel PlotModel { get; private set; }
-        // Devuelve el numero del frame actual
-        public string currentFrame { 
+            else
+            {
+                return string.Format("{0:D2}:{1:D2}:{2:D2}",
+                timeSpan.Hours,
+                timeSpan.Minutes,
+                timeSpan.Seconds);
+            }
+        }
+        private double time
+        {
             get
             {
-                return ((int)currentFrameLine.X).ToString();
-            } }
+                return line.X1 + width;
+            }
+            set
+            {
+                line.X1 = value - width;
+                line.X2 = value + width;
+            }
+        }
+        public string formatTimer(TimeSpan timeSpan)
+        {
+            if (timeSpan.TotalHours < 1)
+            {
+                return string.Format("{0:D2}:{1:D2}:{2:D3}",
+                timeSpan.Minutes,
+                timeSpan.Seconds,
+                timeSpan.Milliseconds);
+            }
+            else
+            {
+                return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}",
+                timeSpan.Hours,
+                timeSpan.Minutes,
+                timeSpan.Seconds,
+                timeSpan.Milliseconds);
+            }
+        }
     }
 }

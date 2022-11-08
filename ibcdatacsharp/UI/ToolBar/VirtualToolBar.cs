@@ -21,8 +21,10 @@ namespace ibcdatacsharp.UI.ToolBar
         public delegate void RecordEventHandler(object sender, RecordState args);
         public delegate void StopEventHandler(object sender);
         public event PauseEventHandler pauseEvent;
+        // Se laza cuando se empieza o termina de grabar
         public event RecordEventHandler recordEvent;
         public event StopEventHandler stopEvent;
+        // Se lanza cuando se configuran los ficheros de grabar
         public event EventHandler<SaveArgs> saveEvent;
 
         private bool buttonsEnabled = false;
@@ -127,7 +129,7 @@ namespace ibcdatacsharp.UI.ToolBar
             }
             saveMenu.ok.Click -= continueRecord;
             toolBar.savingMenu.Visibility = Visibility.Collapsed;
-            ((MainWindow)Application.Current.MainWindow).Focus();
+            //((MainWindow)Application.Current.MainWindow).Focus();
             recordState = RecordState.Recording;
             toolBar.changeRecordState(RecordState.Recording);
             menuBar.changeRecordState(RecordState.Recording);
