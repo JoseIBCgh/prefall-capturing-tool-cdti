@@ -147,6 +147,7 @@ namespace ibcdatacsharp.UI
                 deviceListClass.showIMUs();
                 deviceListClass.showInsoles();
                 deviceListClass.addIMU(new IMUInfo("IMU", "AD:DS"));
+                deviceListClass.addIMU(new IMUInfo("IMU", "AC:DE"));
                 deviceListClass.addInsole(new InsolesInfo("Insole", "Left"));
                 
             }
