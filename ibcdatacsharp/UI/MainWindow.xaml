@@ -19,7 +19,7 @@
             <dock:LayoutRoot>
                 <dock:LayoutPanel Orientation="Vertical" DockHeight="*" DockWidth="*">
                     <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
-                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.75*">
                             <dock:LayoutAnchorable CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
                                 <TabControl Grid.Column="0" TabStripPlacement="Top">
                                     <TabItem Header="Devices">
@@ -63,7 +63,7 @@
                             </dock:LayoutAnchorablePaneGroup>
                         </dock:LayoutAnchorablePaneGroup>
                     </dock:LayoutAnchorablePaneGroup>
-                    <dock:LayoutAnchorablePane DockWidth="*" DockHeight="0.5*">
+                    <dock:LayoutAnchorablePane DockWidth="*" DockHeight="0.25*">
                         <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False">
                             <Frame Source="pack://application:,,,/UI/TimeLine/TimeLine.xaml" x:Name="timeLine"/>
                         </dock:LayoutAnchorable>

@@ -32,6 +32,8 @@ namespace ibcdatacsharp.UI.TimeLine
         {
             this.timer = timer;
             this.plot = plot;
+            plot.Plot.XAxis2.SetSizeLimit(pad:0);
+            plot.Plot.XAxis2.SetSizeLimit(pad:0);
             plot.Plot.SetInnerViewLimits(xMin: minX, xMax: maxX, yMin:minY, yMax:maxY);
             plot.Plot.SetOuterViewLimits(xMin: minX, xMax: maxX, yMin: minY, yMax: maxY);
             line = plot.Plot.AddHorizontalSpan(pos - width, pos + width, Color.LightSkyBlue);
@@ -110,21 +112,11 @@ namespace ibcdatacsharp.UI.TimeLine
         }
         public string formatTimer(TimeSpan timeSpan)
         {
-            if (timeSpan.TotalHours < 1)
-            {
-                return string.Format("{0:D2}:{1:D2}:{2:D3}",
-                timeSpan.Minutes,
-                timeSpan.Seconds,
-                timeSpan.Milliseconds);
-            }
-            else
-            {
-                return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}",
-                timeSpan.Hours,
-                timeSpan.Minutes,
-                timeSpan.Seconds,
-                timeSpan.Milliseconds);
-            }
+            return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}",
+            timeSpan.Hours,
+            timeSpan.Minutes,
+            timeSpan.Seconds,
+            timeSpan.Milliseconds);
         }
     }
 }

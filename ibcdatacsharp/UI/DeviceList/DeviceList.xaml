@@ -41,10 +41,10 @@
                     <Grid Width="280">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/imu-blue-icon-small.png" Height="20" Width="20"/>
                         <TextBlock Text="IMU" Grid.Column="1" TextAlignment="Center"/>
@@ -59,10 +59,10 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20"/>
                                 <ColumnDefinition Width="10"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="1" Height="10" Width="10" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="2" TextAlignment="Center"/>
@@ -83,10 +83,10 @@
                     <Grid Width="280">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/camera-blue-icon-small.png" Height="20" Width="20"/>
                         <TextBlock Text="Cameras" Grid.Column="1" TextAlignment="Center"/>
@@ -101,10 +101,10 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20"/>
                                 <ColumnDefinition Width="10"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="1" Height="10" Width="10" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="2" TextAlignment="Center"/>
@@ -119,10 +119,10 @@
                     <Grid Width="280">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/insole-blue-icon-small.png" Height="20" Width="20"/>
                         <TextBlock Text="IMU-Insoles" Grid.Column="1" TextAlignment="Center"/>
@@ -137,10 +137,10 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20"/>
                                 <ColumnDefinition Width="10"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
-                                <ColumnDefinition SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="1" Height="10" Width="10" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="2" TextAlignment="Center"/>

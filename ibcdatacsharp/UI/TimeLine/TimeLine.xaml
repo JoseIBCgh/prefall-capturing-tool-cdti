@@ -25,26 +25,26 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button x:Name="play" Grid.Row="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Height="30" Padding="5 5 5 5" Background="Blue">
+                    <Button x:Name="play" Grid.Row="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MaxHeight="25" Padding="5 5 5 5" Background="Blue">
                         <DockPanel>
-                            <Image DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" Height="15" Width="15" Source="pack://application:,,,/UI/TimeLine/Icons/play-icon.png" Margin="5 0 0 0"/>
-                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Play" Foreground="White" FontSize="14"/>
+                            <Image DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" MaxHeight="15" MaxWidth="15" Source="pack://application:,,,/UI/TimeLine/Icons/play-icon.png" Margin="5 0 0 0"/>
+                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Play" Foreground="White" FontSize="12"/>
                         </DockPanel>
                     </Button>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button x:Name="start" Width="30" Height="30" Click="onPause" Padding="5 5 5 5" Margin="5 5 5 5">
+                        <Button x:Name="start" MaxWidth="25" MaxHeight="25" Click="onPause" Padding="5 5 5 5" Margin="5 5 5 5">
                             <Image Source="pack://application:,,,/UI/TimeLine/Icons/fast-backward-icon.png"/>
                         </Button>
-                        <Button x:Name="pause" Width="30" Height="30"  Click="onPause" Padding="5 5 5 5"  Margin="5 5 5 5">
+                        <Button x:Name="pause" MaxWidth="25" MaxHeight="25"  Click="onPause" Padding="5 5 5 5"  Margin="5 5 5 5">
                             <Image x:Name="pauseImage" Source="pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"/>
                         </Button>
-                        <Button x:Name="end" Width="30" Height="30" Click="onPause" Padding="5 5 5 5"  Margin="5 5 5 5">
+                        <Button x:Name="end" MaxWidth="25" MaxHeight="25" Click="onPause" Padding="5 5 5 5"  Margin="5 5 5 5">
                             <Image Source="pack://application:,,,/UI/TimeLine/Icons/fast-forward-icon.png"/>
                         </Button>
                     </StackPanel>
                 </Grid>
                 </StackPanel>
-                <TextBlock x:Name="time" Grid.Row="1" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="0 10 0 0" Text="{Binding model.timeFormatted}"/>
+                <TextBlock x:Name="time" Grid.Row="1" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="0 10 0 0" Text="00:00:00:000"/>
         </Grid>
         <WpfPlot Grid.Column="1" x:Name="timeLine"/>
     </Grid>
