@@ -26,6 +26,7 @@ namespace ibcdatacsharp.UI.TimeLine
             DataContext = this;
             startPlay();
         }
+        // Actualiza el timeline y el contador
         private void startPlay()
         {
             timer = new System.Timers.Timer();
@@ -38,6 +39,7 @@ namespace ibcdatacsharp.UI.TimeLine
             model.timeEvent -= onDrag;
             model.timeEvent += onDrag;
         }
+        // Actualiza solo el contador
         private void startCapture()
         {
             timer = new System.Timers.Timer();
@@ -66,11 +68,13 @@ namespace ibcdatacsharp.UI.TimeLine
                 timer.Stop();
             }
         }
-        private void onDrag(object sender, TimeArgs e)
+        // Sirve para que el contador concuerde con el timeline (solo play)
+        private void onDrag(object sender, double time)
         {
-            deltaTime = e.time;
+            deltaTime = time;
             stopwatch.Restart();
         }
+        // Callback para actualizar contador y timeline
         public void tickPlay()
         {
             TimeSpan time = stopwatch.Elapsed;
@@ -80,6 +84,7 @@ namespace ibcdatacsharp.UI.TimeLine
                 model.setTime(totalTime);
             });
         }
+        // Callback para actualizar solo contador
         public void tickCapture()
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>

@@ -12,7 +12,7 @@ namespace ibcdatacsharp.UI.TimeLine
 {
     public class Model
     {
-        public delegate void TimeEventHandler(object sender, TimeArgs args);
+        public delegate void TimeEventHandler(object sender, double time);
         public event TimeEventHandler timeEvent;
 
         private TextBlock timer;
@@ -51,11 +51,12 @@ namespace ibcdatacsharp.UI.TimeLine
             plot.Refresh();
             line.Dragged += (sender, e) =>
             {
-                timeEvent?.Invoke(this, new TimeArgs() { time=line.X1 + width});
+                timeEvent?.Invoke(this, time);
                 NotifyTimeChanged();
             };
             MIN_CHANGE_TO_NOTIFY = UPDATE_TIME_MS / 1000;
         }
+        // Sirve para actualzar la line de tiempo
         public void setTime(double time)
         {
             if (time > maxX)
@@ -69,6 +70,7 @@ namespace ibcdatacsharp.UI.TimeLine
             plot.Render();
             NotifyTimeChanged();
         }
+        // Sirve para actualizar el contador
         private void NotifyTimeChanged()
         {
             if (hasToNotify())
@@ -77,13 +79,16 @@ namespace ibcdatacsharp.UI.TimeLine
                 lastTime = time;
             }
         }
+        // Condicion para actualizar el contador
         private bool hasToNotify()
         {
             return Math.Abs(time - lastTime) > MIN_CHANGE_TO_NOTIFY;
         }
+        // Formato del eje x
         private string formatAxis(double time)
         {
             TimeSpan timeSpan = TimeSpan.FromSeconds(time);
+            // Si es menor que una hora mostrar solo minutos y segundos
             if (time < 60 * 60)
             {
                 return string.Format("{0:D2}:{1:D2}",
@@ -98,6 +103,7 @@ namespace ibcdatacsharp.UI.TimeLine
                 timeSpan.Seconds);
             }
         }
+        // Modifica la posicion de la linea de tiempo
         private double time
         {
             get
@@ -110,6 +116,7 @@ namespace ibcdatacsharp.UI.TimeLine
                 line.X2 = value + width;
             }
         }
+        // Devuelve el texto del timer
         public string formatTimer(TimeSpan timeSpan)
         {
             return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}",
