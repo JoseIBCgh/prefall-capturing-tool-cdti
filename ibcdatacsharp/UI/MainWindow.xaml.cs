@@ -219,7 +219,7 @@ namespace ibcdatacsharp.UI
         // Funcion que se ejecuta al clicar el boton Capture
         private void onCapture(object sender, EventArgs e)
         {
-            graphManager.initTimerCapture(); 
+            graphManager.initCapture(); 
         }
         // Funcion que se ejecuta al clicar el boton Pause
         private void onPause(object sender, EventArgs e)

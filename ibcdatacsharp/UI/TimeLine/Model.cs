@@ -25,6 +25,7 @@ namespace ibcdatacsharp.UI.TimeLine
         private double minY = 0;
         private double maxY = 1;
         private double lastTime;
+        // Tiempo de actualizacio del timeline
         private double MIN_CHANGE_TO_NOTIFY;
 
         // Crea los ejes y las lineas
@@ -56,7 +57,23 @@ namespace ibcdatacsharp.UI.TimeLine
             };
             MIN_CHANGE_TO_NOTIFY = UPDATE_TIME_MS / 1000;
         }
-        // Sirve para actualzar la line de tiempo
+        // Mueve la linea al principio
+        public void moveToStart()
+        {
+            time = minX;
+            timeEvent?.Invoke(this, time);
+            plot.Render();
+            NotifyTimeChanged();
+        }
+        // Mueve la linea al final
+        public void moveToEnd()
+        {
+            time = maxX;
+            timeEvent?.Invoke(this, time);
+            plot.Render();
+            NotifyTimeChanged();
+        }
+        // Sirve para actualzar el tiempo
         public void setTime(double time)
         {
             if (time > maxX)
@@ -68,18 +85,19 @@ namespace ibcdatacsharp.UI.TimeLine
                 this.time = time;
             }
             plot.Render();
-            NotifyTimeChanged();
+            if (hasToNotify())
+            {
+                NotifyTimeChanged();
+            }
         }
         // Sirve para actualizar el contador
         private void NotifyTimeChanged()
         {
-            if (hasToNotify())
-            {
-                timer.Text = formatTimer(TimeSpan.FromSeconds(time));
-                lastTime = time;
-            }
+            timer.Text = formatTimer(TimeSpan.FromSeconds(time));
+            lastTime = time;
         }
-        // Condicion para actualizar el contador
+        // Condicion para actualizar el contador (sirve para no actualizarlo cada tick)
+        // (No hace falta actualizarlo cada tick ya que no se nota)
         private bool hasToNotify()
         {
             return Math.Abs(time - lastTime) > MIN_CHANGE_TO_NOTIFY;
@@ -103,14 +121,14 @@ namespace ibcdatacsharp.UI.TimeLine
                 timeSpan.Seconds);
             }
         }
-        // Modifica la posicion de la linea de tiempo
-        private double time
+        // Definicion del valor del tiempo. Se puede modificar pero set y get tienen que ser consistentes
+        public double time
         {
             get
             {
                 return line.X1 + width;
             }
-            set
+            private set
             {
                 line.X1 = value - width;
                 line.X2 = value + width;

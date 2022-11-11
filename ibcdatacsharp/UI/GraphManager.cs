@@ -19,6 +19,7 @@ namespace ibcdatacsharp.UI
 
         private Device.Device device;
         private VirtualToolBar virtualToolBar;
+        private TimeLine.TimeLine timeLine;
         // Añadir todos los grafos en esta lista
         private List<Frame> graphs;
 
@@ -27,6 +28,16 @@ namespace ibcdatacsharp.UI
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             virtualToolBar = mainWindow.virtualToolBar;
             device = mainWindow.device;
+            if (mainWindow.timeLine.Content == null) {
+                mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+                };
+            }
+            else
+            {
+                timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+            }
             graphs = new List<Frame>();
             graphs.Add(mainWindow.accelerometer);
             graphs.Add(mainWindow.gyroscope);
@@ -34,7 +45,7 @@ namespace ibcdatacsharp.UI
             graphs.Add(mainWindow.angle);
         }
         // Configura el timer capture
-        public void initTimerCapture()
+        public void initCapture()
         {
             // Se ejecuta al clicar pause
             void onPause(object sender, PauseState pauseState)
@@ -43,11 +54,15 @@ namespace ibcdatacsharp.UI
                 {
                     timerCapture.Stop();
                     timerRender.Stop();
+                    // Pausa el timer de la linea de tiempo hay que llamarlo
+                    timeLine.Pause();
                 }
                 else if (pauseState == PauseState.Play)
                 {
                     timerCapture.Start();
                     timerRender.Start();
+                    // Inicia el timer de la linea de tiempo hay que llamarlo
+                    timeLine.Start();
                 }
             }
             // Se ejecuta al clicar stop
@@ -59,6 +74,7 @@ namespace ibcdatacsharp.UI
                 timerCapture = null;
                 timerRender.Dispose();
                 timerRender = null;
+                timeLine.Stop();
             }
             if (timerCapture == null)
             {
@@ -96,6 +112,7 @@ namespace ibcdatacsharp.UI
                 }
                 device.initTimer();
             }
+            timeLine.startCapture();
         }
     }
 }
