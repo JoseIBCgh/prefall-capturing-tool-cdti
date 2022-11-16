@@ -14,6 +14,26 @@ namespace ibcdatacsharp.UI.Graphs
         {
             get { return frames.Length; }
         }
+        public int minFrame
+        {
+            get { return frames[0].frame; }
+        }
+        public int maxFrame
+        {
+            get { return frames[frames.Length - 1].frame; }
+        }
+        public double minTime
+        {
+            get { return frames[0].time; }
+        }
+        public double maxTime
+        {
+            get { return frames[frames.Length - 1].time; }
+        }
+        public double time(int frame){
+            int index = frame - minFrame;
+            return frames[index].time;
+        }
         public GraphData(List<FrameData> frames)
         {
             this.frames = frames.ToArray();

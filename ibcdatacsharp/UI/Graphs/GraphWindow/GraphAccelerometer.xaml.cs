@@ -39,6 +39,13 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
                 model.updateData(accX, accY, accZ);
             });
         }
+        public async void onUpdateTimeLine(object sender, int frame)
+        {
+            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                model.updateIndex(frame);
+            });
+        }
         // Devuelve los datos del Acelerometro
         private double[] getData()
         {

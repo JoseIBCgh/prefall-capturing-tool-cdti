@@ -46,8 +46,8 @@ namespace ibcdatacsharp.UI.TimeLine
                 deltaTime = model.time;
                 paused = false;
                 // Quitar primero el evento para que solo se añada una vez
-                model.timeEvent -= onDrag;
-                model.timeEvent += onDrag;
+                model.dragEvent -= onDrag;
+                model.dragEvent += onDrag;
                 start.Click -= moveToStart;
                 start.Click += moveToStart;
                 end.Click -= moveToEnd;
@@ -70,7 +70,7 @@ namespace ibcdatacsharp.UI.TimeLine
                 timer.Elapsed += tickCapture;
                 timer.Start();
                 // Quitar los eventos si estaban
-                model.timeEvent -= onDrag;
+                model.dragEvent -= onDrag;
                 start.Click -= moveToStart;
                 end.Click -= moveToEnd;
                 pause.Click -= onPause;

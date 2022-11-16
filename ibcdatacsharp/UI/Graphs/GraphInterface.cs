@@ -7,6 +7,8 @@ namespace ibcdatacsharp.UI.Graphs
     {
         // Dibuja todo los datos (para hacer el replay)
         public void drawData(GraphData data);
+        // Modifica los datos a mostrar segun el timeline (para el replay)
+        public void onUpdateTimeLine(object sender, int frame);
         // Se ejecuta cuando hay que añadir nuevos puntos al grafo
         public void onTick(object sender, EventArgs e);
         // Borra los datos

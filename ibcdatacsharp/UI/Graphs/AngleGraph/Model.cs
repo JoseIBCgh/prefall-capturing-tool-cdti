@@ -1,5 +1,6 @@
 ﻿//#define MOVE_DATA
 
+using OpenCvSharp.Flann;
 using ScottPlot;
 using System;
 using System.Drawing;
@@ -26,6 +27,9 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         private int nextIndex = 0;
         private WpfPlot plot;
 
+        private const double MIN_Y = -200;
+        private const double MAX_Y = 200;
+
         public Model(WpfPlot plot)
         {
             values = new double[CAPACITY];
@@ -38,7 +42,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         // Inicializa el modelo
         private void SetupModel()
         {
-            plot.Plot.SetAxisLimits(yMin: -200, yMax: 200);
+            plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
             plot.Plot.XAxis2.SetSizeLimit(max: 5, pad:0);
             plot.Plot.XAxis.SetSizeLimit(pad: 0);
             paintAreas();
@@ -69,7 +73,18 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             values = data;
             plot.Plot.Remove(signalPlot);
             signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
-            plot.Plot.SetAxisLimits(xMin: 0, xMax: data.Length);
+            signalPlot.MaxRenderIndex = 0;
+            plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, values.Length));
+            plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
+            plot.Render();
+        }
+        // Cambia los datos a mostrar
+        public void updateIndex(int index)
+        {
+            index = Math.Min(index, values.Length); //Por si acaso
+            signalPlot.MaxRenderIndex = index;
+            plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS), 
+                xMax: Math.Max(index, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
         }
         #endregion Replay
@@ -134,7 +149,8 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         {
             int index = nextIndex - 1;
             signalPlot.MaxRenderIndex = index;
-            plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS), xMax: index);
+            plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
+                xMax: Math.Max(index, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
         }
 #endif

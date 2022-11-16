@@ -1,6 +1,7 @@
 ﻿using ibcdatacsharp.UI.Graphs;
 using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +25,8 @@ namespace ibcdatacsharp.UI
         private List<Frame> graphs;
         private GraphData graphData;
 
+        public delegate void FrameEventHandler(object sender, int frame);
+        public event FrameEventHandler frameEvent;
         public GraphManager()
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
@@ -55,6 +58,9 @@ namespace ibcdatacsharp.UI
         public void initReplay(List<FrameData> data)
         {
             graphData = new GraphData(data);
+            timeLine.model.timeEvent -= onUpdateTimeLine;
+            timeLine.model.timeEvent += onUpdateTimeLine;
+            timeLine.model.updateLimits(graphData.minTime, graphData.maxTime);
             foreach (Frame frame in graphs)
             {
                 if (frame.Content == null)
@@ -65,6 +71,8 @@ namespace ibcdatacsharp.UI
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.clearData();
                         graph.drawData(graphData);
+                        frameEvent -= graph.onUpdateTimeLine;
+                        frameEvent += graph.onUpdateTimeLine;
                     };
                 }
                 else
@@ -72,8 +80,58 @@ namespace ibcdatacsharp.UI
                     GraphInterface graph = frame.Content as GraphInterface;
                     graph.clearData();
                     graph.drawData(graphData);
+                    frameEvent -= graph.onUpdateTimeLine;
+                    frameEvent += graph.onUpdateTimeLine;
                 }
             }
+        }
+        public void onUpdateTimeLine(object sender, double time)
+        {
+            int initialEstimation(double time)
+            {
+                double timePerFrame = (graphData.maxTime - graphData.minTime) / (graphData.maxFrame - graphData.minFrame);
+                int expectedFrame = (int)Math.Round(time / timePerFrame);
+                return expectedFrame;
+            }
+            int searchFrameLineal(double time, int currentFrame, int previousFrame, double previousDiference)
+            {
+                double currentTime = graphData.time(currentFrame);
+                double currentDiference = Math.Abs(time - currentTime);
+                if(currentDiference >= previousDiference)
+                {
+                    return previousFrame;
+                }
+                else if(currentTime < time)
+                {
+                    if (currentFrame == graphData.maxFrame) //Si es el ultimo frame devolverlo
+                    {
+                        return graphData.maxFrame;
+                    }
+                    else
+                    {
+                        return searchFrameLineal(time, currentFrame + 1, currentFrame, currentDiference);
+                    }
+                }
+                else if(currentTime > time) 
+                {
+                    if (currentFrame == graphData.minFrame) //Si es el primer frame devolverlo
+                    {
+                        return graphData.minFrame;
+                    }
+                    else
+                    {
+                        return searchFrameLineal(time, currentFrame - 1, currentFrame, currentDiference);
+                    }
+                }
+                else //currentTime == time muy poco probable (decimales) pero puede pasar
+                {
+                    return currentFrame;
+                }
+            }
+            int estimatedFrame = initialEstimation(time);
+            estimatedFrame = Math.Max(estimatedFrame, graphData.minFrame); // No salirse del rango
+            estimatedFrame = Math.Min(estimatedFrame, graphData.maxFrame); // No salirse del rango
+            frameEvent?.Invoke(this, searchFrameLineal(time, estimatedFrame, -1, double.MaxValue));
         }
         // Configura el timer capture
         public void initCapture()

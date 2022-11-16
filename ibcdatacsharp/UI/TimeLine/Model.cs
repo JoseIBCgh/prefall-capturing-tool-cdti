@@ -14,11 +14,13 @@ namespace ibcdatacsharp.UI.TimeLine
     {
         public delegate void TimeEventHandler(object sender, double time);
         public event TimeEventHandler timeEvent;
+        public event TimeEventHandler dragEvent;
 
         private TextBlock timer;
         private WpfPlot plot;
         private HSpan line;
         private double pos = 0;
+        private const double PERCENT_WIDTH = 0.5; 
         private double width = 0.5;
         private double minX = 0;
         private double maxX = 100;
@@ -52,15 +54,29 @@ namespace ibcdatacsharp.UI.TimeLine
             plot.Refresh();
             line.Dragged += (sender, e) =>
             {
+                dragEvent?.Invoke(this, time);
                 timeEvent?.Invoke(this, time);
                 NotifyTimeChanged();
             };
             MIN_CHANGE_TO_NOTIFY = UPDATE_TIME_MS / 1000;
         }
+        public void updateLimits(double minTime, double maxTime)
+        {
+            width = (maxTime - minTime) * PERCENT_WIDTH / 100.0;
+            minX = minTime;
+            maxX = maxTime;
+            plot.Plot.SetInnerViewLimits(xMin: minX, xMax: maxX, yMin: minY, yMax: maxY);
+            plot.Plot.SetOuterViewLimits(xMin: minX, xMax: maxX, yMin: minY, yMax: maxY);
+            line.DragLimitMin = minX;
+            line.DragLimitMax = maxX;
+            plot.Plot.SetAxisLimitsX(minX, maxX);
+            time = minTime;
+        }
         // Mueve la linea al principio
         public void moveToStart()
         {
             time = minX;
+            dragEvent?.Invoke(this, time);
             timeEvent?.Invoke(this, time);
             plot.Render();
             NotifyTimeChanged();
@@ -69,6 +85,7 @@ namespace ibcdatacsharp.UI.TimeLine
         public void moveToEnd()
         {
             time = maxX;
+            dragEvent?.Invoke(this, time);
             timeEvent?.Invoke(this, time);
             plot.Render();
             NotifyTimeChanged();
@@ -85,6 +102,7 @@ namespace ibcdatacsharp.UI.TimeLine
                 this.time = time;
             }
             plot.Render();
+            timeEvent?.Invoke(this, time);
             if (hasToNotify())
             {
                 NotifyTimeChanged();

@@ -53,6 +53,41 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
                 updateZ(angleZ)
             });
         }
+        public async void onUpdateTimeLine(object sender, int frame)
+        {
+            await Task.WhenAll(new Task[]
+            {
+                updateIndexX(frame),
+                updateIndexY(frame),
+                updateIndexZ(frame),
+            });
+        }
+        // Funciones para hacer cambiar el indice de cada grafo
+        #region Update Index
+        public async Task updateIndexX(int frame)
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelX.updateIndex(frame);
+            });
+        }
+        public async Task updateIndexY(int frame)
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelY.updateIndex(frame);
+            });
+        }
+        public async Task updateIndexZ(int frame)
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelZ.updateIndex(frame);
+            });
+        }
+        #endregion Update Index
+        // Funciones para hacer el update y clear de cada grafo
+        #region Update, Clear graph
         // Funcion para actualizar la grafica X
         public async Task updateX(double data)
         {
@@ -125,6 +160,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
                 modelZ.clear();
             });
         }
+        #endregion Update, Clear graph
         // Actualiza los datos de los grafos
         public async void onTick(object sender, EventArgs e)
         {
@@ -145,6 +181,8 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
                 clearZ(),
             });
         }
+        // Funciones para hacer el render de cada grafo
+        #region Render graph
         // Actualiza el render del grafo X
         public async Task renderX()
         {
@@ -169,6 +207,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
                 modelZ.render();
             });
         }
+        #endregion Render graph
         // Actualiza el render de los grafos
         public async void onRender(object sender, EventArgs e)
         {

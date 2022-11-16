@@ -35,8 +35,13 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         private int nextIndex = 0;
         private WpfPlot plot;
 
+        private double minY;
+        private double maxY;
+
         public Model(WpfPlot plot,double minY, double maxY, string title = "", string units = "")
         {
+            this.minY = minY;
+            this.maxY = maxY;
             valuesX = new double[CAPACITY];
             valuesY = new double[CAPACITY];
             valuesZ = new double[CAPACITY];
@@ -44,7 +49,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             signalPlotX = plot.Plot.AddSignal(valuesX, color:Color.Red);
             signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green);
             signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue);
-            plot.Plot.SetAxisLimits(yMin: minY, yMax: maxY);
+            plot.Plot.SetAxisLimitsY(yMin: minY, yMax: maxY);
             //plot.Plot.Title(title);
             signalPlotX.MaxRenderIndex = nextIndex;
             signalPlotY.MaxRenderIndex = nextIndex;
@@ -64,7 +69,22 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             signalPlotX = plot.Plot.AddSignal(valuesX, color: Color.Red);
             signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green);
             signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue);
-            plot.Plot.SetAxisLimits(xMin: 0, xMax: x.Length);
+            signalPlotX.MaxRenderIndex = 0;
+            signalPlotY.MaxRenderIndex = 0;
+            signalPlotZ.MaxRenderIndex = 0;
+            plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, valuesX.Length));
+            plot.Plot.SetAxisLimitsY(yMin: minY, yMax: maxY);
+            plot.Render();
+        }
+        // Cambia los datos a mostrar
+        public void updateIndex(int index)
+        {
+            index = Math.Min(index, valuesX.Length); //Por si acaso
+            signalPlotX.MaxRenderIndex = index;
+            signalPlotY.MaxRenderIndex = index;
+            signalPlotZ.MaxRenderIndex = index;
+            plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
+                xMax: Math.Max(index, Math.Min(MAX_POINTS, valuesX.Length)));
             plot.Render();
         }
         #endregion Replay
@@ -146,7 +166,8 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             signalPlotX.MaxRenderIndex = index;
             signalPlotY.MaxRenderIndex = index;
             signalPlotZ.MaxRenderIndex = index;
-            plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS), xMax: index);
+            plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
+                xMax: Math.Max(index, Math.Min(MAX_POINTS, valuesX.Length)));
             plot.Render();
         }
 #endif
