@@ -1,5 +1,6 @@
 ﻿//#define MOVE_DATA
 
+using OpenCvSharp.Flann;
 using ScottPlot;
 using System;
 using System.Drawing;
@@ -50,6 +51,23 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             signalPlotZ.MaxRenderIndex = nextIndex;
             plot.Refresh();
         }
+        #region Replay
+        // Añade todos los datos de golpe (solo para replay)
+        public void updateData(double[] x, double[] y, double[] z)
+        {
+            valuesX = x;
+            valuesY = y;
+            valuesZ = z;
+            plot.Plot.Remove(signalPlotX);
+            plot.Plot.Remove(signalPlotY);
+            plot.Plot.Remove(signalPlotZ);
+            signalPlotX = plot.Plot.AddSignal(valuesX, color: Color.Red);
+            signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green);
+            signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue);
+            plot.Plot.SetAxisLimits(xMin: 0, xMax: x.Length);
+            plot.Render();
+        }
+        #endregion Replay
 #if MOVE_DATA
         // Actualiza los datos
         public void updateData(double[] data)

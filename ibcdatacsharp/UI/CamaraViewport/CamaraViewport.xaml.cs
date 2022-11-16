@@ -12,20 +12,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using ibcdatacsharp.UI.Timer;
+using System.Collections.Generic;
+using Windows.Graphics.Imaging;
 
 namespace ibcdatacsharp.UI.CamaraViewport
 {
     /// <summary>
     /// Lógica de interacción para CamaraViewport.xaml
     /// </summary>
-    // Task version
+// Task version
 
 #if TASK
     public partial class CamaraViewport : Page
     {
-        private const int FRAME_HEIGHT = 480;
-        private const int FRAME_WIDTH = 640;
-        private const int VIDEO_FPS = 30;
 
         private VideoCapture videoCapture;
 
@@ -51,12 +50,28 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 }
             }
         }
+        public IReadOnlyList<ImageStream> clipImages { get; set; }
+        private int lastIndexDisplay = -1;
 
         public CamaraViewport()
         {
             InitializeComponent();
             _currentFrame = getBlackImage();
             imgViewport.Source = BitmapSourceConverter.ToBitmapSource(currentFrame);
+        }
+        public async void updateClip(double time)
+        {
+            double timePerFrame = 1.0 / Config.VIDEO_FPS_SAVE;
+            int index = (int)Math.Round(time / timePerFrame); //Round ???
+            if(index != lastIndexDisplay)
+            {
+                ImageStream image = clipImages[index];
+                await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+                {
+                    //imgViewport.Source = image;
+                }
+                );
+            }
         }
         // Comprueba si se esta grabano alguna camara
         public bool someCameraOpened()
@@ -66,7 +81,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
         // Pantalla en negro cuando no se graba
         private Mat getBlackImage()
         {
-            Mat frame = new Mat(FRAME_HEIGHT, FRAME_WIDTH, MatType.CV_32F);
+            Mat frame = new Mat(Config.FRAME_HEIGHT, Config.FRAME_WIDTH, MatType.CV_32F);
             return frame;
         }
         // Empieza a grabar la camara
@@ -113,7 +128,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                     }
                     );
                 }
-                await Task.Delay(1000 / VIDEO_FPS);
+                await Task.Delay(1000 / Config.VIDEO_FPS);
             }
         }
         // Cierra la camara y el video writer al cerrar la aplicacion
@@ -125,13 +140,10 @@ namespace ibcdatacsharp.UI.CamaraViewport
             }
         }
     }
-#elif THREAD
+#endif
+#if THREAD
     public partial class CamaraViewport : Page
     {
-        public const int FRAME_HEIGHT = 480;
-        public const int FRAME_WIDTH = 640;
-        private const int VIDEO_FPS = 30;
-
         private VideoCapture videoCapture;
 
         private CancellationTokenSource cancellationTokenSourceDisplay;
@@ -151,7 +163,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
         // Pantalla en negro cuando no se graba
         private Mat getBlackImage()
         {
-            Mat frame = new Mat(FRAME_HEIGHT, FRAME_WIDTH, MatType.CV_32F);
+            Mat frame = new Mat(Config.FRAME_HEIGHT, Config.FRAME_WIDTH, MatType.CV_32F);
             return frame;
         }
         // Empieza a grabar la camara
@@ -181,7 +193,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 videoCapture.Read(frame);
                 if (!frame.Empty())
                 {
-                    Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                    Mat frameResized = frame.Resize(new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
                     return frameResized;
                 }
                 else
@@ -219,7 +231,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                     }
                     );
                 }
-                Thread.Sleep(1000 / VIDEO_FPS);
+                Thread.Sleep(1000 / Config.VIDEO_FPS);
             }
         }
         // Cierra la camara y el video writer al cerrar la aplicacion
@@ -231,7 +243,8 @@ namespace ibcdatacsharp.UI.CamaraViewport
             }
         }
     }
-#elif TIMER
+#endif
+#if TIMER
     public partial class CamaraViewport : Page
     {
         public const int FRAME_HEIGHT = 480;

@@ -23,6 +23,22 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             device = mainWindow.device;
             DataContext = this;
         }
+        public async void drawData(GraphData data)
+        {
+            double[] accX = new double[data.length];
+            double[] accY = new double[data.length];
+            double[] accZ = new double[data.length];
+            for (int i = 0; i < data.length; i++)
+            {
+                accX[i] = data[i].accX;
+                accY[i] = data[i].accY;
+                accZ[i] = data[i].accZ;
+            }
+            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                model.updateData(accX, accY, accZ);
+            });
+        }
         // Devuelve los datos del Acelerometro
         private double[] getData()
         {

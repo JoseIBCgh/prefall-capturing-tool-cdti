@@ -23,6 +23,22 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             device = mainWindow.device;
             DataContext = this;
         }
+        public async void drawData(GraphData data)
+        {
+            double[] magX = new double[data.length];
+            double[] magY = new double[data.length];
+            double[] magZ = new double[data.length];
+            for (int i = 0; i < data.length; i++)
+            {
+                magX[i] = data[i].magX;
+                magY[i] = data[i].magY;
+                magZ[i] = data[i].magZ;
+            }
+            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                model.updateData(magX, magY, magZ);
+            });
+        }
         // Devuelve los datos del magnetometro
         private double[] getData()
         {

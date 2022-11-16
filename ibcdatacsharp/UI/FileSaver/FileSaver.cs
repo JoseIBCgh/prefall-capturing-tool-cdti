@@ -15,11 +15,8 @@ namespace ibcdatacsharp.UI.FileSaver
 {
     internal class FileSaver
     {
-        private const int FPS = 25;
         private const int RECORD_CSV_MS = 10;
-        private const int RECORD_VIDEO_MS = 1000 / FPS;
-        private const int FRAME_HEIGHT = 480;
-        private const int FRAME_WIDTH = 640;
+        private const int RECORD_VIDEO_MS = 1000 / Config.VIDEO_FPS_SAVE;
         private System.Timers.Timer timerCsv;
         private Stopwatch stopwatchCSV;
         private int frameCsv;
@@ -34,17 +31,17 @@ namespace ibcdatacsharp.UI.FileSaver
         private string? csvFile;
         private bool recordCSV;
         private bool recordVideo;
-        private const string csvHeader = @"DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT
-            TIME	TIME	ACC_X	ACC_Y	ACC_Z	GYR_X	GYR_Y	GYR_Z	MAG_X	MAG_Y	MAG_Z
-            FRAME_NUMBERS	ANALOG	ANALOG	ANALOG	ANALOG	ANALOG	ANALOG	ANALOG	ANALOG	ANALOG	ANALOG
-            ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL
-        ITEM	0	0	x	x	x	x	x	x	x	x	x
-";
         private StringBuilder? csvData;
         public FileSaver()
         {
             recordCSV = false;
             recordVideo = false;
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.initialized += (sender, args) => finishInit();
+        }
+        // Para solucionar problemas de dependencias
+        private void finishInit()
+        {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             if (mainWindow.camaraViewport.Content == null)
             {
@@ -176,14 +173,14 @@ namespace ibcdatacsharp.UI.FileSaver
             {
                 csvFile = baseFilename + ".csv";
                 csvData = new StringBuilder();
-                csvData.Append(csvHeader);
+                csvData.Append(Config.csvHeader);
                 initRecordCsv();
             }
             if (recordVideo)
             {
                 string videoFile = baseFilename + ".avi";
                 string pathVideoFile = path + "\\" + videoFile;
-                videoWriter = new VideoWriter(pathVideoFile, FourCC.DIVX, FPS, new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                videoWriter = new VideoWriter(pathVideoFile, FourCC.DIVX, Config.VIDEO_FPS_SAVE, new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
                 initRecordVideo();
             }
         }
@@ -206,7 +203,7 @@ namespace ibcdatacsharp.UI.FileSaver
             if (videoWriter != null)
             {
                 Mat frame = camaraViewport.currentFrame;
-                Mat frameResized = frame.Resize(new OpenCvSharp.Size(FRAME_WIDTH, FRAME_HEIGHT));
+                Mat frameResized = frame.Resize(new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
                 if (videoWriter != null)
                 {
                     videoWriter.Write(frameResized);

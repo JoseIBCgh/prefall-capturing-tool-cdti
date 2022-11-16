@@ -3,6 +3,7 @@
 using ScottPlot;
 using System;
 using System.Drawing;
+using Windows.Foundation.Collections;
 
 namespace ibcdatacsharp.UI.Graphs.AngleGraph
 {
@@ -61,6 +62,17 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             plot.Plot.AddVerticalSpan(separation34, separation45, color24);
             plot.Plot.AddVerticalSpan(separation45, double.MaxValue, color15);
         }
+        #region Replay
+        // Añade todos los datos de golpe (solo para replay)
+        public void updateData(double[] data)
+        {
+            values = data;
+            plot.Plot.Remove(signalPlot);
+            signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
+            plot.Plot.SetAxisLimits(xMin: 0, xMax: data.Length);
+            plot.Render();
+        }
+        #endregion Replay
 
 #if MOVE_DATA
         // Añade un punto

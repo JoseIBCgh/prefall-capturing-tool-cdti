@@ -1,4 +1,5 @@
 ﻿using ibcdatacsharp.UI.Device;
+using OxyPlot.Axes;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,8 +34,35 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             modelY = new Model(angleY);
             modelZ = new Model(angleZ);
         }
+        public async void drawData(GraphData data)
+        {
+            double[] angleX = new double[data.length];
+            double[] angleY = new double[data.length];
+            double[] angleZ = new double[data.length];
+            for (int i = 0; i < data.length; i++)
+            {
+                // Provisional hay que cambiarlo por los angulos
+                angleX[i] = data[i].accX;
+                angleY[i] = data[i].accY;
+                angleZ[i] = data[i].accZ;
+            }
+            await Task.WhenAll(new Task[]
+            {
+                updateX(angleX),
+                updateY(angleY),
+                updateZ(angleZ)
+            });
+        }
         // Funcion para actualizar la grafica X
         public async Task updateX(double data)
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelX.updateData(data);
+            });
+        }
+        // Funcion para actualizar la grafica X de golpe (para replay)
+        public async Task updateX(double[] data)
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
@@ -57,6 +85,14 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
                 modelY.updateData(data);
             });
         }
+        // Funcion para actualizar la grafica Y de golpe (para replay)
+        public async Task updateY(double[] data)
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelY.updateData(data);
+            });
+        }
         // Funcion para borrar los datos Y
         public async Task clearY()
         {
@@ -67,6 +103,14 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         }
         // Funcion para actualizar la grafica Z
         public async Task updateZ(double data)
+        {
+            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                modelZ.updateData(data);
+            });
+        }
+        // Funcion para actualizar la grafica Z de golpe(para replay)
+        public async Task updateZ(double[] data)
         {
             await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {

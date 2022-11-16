@@ -23,6 +23,22 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             device = mainWindow.device;
             DataContext = this;
         }
+        public async void drawData(GraphData data)
+        {
+            double[] gyrX = new double[data.length];
+            double[] gyrY = new double[data.length];
+            double[] gyrZ = new double[data.length];
+            for (int i = 0; i < data.length; i++)
+            {
+                gyrX[i] = data[i].gyrX;
+                gyrY[i] = data[i].gyrY;
+                gyrZ[i] = data[i].gyrZ;
+            }
+            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                model.updateData(gyrX, gyrY, gyrZ);
+            });
+        }
         // Devuelve los datos del Giroscopio
         private double[] getData()
         {

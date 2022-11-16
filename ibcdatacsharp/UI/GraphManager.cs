@@ -22,13 +22,21 @@ namespace ibcdatacsharp.UI
         private TimeLine.TimeLine timeLine;
         // Añadir todos los grafos en esta lista
         private List<Frame> graphs;
+        private GraphData graphData;
 
         public GraphManager()
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.initialized += (sender, args) => finishInit();
+        }
+        // Para solucionar problemas de dependencias
+        private void finishInit()
+        {
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             virtualToolBar = mainWindow.virtualToolBar;
             device = mainWindow.device;
-            if (mainWindow.timeLine.Content == null) {
+            if (mainWindow.timeLine.Content == null)
+            {
                 mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
                 {
                     timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
@@ -43,6 +51,29 @@ namespace ibcdatacsharp.UI
             graphs.Add(mainWindow.gyroscope);
             graphs.Add(mainWindow.magnetometer);
             graphs.Add(mainWindow.angle);
+        }
+        public void initReplay(List<FrameData> data)
+        {
+            graphData = new GraphData(data);
+            foreach (Frame frame in graphs)
+            {
+                if (frame.Content == null)
+                {
+                    frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        // Todos los grafos deberian implementar esta interface
+                        GraphInterface graph = frame.Content as GraphInterface;
+                        graph.clearData();
+                        graph.drawData(graphData);
+                    };
+                }
+                else
+                {
+                    GraphInterface graph = frame.Content as GraphInterface;
+                    graph.clearData();
+                    graph.drawData(graphData);
+                }
+            }
         }
         // Configura el timer capture
         public void initCapture()

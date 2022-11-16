@@ -21,9 +21,11 @@ namespace ibcdatacsharp.UI
 
         public Device.Device device;
         public VirtualToolBar virtualToolBar;
-        private GraphManager graphManager;
+        public GraphManager graphManager;
 
         private FileSaver.FileSaver fileSaver;
+
+        public event EventHandler initialized;
         public MainWindow()
         {
             InitializeComponent();
@@ -34,6 +36,7 @@ namespace ibcdatacsharp.UI
             initIcon();
             initToolBarHandlers();
             initMenuHandlers();
+            initialized?.Invoke(this, EventArgs.Empty);
         }
         // Cambia el icono de la ventana
         private void initIcon()
@@ -239,7 +242,7 @@ namespace ibcdatacsharp.UI
         // Funcion que se ejecuta al clicar el boton Show Captured Files
         private void onCapturedFiles(object sender, EventArgs e)
         {
-            Trace.WriteLine("Show Captured Files");
+            virtualToolBar.openClick();
         }
         // Funcion que se ejecuta al clicar el menú Exit
         private void onExit(object sender, EventArgs e)

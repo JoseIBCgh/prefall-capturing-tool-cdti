@@ -1,8 +1,19 @@
 ﻿using ibcdatacsharp.UI.FileSaver;
 using ibcdatacsharp.UI.ToolBar.Enums;
+using Microsoft.Win32;
 using System;
+using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Navigation;
+using Windows.Media.Editing;
+using Windows.Storage;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using Windows.UI.Composition;
+using System.Collections.Generic;
+using Windows.Graphics.Imaging;
+using ibcdatacsharp.UI.Graphs;
+using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -16,6 +27,7 @@ namespace ibcdatacsharp.UI.ToolBar
         private MenuBar.MenuBar menuBar;
 
         private SavingMenu saveMenu;
+        private GraphManager graphManager;
 
         public delegate void PauseEventHandler(object sender, PauseState args);
         public delegate void RecordEventHandler(object sender, RecordState args);
@@ -34,12 +46,19 @@ namespace ibcdatacsharp.UI.ToolBar
             pauseState = PauseState.Play;
             recordState = RecordState.RecordStopped;
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.initialized += (sender, args) => finishInit();
+        }
+        // Para solucionar problemas de dependencias
+        private void finishInit()
+        {
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            graphManager = mainWindow.graphManager;
             if (mainWindow.toolBar.Content == null)
             {
                 mainWindow.toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
                 {
                     toolBar = mainWindow.toolBar.Content as ToolBar;
-                    if(toolBar.savingMenu.Content == null)
+                    if (toolBar.savingMenu.Content == null)
                     {
                         toolBar.savingMenu.Navigated += delegate (object sender, NavigationEventArgs e)
                         {
@@ -67,7 +86,7 @@ namespace ibcdatacsharp.UI.ToolBar
                     saveMenu = toolBar.savingMenu.Content as SavingMenu;
                 }
             }
-            if(mainWindow.menuBar.Content == null)
+            if (mainWindow.menuBar.Content == null)
             {
                 mainWindow.menuBar.Navigated += delegate (object sender, NavigationEventArgs e)
                 {
@@ -160,6 +179,99 @@ namespace ibcdatacsharp.UI.ToolBar
             if(stopEvent != null)
             {
                 stopEvent?.Invoke(this);
+            }
+        }
+        // Abre los ficheros (csv y avi)
+        public void openClick()
+        {
+            async void initVideo(string filename)
+            {
+                IEnumerable<TimeSpan> getTimespans(double videoDuration)
+                {
+                    List<TimeSpan> timeSpans = new List<TimeSpan>();
+                    double timePerFrame = 1.0 / Config.VIDEO_FPS_SAVE;
+                    double time = 0;
+                    while(time < videoDuration)
+                    {
+                        timeSpans.Add(TimeSpan.FromSeconds(time));
+                        time += timePerFrame;
+                    }
+                    return timeSpans;
+                }
+                StorageFile file = await StorageFile.GetFileFromPathAsync(filename);
+                MediaClip clip = await MediaClip.CreateFromFileAsync(file);
+                MediaComposition composition = new MediaComposition();
+                composition.Clips.Add(clip);
+                IReadOnlyList<ImageStream> images = await composition.GetThumbnailsAsync(
+                    getTimespans(clip.OriginalDuration.TotalSeconds), Config.FRAME_WIDTH, Config.FRAME_HEIGHT, 
+                    VideoFramePrecision.NearestFrame);
+            }
+            void initCSV(string filename)
+            {
+                using (var reader = new StreamReader(filename))
+                {
+                    List<FrameData> data = new List<FrameData>();
+                    int linesToSkip = Config.csvHeader.Split('\n').Length - 1; //Hay un salto de linea al final del header
+                    Trace.WriteLine("linesToSkip", linesToSkip.ToString());
+                    for(int i = 0; i < linesToSkip; i++)
+                    {
+                        reader.ReadLine();
+                    }
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        data.Add(new FrameData(line));
+                    }
+                    graphManager.initReplay(data);
+                }
+            }
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if(openFileDialog.ShowDialog() == true)
+            {
+                string[] files = openFileDialog.FileNames;
+                if(files.Length == 2)
+                {
+                    string file1 = files[0];
+                    if (Path.GetExtension(file1) == ".avi")
+                    {
+                        string file2 = files[1];
+                        if(Path.GetExtension(file2) == ".csv" || Path.GetExtension(file2) == ".txt")
+                        {
+                            initVideo(file1);
+                            initCSV(file2);
+                        }
+                    }
+                    else if(Path.GetExtension(file1) == ".csv" || Path.GetExtension(file1) == ".txt")
+                    {
+                        string file2 = files[1];
+                        if (Path.GetExtension(file2) == ".avi")
+                        {
+                            initVideo(file2);
+                            initCSV(file1);
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+                else if(files.Length == 1)
+                {
+                    string file = files[0];
+                    string extension = Path.GetExtension(file);
+                    if(extension == ".avi")
+                    {
+                        initVideo(file);
+                    }
+                    else if(extension == ".csv" || extension == ".txt")
+                    {
+                        initCSV(file);
+                    }
+                    else
+                    {
+
+                    }
+                }
             }
         }
     }

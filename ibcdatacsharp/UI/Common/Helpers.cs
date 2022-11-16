@@ -1,5 +1,7 @@
 ﻿using System.Windows.Media;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using Windows.Graphics.Imaging;
 
 namespace ibcdatacsharp.UI.Common
 {
@@ -19,6 +21,10 @@ namespace ibcdatacsharp.UI.Common
                 if (result != null) return result;
             }
             return null;
+        }
+        public static BitmapImage imageStream2BitmapImage(ImageStream imageStream)
+        {
+            return new BitmapImage();
         }
     }
 }
