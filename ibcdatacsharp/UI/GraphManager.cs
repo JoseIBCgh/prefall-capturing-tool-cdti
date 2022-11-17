@@ -55,12 +55,11 @@ namespace ibcdatacsharp.UI
             graphs.Add(mainWindow.magnetometer);
             graphs.Add(mainWindow.angle);
         }
-        public void initReplay(List<FrameData> data)
+        public void initReplay(GraphData data)
         {
-            graphData = new GraphData(data);
+            graphData = data;
             timeLine.model.timeEvent -= onUpdateTimeLine;
             timeLine.model.timeEvent += onUpdateTimeLine;
-            timeLine.model.updateLimits(graphData.minTime, graphData.maxTime);
             foreach (Frame frame in graphs)
             {
                 if (frame.Content == null)
@@ -89,7 +88,7 @@ namespace ibcdatacsharp.UI
         {
             int initialEstimation(double time)
             {
-                double timePerFrame = (graphData.maxTime - graphData.minTime) / (graphData.maxFrame - graphData.minFrame);
+                double timePerFrame = graphData.maxTime / graphData.maxFrame;
                 int expectedFrame = (int)Math.Round(time / timePerFrame);
                 return expectedFrame;
             }

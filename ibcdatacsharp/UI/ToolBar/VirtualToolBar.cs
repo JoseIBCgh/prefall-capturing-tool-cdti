@@ -15,6 +15,9 @@ using Windows.Graphics.Imaging;
 using ibcdatacsharp.UI.Graphs;
 using System.Diagnostics;
 using System.Windows.Media.Imaging;
+using ibcdatacsharp.UI.Common;
+using OpenCvSharp.WpfExtensions;
+using System.Threading.Tasks;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -27,6 +30,7 @@ namespace ibcdatacsharp.UI.ToolBar
         private ToolBar toolBar;
         private MenuBar.MenuBar menuBar;
         private CamaraViewport.CamaraViewport camaraViewport;
+        private TimeLine.TimeLine timeLine;
 
         private SavingMenu saveMenu;
         private GraphManager graphManager;
@@ -110,6 +114,17 @@ namespace ibcdatacsharp.UI.ToolBar
             else
             {
                 camaraViewport = mainWindow.camaraViewport.Content as CamaraViewport.CamaraViewport;
+            }
+            if (mainWindow.timeLine.Content == null)
+            {
+                mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+                };
+            }
+            else
+            {
+                timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
             }
         }
         public void onScanClick()
@@ -196,9 +211,9 @@ namespace ibcdatacsharp.UI.ToolBar
             }
         }
         // Abre los ficheros (csv y avi)
-        public void openClick()
+        public async void openClick()
         {
-            async void initVideo(string filename)
+            async Task<BitmapSource[]> extractVideo(string filename)
             {
                 IEnumerable<TimeSpan> getTimespans(double videoDuration)
                 {
@@ -219,9 +234,14 @@ namespace ibcdatacsharp.UI.ToolBar
                 IReadOnlyList<ImageStream> frames = await composition.GetThumbnailsAsync(
                     getTimespans(clip.OriginalDuration.TotalSeconds), Config.FRAME_WIDTH, Config.FRAME_HEIGHT, 
                     VideoFramePrecision.NearestFrame);
-                camaraViewport.initReplay(frames);
+                BitmapSource[] framesConverted = new BitmapSource[frames.Count];
+                for (int i = 0; i < frames.Count; i++)
+                {
+                    framesConverted[i] = Helpers.Bitmap2BitmapImage(Helpers.UWP2WPF(frames[i]));
+                }
+                return framesConverted;
             }
-            void initCSV(string filename)
+            GraphData extractCSV(string filename)
             {
                 using (var reader = new StreamReader(filename))
                 {
@@ -237,23 +257,44 @@ namespace ibcdatacsharp.UI.ToolBar
                         string line = reader.ReadLine();
                         data.Add(new FrameData(line));
                     }
-                    graphManager.initReplay(data);
+                    return new GraphData(data);
                 }
             }
+            void setTimeLineLimits(GraphData csvData, BitmapSource[] videoData)
+            {
+                // Funcion para obtener la longitud del timeLine (se puede cambiar)
+                double resultLength(double csvLength, double videoLength)
+                {
+                    return Math.Max(csvLength, videoLength);
+                }
+                double csvLength = csvData.maxTime;
+                double videoLength = (double)videoData.Length / Config.VIDEO_FPS_SAVE;
+                timeLine.model.updateLimits(0, resultLength(csvLength, videoLength));
+            }
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
             if(openFileDialog.ShowDialog() == true)
             {
                 string[] files = openFileDialog.FileNames;
                 if(files.Length == 2)
                 {
+                    BitmapSource[] videoData;
+                    GraphData csvData;
                     string file1 = files[0];
                     if (Path.GetExtension(file1) == ".avi")
                     {
                         string file2 = files[1];
                         if(Path.GetExtension(file2) == ".csv" || Path.GetExtension(file2) == ".txt")
                         {
-                            initVideo(file1);
-                            initCSV(file2);
+                            videoData = await extractVideo(file1);
+                            csvData = extractCSV(file2);
+                            setTimeLineLimits(csvData, videoData);
+                            graphManager.initReplay(csvData);
+                            camaraViewport.initReplay(videoData);
+                        }
+                        else
+                        {
+                            //Error
                         }
                     }
                     else if(Path.GetExtension(file1) == ".csv" || Path.GetExtension(file1) == ".txt")
@@ -261,13 +302,20 @@ namespace ibcdatacsharp.UI.ToolBar
                         string file2 = files[1];
                         if (Path.GetExtension(file2) == ".avi")
                         {
-                            initVideo(file2);
-                            initCSV(file1);
+                            videoData = await extractVideo(file2);
+                            csvData = extractCSV(file1);
+                            setTimeLineLimits(csvData, videoData);
+                            graphManager.initReplay(csvData);
+                            camaraViewport.initReplay(videoData);
+                        }
+                        else
+                        {
+                            //Error
                         }
                     }
                     else
                     {
-
+                        //Error
                     }
                 }
                 else if(files.Length == 1)
@@ -276,11 +324,15 @@ namespace ibcdatacsharp.UI.ToolBar
                     string extension = Path.GetExtension(file);
                     if(extension == ".avi")
                     {
-                        initVideo(file);
+                        BitmapSource[] videoData = await extractVideo(file);
+                        timeLine.model.updateLimits(0, (double)videoData.Length / Config.VIDEO_FPS_SAVE);
+                        camaraViewport.initReplay(videoData);
                     }
                     else if(extension == ".csv" || extension == ".txt")
                     {
-                        initCSV(file);
+                        GraphData csvData = extractCSV(file);
+                        timeLine.model.updateLimits(0, csvData.maxTime);
+                        graphManager.initReplay(csvData);
                     }
                     else
                     {

@@ -14,10 +14,7 @@ namespace ibcdatacsharp.UI.Graphs
         {
             get { return frames.Length; }
         }
-        public int minFrame
-        {
-            get { return frames[0].frame; }
-        }
+        public int minFrame = 0;
         public int maxFrame
         {
             get { return frames[frames.Length - 1].frame; }

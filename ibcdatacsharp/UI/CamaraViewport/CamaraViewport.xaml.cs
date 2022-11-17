@@ -77,16 +77,11 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
             }
         }
-        public void initReplay(IReadOnlyList<ImageStream> frames)
+        public void initReplay(BitmapSource[] frames)
         {
-            clipImages = new BitmapSource[frames.Count];
-            for(int i = 0; i < frames.Count; i++)
-            {
-                clipImages[i] = Helpers.Bitmap2BitmapImage(Helpers.UWP2WPF(frames[i]));
-            }
+            clipImages = frames;
             timeLine.model.timeEvent -= onUpdateTimeLine;
             timeLine.model.timeEvent += onUpdateTimeLine;
-            timeLine.model.updateLimits(0, (double)clipImages.Length / Config.VIDEO_FPS_SAVE);
         }
         public async void onUpdateTimeLine(object sender, double time)
         {
