@@ -152,6 +152,14 @@ namespace ibcdatacsharp.UI.TimeLine
                 model.setTime(totalTime);
             });
         }
+        public void tickPlay(double time = 0)
+        {
+            double totalTime = time + deltaTime;
+            Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
+            {
+                model.setTime(totalTime);
+            });
+        }
         // Callback para actualizar solo contador
         public void tickCapture(object sender, ElapsedEventArgs e)
         {

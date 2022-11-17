@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using ibcdatacsharp.UI.Common;
 using OpenCvSharp.WpfExtensions;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -273,6 +274,7 @@ namespace ibcdatacsharp.UI.ToolBar
             }
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = true;
+            openFileDialog.Filter = "Allowed Files(*.txt;*.csv;*.avi)|*.txt;*.csv;*.avi";
             if(openFileDialog.ShowDialog() == true)
             {
                 string[] files = openFileDialog.FileNames;
@@ -291,10 +293,12 @@ namespace ibcdatacsharp.UI.ToolBar
                             setTimeLineLimits(csvData, videoData);
                             graphManager.initReplay(csvData);
                             camaraViewport.initReplay(videoData);
+                            timeLine.tickPlay();
+                            MessageBox.Show("Ficheros " + file1 + " " + file2 + "cargados.");
                         }
                         else
                         {
-                            //Error
+                            MessageBox.Show("El fichero de datos tiene que ser .csv o .txt", "Error de formato", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     else if(Path.GetExtension(file1) == ".csv" || Path.GetExtension(file1) == ".txt")
@@ -307,15 +311,17 @@ namespace ibcdatacsharp.UI.ToolBar
                             setTimeLineLimits(csvData, videoData);
                             graphManager.initReplay(csvData);
                             camaraViewport.initReplay(videoData);
+                            timeLine.tickPlay();
+                            MessageBox.Show("Ficheros " + file1 + " " + file2 + " cargados.");
                         }
                         else
                         {
-                            //Error
+                            MessageBox.Show("El fichero de video tiene que ser .avi", "Error de formato", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     else
                     {
-                        //Error
+                        MessageBox.Show("El fichero de datos tiene que ser .csv o .txt y el fichero de video tiene que ser .avi", "Error de formato", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 else if(files.Length == 1)
@@ -327,17 +333,25 @@ namespace ibcdatacsharp.UI.ToolBar
                         BitmapSource[] videoData = await extractVideo(file);
                         timeLine.model.updateLimits(0, (double)videoData.Length / Config.VIDEO_FPS_SAVE);
                         camaraViewport.initReplay(videoData);
+                        timeLine.tickPlay();
+                        MessageBox.Show("Fichero " + file + " cargado.");
                     }
                     else if(extension == ".csv" || extension == ".txt")
                     {
                         GraphData csvData = extractCSV(file);
                         timeLine.model.updateLimits(0, csvData.maxTime);
                         graphManager.initReplay(csvData);
+                        timeLine.tickPlay();
+                        MessageBox.Show("Fichero " + file + " cargado.");
                     }
                     else
                     {
-
+                        MessageBox.Show("Solo se admiten ficheros .csv, .txt o .avi", "Error de formato", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Selecciona 1 o 2 ficheros", "Error de numero de ficheros", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
