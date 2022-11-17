@@ -1,10 +1,6 @@
-﻿//#define MOVE_DATA
-
-using OpenCvSharp.Flann;
-using ScottPlot;
+﻿using ScottPlot;
 using System;
 using System.Drawing;
-using Windows.Foundation.Collections;
 
 namespace ibcdatacsharp.UI.Graphs.AngleGraph
 {
@@ -12,18 +8,10 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
     public class Model
     {
         private const int MAX_POINTS = 100;
-
-#if MOVE_DATA
-        private const int EXTRA = 20;
-        private const int CAPACITY = MAX_POINTS + EXTRA;
-        readonly double[] values;
-        readonly ScottPlot.Plottable.SignalPlot signalPlot;
-#else
         private int CAPACITY = 100000; //Usar un valor sufientemente grande para que en la mayoria de los casos no haya que cambiar el tamaño de los arrays
         private const int GROW_FACTOR = 2;
         double[] values;
         ScottPlot.Plottable.SignalPlot signalPlot;
-#endif 
         private int nextIndex = 0;
         private WpfPlot plot;
 
@@ -89,48 +77,6 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         }
         #endregion Replay
 
-#if MOVE_DATA
-        // Añade un punto
-        public void updateData(double data)
-        {
-            if(nextIndex >= CAPACITY) //No deberia de pasar
-            {
-                moveData();
-            }
-            values[nextIndex] = data;
-            nextIndex++;
-        }
-        // Desplaza los datos
-        private void moveData()
-        {
-            int displacement = nextIndex - MAX_POINTS;
-            if(displacement > 0)
-            {
-                for (int i = 0; i < MAX_POINTS; i++)
-                {
-                    int index_replacement = i + displacement;
-                    int index_replaced = i;
-                    values[index_replaced] = values[index_replacement];
-                }
-                nextIndex = MAX_POINTS;
-            }
-        }
-        // Actualiza el renderizado
-        public void render()
-        {
-            if (nextIndex <= MAX_POINTS)
-            {
-                int index = nextIndex - 1;
-                signalPlot.MaxRenderIndex = index;
-                plot.Plot.SetAxisLimits(xMin: 0, xMax: index);
-            }
-            else
-            {
-                moveData();
-            }
-            plot.Render();
-        }
-#else
         // Añade un punto
         public void updateData(double data)
         {
@@ -153,7 +99,6 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
                 xMax: Math.Max(index, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
         }
-#endif
         // Borra todos los puntos
         public void clear()
         {

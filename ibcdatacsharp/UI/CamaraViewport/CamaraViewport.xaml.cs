@@ -14,6 +14,12 @@ using System.Windows.Threading;
 using ibcdatacsharp.UI.Timer;
 using System.Collections.Generic;
 using Windows.Graphics.Imaging;
+using ibcdatacsharp.UI.Common;
+using System.Windows.Media.Imaging;
+using ibcdatacsharp.UI.Device;
+using ibcdatacsharp.UI.ToolBar;
+using System.Windows.Navigation;
+using ibcdatacsharp.UI.Graphs;
 
 namespace ibcdatacsharp.UI.CamaraViewport
 {
@@ -25,7 +31,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
 #if TASK
     public partial class CamaraViewport : Page
     {
-
+        private TimeLine.TimeLine timeLine;
         private VideoCapture videoCapture;
 
         private CancellationTokenSource cancellationTokenSourceDisplay;
@@ -50,7 +56,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 }
             }
         }
-        public IReadOnlyList<ImageStream> clipImages { get; set; }
+        private BitmapSource[] clipImages;
         private int lastIndexDisplay = -1;
 
         public CamaraViewport()
@@ -58,17 +64,42 @@ namespace ibcdatacsharp.UI.CamaraViewport
             InitializeComponent();
             _currentFrame = getBlackImage();
             imgViewport.Source = BitmapSourceConverter.ToBitmapSource(currentFrame);
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            if (mainWindow.timeLine.Content == null)
+            {
+                mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+                };
+            }
+            else
+            {
+                timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+            }
         }
-        public async void updateClip(double time)
+        public void initReplay(IReadOnlyList<ImageStream> frames)
+        {
+            clipImages = new BitmapSource[frames.Count];
+            for(int i = 0; i < frames.Count; i++)
+            {
+                clipImages[i] = Helpers.Bitmap2BitmapImage(Helpers.UWP2WPF(frames[i]));
+            }
+            timeLine.model.timeEvent -= onUpdateTimeLine;
+            timeLine.model.timeEvent += onUpdateTimeLine;
+            timeLine.model.updateLimits(0, (double)clipImages.Length / Config.VIDEO_FPS_SAVE);
+        }
+        public async void onUpdateTimeLine(object sender, double time)
         {
             double timePerFrame = 1.0 / Config.VIDEO_FPS_SAVE;
             int index = (int)Math.Round(time / timePerFrame); //Round ???
+            index = Math.Max(index, 0);
+            index = Math.Min(index, clipImages.Length - 1);
             if(index != lastIndexDisplay)
             {
-                ImageStream image = clipImages[index];
+                BitmapSource image = clipImages[index];
                 await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
                 {
-                    //imgViewport.Source = image;
+                    imgViewport.Source = image;
                 }
                 );
             }

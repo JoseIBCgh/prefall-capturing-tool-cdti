@@ -1,7 +1,4 @@
-﻿//#define MOVE_DATA
-
-using OpenCvSharp.Flann;
-using ScottPlot;
+﻿using ScottPlot;
 using System;
 using System.Drawing;
 
@@ -11,16 +8,6 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
     public class Model
     {
         private const int MAX_POINTS = 100;
-#if MOVE_DATA
-        private const int EXTRA = 20;
-        private const int CAPACITY = MAX_POINTS + EXTRA;
-        readonly double[] valuesX;
-        readonly double[] valuesY;
-        readonly double[] valuesZ;
-        readonly ScottPlot.Plottable.SignalPlot signalPlotX;
-        readonly ScottPlot.Plottable.SignalPlot signalPlotY;
-        readonly ScottPlot.Plottable.SignalPlot signalPlotZ;
-#else
         private int CAPACITY = 100000; //Usar un valor sufientemente grande para que en la mayoria de los casos no haya que cambiar el tamaño de los arrays
         private const int GROW_FACTOR = 2;
         
@@ -30,7 +17,6 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         ScottPlot.Plottable.SignalPlot signalPlotX;
         ScottPlot.Plottable.SignalPlot signalPlotY;
         ScottPlot.Plottable.SignalPlot signalPlotZ;
-#endif
 
         private int nextIndex = 0;
         private WpfPlot plot;
@@ -88,54 +74,6 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             plot.Render();
         }
         #endregion Replay
-#if MOVE_DATA
-        // Actualiza los datos
-        public void updateData(double[] data)
-        {
-            if(nextIndex >= CAPACITY) //No deberia de pasar
-            {
-                moveData();
-            }
-            valuesX[nextIndex] = data[0];
-            valuesY[nextIndex] = data[1];
-            valuesZ[nextIndex] = data[2];
-            nextIndex++;
-        }
-        // Desplaza los datos
-        private void moveData()
-        {
-            int displacement = nextIndex - MAX_POINTS;
-            if(displacement > 0)
-            {
-                for (int i = 0; i < MAX_POINTS; i++)
-                {
-                    int index_replacement = i + displacement;
-                    int index_replaced = i;
-                    valuesX[index_replaced] = valuesX[index_replacement];
-                    valuesY[index_replaced] = valuesY[index_replacement];
-                    valuesZ[index_replaced] = valuesZ[index_replacement];
-                }
-                nextIndex = MAX_POINTS;
-            }
-        }
-        // Actualiza el renderizado
-        public void render()
-        {
-            if (nextIndex <= MAX_POINTS)
-            {
-                int index = nextIndex - 1;
-                signalPlotX.MaxRenderIndex = index;
-                signalPlotY.MaxRenderIndex = index;
-                signalPlotZ.MaxRenderIndex = index;
-                plot.Plot.SetAxisLimits(xMin: 0, xMax: index);
-            }
-            else
-            {
-                moveData();
-            }
-            plot.Render();
-        }
-#else
         // Esta version funciona mejor pero usa mas memoria. Si se sobrepasa la memoria incial hay que modificar el tamaño de las arrays.
 
         // Actualiza los datos
@@ -170,7 +108,6 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
                 xMax: Math.Max(index, Math.Min(MAX_POINTS, valuesX.Length)));
             plot.Render();
         }
-#endif
         // Borra todos los puntos de todas las lineas
         public void clear()
         {

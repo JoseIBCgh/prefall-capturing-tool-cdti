@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Windows.Graphics.Imaging;
 using ibcdatacsharp.UI.Graphs;
 using System.Diagnostics;
+using System.Windows.Media.Imaging;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -25,6 +26,7 @@ namespace ibcdatacsharp.UI.ToolBar
 
         private ToolBar toolBar;
         private MenuBar.MenuBar menuBar;
+        private CamaraViewport.CamaraViewport camaraViewport;
 
         private SavingMenu saveMenu;
         private GraphManager graphManager;
@@ -53,6 +55,7 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             graphManager = mainWindow.graphManager;
+            
             if (mainWindow.toolBar.Content == null)
             {
                 mainWindow.toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
@@ -96,6 +99,17 @@ namespace ibcdatacsharp.UI.ToolBar
             else
             {
                 menuBar = mainWindow.menuBar.Content as MenuBar.MenuBar;
+            }
+            if(mainWindow.camaraViewport.Content == null)
+            {
+                mainWindow.camaraViewport.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    camaraViewport = mainWindow.camaraViewport.Content as CamaraViewport.CamaraViewport;
+                };
+            }
+            else
+            {
+                camaraViewport = mainWindow.camaraViewport.Content as CamaraViewport.CamaraViewport;
             }
         }
         public void onScanClick()
@@ -202,9 +216,10 @@ namespace ibcdatacsharp.UI.ToolBar
                 MediaClip clip = await MediaClip.CreateFromFileAsync(file);
                 MediaComposition composition = new MediaComposition();
                 composition.Clips.Add(clip);
-                IReadOnlyList<ImageStream> images = await composition.GetThumbnailsAsync(
+                IReadOnlyList<ImageStream> frames = await composition.GetThumbnailsAsync(
                     getTimespans(clip.OriginalDuration.TotalSeconds), Config.FRAME_WIDTH, Config.FRAME_HEIGHT, 
                     VideoFramePrecision.NearestFrame);
+                camaraViewport.initReplay(frames);
             }
             void initCSV(string filename)
             {
