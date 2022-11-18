@@ -101,7 +101,8 @@ namespace ibcdatacsharp.UI.CamaraViewport
         // Pantalla en negro cuando no se graba
         private Mat getBlackImage()
         {
-            Mat frame = new Mat(Config.FRAME_HEIGHT, Config.FRAME_WIDTH, Config.MAT_TYPE);
+            MatType matType = (MatType)(Config.MAT_TYPE == null?Config.DEFAULT_MAT_TYPE:Config.MAT_TYPE);
+            Mat frame = new Mat(Config.FRAME_HEIGHT, Config.FRAME_WIDTH, matType);
             return frame;
         }
         // Empieza a grabar la camara

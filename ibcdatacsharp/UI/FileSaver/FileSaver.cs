@@ -215,9 +215,13 @@ namespace ibcdatacsharp.UI.FileSaver
             if (videoWriter != null)
             {
                 Mat frame = camaraViewport.currentFrame;
+                if(Config.MAT_TYPE == null)
+                {
+                    Config.MAT_TYPE = Config.DEFAULT_MAT_TYPE;
+                }
                 if(frame.Type() != Config.MAT_TYPE)
                 {
-                    frame.ConvertTo(frame, Config.MAT_TYPE);
+                    frame.ConvertTo(frame, (MatType)Config.MAT_TYPE);
                 }
                 Mat frameResized = frame.Resize(new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
                 if (videoWriter != null)

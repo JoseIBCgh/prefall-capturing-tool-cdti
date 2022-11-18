@@ -1,4 +1,5 @@
 ﻿using ScottPlot;
+using ScottPlot.Plottable;
 using System;
 using System.Drawing;
 
@@ -11,12 +12,14 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         private int CAPACITY = 100000; //Usar un valor sufientemente grande para que en la mayoria de los casos no haya que cambiar el tamaño de los arrays
         private const int GROW_FACTOR = 2;
         double[] values;
-        ScottPlot.Plottable.SignalPlot signalPlot;
+        SignalPlot signalPlot;
         private int nextIndex = 0;
         private WpfPlot plot;
 
         private const double MIN_Y = -200;
         private const double MAX_Y = 200;
+        private HSpan line;
+        private double lineWidth = 0.2;
 
         public Model(WpfPlot plot)
         {
@@ -24,7 +27,9 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
             plot.Plot.XAxis2.SetSizeLimit(max: 5, pad: 0);
             plot.Plot.XAxis.SetSizeLimit(pad: 0);
+            plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
             paintAreas();
+            line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.LightSkyBlue);
             plot.Refresh();
         }
         // Pinta el fondo
@@ -54,7 +59,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             plot.Plot.Remove(signalPlot);
             signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
             nextIndex = 0;
-            signalPlot.MaxRenderIndex = nextIndex;
+            maxRenderIndex = nextIndex;
         }
         #region Replay
         // Añade todos los datos de golpe (solo para replay)
@@ -63,7 +68,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             values = data;
             plot.Plot.Remove(signalPlot);
             signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
-            signalPlot.MaxRenderIndex = 0;
+            maxRenderIndex = 0;
             plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, values.Length));
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
             plot.Render();
@@ -72,8 +77,8 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         public void updateIndex(int index)
         {
             index = Math.Min(index, values.Length); //Por si acaso
-            signalPlot.MaxRenderIndex = index;
-            plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS), 
+            maxRenderIndex = index;
+            plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS),
                 xMax: Math.Max(index, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
         }
@@ -96,7 +101,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         public void render()
         {
             int index = nextIndex - 1;
-            signalPlot.MaxRenderIndex = index;
+            maxRenderIndex = index;
             plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
                 xMax: Math.Max(index, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
@@ -105,6 +110,15 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         public void clear()
         {
             nextIndex = 0;
+        }
+        // Usar esto para actualizar la line tambien
+        private int maxRenderIndex{ 
+            set 
+            {
+                signalPlot.MaxRenderIndex = value;
+                line.X1 = value - lineWidth;
+                line.X2 = value + lineWidth;
+            } 
         }
     }
 }
