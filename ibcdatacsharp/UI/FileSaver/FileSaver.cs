@@ -201,7 +201,7 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             RawArgs rawArgs = device.rawData;
             //AngleArgs angleArgs = device.angleData;
-            double elapsed = timeLine.elapsed;
+            double elapsed = timeLine.elapsed; // Usar tiempo del timeLine para sincronizar.
             string newLine = "1 " + elapsed.ToString() + " " + frameCsv.ToString() + " " +
                 rawArgs.accelerometer[0].ToString() + " " + rawArgs.accelerometer[1].ToString() + " " + rawArgs.accelerometer[2].ToString() + " " +
                 rawArgs.gyroscope[0].ToString() + " " + rawArgs.gyroscope[1].ToString() + " " + rawArgs.gyroscope[2].ToString() + " " +
@@ -215,6 +215,10 @@ namespace ibcdatacsharp.UI.FileSaver
             if (videoWriter != null)
             {
                 Mat frame = camaraViewport.currentFrame;
+                if(frame.Type() != Config.MAT_TYPE)
+                {
+                    frame.ConvertTo(frame, Config.MAT_TYPE);
+                }
                 Mat frameResized = frame.Resize(new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
                 if (videoWriter != null)
                 {
