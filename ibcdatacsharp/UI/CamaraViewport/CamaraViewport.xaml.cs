@@ -1,5 +1,5 @@
 ﻿// Dejar sin comentar solo una
-#define TASK
+#define TASK // Solo esta version esta actualizada
 //#define THREAD
 //#define TIMER // no funciona bien
 
@@ -11,16 +11,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using ibcdatacsharp.UI.Timer;
-using System.Collections.Generic;
-using Windows.Graphics.Imaging;
-using ibcdatacsharp.UI.Common;
 using System.Windows.Media.Imaging;
-using ibcdatacsharp.UI.Device;
-using ibcdatacsharp.UI.ToolBar;
 using System.Windows.Navigation;
-using ibcdatacsharp.UI.Graphs;
-using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.CamaraViewport
 {
@@ -57,8 +49,6 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 }
             }
         }
-        private BitmapSource[] clipImages;
-        private int lastIndexDisplay = -1;
 
         public CamaraViewport()
         {
@@ -78,36 +68,18 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
             }
         }
-        public void initReplay(Uri video)
+        public void initReplay(string path)
         {
-            //clipImages = frames;
             imgViewport.Visibility = Visibility.Collapsed;
             videoViewport.Visibility = Visibility.Visible;
-            videoViewport.Source = video;
+            videoViewport.Source = new Uri(path);
             videoViewport.LoadedBehavior = MediaState.Pause;
             videoViewport.ScrubbingEnabled = true;
-            //videoViewport.Stop();
             timeLine.model.timeEvent -= onUpdateTimeLine;
             timeLine.model.timeEvent += onUpdateTimeLine;
         }
         public void onUpdateTimeLine(object sender, double time)
         {
-            /*
-            double timePerFrame = 1.0 / Config.VIDEO_FPS_SAVE;
-            int index = (int)Math.Round(time / timePerFrame); //Round ???
-            index = Math.Max(index, 0);
-            index = Math.Min(index, clipImages.Length - 1);
-            if(index != lastIndexDisplay)
-            {
-                BitmapSource image = clipImages[index];
-                await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-                {
-                    imgViewport.Source = image;
-                }
-                );
-            }
-            */
-            Trace.WriteLine(time);
             videoViewport.Position = TimeSpan.FromSeconds(time);
         }
         // Comprueba si se esta grabano alguna camara
