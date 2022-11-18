@@ -32,7 +32,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             this.minY = minY;
             this.maxY = maxY;
             this.plot = plot;
-            line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.LightSkyBlue);
+            line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.Red);
             plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
             plot.Refresh();
         }

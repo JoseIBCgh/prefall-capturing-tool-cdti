@@ -29,7 +29,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             plot.Plot.XAxis.SetSizeLimit(pad: 0);
             plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
             paintAreas();
-            line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.LightSkyBlue);
+            line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.Red);
             plot.Refresh();
         }
         // Pinta el fondo
