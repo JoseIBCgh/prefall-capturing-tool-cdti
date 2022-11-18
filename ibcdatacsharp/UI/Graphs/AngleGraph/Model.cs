@@ -20,20 +20,12 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
 
         public Model(WpfPlot plot)
         {
-            values = new double[CAPACITY];
             this.plot = plot;
-            signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
-            SetupModel();
-            signalPlot.MaxRenderIndex = nextIndex;
-            plot.Refresh();
-        }
-        // Inicializa el modelo
-        private void SetupModel()
-        {
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
-            plot.Plot.XAxis2.SetSizeLimit(max: 5, pad:0);
+            plot.Plot.XAxis2.SetSizeLimit(max: 5, pad: 0);
             plot.Plot.XAxis.SetSizeLimit(pad: 0);
             paintAreas();
+            plot.Refresh();
         }
         // Pinta el fondo
         private void paintAreas()
@@ -53,6 +45,16 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             plot.Plot.AddVerticalSpan(separation23, separation34, color3);
             plot.Plot.AddVerticalSpan(separation34, separation45, color24);
             plot.Plot.AddVerticalSpan(separation45, double.MaxValue, color15);
+        }
+        public void initCapture()
+        {
+            values = new double[CAPACITY];
+            plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
+            plot.Plot.XAxis2.SetSizeLimit(max: 5);
+            plot.Plot.Remove(signalPlot);
+            signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
+            nextIndex = 0;
+            signalPlot.MaxRenderIndex = nextIndex;
         }
         #region Replay
         // Añade todos los datos de golpe (solo para replay)

@@ -28,15 +28,22 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         {
             this.minY = minY;
             this.maxY = maxY;
+            this.plot = plot;
+            plot.Refresh();
+        }
+        public void initCapture()
+        {
             valuesX = new double[CAPACITY];
             valuesY = new double[CAPACITY];
             valuesZ = new double[CAPACITY];
-            this.plot = plot;
-            signalPlotX = plot.Plot.AddSignal(valuesX, color:Color.Red);
+            plot.Plot.Remove(signalPlotX);
+            plot.Plot.Remove(signalPlotY);
+            plot.Plot.Remove(signalPlotZ);
+            signalPlotX = plot.Plot.AddSignal(valuesX, color: Color.Red);
             signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green);
             signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue);
             plot.Plot.SetAxisLimitsY(yMin: minY, yMax: maxY);
-            //plot.Plot.Title(title);
+            nextIndex = 0;
             signalPlotX.MaxRenderIndex = nextIndex;
             signalPlotY.MaxRenderIndex = nextIndex;
             signalPlotZ.MaxRenderIndex = nextIndex;

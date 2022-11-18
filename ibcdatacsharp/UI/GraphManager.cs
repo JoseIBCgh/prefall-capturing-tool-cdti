@@ -57,6 +57,10 @@ namespace ibcdatacsharp.UI
         }
         public void initReplay(GraphData data)
         {
+            if(timerCapture != null)
+            {
+                clearCapture();
+            }
             graphData = data;
             timeLine.model.timeEvent -= onUpdateTimeLine;
             timeLine.model.timeEvent += onUpdateTimeLine;
@@ -81,6 +85,35 @@ namespace ibcdatacsharp.UI
                     graph.drawData(graphData);
                     frameEvent -= graph.onUpdateTimeLine;
                     frameEvent += graph.onUpdateTimeLine;
+                }
+            }
+        }
+        // Deshace el replay
+        private void clearReplay()
+        {
+            if (graphData != null)
+            {
+                graphData = null;
+                timeLine.model.timeEvent -= onUpdateTimeLine;
+                timeLine.Stop();
+                foreach (Frame frame in graphs)
+                {
+                    if (frame.Content == null)
+                    {
+                        frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                        {
+                            // Todos los grafos deberian implementar esta interface
+                            GraphInterface graph = frame.Content as GraphInterface;
+                            graph.clearData();
+                            frameEvent -= graph.onUpdateTimeLine;
+                        };
+                    }
+                    else
+                    {
+                        GraphInterface graph = frame.Content as GraphInterface;
+                        graph.clearData();
+                        frameEvent -= graph.onUpdateTimeLine;
+                    }
                 }
             }
         }
@@ -135,37 +168,9 @@ namespace ibcdatacsharp.UI
         // Configura el timer capture
         public void initCapture()
         {
-            // Se ejecuta al clicar pause
-            void onPause(object sender, PauseState pauseState)
-            {
-                if (pauseState == PauseState.Pause)
-                {
-                    timerCapture.Stop();
-                    timerRender.Stop();
-                    // Pausa el timer de la linea de tiempo hay que llamarlo
-                    timeLine.Pause();
-                }
-                else if (pauseState == PauseState.Play)
-                {
-                    timerCapture.Start();
-                    timerRender.Start();
-                    // Inicia el timer de la linea de tiempo hay que llamarlo
-                    timeLine.Start();
-                }
-            }
-            // Se ejecuta al clicar stop
-            void onStop(object sender)
-            {
-                virtualToolBar.pauseEvent -= onPause;
-                virtualToolBar.stopEvent -= onStop;
-                timerCapture.Dispose();
-                timerCapture = null;
-                timerRender.Dispose();
-                timerRender = null;
-                timeLine.Stop();
-            }
             if (timerCapture == null)
             {
+                clearReplay();
                 timerCapture = new System.Timers.Timer(CAPTURE_MS);
                 timerCapture.AutoReset = true;
                 timerRender = new System.Timers.Timer(RENDER_MS);
@@ -179,6 +184,7 @@ namespace ibcdatacsharp.UI
                             // Todos los grafos deberian implementar esta interface
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.clearData();
+                            graph.initCapture();
                             timerCapture.Elapsed += graph.onTick;
                             timerRender.Elapsed += graph.onRender;
                         };
@@ -187,6 +193,7 @@ namespace ibcdatacsharp.UI
                     {
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.clearData();
+                        graph.initCapture();
                         timerCapture.Elapsed += graph.onTick;
                         timerRender.Elapsed += graph.onRender;
                     }
@@ -200,7 +207,40 @@ namespace ibcdatacsharp.UI
                 }
                 device.initTimer();
             }
-            timeLine.startCapture();
+        }
+        // Se ejecuta al clicar pause
+        void onPause(object sender, PauseState pauseState)
+        {
+            if (pauseState == PauseState.Pause)
+            {
+                timerCapture.Stop();
+                timerRender.Stop();
+                // Pausa el timer de la linea de tiempo hay que llamarlo
+                timeLine.Pause();
+            }
+            else if (pauseState == PauseState.Play)
+            {
+                timerCapture.Start();
+                timerRender.Start();
+                // Inicia el timer de la linea de tiempo hay que llamarlo
+                timeLine.Start();
+            }
+        }
+        // Se ejecuta al clicar stop
+        void onStop(object sender)
+        {
+            clearCapture();
+        }
+        // Deshace la captura
+        private void clearCapture()
+        {
+            virtualToolBar.pauseEvent -= onPause;
+            virtualToolBar.stopEvent -= onStop;
+            timerCapture.Dispose();
+            timerCapture = null;
+            timerRender.Dispose();
+            timerRender = null;
+            timeLine.Stop();
         }
     }
 }

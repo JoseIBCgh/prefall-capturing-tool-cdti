@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 
 namespace ibcdatacsharp.UI.CamaraViewport
@@ -53,7 +52,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
         public CamaraViewport()
         {
             InitializeComponent();
-            _currentFrame = getBlackImage();
+            _currentFrame = getBlackImage(); // Acceder directamente porque no estaba inicializado (Error sino)
             imgViewport.Source = BitmapSourceConverter.ToBitmapSource(currentFrame);
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             if (mainWindow.timeLine.Content == null)
@@ -70,6 +69,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
         }
         public void initReplay(string path)
         {
+            endCameraTask(); // Dejar de usar la camara
             imgViewport.Visibility = Visibility.Collapsed;
             videoViewport.Visibility = Visibility.Visible;
             videoViewport.Source = new Uri(path);
@@ -77,6 +77,17 @@ namespace ibcdatacsharp.UI.CamaraViewport
             videoViewport.ScrubbingEnabled = true;
             timeLine.model.timeEvent -= onUpdateTimeLine;
             timeLine.model.timeEvent += onUpdateTimeLine;
+        }
+        // Deshace el replay
+        private void clearReplay()
+        {
+            if (videoViewport.Source != null)
+            {
+                imgViewport.Visibility = Visibility.Visible;
+                videoViewport.Visibility = Visibility.Collapsed;
+                videoViewport.Source = null;
+                timeLine.model.timeEvent -= onUpdateTimeLine;
+            }
         }
         public void onUpdateTimeLine(object sender, double time)
         {
@@ -90,12 +101,18 @@ namespace ibcdatacsharp.UI.CamaraViewport
         // Pantalla en negro cuando no se graba
         private Mat getBlackImage()
         {
-            Mat frame = new Mat(Config.FRAME_HEIGHT, Config.FRAME_WIDTH, MatType.CV_32F);
+            Mat frame = new Mat(Config.FRAME_HEIGHT, Config.FRAME_WIDTH, MatType.CV_8U);
             return frame;
         }
         // Empieza a grabar la camara
         public void initializeCamara(int index)
         {
+            // Quitar la imagen de la grabacion anterior
+            currentFrame = getBlackImage();
+            imgViewport.Source = BitmapSourceConverter.ToBitmapSource(currentFrame);
+            
+            clearReplay();
+
             cancellationTokenSourceDisplay = new CancellationTokenSource();
             cancellationTokenDisplay = cancellationTokenSourceDisplay.Token;
             videoCapture = new VideoCapture(index, VideoCaptureAPIs.DSHOW);
@@ -103,6 +120,10 @@ namespace ibcdatacsharp.UI.CamaraViewport
         }
         // Cierra la camara y la ventana
         private void onClose(object sender, RoutedEventArgs e)
+        {
+            endCameraTask();
+        }
+        private void endCameraTask()
         {
             if (videoCapture != null)
             {

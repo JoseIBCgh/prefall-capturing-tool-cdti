@@ -23,6 +23,10 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             device = mainWindow.device;
             DataContext = this;
         }
+        public void initCapture()
+        {
+            model.initCapture();
+        }
         public async void drawData(GraphData data)
         {
             double[] accX = new double[data.length];

@@ -13,7 +13,7 @@ namespace ibcdatacsharp.UI.TimeLine
     /// </summary>
     public enum TimerMode
     {
-        CAPTURE,
+        RECORD,
         PLAY
     }
     public partial class TimeLine : Page
@@ -58,7 +58,7 @@ namespace ibcdatacsharp.UI.TimeLine
             }
         }
         // Actualiza solo el contador
-        public void startCapture()
+        public void startRecord()
         {
             // Condicion para permitir inicializar el contador
             if (timer == null)
@@ -67,14 +67,14 @@ namespace ibcdatacsharp.UI.TimeLine
                 stopwatch = new Stopwatch();
                 stopwatch.Start();
                 timer.Interval = UPDATE_TIME_MS;
-                timer.Elapsed += tickCapture;
+                timer.Elapsed += tickRecord;
                 timer.Start();
                 // Quitar los eventos si estaban
                 model.dragEvent -= onDrag;
                 start.Click -= moveToStart;
                 end.Click -= moveToEnd;
                 pause.Click -= onPause;
-                timerMode = TimerMode.CAPTURE;
+                timerMode = TimerMode.RECORD;
             }
         }
         public Model model { get; private set; }
@@ -97,7 +97,7 @@ namespace ibcdatacsharp.UI.TimeLine
         // Pausa el timer (modo capture)
         public void Pause()
         {
-            if (timerMode == TimerMode.CAPTURE)
+            if (timerMode == TimerMode.RECORD)
             {
                 paused = true;
             }
@@ -105,7 +105,7 @@ namespace ibcdatacsharp.UI.TimeLine
         // Inicia el timer(modo capture)
         public void Start()
         {
-            if (timerMode == TimerMode.CAPTURE)
+            if (timerMode == TimerMode.RECORD)
             {
                 paused = false;
             }
@@ -113,12 +113,13 @@ namespace ibcdatacsharp.UI.TimeLine
         // Detiene el timer (modo capture)
         public void Stop()
         {
-            if (timerMode == TimerMode.CAPTURE)
+            if (timer != null)
             {
-                timer.Elapsed -= tickCapture;
+                timer.Elapsed -= tickRecord;
+                timer.Elapsed -= tickPlay;
                 timer.Dispose();
                 timer = null;
-                stopwatch = null;
+                stopwatch.Reset();
             }
         }
         // Se ejecuta al pulsar el boton de pausa
@@ -161,13 +162,14 @@ namespace ibcdatacsharp.UI.TimeLine
             });
         }
         // Callback para actualizar solo contador
-        public void tickCapture(object sender, ElapsedEventArgs e)
+        public void tickRecord(object sender, ElapsedEventArgs e)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
             {
                 time.Text = model.formatTimer(stopwatch.Elapsed);
             });
         }
+        public double elapsed { get { return stopwatch.Elapsed.TotalSeconds; } }
         // No acceder directamente
         private bool _paused;
         private bool paused

@@ -169,7 +169,6 @@ namespace ibcdatacsharp.UI.ToolBar
             }
             saveMenu.ok.Click -= continueRecord;
             toolBar.savingMenu.Visibility = Visibility.Collapsed;
-            //((MainWindow)Application.Current.MainWindow).Focus();
             recordState = RecordState.Recording;
             toolBar.changeRecordState(RecordState.Recording);
             menuBar.changeRecordState(RecordState.Recording);
@@ -177,6 +176,7 @@ namespace ibcdatacsharp.UI.ToolBar
             {
                 recordEvent?.Invoke(this, RecordState.Recording);
             }
+            timeLine.startRecord();
         }
         // Se ejecuta al clicar stop
         public void stopClick()
@@ -196,6 +196,7 @@ namespace ibcdatacsharp.UI.ToolBar
                 {
                     recordEvent?.Invoke(this, RecordState.RecordStopped);
                 }
+                timeLine.Stop();
             }
             if(stopEvent != null)
             {
@@ -244,6 +245,11 @@ namespace ibcdatacsharp.UI.ToolBar
                 double csvLength = csvData.maxTime;
                 double videoLength = getVideoDuration(videoPath);
                 timeLine.model.updateLimits(0, resultLength(csvLength, videoLength));
+            }
+            // Que hacer cuando esta grabando (por ahora no permitir abrir)
+            if(recordState == RecordState.Recording)
+            {
+                return;
             }
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = true;

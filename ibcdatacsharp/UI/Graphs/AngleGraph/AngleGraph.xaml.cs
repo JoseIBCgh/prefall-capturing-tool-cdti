@@ -1,5 +1,4 @@
 ﻿using ibcdatacsharp.UI.Device;
-using OxyPlot.Axes;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,6 +32,12 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             modelX = new Model(angleX);
             modelY = new Model(angleY);
             modelZ = new Model(angleZ);
+        }
+        public void initCapture()
+        {
+            modelX.initCapture();
+            modelY.initCapture();
+            modelZ.initCapture();
         }
         public async void drawData(GraphData data)
         {

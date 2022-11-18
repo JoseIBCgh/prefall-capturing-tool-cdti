@@ -23,6 +23,7 @@ namespace ibcdatacsharp.UI.FileSaver
         private System.Timers.Timer timerVideo;
 
         private CamaraViewport.CamaraViewport camaraViewport;
+        private TimeLine.TimeLine timeLine;
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
         private VideoWriter? videoWriter;
@@ -53,6 +54,17 @@ namespace ibcdatacsharp.UI.FileSaver
             else
             {
                 camaraViewport = mainWindow.camaraViewport.Content as CamaraViewport.CamaraViewport;
+            }
+            if (mainWindow.timeLine.Content == null)
+            {
+                mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+                };
+            }
+            else
+            {
+                timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
             }
             virtualToolBar = mainWindow.virtualToolBar;
             device = mainWindow.device;
@@ -189,7 +201,7 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             RawArgs rawArgs = device.rawData;
             //AngleArgs angleArgs = device.angleData;
-            double elapsed = stopwatchCSV.Elapsed.TotalSeconds;
+            double elapsed = timeLine.elapsed;
             string newLine = "1 " + elapsed.ToString() + " " + frameCsv.ToString() + " " +
                 rawArgs.accelerometer[0].ToString() + " " + rawArgs.accelerometer[1].ToString() + " " + rawArgs.accelerometer[2].ToString() + " " +
                 rawArgs.gyroscope[0].ToString() + " " + rawArgs.gyroscope[1].ToString() + " " + rawArgs.gyroscope[2].ToString() + " " +
