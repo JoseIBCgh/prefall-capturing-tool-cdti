@@ -20,6 +20,7 @@ using ibcdatacsharp.UI.Device;
 using ibcdatacsharp.UI.ToolBar;
 using System.Windows.Navigation;
 using ibcdatacsharp.UI.Graphs;
+using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.CamaraViewport
 {
@@ -77,14 +78,21 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
             }
         }
-        public void initReplay(BitmapSource[] frames)
+        public void initReplay(Uri video)
         {
-            clipImages = frames;
+            //clipImages = frames;
+            imgViewport.Visibility = Visibility.Collapsed;
+            videoViewport.Visibility = Visibility.Visible;
+            videoViewport.Source = video;
+            videoViewport.LoadedBehavior = MediaState.Pause;
+            videoViewport.ScrubbingEnabled = true;
+            //videoViewport.Stop();
             timeLine.model.timeEvent -= onUpdateTimeLine;
             timeLine.model.timeEvent += onUpdateTimeLine;
         }
-        public async void onUpdateTimeLine(object sender, double time)
+        public void onUpdateTimeLine(object sender, double time)
         {
+            /*
             double timePerFrame = 1.0 / Config.VIDEO_FPS_SAVE;
             int index = (int)Math.Round(time / timePerFrame); //Round ???
             index = Math.Max(index, 0);
@@ -98,6 +106,9 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 }
                 );
             }
+            */
+            Trace.WriteLine(time);
+            videoViewport.Position = TimeSpan.FromSeconds(time);
         }
         // Comprueba si se esta grabano alguna camara
         public bool someCameraOpened()

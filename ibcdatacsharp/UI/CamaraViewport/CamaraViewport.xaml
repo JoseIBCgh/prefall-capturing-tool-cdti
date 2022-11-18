@@ -20,6 +20,7 @@
             </Style>
         </Grid.Resources>
         <Button Grid.Row="0" Click="onClose">Close</Button>
-        <Image Grid.Row="1" Name="imgViewport" Stretch="Uniform"/>
+        <Image Grid.Row="1" Name="imgViewport" Stretch="Uniform" Visibility="Visible"/>
+        <MediaElement Grid.Row="1" Name="videoViewport" Stretch="Uniform" Visibility="Collapsed"/>
     </Grid>
 </Page>
