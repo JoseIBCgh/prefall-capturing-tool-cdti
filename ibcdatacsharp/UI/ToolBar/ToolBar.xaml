@@ -13,7 +13,6 @@
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
-                <Setter Property="Margin" Value="5, 0, 5, 0"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -33,6 +32,20 @@
                         <Setter Property="BorderBrush" Value="Transparent"/>
                         <Setter Property="Foreground" Value="Gray"/>
                     </Trigger>
+                    <EventTrigger RoutedEvent="Button.PreviewMouseLeftButtonDown">
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)">
+                                <ColorAnimation From="Transparent" To="LightBlue" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Button.PreviewMouseLeftButtonUp">
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)">
+                                <ColorAnimation From="LightBlue" To="Transparent" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
                 </Style.Triggers>
             </Style>
             <Style TargetType="{x:Type Image}">
@@ -42,6 +55,9 @@
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="TextAlignment" Value="Center"/>
                 <Setter Property="FontSize" Value="11"/>
+            </Style>
+            <Style TargetType="{x:Type StackPanel}">
+                <Setter Property="Margin" Value="5 0 5 0"/>
             </Style>
         </DockPanel.Resources>
         <Button x:Name="scan" DockPanel.Dock="Left">

@@ -23,7 +23,6 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             InitializeComponent();
             deactivateButtons();
-            initButtonAnimations();
         }
         private void initButtonAnimations()
         {
