@@ -8,6 +8,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
     // Modelo de los graficos del acelerometro, giroscopio y magnetometro
     public class Model
     {
+        private const int RIGHT_SEPARATION = 20;
         private const int MAX_POINTS = 100;
         private int CAPACITY = 100000; //Usar un valor sufientemente grande para que en la mayoria de los casos no haya que cambiar el tamaño de los arrays
         private const int GROW_FACTOR = 2;
@@ -79,7 +80,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             index = Math.Min(index, values.Length); //Por si acaso
             maxRenderIndex = index;
             plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS),
-                xMax: Math.Max(index, Math.Min(MAX_POINTS, values.Length)));
+                xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
         }
         #endregion Replay
@@ -103,7 +104,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             int index = nextIndex - 1;
             maxRenderIndex = index;
             plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
-                xMax: Math.Max(index, Math.Min(MAX_POINTS, values.Length)));
+                xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
         }
         // Borra todos los puntos
