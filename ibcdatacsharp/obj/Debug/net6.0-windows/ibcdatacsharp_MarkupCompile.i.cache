@@ -12,8 +12,8 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\App.xaml
 131091485075
 
-611741557775
-215-1151724416
+621251477819
+217-1249527235
 UI\CamaraViewport\CamaraViewport.xaml;UI\DeviceList\DeviceList.xaml;UI\FileBrowser\FileBrowser.xaml;UI\FileSaver\SavingMenu.xaml;UI\Graphs\AngleGraph\AngleGraph.xaml;UI\Graphs\GraphWindow\GraphAccelerometer.xaml;UI\Graphs\GraphWindow\GraphGyroscope.xaml;UI\Graphs\GraphWindow\GraphMagnetometer.xaml;UI\MainWindow.xaml;UI\MenuBar\MenuBar.xaml;UI\MenuBar\Version.xaml;UI\TimeLine\TimeLine.xaml;UI\ToolBar\ToolBar.xaml;
 
 False

@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "XDKuBJHy1XfMwae6zQvSJud3ZN9s26731QzNOxDVgNvsXfmpa5yrTd16sGy2GgNQ6Hzts7jDZ90jp3jMcgSDWw==",
+  "dgSpecHash": "ylb8Z0rYqj2JGB97Q4jv9/qhXoNz7k6/boMaAcHxAjAotxXHTGCYM03v1TUd5dxluJWqc1lSe68TC4JcD1N5MA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\ibcdatacsharp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Deva\\.nuget\\packages\\directshowlib\\1.0.0\\directshowlib.1.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\directshowlib.standard\\2.1.0\\directshowlib.standard.2.1.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\dirkster.avalondock\\4.70.2\\dirkster.avalondock.4.70.2.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\microsoft-windowsapicodepack-core\\1.1.4\\microsoft-windowsapicodepack-core.1.1.4.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\microsoft-windowsapicodepack-shell\\1.1.4\\microsoft-windowsapicodepack-shell.1.1.4.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\opencvsharp4\\4.6.0.20220608\\opencvsharp4.4.6.0.20220608.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\opencvsharp4.extensions\\4.6.0.20220608\\opencvsharp4.extensions.4.6.0.20220608.nupkg.sha512",

@@ -146,3 +146,5 @@ C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\refint\
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\ibcdatacsharp.pdb
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\ibcdatacsharp.genruntimeconfig.cache
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\ref\ibcdatacsharp.dll
+C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\Microsoft.WindowsAPICodePack.dll
+C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\Microsoft.WindowsAPICodePack.Shell.dll
