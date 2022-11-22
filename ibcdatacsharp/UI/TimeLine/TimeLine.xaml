@@ -16,8 +16,8 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center">
                 <StackPanel>
@@ -40,7 +40,7 @@
                     </StackPanel>
                 </StackPanel>
                 </StackPanel>
-                <TextBlock x:Name="time" Grid.Row="1" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="0 10 0 0" Text="00:00:00:000"/>
+                <TextBlock x:Name="time" Grid.Row="1" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Text="00:00:00:000"/>
         </Grid>
         <WpfPlot Grid.Column="1" x:Name="timeLine"/>
     </Grid>
