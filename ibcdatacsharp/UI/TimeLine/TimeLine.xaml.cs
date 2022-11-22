@@ -1,5 +1,4 @@
 ﻿using ibcdatacsharp.UI.ToolBar;
-using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.Diagnostics;
 using System.Timers;

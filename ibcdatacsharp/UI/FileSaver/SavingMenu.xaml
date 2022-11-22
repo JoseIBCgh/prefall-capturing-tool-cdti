@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ibcdatacsharp.UI.FileSaver"
         mc:Ignorable="d"
-        Height="60" Width="300">
+        Height="50" Width="300">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -13,15 +13,15 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Width="50" Height="25" Click="changeDirectory" Content="Abrir" Margin="10 0 10 0"/>
+                <Button Grid.Column="0" Width="50" Height="20" Click="changeDirectory" Content="Abrir" Margin="10 2.5 10 2.5"/>
                 <TextBlock x:Name="route" Grid.Column="1" Text="C:\Temp" VerticalAlignment="Center"/>
             </Grid>
             <Grid Grid.Row="1">
@@ -29,11 +29,11 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Column="0" Margin="10 0 10 0">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Column="0" Margin="10 5 10 5">
                     <CheckBox x:Name="csv" Padding="0 0 2 0" IsChecked="True"/>
                     <TextBlock Padding="2 0 0 0" Text="Incluir CSV"/>
                 </StackPanel>
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Column="1" Margin="10 0 10 0">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Column="1" Margin="10 5 10 5">
                     <CheckBox x:Name="video" Padding="0 0 2 0" IsChecked="False"/>
                     <TextBlock Padding="2 0 0 0" Text="Incluir Video"/>
                 </StackPanel>
