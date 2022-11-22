@@ -11,6 +11,7 @@ namespace ibcdatacsharp.UI.TimeLine
         public delegate void TimeEventHandler(object sender, double time);
         public event TimeEventHandler timeEvent;
         public event TimeEventHandler dragEvent;
+        public event EventHandler endEvent;
 
         private TextBlock timer;
         private WpfPlot plot;
@@ -83,6 +84,7 @@ namespace ibcdatacsharp.UI.TimeLine
             time = maxX;
             dragEvent?.Invoke(this, time);
             timeEvent?.Invoke(this, time);
+            endEvent?.Invoke(this, EventArgs.Empty);
             plot.Render();
             NotifyTimeChanged();
         }
@@ -92,6 +94,7 @@ namespace ibcdatacsharp.UI.TimeLine
             if (time > maxX)
             {
                 this.time = maxX;
+                endEvent?.Invoke(this, EventArgs.Empty);
             }
             else
             {

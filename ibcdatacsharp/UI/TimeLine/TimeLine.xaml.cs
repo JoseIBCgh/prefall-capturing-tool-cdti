@@ -106,6 +106,7 @@ namespace ibcdatacsharp.UI.TimeLine
                 timer.Elapsed += tick;
                 play.Click += onPlay;
                 model.dragEvent += onDrag;
+                model.endEvent += onEnd;
                 begin.Click += moveToStart;
                 end.Click += moveToEnd;
                 pause.Click += onPause;
@@ -122,6 +123,7 @@ namespace ibcdatacsharp.UI.TimeLine
                 timer.Dispose(); 
                 play.Click -= onPlay;
                 model.dragEvent -= onDrag;
+                model.endEvent -= onEnd;
                 begin.Click -= moveToStart;
                 end.Click -= moveToEnd;
                 pause.Click -= onPause;
@@ -191,6 +193,13 @@ namespace ibcdatacsharp.UI.TimeLine
         public void moveToEnd(object sender, EventArgs e)
         {
             model.moveToEnd();
+        }
+        public void onEnd(object sender, EventArgs e)
+        {
+            paused = true;
+            pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
+            timer.Stop();
+            stopwatch.Stop();
         }
         // Se ejecuta al pulsar el boton de pausa
         public void onPause(object sender, EventArgs e){
