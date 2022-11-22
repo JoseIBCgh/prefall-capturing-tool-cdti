@@ -28,11 +28,9 @@ namespace ibcdatacsharp.UI.ToolBar
         private GraphManager graphManager;
 
         public delegate void PauseEventHandler(object sender, PauseState args);
-        public delegate void RecordEventHandler(object sender, RecordState args);
         public delegate void StopEventHandler(object sender);
         public event PauseEventHandler pauseEvent;
         // Se laza cuando se empieza o termina de grabar
-        public event RecordEventHandler recordEvent;
         public event StopEventHandler stopEvent;
         // Se lanza cuando se configuran los ficheros de grabar
         public event EventHandler<SaveArgs> saveEvent;
@@ -172,10 +170,6 @@ namespace ibcdatacsharp.UI.ToolBar
             recordState = RecordState.Recording;
             toolBar.changeRecordState(RecordState.Recording);
             menuBar.changeRecordState(RecordState.Recording);
-            if (recordEvent != null)
-            {
-                recordEvent?.Invoke(this, RecordState.Recording);
-            }
             timeLine.startRecord();
         }
         // Se ejecuta al clicar stop
@@ -192,10 +186,6 @@ namespace ibcdatacsharp.UI.ToolBar
                 recordState = RecordState.RecordStopped;
                 toolBar.changeRecordState(RecordState.RecordStopped);
                 menuBar.changeRecordState(RecordState.RecordStopped);
-                if(recordEvent != null)
-                {
-                    recordEvent?.Invoke(this, RecordState.RecordStopped);
-                }
             }
             if(stopEvent != null)
             {

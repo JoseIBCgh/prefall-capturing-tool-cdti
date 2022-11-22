@@ -6,8 +6,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -69,7 +67,7 @@ namespace ibcdatacsharp.UI.FileSaver
             virtualToolBar = mainWindow.virtualToolBar;
             device = mainWindow.device;
             mainWindow.virtualToolBar.saveEvent += onSaveInfo;
-            mainWindow.virtualToolBar.recordEvent += onRecord;
+            mainWindow.virtualToolBar.stopEvent += onStopRecording;
         }
         private void onPauseCsv(object sender, PauseState pauseState)
         {
@@ -129,20 +127,8 @@ namespace ibcdatacsharp.UI.FileSaver
                 timerVideo.Start();
             }
         }
-        // Se llama cuando se empieza o termina de grabar
-        public void onRecord(object sender, RecordState recordState)
-        {
-            if(recordState == RecordState.Recording)
-            {
-                initFiles();
-            }
-            else if(recordState == RecordState.RecordStopped)
-            {
-                stopRecording();
-            }
-        }
         // Acciones para terminar de grabar
-        private void stopRecording()
+        private void onStopRecording(object sender)
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             if (recordCSV)
@@ -242,6 +228,7 @@ namespace ibcdatacsharp.UI.FileSaver
             recordVideo = args.video;
             recordCSV = args.csv;
             path = args.directory;
+            initFiles();
         }
         // Se llama cuando se cierra la aplicacion. Para guardar lo grabado
         public void onCloseApplication()
