@@ -1,5 +1,7 @@
-﻿using ibcdatacsharp.UI.Timer;
+﻿using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
+using System.Diagnostics;
+using System.Timers;
 using System.Windows;
 
 namespace ibcdatacsharp.UI.Device
@@ -7,9 +9,8 @@ namespace ibcdatacsharp.UI.Device
     // Clase que simula un IMU para hacer pruebas
     public class Device
     {
-        public int frame { get; private set; }
         private const int DEVICE_MS = 10;
-        public Timer.TimerMeasure timer { get; private set; }
+        private System.Timers.Timer timer;
         public RawArgs rawData { get; set; }
         public AngleArgs angleData { get; set; }
         public Device()
@@ -23,32 +24,42 @@ namespace ibcdatacsharp.UI.Device
             void onStop(object sender)
             {
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                mainWindow.virtualToolBar.pauseEvent -= timer.onPause;
+                mainWindow.virtualToolBar.pauseEvent -= onPause;
                 timer.Dispose();
                 timer = null;
                 mainWindow.virtualToolBar.stopEvent -= onStop;
             }
+            void onPause(object sender, PauseState pauseState)
+            {
+                if(pauseState == PauseState.Pause)
+                {
+                    timer.Stop();
+                }
+                else if(pauseState == PauseState.Play)
+                {
+                    timer.Start();
+                }
+            }
             if (timer == null)
             {
-                timer = new Timer.TimerMeasure();
-                timer.Mode = TimerMode.Periodic;
-                timer.Period = DEVICE_MS;
-                timer.Tick += generateData;
+                timer = new System.Timers.Timer();
+                timer.AutoReset = true;
+                timer.Interval = DEVICE_MS;
+                timer.Elapsed += generateData;
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-                mainWindow.virtualToolBar.pauseEvent += timer.onPause;
+                mainWindow.virtualToolBar.pauseEvent += onPause;
                 mainWindow.virtualToolBar.stopEvent += onStop;
-                if (mainWindow.virtualToolBar.pauseState == ToolBar.Enums.PauseState.Play)
+                if (mainWindow.virtualToolBar.pauseState == PauseState.Play)
                 {
                     timer.Start();
                 }
             }
         }
         // Genera datos inventados
-        public void generateData(object sender, FrameArgs frameArgs)
+        public void generateData(object sender, ElapsedEventArgs args)
         {
             rawData = generateRandomRawData();
             angleData = generateRandomAngleData();
-            frame = frameArgs.frame;
         }
         // Genera datos inventados para el Graph Window
         private RawArgs generateRandomRawData()

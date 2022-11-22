@@ -102,6 +102,10 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         public void render()
         {
             int index = nextIndex - 1;
+            if(index < 0)
+            {
+                index = 0;
+            }
             maxRenderIndex = index;
             plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
                 xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));

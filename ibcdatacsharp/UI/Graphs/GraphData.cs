@@ -54,17 +54,22 @@ namespace ibcdatacsharp.UI.Graphs
         public FrameData(string csvLine)
         {
             string[] values = csvLine.Split(' ');
-            time = double.Parse(values[1], CultureInfo.InvariantCulture);
+            time = parseDouble(values[1]);
             frame = int.Parse(values[2]);
-            accX = double.Parse(values[3], CultureInfo.InvariantCulture);
-            accY = double.Parse(values[4], CultureInfo.InvariantCulture);
-            accZ = double.Parse(values[5], CultureInfo.InvariantCulture);
-            gyrX = double.Parse(values[6], CultureInfo.InvariantCulture);
-            gyrY = double.Parse(values[7], CultureInfo.InvariantCulture);
-            gyrZ = double.Parse(values[8], CultureInfo.InvariantCulture);
-            magX = double.Parse(values[9], CultureInfo.InvariantCulture);
-            magY = double.Parse(values[10], CultureInfo.InvariantCulture);
-            magZ = double.Parse(values[11], CultureInfo.InvariantCulture);
+            accX = parseDouble(values[3]);
+            accY = parseDouble(values[4]);
+            accZ = parseDouble(values[5]);
+            gyrX = parseDouble(values[6]);
+            gyrY = parseDouble(values[7]);
+            gyrZ = parseDouble(values[8]);
+            magX = parseDouble(values[9]);
+            magY = parseDouble(values[10]);
+            magZ = parseDouble(values[11]);
+        }
+        private double parseDouble(string s)
+        {
+            string s_comma = s.Replace(".", ",");
+            return double.Parse(s_comma);
         }
     }
 }
