@@ -21,14 +21,14 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center">
                 <StackPanel>
-                    <Button x:Name="play" Click="startPlay" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MaxHeight="25" Padding="5 5 5 5" Background="Blue">
+                    <Button x:Name="play" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MaxHeight="25" Padding="5 5 5 5" Background="Blue">
                         <DockPanel>
                             <Image DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" MaxHeight="15" MaxWidth="15" Source="pack://application:,,,/UI/TimeLine/Icons/play-icon.png" Margin="5 0 0 0"/>
                             <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Play" Foreground="White" FontSize="12"/>
                         </DockPanel>
                     </Button>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button x:Name="start" MaxWidth="25" MaxHeight="25" Padding="5 5 5 5" Margin="5 5 5 5">
+                        <Button x:Name="begin" MaxWidth="25" MaxHeight="25" Padding="5 5 5 5" Margin="5 5 5 5">
                             <Image Source="pack://application:,,,/UI/TimeLine/Icons/fast-backward-icon.png"/>
                         </Button>
                         <Button x:Name="pause" MaxWidth="25" MaxHeight="25"  Padding="5 5 5 5"  Margin="5 5 5 5">

@@ -111,6 +111,8 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         public void clear()
         {
             nextIndex = 0;
+            maxRenderIndex = nextIndex;
+            plot.Render();
         }
         // Usar esto para actualizar la line tambien
         private int maxRenderIndex{ 

@@ -196,7 +196,6 @@ namespace ibcdatacsharp.UI.ToolBar
                 {
                     recordEvent?.Invoke(this, RecordState.RecordStopped);
                 }
-                timeLine.Stop();
             }
             if(stopEvent != null)
             {
@@ -271,7 +270,6 @@ namespace ibcdatacsharp.UI.ToolBar
                             setTimeLineLimits(csvData, videoPath);
                             graphManager.initReplay(csvData);
                             camaraViewport.initReplay(videoPath);
-                            timeLine.tickPlay();
                             MessageBox.Show("Ficheros " + file1 + " " + file2 + "cargados.");
                         }
                         else
@@ -289,7 +287,6 @@ namespace ibcdatacsharp.UI.ToolBar
                             setTimeLineLimits(csvData, videoPath);
                             graphManager.initReplay(csvData);
                             camaraViewport.initReplay(videoPath);
-                            timeLine.tickPlay();
                             MessageBox.Show("Ficheros " + file1 + " " + file2 + " cargados.");
                         }
                         else
@@ -311,7 +308,6 @@ namespace ibcdatacsharp.UI.ToolBar
                         string videoPath = file;
                         timeLine.model.updateLimits(0, getVideoDuration(videoPath));
                         camaraViewport.initReplay(videoPath);
-                        timeLine.tickPlay();
                         MessageBox.Show("Fichero " + file + " cargado.");
                     }
                     else if(extension == ".csv" || extension == ".txt")
@@ -319,7 +315,6 @@ namespace ibcdatacsharp.UI.ToolBar
                         GraphData csvData = extractCSV(file);
                         timeLine.model.updateLimits(0, csvData.maxTime);
                         graphManager.initReplay(csvData);
-                        timeLine.tickPlay();
                         MessageBox.Show("Fichero " + file + " cargado.");
                     }
                     else

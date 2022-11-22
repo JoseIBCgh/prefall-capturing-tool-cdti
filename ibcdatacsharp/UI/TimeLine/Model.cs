@@ -1,8 +1,4 @@
-﻿using OxyPlot.Axes;
-using OxyPlot;
-using OxyPlot.Annotations;
-using System.ComponentModel;
-using ScottPlot;
+﻿using ScottPlot;
 using System;
 using System.Drawing;
 using ScottPlot.Plottable;
