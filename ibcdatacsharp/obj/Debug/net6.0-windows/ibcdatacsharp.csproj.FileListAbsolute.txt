@@ -66,6 +66,7 @@ C:\Users\Deva\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ru\AvalonDock
 C:\Users\Deva\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\sv\AvalonDock.resources.dll
 C:\Users\Deva\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\zh-Hans\AvalonDock.resources.dll
 C:\Users\Deva\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\zh-Hant\AvalonDock.resources.dll
+C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\win-x86\native\opencv_videoio_ffmpeg460.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ibcdatacsharp.exe
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ibcdatacsharp.deps.json
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ibcdatacsharp.runtimeconfig.json
@@ -73,6 +74,8 @@ C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ibcdata
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ibcdatacsharp.pdb
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\DirectShowLib.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\AvalonDock.dll
+C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\Microsoft.WindowsAPICodePack.dll
+C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\Microsoft.WindowsAPICodePack.Shell.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\OpenCvSharp.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\OpenCvSharp.Extensions.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\OpenCvSharp.WpfExtensions.dll
@@ -103,7 +106,6 @@ C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\zh-Hant
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\win-x64\native\OpenCvSharpExtern.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\win-x64\native\opencv_videoio_ffmpeg460_64.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\win-x86\native\OpenCvSharpExtern.dll
-C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\win-x86\native\opencv_videoio_ffmpeg460.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\ibcdatacsharp.csproj.AssemblyReference.cache
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\UI\CamaraViewport\CamaraViewport.g.cs
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\UI\DeviceList\DeviceList.g.cs
@@ -146,5 +148,3 @@ C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\refint\
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\ibcdatacsharp.pdb
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\ibcdatacsharp.genruntimeconfig.cache
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\ref\ibcdatacsharp.dll
-C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\Microsoft.WindowsAPICodePack.dll
-C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\Microsoft.WindowsAPICodePack.Shell.dll
