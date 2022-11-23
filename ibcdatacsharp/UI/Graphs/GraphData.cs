@@ -54,6 +54,10 @@ namespace ibcdatacsharp.UI.Graphs
         public FrameData(string csvLine)
         {
             string[] values = csvLine.Split(' ');
+            if(values.Length != 12)
+            {
+                throw new System.Exception("Deben haber 12 valores por fila");
+            }
             time = parseDouble(values[1]);
             frame = int.Parse(values[2]);
             accX = parseDouble(values[3]);
@@ -68,8 +72,8 @@ namespace ibcdatacsharp.UI.Graphs
         }
         private double parseDouble(string s)
         {
-            string s_comma = s.Replace(".", ",");
-            return double.Parse(s_comma);
+            string s_comma = s.Replace(",", ".");
+            return double.Parse(s_comma, CultureInfo.InvariantCulture);
         }
     }
 }
