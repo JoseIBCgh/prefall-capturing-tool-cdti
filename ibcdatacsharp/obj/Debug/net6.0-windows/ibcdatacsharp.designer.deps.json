@@ -6,11 +6,99 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
+      "DirectShowLib/1.0.0": {
+        "runtime": {
+          "lib/DirectShowLib.dll": {
+            "assemblyVersion": "2.1.0.1599",
+            "fileVersion": "2.1.0.1599"
+          }
+        }
+      },
       "DirectShowLib.Standard/2.1.0": {
         "runtime": {
           "lib/netstandard2.0/DirectShowLib.dll": {
             "assemblyVersion": "2.1.0.0",
             "fileVersion": "2.1.0.0"
+          }
+        }
+      },
+      "Dirkster.AvalonDock/4.70.2": {
+        "runtime": {
+          "lib/net5.0-windows7.0/AvalonDock.dll": {
+            "assemblyVersion": "4.70.2.0",
+            "fileVersion": "4.70.2.0"
+          }
+        },
+        "resources": {
+          "lib/net5.0-windows7.0/ca-ES/AvalonDock.resources.dll": {
+            "locale": "ca-ES"
+          },
+          "lib/net5.0-windows7.0/cs-CZ/AvalonDock.resources.dll": {
+            "locale": "cs-CZ"
+          },
+          "lib/net5.0-windows7.0/de/AvalonDock.resources.dll": {
+            "locale": "de"
+          },
+          "lib/net5.0-windows7.0/es/AvalonDock.resources.dll": {
+            "locale": "es"
+          },
+          "lib/net5.0-windows7.0/fr/AvalonDock.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/net5.0-windows7.0/hu/AvalonDock.resources.dll": {
+            "locale": "hu"
+          },
+          "lib/net5.0-windows7.0/it/AvalonDock.resources.dll": {
+            "locale": "it"
+          },
+          "lib/net5.0-windows7.0/ja/AvalonDock.resources.dll": {
+            "locale": "ja"
+          },
+          "lib/net5.0-windows7.0/ko/AvalonDock.resources.dll": {
+            "locale": "ko"
+          },
+          "lib/net5.0-windows7.0/nl-BE/AvalonDock.resources.dll": {
+            "locale": "nl-BE"
+          },
+          "lib/net5.0-windows7.0/pl/AvalonDock.resources.dll": {
+            "locale": "pl"
+          },
+          "lib/net5.0-windows7.0/pt/AvalonDock.resources.dll": {
+            "locale": "pt"
+          },
+          "lib/net5.0-windows7.0/ro/AvalonDock.resources.dll": {
+            "locale": "ro"
+          },
+          "lib/net5.0-windows7.0/ru/AvalonDock.resources.dll": {
+            "locale": "ru"
+          },
+          "lib/net5.0-windows7.0/sv/AvalonDock.resources.dll": {
+            "locale": "sv"
+          },
+          "lib/net5.0-windows7.0/zh-Hans/AvalonDock.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "lib/net5.0-windows7.0/zh-Hant/AvalonDock.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "Microsoft-WindowsAPICodePack-Core/1.1.4": {
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.WindowsAPICodePack.dll": {
+            "assemblyVersion": "1.1.4.0",
+            "fileVersion": "1.1.4.0"
+          }
+        }
+      },
+      "Microsoft-WindowsAPICodePack-Shell/1.1.4": {
+        "dependencies": {
+          "Microsoft-WindowsAPICodePack-Core": "1.1.4"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "assemblyVersion": "1.1.4.0",
+            "fileVersion": "1.1.4.0"
           }
         }
       },
@@ -120,6 +208,48 @@
           }
         }
       },
+      "RealTimeGraphX/1.0.17": {
+        "runtime": {
+          "lib/netstandard2.0/RealTimeGraphX.dll": {
+            "assemblyVersion": "1.0.17.0",
+            "fileVersion": "1.0.17.0"
+          }
+        }
+      },
+      "RealTimeGraphX.WPF/1.0.17": {
+        "dependencies": {
+          "RealTimeGraphX": "1.0.17"
+        },
+        "runtime": {
+          "lib/net461/RealTimeGraphX.WPF.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ScottPlot/4.1.58": {
+        "dependencies": {
+          "System.Drawing.Common": "6.0.0",
+          "System.Numerics.Vectors": "4.5.0"
+        },
+        "runtime": {
+          "lib/net6.0/ScottPlot.dll": {
+            "assemblyVersion": "4.1.58.0",
+            "fileVersion": "4.1.58.0"
+          }
+        }
+      },
+      "ScottPlot.WPF/4.1.58": {
+        "dependencies": {
+          "ScottPlot": "4.1.58"
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/ScottPlot.WPF.dll": {
+            "assemblyVersion": "4.1.58.0",
+            "fileVersion": "4.1.58.0"
+          }
+        }
+      },
       "System.Drawing.Common/6.0.0": {
         "dependencies": {
           "Microsoft.Win32.SystemEvents": "6.0.0"
@@ -146,6 +276,7 @@
         }
       },
       "System.Memory/4.5.4": {},
+      "System.Numerics.Vectors/4.5.0": {},
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {
         "runtime": {
           "lib/net6.0/System.Runtime.CompilerServices.Unsafe.dll": {
@@ -157,12 +288,40 @@
     }
   },
   "libraries": {
+    "DirectShowLib/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oWwOk9Lj8JIMWPsfx8bUbJ/uWhHlRKpMaU5oVf8Kl9SLMhmrnr0kXg0ebDv3oOmKxZ/D1yrmw+x7UGmgMqUxFA==",
+      "path": "directshowlib/1.0.0",
+      "hashPath": "directshowlib.1.0.0.nupkg.sha512"
+    },
     "DirectShowLib.Standard/2.1.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-XACY5rMew2SQdPALsNaj6I3qHp9ZJ7STJhrc40x9JZXTyuLNpXte4f5nlG9yu8dez6ONJZf2ykGA2YoNT3/O/A==",
       "path": "directshowlib.standard/2.1.0",
       "hashPath": "directshowlib.standard.2.1.0.nupkg.sha512"
+    },
+    "Dirkster.AvalonDock/4.70.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-M55QfWmeRTZbcJHh6erl8RarPMfB9z94HyiGad8HHHlQzJuHQYuyI3/kSFrNj5XVqf22GSgmC3FMjICEaFQlRg==",
+      "path": "dirkster.avalondock/4.70.2",
+      "hashPath": "dirkster.avalondock.4.70.2.nupkg.sha512"
+    },
+    "Microsoft-WindowsAPICodePack-Core/1.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gsEStalyKPTR5/HKyAHYvIoDZTGUTUgIBS1eeGvkjWgDYB7f5aSBFAAJfxhhDsOGDjLs6O0uzw1H0EWYWZGDmg==",
+      "path": "microsoft-windowsapicodepack-core/1.1.4",
+      "hashPath": "microsoft-windowsapicodepack-core.1.1.4.nupkg.sha512"
+    },
+    "Microsoft-WindowsAPICodePack-Shell/1.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EtoEx9Fx3ZGW//sni9TB1vuBvzXIlyG8E2KNaX7bqV240aiU8RP+NmDHd1ox0YKbJDMxq7AWSI2jPhpLMYXKyw==",
+      "path": "microsoft-windowsapicodepack-shell/1.1.4",
+      "hashPath": "microsoft-windowsapicodepack-shell.1.1.4.nupkg.sha512"
     },
     "Microsoft.Win32.SystemEvents/6.0.0": {
       "type": "package",
@@ -220,6 +379,34 @@
       "path": "oxyplot.wpf.shared/2.1.0",
       "hashPath": "oxyplot.wpf.shared.2.1.0.nupkg.sha512"
     },
+    "RealTimeGraphX/1.0.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fqJ7QRfpeELxb76g6JBxUi8I4+XbCqXPUxPgWkrSCVIkNITDKKotYNDsc7ZQBMpAc+gMVecKj+RB3jt4qdljPg==",
+      "path": "realtimegraphx/1.0.17",
+      "hashPath": "realtimegraphx.1.0.17.nupkg.sha512"
+    },
+    "RealTimeGraphX.WPF/1.0.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ca9YU+TevHpUq8BECu8G7sgM0wBnCGR9AmZTu+U5dA4QFtzZGD4iJtqnfRBdE50BGBDvgj3AHXgn9ebw8RR3jQ==",
+      "path": "realtimegraphx.wpf/1.0.17",
+      "hashPath": "realtimegraphx.wpf.1.0.17.nupkg.sha512"
+    },
+    "ScottPlot/4.1.58": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-im1wzvjxxDcPkVEeQj0b4n3o7TDEhUjadxp55cLSuck+KNdSwfFWJFe4/np4Qhyhf+p8H4TCbUtLDajCt3ndXw==",
+      "path": "scottplot/4.1.58",
+      "hashPath": "scottplot.4.1.58.nupkg.sha512"
+    },
+    "ScottPlot.WPF/4.1.58": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-47vMs8fuGgz+nilBw0OwHlwpl5Fi4fwvHar5ZVk08lgAjjoQfgeLYYKKBg6NZS5iF/IFDuc2aTEiZ0URpn5PHg==",
+      "path": "scottplot.wpf/4.1.58",
+      "hashPath": "scottplot.wpf.4.1.58.nupkg.sha512"
+    },
     "System.Drawing.Common/6.0.0": {
       "type": "package",
       "serviceable": true,
@@ -233,6 +420,13 @@
       "sha512": "sha512-1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw==",
       "path": "system.memory/4.5.4",
       "hashPath": "system.memory.4.5.4.nupkg.sha512"
+    },
+    "System.Numerics.Vectors/4.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
+      "path": "system.numerics.vectors/4.5.0",
+      "hashPath": "system.numerics.vectors.4.5.0.nupkg.sha512"
     },
     "System.Runtime.CompilerServices.Unsafe/6.0.0": {
       "type": "package",
