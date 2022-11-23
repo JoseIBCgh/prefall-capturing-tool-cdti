@@ -1,5 +1,7 @@
 ﻿using OpenCvSharp;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace ibcdatacsharp.UI.Graphs
@@ -56,7 +58,7 @@ namespace ibcdatacsharp.UI.Graphs
             string[] values = csvLine.Split(' ');
             if(values.Length != 12)
             {
-                throw new System.Exception("Deben haber 12 valores por fila");
+                throw new Exception("Deben haber 12 valores por fila");
             }
             time = parseDouble(values[1]);
             frame = int.Parse(values[2]);
@@ -73,7 +75,12 @@ namespace ibcdatacsharp.UI.Graphs
         private double parseDouble(string s)
         {
             string s_comma = s.Replace(",", ".");
-            return double.Parse(s_comma, CultureInfo.InvariantCulture);
+            double result =  double.Parse(s_comma, CultureInfo.InvariantCulture);
+            if(Math.Abs(result) > 10000)
+            {
+                throw new Exception("Conversion a double incorrecta");
+            }
+            return result;
         }
     }
 }
