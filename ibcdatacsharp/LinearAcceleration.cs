@@ -1,231 +1,74 @@
-﻿//#define struct
-#define class
+﻿using ibcdatacsharp.UI.Graphs;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
+using System.Globalization;
 using System;
 using System.Diagnostics;
-using System.Linq;
 
 namespace ibcdatacsharp
 {
-#if struct
-    public struct Quaternion
+    public struct LinearAcceleration
     {
-        public Vector v;
-        public float w;
-        public Quaternion(float w, float x, float y, float z)
+        private static Vector3 g = new Vector3(0, 0, -1);
+        private static Vector3 quaternionRotateVector(Quaternion q, Vector3 v)
         {
-            this.v = new Vector(x, y, z);
-            this.w = w;
+            Quaternion qvq = Quaternion.Conjugate(q) * new Quaternion(v, 1) * q;
+            return new Vector3(qvq.X, qvq.Y, qvq.Z);
         }
-        public Quaternion(Vector v, float w)
+        public static Vector3 calcLinAcc(Quaternion q, Vector3 acc)
         {
-            this.v = v;
-            this.w = w;
-        }
-        public Quaternion(Vector v)
-        {
-            this.v = v;
-            this.w = 0;
-        }
-        public static bool operator ==(Quaternion q1, Quaternion q2) => q1.v == q2.v && q1.w == q2.w;
-        public static bool operator !=(Quaternion q1, Quaternion q2) => q1.v != q2.v || q1.w != q2.w;
-        public override string ToString() => w.ToString() + " + " + v.ToString();
-    }
-    public struct Vector
-    {
-        public float x;
-        public float y;
-        public float z;
-        public Vector(float x, float y, float z)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-        public static Vector operator /(Vector v, float f) => new Vector(v.x / f, v.y / f, v.z / f);
-        public static Vector operator -(Vector v) => new Vector(-v.x, -v.y, -v.z);
-        public static Vector operator -(Vector v1, Vector v2) => new Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
-        public static Vector operator +(Vector v1, Vector v2) => new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
-        public static Vector operator *(float f, Vector v) => new Vector(f * v.x, f * v.y, f * v.z);
-        public static bool operator ==(Vector v1, Vector v2) => v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
-        public static bool operator !=(Vector v1, Vector v2) => v1.x != v2.x || v1.y != v2.y || v1.z != v2.z;
-        public override string ToString() => x.ToString() + " + " +  y.ToString() + " + " +  z.ToString();
-    }
-    public class LinearAcceleration
-    {
-        private Vector cross(Vector v1, Vector v2)
-        {
-            return new Vector(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
-        }
-        private float dot(Vector v1, Vector v2)
-        {
-            return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-        }
-        private float dot(Quaternion q1, Quaternion q2)
-        {
-            return dot(q1.v, q2.v) + q1.w * q2.w;
-        }
-        private Quaternion normalizeQuaternion(Quaternion q)
-        {
-            float m = (float)Math.Sqrt(dot(q, q));
-            return new Quaternion(q.v/m, q.w/m);
-        }
-        private Quaternion quaternionMult(Quaternion q1, Quaternion q2)
-        {
-            return new Quaternion(cross(q1.v, q2.v) + q1.w * q2.v + q2.w * q1.v, q1.w * q2.w - dot(q1.v, q2.v));
-        }
-        private Quaternion quaternionConjugate(Quaternion q)
-        {
-            return new Quaternion(-q.v, q.w);
-        }
-        private Vector quaternionRotateVector(Quaternion q, Vector v)
-        {
-            Quaternion qv = quaternionMult(quaternionConjugate(q), new Quaternion(v));
-            Quaternion qvq = quaternionMult(qv, q);
-            return qvq.v;
-        }
-        private Vector vectorSubtraction(Vector v1, Vector v2)
-        {
-            return v1 - v2;
-        }
-        public Vector calcLinAcc(Quaternion q, Vector acc)
-        {
-            Vector g = new(0 , 0, -1);
-            Vector gRot = quaternionRotateVector(q, g);
+            Vector3 gRot = quaternionRotateVector(q, g);
             return gRot - acc;
         }
-#endif
-#if class
-    public class Quaternion
-    {
-        public Vector v;
-        public float w;
-        public Quaternion(float w, float x, float y, float z)
+        public static void test(string filename = "C:\\Temp\\a1.csv")
         {
-            this.v = new Vector(x, y, z);
-            this.w = w;
-        }
-        public Quaternion(Vector v, float w)
-        {
-            this.v = v;
-            this.w = w;
-        }
-        public Quaternion(Vector v)
-        {
-            this.v = v;
-            this.w = 0;
-        }
-        public static bool operator ==(Quaternion q1, Quaternion q2) => q1.v == q2.v && q1.w == q2.w;
-        public static bool operator !=(Quaternion q1, Quaternion q2) => q1.v != q2.v || q1.w != q2.w;
-        public override string ToString() => w.ToString() + " + " + v.ToString();
-    }
-    public class Vector
-    {
-        public float x;
-        public float y;
-        public float z;
-        public Vector(float x, float y, float z)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-        public static Vector operator /(Vector v, float f) => new Vector(v.x / f, v.y / f, v.z / f);
-        public static Vector operator -(Vector v) => new Vector(-v.x, -v.y, -v.z);
-        public static Vector operator -(Vector v1, Vector v2) => new Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
-        public static Vector operator +(Vector v1, Vector v2) => new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
-        public static Vector operator *(float f, Vector v) => new Vector(f * v.x, f * v.y, f * v.z);
-        public static bool operator ==(Vector v1, Vector v2) => v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
-        public static bool operator !=(Vector v1, Vector v2) => v1.x != v2.x || v1.y != v2.y || v1.z != v2.z;
-        public override string ToString() => x.ToString() + " + " +  y.ToString() + " + " +  z.ToString();
-    }
-    public class LinearAcceleration
-    {
-        private Vector cross(Vector v1, Vector v2)
-        {
-            return new Vector(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
-        }
-        private float dot(Vector v1, Vector v2)
-        {
-            return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-        }
-        private float dot(Quaternion q1, Quaternion q2)
-        {
-            return dot(q1.v, q2.v) + q1.w * q2.w;
-        }
-        private Quaternion normalizeQuaternion(Quaternion q)
-        {
-            float m = (float)Math.Sqrt(dot(q, q));
-            return new Quaternion(q.v/m, q.w/m);
-        }
-        private Quaternion quaternionMult(Quaternion q1, Quaternion q2)
-        {
-            return new Quaternion(cross(q1.v, q2.v) + q1.w * q2.v + q2.w * q1.v, q1.w * q2.w - dot(q1.v, q2.v));
-        }
-        private Quaternion quaternionConjugate(Quaternion q)
-        {
-            return new Quaternion(-q.v, q.w);
-        }
-        private Vector quaternionRotateVector(Quaternion q, Vector v)
-        {
-            Quaternion qv = quaternionMult(quaternionConjugate(q), new Quaternion(v));
-            Quaternion qvq = quaternionMult(qv, q);
-            return qvq.v;
-        }
-        private Vector vectorSubtraction(Vector v1, Vector v2)
-        {
-            return v1 - v2;
-        }
-        public Vector calcLinAcc(Quaternion q, Vector acc)
-        {
-            Vector g = new(0 , 0, -1);
-            Vector gRot = quaternionRotateVector(q, g);
-            return gRot - acc;
-        }
-#endif
-        private const int NUM_TESTS = 10;
-        private const int NUM_OPERATIONS = 1000000;
-        public void testQuaternionMult()
-        {
-            Quaternion q1 = new Quaternion(1.3f, 3.5f, 4.3f, 2.1f);
-            Quaternion q2 = new Quaternion(2.4f, 5.7f, 8.1f, 6.8f);
-            Quaternion r = quaternionMult(q1, q2);
-            Quaternion tr = new Quaternion(-65.94f, 28.039999999999996f, 9.019999999999998f, 17.72f);
-            Trace.WriteLine("teoric " + tr);
-            Trace.WriteLine("calculated " + r);
-        }
-        public void testSpeed()
-        {
-            Vector getRandomVector(Random random)
+            using (var reader = new StreamReader(filename))
             {
-                return new Vector(random.NextSingle(), random.NextSingle(), random.NextSingle());
-            }
-            Quaternion getRandomQuaternion(Random random)
-            {
-                return new Quaternion(getRandomVector(random), random.NextSingle());
-            }
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            Random random = new Random();
-            float[] times = new float[NUM_TESTS];
-            for (int j = 0; j < NUM_TESTS; j++)
-            {
-                for (int i = 0; i < NUM_OPERATIONS; i++)
+                List<FrameData> data = new List<FrameData>();
+                int linesToSkip = 1;
+                for (int i = 0; i < linesToSkip; i++)
                 {
-                    Quaternion q = getRandomQuaternion(random);
-                    Vector v = getRandomVector(random);
-                    Vector r = calcLinAcc(q, v);
+                    reader.ReadLine();
                 }
-                times[j] = stopwatch.ElapsedMilliseconds;
-                stopwatch.Restart();
+                float maxError = 0;
+                float totalError = 0;
+                int numLines = 0;
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    string[] values = line.Split(',');
+                    float accx = float.Parse(values[3], CultureInfo.InvariantCulture);
+                    float accy = float.Parse(values[4], CultureInfo.InvariantCulture);
+                    float accz = float.Parse(values[5], CultureInfo.InvariantCulture);
+                    float qx = float.Parse(values[16], CultureInfo.InvariantCulture);
+                    float qy = float.Parse(values[17], CultureInfo.InvariantCulture);
+                    float qz = float.Parse(values[18], CultureInfo.InvariantCulture);
+                    float qw = float.Parse(values[15], CultureInfo.InvariantCulture);
+                    float laccx = float.Parse(values[19], CultureInfo.InvariantCulture);
+                    float laccy = float.Parse(values[20], CultureInfo.InvariantCulture);
+                    float laccz = float.Parse(values[21], CultureInfo.InvariantCulture);
+                    Quaternion qsensor = new Quaternion(qx, qy, qz, qw);
+                    qsensor = Quaternion.Conjugate(qsensor);
+                    Vector3 acc = new Vector3(accx, accy, accz);
+                    Vector3 lacc = new Vector3(laccx, laccy, laccz);
+                    Vector3 lacc_cal = calcLinAcc(qsensor, acc);
+                    float diference =  Math.Abs(lacc.X - lacc_cal.X) + Math.Abs(lacc.Y - lacc_cal.Y) +
+                        Math.Abs(lacc.Z - lacc_cal.Z);
+                    float total = Math.Abs(lacc.X + lacc.Y + lacc.Z);
+                    float error = diference / total;
+                    totalError += error;
+                    numLines++;
+                    if(error > maxError)
+                    {
+                        maxError = error;
+                    }
+                    Trace.WriteLine("teorico " + lacc + " calculado " + lacc_cal);
+                }
+                Trace.WriteLine("Max error " + (maxError * 100).ToString() + " %");
+                float errorMedio = totalError / numLines;
+                Trace.WriteLine("Error medio " + (errorMedio * 100).ToString() + " %");
             }
-            Trace.Write('[');
-            foreach(float time in times)
-            {
-                Trace.Write(time);
-                Trace.Write(", ");
-            }
-            Trace.WriteLine("]");
-            Trace.WriteLine(times.Sum() / times.Length);
         }
     }
 }
