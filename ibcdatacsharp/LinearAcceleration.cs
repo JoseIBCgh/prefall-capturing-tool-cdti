@@ -25,7 +25,6 @@ namespace ibcdatacsharp
         {
             using (var reader = new StreamReader(filename))
             {
-                List<FrameData> data = new List<FrameData>();
                 int linesToSkip = 1;
                 for (int i = 0; i < linesToSkip; i++)
                 {
