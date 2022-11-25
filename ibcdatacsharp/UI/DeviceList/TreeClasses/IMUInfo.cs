@@ -5,6 +5,11 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
     // Guarda la información de un IMU
     public class IMUInfo : BaseObject
     {
+        public int id
+        {
+            get { return GetValue<int>("id"); }
+            set { SetValue("id", value); }
+        }
         public string name
         {
             get { return GetValue<string>("name"); }
@@ -25,8 +30,9 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<bool>("connected"); }
             set { SetValue("connected", value); }
         }
-        public IMUInfo(string name, string adress)
+        public IMUInfo(int id, string name, string adress)
         {
+            this.id = id;
             this.name = name;
             this.adress = adress;
             this.battery = null;

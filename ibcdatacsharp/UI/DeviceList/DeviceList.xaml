@@ -41,16 +41,18 @@
                     <Grid Width="280">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="0.5*"/>
                             <ColumnDefinition Width="1.5*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.2*"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/imu-blue-icon-small.png" Height="20" Width="20"/>
-                        <TextBlock Text="IMU" Grid.Column="1" TextAlignment="Center"/>
-                        <TextBlock Text="Address" Grid.Column="2" TextAlignment="Center"/>
-                        <TextBlock Text="Battery" Grid.Column="3" TextAlignment="Center"/>
-                        <TextBlock Text="" Grid.Column="4" TextAlignment="Center"/>
+                        <TextBlock Text="Id" Grid.Column="1" TextAlignment="Center"/>
+                        <TextBlock Text="IMU" Grid.Column="2" TextAlignment="Center"/>
+                        <TextBlock Text="Address" Grid.Column="3" TextAlignment="Center"/>
+                        <TextBlock Text="Battery" Grid.Column="4" TextAlignment="Center"/>
+                        <TextBlock Text="Connected" Grid.Column="5" TextAlignment="Center"/>
                     </Grid>
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
@@ -59,16 +61,18 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="15"/>
                                 <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="0.5*"/>
                                 <ColumnDefinition Width="1.5*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="1.2*"/>
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="1" Height="15" Width="15" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
-                            <TextBlock Text="{Binding Path=name}" Grid.Column="2" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=adress}" Grid.Column="3" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="4" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=connected, Converter={StaticResource connectedConverter}}" Grid.Column="5" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=id}" Grid.Column="2" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=name}" Grid.Column="3" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=adress}" Grid.Column="4" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="5" TextAlignment="Center"/>
+                            <Image Grid.Column="6" Height="15" Width="15" Source="{Binding Path=connected, Converter={StaticResource connectedConverter}}"/>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
