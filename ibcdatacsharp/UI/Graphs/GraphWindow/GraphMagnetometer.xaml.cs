@@ -80,5 +80,10 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
                 model.render();
             });
         }
+
+        public void drawRealTimeData(double accX, double accY, double accZ)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

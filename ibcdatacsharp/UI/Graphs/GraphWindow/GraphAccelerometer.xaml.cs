@@ -1,5 +1,6 @@
 ﻿using ibcdatacsharp.UI.Device;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -26,6 +27,16 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         public void initCapture()
         {
             model.initCapture();
+        }
+        public async void drawRealTimeData(double accX, double accY, double accZ)
+        {
+            double[] acc = new double[3] { accX, accY, accZ };
+
+            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                model.updateData(acc);
+            });
+
         }
         public async void drawData(GraphData data)
         {

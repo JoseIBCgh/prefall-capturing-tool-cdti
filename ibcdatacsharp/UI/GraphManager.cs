@@ -1,8 +1,17 @@
-﻿using ibcdatacsharp.UI.Graphs;
+﻿using ibcdatacsharp.UI.DeviceList;
+using ibcdatacsharp.UI.Graphs;
+using ibcdatacsharp.UI.Graphs.AngleGraph;
+using ibcdatacsharp.UI.Graphs.GraphWindow;
 using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
+using MS.WindowsAPICodePack.Internal;
+using ScottPlot.Statistics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Numerics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -14,6 +23,9 @@ namespace ibcdatacsharp.UI
     {
         private CaptureManager captureManager;
         private ReplayManager replayManager;
+        public List<Frame> graphs;
+
+
         public GraphManager()
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
@@ -25,7 +37,7 @@ namespace ibcdatacsharp.UI
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             VirtualToolBar virtualToolBar = mainWindow.virtualToolBar;
             Device.Device device = mainWindow.device;
-            List<Frame> graphs = new List<Frame>();
+            graphs = new List<Frame>();
             graphs.Add(mainWindow.accelerometer);
             graphs.Add(mainWindow.gyroscope);
             graphs.Add(mainWindow.magnetometer);
@@ -87,6 +99,42 @@ namespace ibcdatacsharp.UI
         private List<Frame> graphs;
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
+
+        //Begin Wise
+        public Dictionary<string, WisewalkSDK.Device> devices_list = new Dictionary<string, WisewalkSDK.Device>();
+        public List<int> counter = new List<int>();
+        
+        public string frame2;
+        public int sr;
+        int timespan;
+        string ts;
+        int frame = 0;
+
+        Quaternion q1 = new Quaternion();
+        Quaternion refq = new Quaternion();
+        Quaternion q_lower = new Quaternion();
+        Quaternion q_upper = new Quaternion();
+
+        int anglequat = 0;
+        int mac1 = 0;
+        int mac2 = 0;
+
+        double alpha = 0.0d;
+        double delta = 0.0d;
+        double phi = 0.0d;
+
+        float a1 = 0.0f;
+        float a2 = 0.0f;
+        float a3 = 0.0f;
+
+        string dataline;
+
+        float fakets = 0.01f;
+
+        LinearAcceleration linAcc;
+        string error = "";
+
+        //End Wise
         public CaptureManager(List<Frame> graphs, VirtualToolBar virtualToolBar, Device.Device device)
         {
             active = false;
@@ -94,8 +142,12 @@ namespace ibcdatacsharp.UI
             this.virtualToolBar = virtualToolBar;
             this.device = device;
         }
+
+       
         public void activate()
         {
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+
             if (!active)
             {
                 active = true;
@@ -111,17 +163,25 @@ namespace ibcdatacsharp.UI
                         {
                             // Todos los grafos deberian implementar esta interface
                             GraphInterface graph = frame.Content as GraphInterface;
+
                             graph.initCapture();
-                            timerCapture.Elapsed += graph.onTick;
-                            timerRender.Elapsed += graph.onRender;
+                            
+                            
+                            mainWindow.api.dataReceived += Api_dataReceived;
+                            
+
+                            //timerCapture.Elapsed += graph.onTick;
+                            //timerRender.Elapsed += graph.onRender;
                         };
                     }
                     else
                     {
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.initCapture();
-                        timerCapture.Elapsed += graph.onTick;
-                        timerRender.Elapsed += graph.onRender;
+                        
+                        mainWindow.api.dataReceived += Api_dataReceived;
+                        //timerCapture.Elapsed += graph.onTick;
+                        //timerRender.Elapsed += graph.onRender;
                     }
                 }
                 virtualToolBar.pauseEvent += onPause; //funcion local
@@ -133,6 +193,13 @@ namespace ibcdatacsharp.UI
                 }
                 device.initTimer();
             }
+            mainWindow.api.SetDevicesConfigurations(100, 3, out error);
+            Thread.Sleep(1000);
+            mainWindow.api.SetRTCDevices(mainWindow.GetDateTime(), out error);
+            Thread.Sleep(1000);
+
+            mainWindow.api.StartStream(out error);
+
         }
         public void deactivate()
         {
@@ -151,8 +218,8 @@ namespace ibcdatacsharp.UI
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.clearData();
                             graph.initCapture();
-                            timerCapture.Elapsed -= graph.onTick;
-                            timerRender.Elapsed -= graph.onRender;
+                            //timerCapture.Elapsed -= graph.onTick;
+                            //timerRender.Elapsed -= graph.onRender;
                         };
                     }
                     else
@@ -160,8 +227,8 @@ namespace ibcdatacsharp.UI
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.clearData();
                         graph.initCapture();
-                        timerCapture.Elapsed -= graph.onTick;
-                        timerRender.Elapsed -= graph.onRender;
+                        //timerCapture.Elapsed -= graph.onTick;
+                        //timerRender.Elapsed -= graph.onRender;
                     }
                 }
                 virtualToolBar.pauseEvent -= onPause; //funcion local
@@ -214,6 +281,191 @@ namespace ibcdatacsharp.UI
         {
             deactivate();
         }
+
+        //Begin Wise
+        //Callback para recoger datas del IMU
+        public void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
+        {
+
+            
+
+            // refq = 0.823125, 0.000423, 0.009129, -0.567773
+
+
+            /**
+             * 
+             *  
+                X1 = Q1*X*conj(Q1);
+                Y1 = Q1*Y*conj(Q1);
+                Z1 = Q1*Z*conj(Q1);
+                X2 = Q2*X*conj(Q2);
+                Y2 = Q2*Y*conj(Q2);
+                Z2 = Q2*Z*conj(Q2);
+                DiffAngleX = acos(dot(X1,X2));
+                DiffAngleY = acos(dot(Y1,Y2));
+                DiffAngleZ = acos(dot(Z1,Z2));
+             */
+
+            /*
+            
+            Q1 = C0:97:3C:F2:DA:40
+            Q2 = D8:D3:A5:0A:4F:BC
+             */
+
+
+            //ref_quaternion:
+            //0.823125, 0.000423, 0.009129, -0.567773 Z para arriba
+            // 0.176144, -0.189621, 0.693031, -0.672846 Y para arriba
+            // 0.516224, 0.4542, 0.55528, -0.467841 X para arriba
+
+            refq.W = 0.176144f;
+            refq.X = -0.189621f;
+            refq.Y = 0.693031f;
+            refq.Z = -0.672846f;
+
+
+            Matrix4x4 refmat = Matrix4x4.CreateFromQuaternion(refq);
+
+
+            //if (data.Imu.Count > 0 ) {
+            ////    Trace.WriteLine("Data: " + " " + devices_list[deviceHandler.ToString()].Id.ToString() + " " + tsA.ToString("F3") + " " + devices_list[deviceHandler.ToString()].NPackets.ToString() + " "
+            ////+ data.Quat[0].W.ToString() + ", " + data.Quat[0].X.ToString() + ", " + data.Quat[0].Y.ToString() + ", " + data.Quat[0].Z.ToString());
+
+            //    if (devices_list[deviceHandler.ToString()].Id.ToString() == "C0:97:3C:F2:DA:40"  )  
+            //    {
+            //        q_lower.W = (float)data.Quat[0].W;
+            //        q_lower.X = (float)data.Quat[0].X;
+            //        q_lower.Y = (float)data.Quat[0].Y;
+            //        q_lower.Z = (float)data.Quat[0].Z;
+            //        anglequat++;
+
+            //    }
+
+            //    else if ( devices_list[deviceHandler.ToString()].Id.ToString() == "D8:D3:A5:0A:4F:BC" )
+            //    {
+            //        q_upper.W = (float)data.Quat[0].W;
+            //        q_upper.X = (float)data.Quat[0].X;
+            //        q_upper.Y = (float)data.Quat[0].Y;
+            //        q_upper.Z = (float)data.Quat[0].Z;
+            //        anglequat++;
+            //    }
+
+
+
+            //   if (anglequat % 2 == 0)
+            //    {
+            //        Vector3 angle_low = new();
+            //        Vector3 angle_up = new();
+            //        Vector3 angle_ref = new();
+            //        angle_low = ToEulerAngles(q_lower);
+            //        angle_up = ToEulerAngles(q_upper);
+            //        angle_ref = ToEulerAngles(refq);
+            //        a1 = angle_low.X - angle_up.X + angle_ref.X;
+            //        a2 = angle_low.Y - angle_up.Y + angle_ref.Y;
+            //        a3 = angle_low.Z - angle_up.Z + angle_ref.Z;
+            //        a1 = ToDegrees(a1);
+            //        a2 = ToDegrees(a2);
+            //        a3 = ToDegrees(a3);
+
+            //       // Trace.WriteLine(":::::: ANGLE JOINT: " + a1.ToString() + " " + a2.ToString() + " " + a3.ToString());
+
+            //        Matrix4x4 m_lower = Matrix4x4.CreateFromQuaternion(q_lower);
+            //        Matrix4x4 m_upper = Matrix4x4.CreateFromQuaternion(q_upper);
+
+            //        Matrix4x4 R = Matrix4x4.Multiply(m_lower, m_upper);
+
+            //        double beta = Math.Atan2(R.M32 , Math.Sqrt( Math.Pow(R.M12,2) * Math.Pow(R.M22, 2) ) );
+            //        double delta = Math.Atan2(-(R.M12 / Math.Cos(beta)), R.M22 / Math.Cos(beta));
+            //        double phi = Math.Atan2(-(R.M31 / Math.Cos(beta)), R.M33 / Math.Cos(beta));
+
+            //        if (beta >= 90.0 && beta < 91.0)
+            //        {
+            //            beta = 90.0d;
+            //            delta = 0.0d;
+            //            phi = Math.Atan2(R.M13, R.M23);
+
+            //        }
+
+            //        //Trace.WriteLine("Beta: " + ToDegrees((float) beta).ToString() + " Delta:" + ToDegrees((float) delta).ToString() + 
+            //        //    " Phi: " + ToDegrees((float) phi).ToString());                   
+            //    }
+            //}
+
+            // Only a IMU
+
+
+
+            if (true)
+
+
+            {
+
+
+                dataline = "Timespan1: " + frame.ToString() + " " + (fakets).ToString("F2") + " " + data.Imu[0].acc_x.ToString("F3") + " " + data.Imu[0].acc_y.ToString("F3") + " " + data.Imu[0].acc_z.ToString("F3") + " " + data.Quat[0].W.ToString("F3") + " " + data.Quat[0].X.ToString("F3") + "  " + data.Quat[0].Y.ToString("F3") + " " + data.Quat[0].Z.ToString("F3") + "\n" +
+                "Timespan2: " + (frame + 1).ToString() + " " + (fakets + 0.01).ToString("F2") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_z.ToString("F3") + "\n" +
+                "Timespan3: " + (frame + 2).ToString() + " " + (fakets + 0.02).ToString("F2") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + "\n" +
+                "Timespan4: " + (frame + 3).ToString() + " " + (fakets + 0.03).ToString("F2") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3");
+                fakets += 0.04f;
+                Trace.WriteLine(dataline);
+
+                //Graphs.GraphWindow.GraphAccelerometer acc = frame.Content as Graphs.GraphWindow.GraphAccelerometer;
+
+
+
+                //using (StreamWriter sw = File.AppendText("C:\\Temp\\output.txt"))
+                //{
+                //    sw.WriteLine(dataline);
+
+                //}
+
+                frame += 4;
+
+                //    await Task.WhenAll(new Task[] {
+                //        updateAccelerometer(frame, data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z),
+                //        updateMagnetometer(frame, data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z),
+                //        updateGyroscope(frame, data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z),
+                //        renderAcceletometer(),
+                //        renderGyroscope(),
+                //        renderMagnetometer(),
+
+
+
+                //    //v.appendCSV( data.timespans[0] , frame,data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z, data.Imu[0].gyro_x, 
+                //    //data.Imu[0].gyro_y, data.Imu[0].gyro_z, data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z),
+
+                //    //v.appendCSV( data.timespans[1] , frame + 1,data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z, data.Imu[1].gyro_x,
+                //    //data.Imu[1].gyro_y, data.Imu[1].gyro_z, data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z),
+
+                //    //v.appendCSV( data.timespans[2] , frame + 2,data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z, data.Imu[2].gyro_x,
+                //    //data.Imu[2].gyro_y, data.Imu[2].gyro_z, data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z),
+
+                //    // v.appendCSV( data.timespans[3] , frame + 3, data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z, data.Imu[3].gyro_x,
+                //    //data.Imu[3].gyro_y, data.Imu[3].gyro_z, data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z),
+
+
+                //});
+
+
+            }
+            //else if (devices_list.Count == 2)
+            //{
+            //await Task.WhenAll(new Task[] {
+
+            //angleGraph.updateX(frame, a1),
+            //angleGraph.updateY(frame, a2),
+            //angleGraph.updateZ(frame, a3),
+            //angleGraph.renderX(),
+            //angleGraph.renderY(),
+            //angleGraph.renderZ()
+
+
+            //});
+
+
+            //}
+
+        }
+        //End Wise
     }
     public class ReplayManager
     {
@@ -275,6 +527,7 @@ namespace ibcdatacsharp.UI
                         {
                             // Todos los grafos deberian implementar esta interface
                             GraphInterface graph = frame.Content as GraphInterface;
+                            
                             graph.clearData();
                             frameEvent -= graph.onUpdateTimeLine;
                         };

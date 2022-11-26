@@ -223,5 +223,10 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
                 renderZ(),
             });
         }
+
+        public void drawRealTimeData(double accX, double accY, double accZ)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
