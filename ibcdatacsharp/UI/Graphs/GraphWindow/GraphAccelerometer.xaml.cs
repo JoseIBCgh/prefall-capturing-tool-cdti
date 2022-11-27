@@ -73,6 +73,8 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
                 model.updateData(getData());
+                
+              
             });
         }
         // Borra el contenido de los graficos
@@ -83,6 +85,17 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
                 model.clear();
             });
         }
+
+        //Actualiza el render
+
+        public async void render()
+        {
+            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                model.render();
+            });
+        }
+
         // Actualiza el render
         public async void onRender(object sender, EventArgs e)
         {

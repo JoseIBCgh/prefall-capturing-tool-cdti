@@ -15,6 +15,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 
 namespace ibcdatacsharp.UI
 {
@@ -134,6 +135,8 @@ namespace ibcdatacsharp.UI
         LinearAcceleration linAcc;
         string error = "";
 
+        GraphAccelerometer acc;
+
         //End Wise
         public CaptureManager(List<Frame> graphs, VirtualToolBar virtualToolBar, Device.Device device)
         {
@@ -168,8 +171,8 @@ namespace ibcdatacsharp.UI
                             
                             
                             mainWindow.api.dataReceived += Api_dataReceived;
-                            
 
+                            
                             //timerCapture.Elapsed += graph.onTick;
                             //timerRender.Elapsed += graph.onRender;
                         };
@@ -406,18 +409,27 @@ namespace ibcdatacsharp.UI
                 "Timespan3: " + (frame + 2).ToString() + " " + (fakets + 0.02).ToString("F2") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + "\n" +
                 "Timespan4: " + (frame + 3).ToString() + " " + (fakets + 0.03).ToString("F2") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3");
                 fakets += 0.04f;
+
+
                 Trace.WriteLine(dataline);
 
-                //Graphs.GraphWindow.GraphAccelerometer acc = frame.Content as Graphs.GraphWindow.GraphAccelerometer;
+                Application.Current.Dispatcher.BeginInvoke( () =>
+                {
+                    acc = (GraphAccelerometer)graphs[0].Content;
 
+                    acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_x, data.Imu[0].acc_x);
+                    acc.render();
+                });
 
+                //GraphAccelerometer acc = graphs[0].Content as GraphAccelerometer;
+
+                //acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_x, data.Imu[0].acc_x);
 
                 //using (StreamWriter sw = File.AppendText("C:\\Temp\\output.txt"))
                 //{
                 //    sw.WriteLine(dataline);
 
                 //}
-
                 frame += 4;
 
                 //    await Task.WhenAll(new Task[] {
