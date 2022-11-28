@@ -37,6 +37,8 @@ namespace ibcdatacsharp.UI.ToolBar
 
         private bool buttonsEnabled = false;
 
+        string error = "";
+
         public VirtualToolBar()
         {
             pauseState = PauseState.Play;
@@ -129,7 +131,7 @@ namespace ibcdatacsharp.UI.ToolBar
         // Se ejecuta al clicar el boton pause
         public void pauseClick()
         {
-            string error = "";
+            
 
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
@@ -183,9 +185,14 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             if(pauseState == PauseState.Pause)
             {
+                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+
+                mainWindow.api.StopStream(out error);
+
                 pauseState = PauseState.Play;
                 toolBar.changePauseState(PauseState.Pause);
                 menuBar.changePauseState(PauseState.Pause);
+                
             }
             if(recordState == RecordState.Recording)
             {

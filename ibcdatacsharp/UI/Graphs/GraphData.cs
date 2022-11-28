@@ -53,10 +53,15 @@ namespace ibcdatacsharp.UI.Graphs
         public double magX { get; set; }
         public double magY { get; set; }
         public double magZ { get; set; }
+
+        public double laccX { get; set; }
+        public double laccY { get; set; }
+        
+        public double laccZ { get; set; }
         public FrameData(string csvLine)
         {
             string[] values = csvLine.Split(' ');
-            if(values.Length != 12)
+            if(values.Length != 15)
             {
                 throw new Exception("Deben haber 12 valores por fila");
             }
@@ -71,6 +76,9 @@ namespace ibcdatacsharp.UI.Graphs
             magX = parseDouble(values[9]);
             magY = parseDouble(values[10]);
             magZ = parseDouble(values[11]);
+            laccX = parseDouble(values[12]);
+            laccY = parseDouble(values[13]);
+            laccZ = parseDouble(values[14]);
         }
         private double parseDouble(string s)
         {
