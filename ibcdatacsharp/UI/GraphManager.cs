@@ -5,6 +5,7 @@ using ibcdatacsharp.UI.Graphs.GraphWindow;
 using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
 using MS.WindowsAPICodePack.Internal;
+using OpenCvSharp;
 using ScottPlot.Statistics;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace ibcdatacsharp.UI
         private ReplayManager replayManager;
         public List<Frame> graphs;
 
+       
 
         public GraphManager()
         {
@@ -56,6 +58,8 @@ namespace ibcdatacsharp.UI
                 TimeLine.TimeLine timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
                 replayManager = new ReplayManager(timeLine, graphs);
             }
+
+
             captureManager = new CaptureManager(graphs, virtualToolBar, device);
         }
         public void initReplay(GraphData data)
@@ -101,6 +105,13 @@ namespace ibcdatacsharp.UI
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
 
+        public Graphs.GraphWindow.GraphAccelerometer accelerometer;
+        public Graphs.GraphWindow.GraphGyroscope gyroscope;
+        public Graphs.GraphWindow.GraphMagnetometer magnetometer;
+
+        MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+
+
         //Begin Wise
         public Dictionary<string, WisewalkSDK.Device> devices_list = new Dictionary<string, WisewalkSDK.Device>();
         public List<int> counter = new List<int>();
@@ -136,6 +147,8 @@ namespace ibcdatacsharp.UI
         string error = "";
 
         GraphAccelerometer acc;
+        GraphGyroscope gyr;
+        GraphMagnetometer mag;
 
         //End Wise
         public CaptureManager(List<Frame> graphs, VirtualToolBar virtualToolBar, Device.Device device)
@@ -144,12 +157,14 @@ namespace ibcdatacsharp.UI
             this.graphs = graphs;
             this.virtualToolBar = virtualToolBar;
             this.device = device;
+
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+
         }
 
        
         public void activate()
         {
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
             if (!active)
             {
@@ -158,6 +173,9 @@ namespace ibcdatacsharp.UI
                 timerCapture.AutoReset = true;
                 timerRender = new System.Timers.Timer(RENDER_MS);
                 timerRender.AutoReset = true;
+
+                mainWindow.api.dataReceived += Api_dataReceived;
+
                 foreach (Frame frame in graphs)
                 {
                     if (frame.Content == null)
@@ -169,9 +187,7 @@ namespace ibcdatacsharp.UI
 
                             graph.initCapture();
                             
-                            
-                            mainWindow.api.dataReceived += Api_dataReceived;
-
+              
                             
                             //timerCapture.Elapsed += graph.onTick;
                             //timerRender.Elapsed += graph.onRender;
@@ -182,11 +198,47 @@ namespace ibcdatacsharp.UI
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.initCapture();
                         
-                        mainWindow.api.dataReceived += Api_dataReceived;
+                       
                         //timerCapture.Elapsed += graph.onTick;
                         //timerRender.Elapsed += graph.onRender;
                     }
                 }
+
+
+                if (mainWindow.accelerometer.Content == null)
+                {
+                    mainWindow.accelerometer.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        accelerometer = mainWindow.accelerometer.Content as Graphs.GraphWindow.GraphAccelerometer;
+                    };
+                }
+                else
+                {
+                    accelerometer = mainWindow.accelerometer.Content as Graphs.GraphWindow.GraphAccelerometer;
+                }
+                if (mainWindow.gyroscope.Content == null)
+                {
+                    mainWindow.gyroscope.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        gyroscope = mainWindow.gyroscope.Content as Graphs.GraphWindow.GraphGyroscope;
+                    };
+                }
+                else
+                {
+                    gyroscope = mainWindow.gyroscope.Content as Graphs.GraphWindow.GraphGyroscope;
+                }
+                if (mainWindow.magnetometer.Content == null)
+                {
+                    mainWindow.magnetometer.Navigated += delegate (object sender, NavigationEventArgs e)
+                    {
+                        magnetometer = mainWindow.magnetometer.Content as Graphs.GraphWindow.GraphMagnetometer;
+                    };
+                }
+                else
+                {
+                    magnetometer = mainWindow.magnetometer.Content as Graphs.GraphWindow.GraphMagnetometer;
+                }
+
                 virtualToolBar.pauseEvent += onPause; //funcion local
                 virtualToolBar.stopEvent += onStop; //funcion local
                 if (virtualToolBar.pauseState == PauseState.Play)
@@ -402,28 +454,80 @@ namespace ibcdatacsharp.UI
 
 
             {
+               
 
+                dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + data.Imu[0].acc_x.ToString("F3") + " " + data.Imu[0].acc_y.ToString("F3") + " " + data.Imu[0].acc_z.ToString("F3") + " " + data.Imu[0].gyro_x.ToString("F3") + " " + data.Imu[0].gyro_y.ToString("F3") + " " + data.Imu[0].gyro_z.ToString("F3") + " " + data.Imu[0].mag_x.ToString("F3") + " " + data.Imu[0].mag_y.ToString("F3") +" " + data.Imu[0].mag_z.ToString("F3") +"\n" +
+                "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_z.ToString("F3") + " " + data.Imu[1].gyro_x.ToString("F3") + " " + data.Imu[1].gyro_y.ToString("F3") + " " + data.Imu[1].gyro_z.ToString("F3") + " " + data.Imu[1].mag_x.ToString("F3") + " " + data.Imu[1].mag_y.ToString("F3") + " " + data.Imu[1].mag_z.ToString("F3") + "\n" +
+                "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + " " + data.Imu[2].gyro_x.ToString("F3") + " " + data.Imu[2].gyro_y.ToString("F3") + " " + data.Imu[2].gyro_z.ToString("F3") + " " + data.Imu[2].mag_x.ToString("F3") + " " + data.Imu[2].mag_y.ToString("F3") + " " + data.Imu[2].mag_z.ToString("F3") + "\n" +
+                "1 "+ (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3") + " " + data.Imu[3].gyro_x.ToString("F3") + " " + data.Imu[3].gyro_y.ToString("F3") + " " + data.Imu[3].gyro_z.ToString("F3") + " " + data.Imu[3].mag_x.ToString("F3") + " " + data.Imu[3].mag_y.ToString("F3") + " " + data.Imu[3].mag_z.ToString("F3") + "\n";
 
-                dataline = "Timespan1: " + frame.ToString() + " " + (fakets).ToString("F2") + " " + data.Imu[0].acc_x.ToString("F3") + " " + data.Imu[0].acc_y.ToString("F3") + " " + data.Imu[0].acc_z.ToString("F3") + " " + data.Quat[0].W.ToString("F3") + " " + data.Quat[0].X.ToString("F3") + "  " + data.Quat[0].Y.ToString("F3") + " " + data.Quat[0].Z.ToString("F3") + "\n" +
-                "Timespan2: " + (frame + 1).ToString() + " " + (fakets + 0.01).ToString("F2") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_z.ToString("F3") + "\n" +
-                "Timespan3: " + (frame + 2).ToString() + " " + (fakets + 0.02).ToString("F2") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + "\n" +
-                "Timespan4: " + (frame + 3).ToString() + " " + (fakets + 0.03).ToString("F2") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3");
+                
+
                 fakets += 0.04f;
+                frame += 4;
 
+                mainWindow.fileSaver.appendCSVManual(dataline);
 
                 Trace.WriteLine(dataline);
 
-                Application.Current.Dispatcher.BeginInvoke( () =>
+                //accelerometer.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
+                //accelerometer.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
+                //accelerometer.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
+                //accelerometer.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
+
+                //Forma Async de pintar gráficas
+
+                Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     acc = (GraphAccelerometer)graphs[0].Content;
 
-                    acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_x, data.Imu[0].acc_x);
+                    acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
+                    acc.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
+                    acc.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
+                    acc.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
+
+                    gyr = (GraphGyroscope)graphs[1].Content;
+
+                    gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
+                    gyr.drawRealTimeData(data.Imu[1].gyro_x, data.Imu[1].gyro_y, data.Imu[1].gyro_z);
+                    gyr.drawRealTimeData(data.Imu[2].gyro_x, data.Imu[2].gyro_y, data.Imu[2].gyro_z);
+                    gyr.drawRealTimeData(data.Imu[3].gyro_x, data.Imu[3].gyro_y, data.Imu[3].gyro_z);
+
+                    mag = (GraphMagnetometer)graphs[2].Content;
+
+                    mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
+                    mag.drawRealTimeData(data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z);
+                    mag.drawRealTimeData(data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z);
+                    mag.drawRealTimeData(data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z);
+
+
                     acc.render();
+                    gyr.render();
+                    mag.render();
                 });
 
-                //GraphAccelerometer acc = graphs[0].Content as GraphAccelerometer;
+                
+                //Application.Current.Dispatcher.InvokeAsync(() =>
+                //{
+                //    gyr = (GraphGyroscope)graphs[1].Content;
 
-                //acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_x, data.Imu[0].acc_x);
+                //    gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
+                //    gyr.render();
+
+                //});
+
+                //Application.Current.Dispatcher.InvokeAsync(() =>
+                //{
+                //    mag = (GraphMagnetometer)graphs[2].Content;
+
+                //    mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
+                //    mag.render();
+
+                //});
+
+
+
+
 
                 //using (StreamWriter sw = File.AppendText("C:\\Temp\\output.txt"))
                 //{

@@ -18,7 +18,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         public GraphMagnetometer()
         {
             InitializeComponent();
-            model = new Model(plot, -4, 4, title: "Magnetometer", units: "k(mT)");
+            model = new Model(plot, -6000, 6000, title: "Magnetometer", units: "k(mT)");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
@@ -81,9 +81,22 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             });
         }
 
-        public void drawRealTimeData(double accX, double accY, double accZ)
+        public async void render()
         {
-            throw new NotImplementedException();
+            await Application.Current.Dispatcher.InvokeAsync( () =>
+            {
+                model.render();
+            });
+        }
+
+        public async void drawRealTimeData(double accX, double accY, double accZ)
+        {
+            double[] acc = new double[3] { accX, accY, accZ };
+
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(acc);
+            });
         }
     }
 }

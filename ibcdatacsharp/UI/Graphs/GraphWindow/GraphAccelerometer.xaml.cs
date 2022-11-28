@@ -19,7 +19,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         public GraphAccelerometer()
         {
             InitializeComponent();
-            model = new Model(plot, -80, 80, title: "Accelerometer", units: "m/s^2");
+            model = new Model(plot, -200, 200, title: "Accelerometer", units: "m/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
@@ -32,7 +32,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         {
             double[] acc = new double[3] { accX, accY, accZ };
 
-            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 model.updateData(acc);
             });
@@ -90,7 +90,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
 
         public async void render()
         {
-            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            await Application.Current.Dispatcher.InvokeAsync( () =>
             {
                 model.render();
             });
@@ -99,7 +99,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         // Actualiza el render
         public async void onRender(object sender, EventArgs e)
         {
-            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            await Application.Current.Dispatcher.InvokeAsync( () =>
             {
                 model.render();
             });

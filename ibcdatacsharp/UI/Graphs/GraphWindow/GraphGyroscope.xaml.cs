@@ -18,7 +18,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         public GraphGyroscope()
         {
             InitializeComponent();
-            model = new Model(plot, -600, 600, title: "Gyroscope", units: "g/s^2");
+            model = new Model(plot, -50, 50, title: "Gyroscope", units: "g/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
@@ -81,9 +81,21 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             });
         }
 
-        public void drawRealTimeData(double accX, double accY, double accZ)
+        public async void render()
         {
-            throw new NotImplementedException();
+            await Application.Current.Dispatcher.InvokeAsync( () =>
+            {
+                model.render();
+            });
+        }
+        public async void drawRealTimeData(double accX, double accY, double accZ)
+        {
+            double[] acc = new double[3] { accX, accY, accZ };
+
+            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            {
+                model.updateData(acc);
+            });
         }
     }
 }

@@ -30,7 +30,7 @@ namespace ibcdatacsharp.UI
         public VirtualToolBar virtualToolBar;
         public GraphManager graphManager;
 
-        private FileSaver.FileSaver fileSaver;
+        public FileSaver.FileSaver fileSaver;
 
         public event EventHandler initialized;
 
@@ -450,6 +450,7 @@ namespace ibcdatacsharp.UI
         // Funcion que se ejecuta al clicar el boton Record
         private void onRecord(object sender, EventArgs e)
         {
+            
             virtualToolBar.recordClick();
         }
         // Funcion que se ejecuta al clicar el boton Show Captured Files

@@ -129,7 +129,13 @@ namespace ibcdatacsharp.UI.ToolBar
         // Se ejecuta al clicar el boton pause
         public void pauseClick()
         {
-            if(pauseState == PauseState.Play)
+            string error = "";
+
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            mainWindow.api.StopStream(out error);
+
+            if (pauseState == PauseState.Play)
             {
                 pauseState = PauseState.Pause;
                 toolBar.changePauseState(PauseState.Play);

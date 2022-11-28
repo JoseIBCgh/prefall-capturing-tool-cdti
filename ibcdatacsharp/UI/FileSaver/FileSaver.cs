@@ -11,7 +11,7 @@ using System.Windows.Navigation;
 
 namespace ibcdatacsharp.UI.FileSaver
 {
-    internal class FileSaver
+    public class FileSaver
     {
         private const int RECORD_CSV_MS = 10;
         private const int RECORD_VIDEO_MS = 1000 / Config.VIDEO_FPS_SAVE;
@@ -30,7 +30,7 @@ namespace ibcdatacsharp.UI.FileSaver
         private string? csvFile;
         private bool recordCSV;
         private bool recordVideo;
-        private StringBuilder? csvData;
+        private StringBuilder? csvData = new StringBuilder();
         public FileSaver()
         {
             recordCSV = false;
@@ -97,8 +97,10 @@ namespace ibcdatacsharp.UI.FileSaver
         private void initRecordCsv()
         {
             timerCsv = new System.Timers.Timer();
-            timerCsv.Interval = RECORD_CSV_MS;
-            timerCsv.Elapsed += (sender, e) => appendCSV();
+
+            //Eliminar estas líneas para grabar manualmente
+            //timerCsv.Interval = RECORD_CSV_MS;
+            //timerCsv.Elapsed += (sender, e) => appendCSV();
 
             virtualToolBar.pauseEvent += onPauseCsv;
 
@@ -169,7 +171,7 @@ namespace ibcdatacsharp.UI.FileSaver
             string baseFilename = fileName();
             if (recordCSV)
             {
-                csvFile = baseFilename + ".csv";
+                csvFile = baseFilename + ".txt";
                 csvData = new StringBuilder();
                 csvData.Append(Config.csvHeader);
                 initRecordCsv();
@@ -182,6 +184,15 @@ namespace ibcdatacsharp.UI.FileSaver
                 initRecordVideo();
             }
         }
+
+        //Añadde fila en un csv de forma manual
+
+        public void appendCSVManual(string dataline)
+        {
+           csvData.Append(dataline);
+           
+        }
+
         // Añade una fila al csv
         private void appendCSV()
         {

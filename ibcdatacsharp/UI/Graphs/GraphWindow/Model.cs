@@ -84,7 +84,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         // Esta version funciona mejor pero usa mas memoria. Si se sobrepasa la memoria incial hay que modificar el tamaño de las arrays.
 
         // Actualiza los datos
-        public void updateData(double[] data)
+        public async void updateData(double[] data)
         {
             if(nextIndex >= CAPACITY) // No deberia pasar
             {
@@ -105,7 +105,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             nextIndex++;
         }
         // Actualiza el renderizado
-        public void render()
+        public async void render()
         {
             int index = nextIndex - 1;
             if(index < 0)
