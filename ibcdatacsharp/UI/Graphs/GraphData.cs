@@ -61,7 +61,7 @@ namespace ibcdatacsharp.UI.Graphs
         public FrameData(string csvLine)
         {
             string[] values = csvLine.Split(' ');
-            if(values.Length != 15)
+            if(values.Length > 12)
             {
                 throw new Exception("Deben haber 12 valores por fila");
             }
