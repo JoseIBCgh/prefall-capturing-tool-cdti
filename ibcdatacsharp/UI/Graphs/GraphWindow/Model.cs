@@ -35,6 +35,13 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             this.plot = plot;
             line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.Red);
             plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
+
+
+            plot.Plot.Style(Style.Seaborn);
+            
+            plot.Plot.XLabel("Frames");
+            plot.Plot.YLabel("Data");
+
             plot.Refresh();
         }
         public void initCapture()
