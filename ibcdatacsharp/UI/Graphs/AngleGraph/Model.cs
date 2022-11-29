@@ -31,6 +31,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
             paintAreas();
             line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.Red);
+            plot.Plot.Style(Style.Seaborn);
             plot.Refresh();
         }
         // Pinta el fondo

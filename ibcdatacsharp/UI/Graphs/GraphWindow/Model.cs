@@ -39,9 +39,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
 
             plot.Plot.Style(Style.Seaborn);
             
-            plot.Plot.XLabel("Frames");
-            plot.Plot.YLabel("Data");
-
+        
             plot.Refresh();
         }
         public void initCapture()

@@ -23,6 +23,8 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
+            this.plot.Plot.XLabel("Frames");
+            this.plot.Plot.YLabel("m/s^2");             ;
         }
         public void initCapture()
         {

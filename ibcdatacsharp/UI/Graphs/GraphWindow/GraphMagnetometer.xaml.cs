@@ -22,6 +22,9 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
+
+            this.plot.Plot.XLabel("Frames");
+            this.plot.Plot.YLabel("mT");
         }
         public void initCapture()
         {
