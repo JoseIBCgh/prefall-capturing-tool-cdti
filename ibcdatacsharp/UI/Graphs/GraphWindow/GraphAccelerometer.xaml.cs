@@ -82,7 +82,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         // Borra el contenido de los graficos
         public async void clearData()
         {
-            await Application.Current.Dispatcher.BeginInvoke(CLEAR_PRIORITY, () =>
+            await Application.Current.Dispatcher.InvokeAsync( () =>
             {
                 model.clear();
             });

@@ -95,7 +95,7 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         {
             double[] acc = new double[3] { accX, accY, accZ };
 
-            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            await Application.Current.Dispatcher.InvokeAsync( () =>
             {
                 model.updateData(acc);
             });
