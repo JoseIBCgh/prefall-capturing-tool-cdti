@@ -30,6 +30,11 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<bool>("connected"); }
             set { SetValue("connected", value); }
         }
+        public bool used
+        {
+            get { return GetValue<bool>("used"); }
+            set { SetValue("used", value); }
+        }
         public IMUInfo(int id, string name, string adress)
         {
             this.id = id;
@@ -37,6 +42,7 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             this.adress = adress;
             this.battery = null;
             this.connected = false;
+            this.used = false;
         }
     }
 }
