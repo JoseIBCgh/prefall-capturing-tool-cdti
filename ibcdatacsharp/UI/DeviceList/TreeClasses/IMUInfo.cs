@@ -28,7 +28,16 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
         public bool connected
         {
             get { return GetValue<bool>("connected"); }
-            set { SetValue("connected", value); }
+            set { 
+                SetValue("connected", value);
+                if (!value)
+                {
+                    if (used)
+                    {
+                        used = false;
+                    }
+                }
+            }
         }
         public bool used
         {
