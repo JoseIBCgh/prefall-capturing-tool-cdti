@@ -271,7 +271,7 @@ namespace ibcdatacsharp.UI
             {
                 
                 ShowPorts();
-                api.Open("COM3", out error);
+                api.Open("COM6", out error);
 
                 if (!api.ScanDevices(out error))
                 {
