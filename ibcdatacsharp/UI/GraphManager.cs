@@ -101,9 +101,7 @@ namespace ibcdatacsharp.UI
     public class CaptureManager
     {
         public bool active { get; private set; }
-        private const int CAPTURE_MS = 10;
         private const int RENDER_MS = 100;
-        private System.Timers.Timer timerCapture;
         private System.Timers.Timer timerRender;
         private List<Frame> graphs;
         private VirtualToolBar virtualToolBar;
@@ -176,8 +174,6 @@ namespace ibcdatacsharp.UI
             if (!active)
             {
                 active = true;
-                timerCapture = new System.Timers.Timer(CAPTURE_MS);
-                timerCapture.AutoReset = true;
                 timerRender = new System.Timers.Timer(RENDER_MS);
                 timerRender.AutoReset = true;
 
@@ -197,7 +193,7 @@ namespace ibcdatacsharp.UI
               
                             
                             //timerCapture.Elapsed += graph.onTick;
-                            //timerRender.Elapsed += graph.onRender;
+                            timerRender.Elapsed += graph.onRender;
                         };
                     }
                     else
@@ -207,7 +203,7 @@ namespace ibcdatacsharp.UI
                         
                        
                         //timerCapture.Elapsed += graph.onTick;
-                        //timerRender.Elapsed += graph.onRender;
+                        timerRender.Elapsed += graph.onRender;
                     }
                 }
 
@@ -250,7 +246,6 @@ namespace ibcdatacsharp.UI
                 virtualToolBar.stopEvent += onStop; //funcion local
                 if (virtualToolBar.pauseState == PauseState.Play)
                 {
-                    timerCapture.Start();
                     timerRender.Start();
                 }
                 device.initTimer();
@@ -265,7 +260,6 @@ namespace ibcdatacsharp.UI
             if (active)
             {
                 active = false;
-                timerCapture.Stop();
                 timerRender.Stop();
                 foreach (Frame frame in graphs)
                 {
@@ -292,7 +286,6 @@ namespace ibcdatacsharp.UI
                 }
                 virtualToolBar.pauseEvent -= onPause; //funcion local
                 virtualToolBar.stopEvent -= onStop; //funcion local
-                timerCapture.Dispose();
                 timerRender.Dispose();
             }
         }
@@ -326,19 +319,17 @@ namespace ibcdatacsharp.UI
         {
             if (pauseState == PauseState.Pause)
             {
-                timerCapture.Stop();
                 timerRender.Stop();
             }
             else if (pauseState == PauseState.Play)
             {
-                timerCapture.Start();
                 timerRender.Start();
             }
         }
         // Se ejecuta al clicar stop
         void onStop(object sender)
         {
-            deactivate();
+            //deactivate();
         }
 
         public void onInitRecord(object sender, EventArgs args)
@@ -516,9 +507,9 @@ namespace ibcdatacsharp.UI
                     mag.drawRealTimeData(data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z);
 
 
-                    acc.render();
-                    gyr.render();
-                    mag.render();
+                    //acc.render();
+                    //gyr.render();
+                    //mag.render();
                 });
 
                 
