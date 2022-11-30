@@ -1,4 +1,6 @@
-﻿using ibcdatacsharp.UI.DeviceList;
+﻿using DirectShowLib.SBE;
+using ibcdatacsharp.UI.DeviceList;
+using ibcdatacsharp.UI.FileSaver;
 using ibcdatacsharp.UI.Graphs;
 using ibcdatacsharp.UI.Graphs.AngleGraph;
 using ibcdatacsharp.UI.Graphs.GraphWindow;
@@ -25,8 +27,8 @@ namespace ibcdatacsharp.UI
     // Se encarga de manejar los grafos
     public class GraphManager
     {
-        private CaptureManager captureManager;
-        private ReplayManager replayManager;
+        public CaptureManager captureManager;
+        public ReplayManager replayManager;
         public List<Frame> graphs;
 
        
@@ -123,6 +125,7 @@ namespace ibcdatacsharp.UI
         int timespan;
         string ts;
         int frame = 0;
+        private bool resetFrame = false;
 
         Quaternion q1 = new Quaternion();
         Quaternion refq = new Quaternion();
@@ -162,7 +165,7 @@ namespace ibcdatacsharp.UI
             this.virtualToolBar = virtualToolBar;
             this.device = device;
 
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.virtualToolBar.saveEvent += onInitRecord;
 
         }
 
@@ -338,6 +341,12 @@ namespace ibcdatacsharp.UI
             deactivate();
         }
 
+        public void onInitRecord(object sender, EventArgs args)
+        {
+            fakets = 0;
+            frame = 0;
+        }
+
         //Begin Wise
         //Callback para recoger datas del IMU
         public void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
@@ -464,19 +473,17 @@ namespace ibcdatacsharp.UI
                 v3 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[3].W, (float)data.Quat[3].X, (float)data.Quat[3].Y, (float)data.Quat[3].Z), new Vector3(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z));
 
 
-                dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + data.Imu[0].acc_x.ToString("F3") + " " + data.Imu[0].acc_y.ToString("F3") + " " + data.Imu[0].acc_z.ToString("F3") + " " + data.Imu[0].gyro_x.ToString("F3") + " " + data.Imu[0].gyro_y.ToString("F3") + " " + data.Imu[0].gyro_z.ToString("F3") + " " + data.Imu[0].mag_x.ToString("F3") + " " + data.Imu[0].mag_y.ToString("F3") +" " + data.Imu[0].mag_z.ToString("F3") + " " + v0.X.ToString("F3")+ " "+ v0.Y.ToString("F3")+" "+ v0.Z.ToString("F3")+"\n" +
-                "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_z.ToString("F3") + " " + data.Imu[1].gyro_x.ToString("F3") + " " + data.Imu[1].gyro_y.ToString("F3") + " " + data.Imu[1].gyro_z.ToString("F3") + " " + data.Imu[1].mag_x.ToString("F3") + " " + data.Imu[1].mag_y.ToString("F3") + " " + data.Imu[1].mag_z.ToString("F3") + " " + v1.X.ToString("F3") + " " + v1.Y.ToString("F3") + " " + v1.Z.ToString("F3") + "\n" +
-                "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + " " + data.Imu[2].gyro_x.ToString("F3") + " " + data.Imu[2].gyro_y.ToString("F3") + " " + data.Imu[2].gyro_z.ToString("F3") + " " + data.Imu[2].mag_x.ToString("F3") + " " + data.Imu[2].mag_y.ToString("F3") + " " + data.Imu[2].mag_z.ToString("F3") + " " + v2.X.ToString("F3") + " " + v2.Y.ToString("F3") + " " + v2.Z.ToString("F3") + "\n" +
-                "1 "+ (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3") + " " + data.Imu[3].gyro_x.ToString("F3") + " " + data.Imu[3].gyro_y.ToString("F3") + " " + data.Imu[3].gyro_z.ToString("F3") + " " + data.Imu[3].mag_x.ToString("F3") + " " + data.Imu[3].mag_y.ToString("F3") + " " + data.Imu[3].mag_z.ToString("F3") + " " + v3.X.ToString("F3") + " " + v3.Y.ToString("F3") + " " + v3.Z.ToString("F3") + "\n";
+                if (virtualToolBar.recordState == RecordState.Recording)
+                {
+                    dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + data.Imu[0].acc_x.ToString("F3") + " " + data.Imu[0].acc_y.ToString("F3") + " " + data.Imu[0].acc_z.ToString("F3") + " " + data.Imu[0].gyro_x.ToString("F3") + " " + data.Imu[0].gyro_y.ToString("F3") + " " + data.Imu[0].gyro_z.ToString("F3") + " " + data.Imu[0].mag_x.ToString("F3") + " " + data.Imu[0].mag_y.ToString("F3") + " " + data.Imu[0].mag_z.ToString("F3") + " " + v0.X.ToString("F3") + " " + v0.Y.ToString("F3") + " " + v0.Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_z.ToString("F3") + " " + data.Imu[1].gyro_x.ToString("F3") + " " + data.Imu[1].gyro_y.ToString("F3") + " " + data.Imu[1].gyro_z.ToString("F3") + " " + data.Imu[1].mag_x.ToString("F3") + " " + data.Imu[1].mag_y.ToString("F3") + " " + data.Imu[1].mag_z.ToString("F3") + " " + v1.X.ToString("F3") + " " + v1.Y.ToString("F3") + " " + v1.Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + " " + data.Imu[2].gyro_x.ToString("F3") + " " + data.Imu[2].gyro_y.ToString("F3") + " " + data.Imu[2].gyro_z.ToString("F3") + " " + data.Imu[2].mag_x.ToString("F3") + " " + data.Imu[2].mag_y.ToString("F3") + " " + data.Imu[2].mag_z.ToString("F3") + " " + v2.X.ToString("F3") + " " + v2.Y.ToString("F3") + " " + v2.Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3") + " " + data.Imu[3].gyro_x.ToString("F3") + " " + data.Imu[3].gyro_y.ToString("F3") + " " + data.Imu[3].gyro_z.ToString("F3") + " " + data.Imu[3].mag_x.ToString("F3") + " " + data.Imu[3].mag_y.ToString("F3") + " " + data.Imu[3].mag_z.ToString("F3") + " " + v3.X.ToString("F3") + " " + v3.Y.ToString("F3") + " " + v3.Z.ToString("F3") + "\n";
 
-               
+                    mainWindow.fileSaver.appendCSVManual(dataline);
+                }
 
-                fakets += 0.04f;
-                frame += 4;
-
-                mainWindow.fileSaver.appendCSVManual(dataline);
-
-                Trace.WriteLine(dataline);
+                //Trace.WriteLine(dataline);
 
                 //accelerometer.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
                 //accelerometer.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
@@ -543,6 +550,7 @@ namespace ibcdatacsharp.UI
 
                 //}
                 frame += 4;
+                fakets += 0.04f;
 
                 //    await Task.WhenAll(new Task[] {
                 //        updateAccelerometer(frame, data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z),
