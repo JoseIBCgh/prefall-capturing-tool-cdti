@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Management;
 using System.Linq;
 
+
 namespace ibcdatacsharp.UI
 {
     /// <summary>
@@ -41,6 +42,9 @@ namespace ibcdatacsharp.UI
         //Wiseware API
 
         private const string pathDir = @"c:\Wiseware\Wisewalk-API\";
+
+        private const string vidPattern = @"VID_([0-9A-F]{4})";
+        private const string pidPattern = @"PID_([0-9A-F]{4})";
 
         private const int ColumnBatteryIndex = 2;
         private const int ColumnNPacketsIndex = 5;
@@ -76,8 +80,18 @@ namespace ibcdatacsharp.UI
         private short handlerSelected = -1;
         float[] acc = new float[3];
 
-
+        List<ComPort> ports2;
         string error = "";
+
+        string port_selected = "";
+
+        struct ComPort // custom struct with our desired values
+        {
+            public string name;
+            public string vid;
+            public string pid;
+            public string description;
+        }
 
         //end Wiseware API
         public MainWindow()
@@ -114,21 +128,50 @@ namespace ibcdatacsharp.UI
 
         //Callback de Escaneo
 
-       
+        private List<ComPort> GetSerialPorts()
+        {
+            using (var searcher = new ManagementObjectSearcher
+                ("SELECT * FROM WIN32_SerialPort"))
+            {
+                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
+                return ports.Select(p =>
+                {
+                    ComPort c = new ComPort();
+                    c.name = p.GetPropertyValue("DeviceID").ToString();
+                    c.vid = p.GetPropertyValue("PNPDeviceID").ToString();
+                    c.description = p.GetPropertyValue("Caption").ToString();
+
+                    Match mVID = Regex.Match(c.vid, vidPattern, RegexOptions.IgnoreCase);
+                    Match mPID = Regex.Match(c.vid, pidPattern, RegexOptions.IgnoreCase);
+
+                    if (mVID.Success)
+                        c.vid = mVID.Groups[1].Value;
+                    if (mPID.Success)
+                        c.pid = mPID.Groups[1].Value;
+
+                    return c;
+
+                }).ToList();
+            }
+        }
+
+        // Selección de puerto sin tener que ponerlo manualmente
+        // En pruebas.
         private void ShowPorts()
         {
 
-            string[] ports = SerialPort.GetPortNames();
 
-            Trace.WriteLine("The following serial ports were found:");
-
-            // Display each port name to the console.
-            foreach (string port in ports)
+            ports = api.GetUsbDongles();
+            foreach (Wisewalk.ComPort port in ports)
             {
-                Trace.WriteLine(port);
-            }
+                Match match1 = Regex.Match(port.description, "nRF52 USB CDC BLE*", RegexOptions.IgnoreCase);
+                if (match1.Success)
+                {
+                    port_selected = port.name;
+                    Trace.WriteLine(port.description);
 
-        
+                }
+            }
         }
 
 
@@ -277,7 +320,7 @@ namespace ibcdatacsharp.UI
             {
                 
                 ShowPorts();
-                api.Open("COM6", out error);
+                api.Open(port_selected, out error);
 
                 if (!api.ScanDevices(out error))
                 {

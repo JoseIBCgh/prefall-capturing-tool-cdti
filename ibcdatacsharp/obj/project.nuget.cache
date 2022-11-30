@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "15ROpI7UtWW2k516UprgLlLCbNJDUQwxTuW8/UGMRzMj97ZuvEGn9uguWPFkIu2VNxTqHGDMg96WmgvS8PwIpw==",
+  "dgSpecHash": "qdEmV4ZCu/W6Z5TeIEiG7od7stwO/r8ZVHwZS5V2zFGvYznyDGOnx8KYwHaZvagUcsrDSyfPC/R/NZuqOB7aSQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\ibcdatacsharp.csproj",
   "expectedPackageFiles": [
@@ -27,8 +27,10 @@
     "C:\\Users\\Deva\\.nuget\\packages\\runtime.osx-x64.runtime.native.system.io.ports\\7.0.0\\runtime.osx-x64.runtime.native.system.io.ports.7.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\scottplot\\4.1.58\\scottplot.4.1.58.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\scottplot.wpf\\4.1.58\\scottplot.wpf.4.1.58.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\system.codedom\\7.0.0\\system.codedom.7.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.io.ports\\7.0.0\\system.io.ports.7.0.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\system.management\\7.0.0\\system.management.7.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.management.dll\\1.0.0\\system.management.dll.1.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",

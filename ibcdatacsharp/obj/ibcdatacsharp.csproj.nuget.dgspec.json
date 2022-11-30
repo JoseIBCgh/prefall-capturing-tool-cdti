@@ -105,6 +105,10 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "System.Management": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "System.Management.dll": {
               "target": "Package",
               "version": "[1.0.0, )"
