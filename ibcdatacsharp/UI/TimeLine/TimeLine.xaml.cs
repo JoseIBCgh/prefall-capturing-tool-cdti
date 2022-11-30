@@ -18,7 +18,7 @@ namespace ibcdatacsharp.UI.TimeLine
         private ReplayManager replayManager;
         private RecordManager recordManager;
 
-        private const int UPDATE_TIME_MS = 50;
+        private const int UPDATE_TIME_MS = 100;
         public TimeLine()
         {
             InitializeComponent();
