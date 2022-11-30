@@ -110,7 +110,7 @@ namespace ibcdatacsharp.UI.DeviceList {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/ibcdatacsharp;V1.0.0.0;component/ui/devicelist/devicelist.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/ibcdatacsharp;component/ui/devicelist/devicelist.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\UI\DeviceList\DeviceList.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

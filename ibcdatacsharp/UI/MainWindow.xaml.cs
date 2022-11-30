@@ -17,6 +17,7 @@ using static WisewalkSDK.Protocol_v3;
 using System.Windows.Forms;
 using Application = System.Windows.Application;
 using System.Threading;
+using System.IO.Ports;
 
 namespace ibcdatacsharp.UI
 {
@@ -110,13 +111,27 @@ namespace ibcdatacsharp.UI
 
         //Callback de Escaneo
 
+        private void ShowPorts()
+        {
+
+            
+
+            Trace.WriteLine("The following serial ports were found:");
+
+            // Display each port name to the console.
+            foreach (string port in ports)
+            {
+                Trace.WriteLine(port);
+            }
+        }
+
 
         private void Api_scanFinished(List<Wisewalk.Dev> devices)
         {
             scanDevices = devices;
             Trace.WriteLine("# of devices: " + devices.Count);
             ShowScanList(scanDevices);
-
+           
         }
 
         private string GetMacAddress(List<Wisewalk.Dev> devices, int idx)
@@ -254,6 +269,8 @@ namespace ibcdatacsharp.UI
 
             void getIMUs()
             {
+                
+                ShowPorts();
                 api.Open("COM6", out error);
 
                 if (!api.ScanDevices(out error))
