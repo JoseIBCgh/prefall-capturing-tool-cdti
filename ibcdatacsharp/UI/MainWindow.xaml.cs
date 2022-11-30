@@ -18,6 +18,9 @@ using System.Windows.Forms;
 using Application = System.Windows.Application;
 using System.Threading;
 using System.IO.Ports;
+using System.Text.RegularExpressions;
+using System.Management;
+using System.Linq;
 
 namespace ibcdatacsharp.UI
 {
@@ -111,6 +114,7 @@ namespace ibcdatacsharp.UI
 
         //Callback de Escaneo
 
+       
         private void ShowPorts()
         {
 
@@ -123,6 +127,8 @@ namespace ibcdatacsharp.UI
             {
                 Trace.WriteLine(port);
             }
+
+        
         }
 
 

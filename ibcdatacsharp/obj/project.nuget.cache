@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kKtHLcKy/01LDkeAdS8x6HABUaTbSeSEuV/EjpYCYqCWCctNAV0mYlkoV7cwqrJ9OePmYFG8iJAu4WKA/FEo3g==",
+  "dgSpecHash": "15ROpI7UtWW2k516UprgLlLCbNJDUQwxTuW8/UGMRzMj97ZuvEGn9uguWPFkIu2VNxTqHGDMg96WmgvS8PwIpw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\ibcdatacsharp.csproj",
   "expectedPackageFiles": [
@@ -29,6 +29,7 @@
     "C:\\Users\\Deva\\.nuget\\packages\\scottplot.wpf\\4.1.58\\scottplot.wpf.4.1.58.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.io.ports\\7.0.0\\system.io.ports.7.0.0.nupkg.sha512",
+    "C:\\Users\\Deva\\.nuget\\packages\\system.management.dll\\1.0.0\\system.management.dll.1.0.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
     "C:\\Users\\Deva\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
@@ -50,6 +51,16 @@
       "warningLevel": 1,
       "message": "Package 'RealTimeGraphX.WPF 1.0.17' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "RealTimeGraphX.WPF",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'System.Management.dll 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "System.Management.dll",
       "targetGraphs": [
         "net6.0-windows7.0"
       ]

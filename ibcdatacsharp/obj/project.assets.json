@@ -446,6 +446,15 @@
           }
         }
       },
+      "System.Management.dll/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/System.Management.dll": {}
+        },
+        "runtime": {
+          "lib/System.Management.dll": {}
+        }
+      },
       "System.Memory/4.5.4": {
         "type": "package",
         "compile": {
@@ -1025,6 +1034,18 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "System.Management.dll/1.0.0": {
+      "sha512": "YZH14kyNOJ6OUUYYlbAdkydPWvnvedjVMp99I1EIXTj5IS/lNI38u1V+K7nlZyr9m8sIYdG6Ycy0kWBpCSnmjQ==",
+      "type": "package",
+      "path": "system.management.dll/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/System.Management.dll",
+        "system.management.dll.1.0.0.nupkg.sha512",
+        "system.management.dll.nuspec"
+      ]
+    },
     "System.Memory/4.5.4": {
       "sha512": "1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw==",
       "type": "package",
@@ -1137,7 +1158,8 @@
       "RealTimeGraphX.WPF >= 1.0.17",
       "ScottPlot.WPF >= 4.1.58",
       "System.Drawing.Common >= 6.0.0",
-      "System.IO.Ports >= 7.0.0"
+      "System.IO.Ports >= 7.0.0",
+      "System.Management.dll >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1245,6 +1267,10 @@
           "System.IO.Ports": {
             "target": "Package",
             "version": "[7.0.0, )"
+          },
+          "System.Management.dll": {
+            "target": "Package",
+            "version": "[1.0.0, )"
           }
         },
         "imports": [
@@ -1287,6 +1313,16 @@
       "warningLevel": 1,
       "message": "Package 'RealTimeGraphX.WPF 1.0.17' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "RealTimeGraphX.WPF",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'System.Management.dll 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "System.Management.dll",
       "targetGraphs": [
         "net6.0-windows7.0"
       ]
