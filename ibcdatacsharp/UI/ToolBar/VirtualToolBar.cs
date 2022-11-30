@@ -134,11 +134,14 @@ namespace ibcdatacsharp.UI.ToolBar
             
 
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-
-            mainWindow.api.StopStream(out error);
+           
 
             if (pauseState == PauseState.Play)
             {
+
+                //Para parar el streaming
+                mainWindow.api.StopStream(out error);
+
                 pauseState = PauseState.Pause;
                 toolBar.changePauseState(PauseState.Play);
                 menuBar.changePauseState(PauseState.Play);
@@ -149,6 +152,10 @@ namespace ibcdatacsharp.UI.ToolBar
             }
             else if(pauseState == PauseState.Pause)
             {
+
+                //Para reaunadar el streaming
+                mainWindow.api.StartStream(out error);
+
                 pauseState = PauseState.Play;
                 toolBar.changePauseState(PauseState.Pause);
                 menuBar.changePauseState(PauseState.Pause);

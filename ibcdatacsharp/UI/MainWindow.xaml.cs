@@ -114,7 +114,7 @@ namespace ibcdatacsharp.UI
         private void ShowPorts()
         {
 
-            
+            string[] ports = SerialPort.GetPortNames();
 
             Trace.WriteLine("The following serial ports were found:");
 
@@ -379,11 +379,20 @@ namespace ibcdatacsharp.UI
                                 scanAux.Add(scanDevices[i]);
                             }
                         }
+                        
+                        // Operación atómica de conexión
+
                         api.Connect(scanAux, out error);
-                        api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
+                        //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
                         Thread.Sleep(1000);
-                        api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
+                        api.SetDevicesConfigurations(100, 3, out error);
                         Thread.Sleep(1000);
+                        api.SetRTCDevices(GetDateTime(), out error);
+                        //api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
+                        Thread.Sleep(1000);
+
+                        // Fin Operación atómica de conexión
+
                         //EndWise
 
                         deviceListClass.connectIMU(treeViewItem);
