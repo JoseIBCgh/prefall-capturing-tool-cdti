@@ -11,6 +11,7 @@ namespace ibcdatacsharp.UI.DeviceList
 {
     public partial class DeviceList : Page
     {
+        private const int MAX_IMU_USED = 2;
         public DeviceList()
         {
             InitializeComponent();
@@ -165,6 +166,30 @@ namespace ibcdatacsharp.UI.DeviceList
             IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
             imuInfo.connected = false;
             treeViewItem.Foreground = new SolidColorBrush(Colors.Black);
+        }
+        private void onCheckIMU(object sender, RoutedEventArgs e)
+        {
+            if(numIMUsUsed > MAX_IMU_USED)
+            {
+                MessageBox.Show("Solo puedes seleccionar dos IMUs", caption:null, 
+                    button:MessageBoxButton.OK, icon: MessageBoxImage.Warning);
+                (sender as CheckBox).IsChecked = false;
+            }
+        }
+        public int numIMUsUsed
+        {
+            get
+            {
+                int n = 0;
+                foreach(IMUInfo imu in VM.IMUs)
+                {
+                    if (imu.used)
+                    {
+                        n++;
+                    }
+                }
+                return n;
+            }
         }
     }
 }
