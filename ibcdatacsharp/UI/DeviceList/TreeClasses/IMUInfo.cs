@@ -44,6 +44,8 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<bool>("used"); }
             set { SetValue("used", value); }
         }
+
+        public IMUInfo() { }
         public IMUInfo(int id, string name, string adress)
         {
             this.id = id;

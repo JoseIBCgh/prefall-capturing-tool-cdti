@@ -68,7 +68,7 @@ namespace ibcdatacsharp.UI
 
         public List<int> counter;
 
-        private List<Wisewalk.Dev> scanDevices = null;
+        private List<Wisewalk.Dev> scanDevices = new List<Wisewalk.Dev>();
 
         private List<Wisewalk.Dev> scanAux;
 
@@ -93,6 +93,9 @@ namespace ibcdatacsharp.UI
             public string description;
         }
 
+        public IMUInfo imuInfo;
+        public List<int> devHandlers;
+
         //end Wiseware API
         public MainWindow()
         {
@@ -108,12 +111,13 @@ namespace ibcdatacsharp.UI
 
             //Begin Wisewalk API
             ports = new List<Wisewalk.ComPort>();
-
+            devHandlers = new List<int>();
             devices_list = new Dictionary<string, WisewalkSDK.Device>();
 
             counter = new List<int>();
             api = new Wisewalk();
             scanAux = new List<Wisewalk.Dev>();
+            imuInfo = new IMUInfo();
 
             version = api.GetApiVersion();
             api.scanFinished += Api_scanFinished;
@@ -382,7 +386,8 @@ namespace ibcdatacsharp.UI
                         }
                     }
 
-                    Thread.Sleep(4000);
+                    await Task.Delay(4000);
+
                     for (int i = 0; i < scanDevices.Count; i++)
                     {
                         deviceListClass.addIMU(new IMUInfo(i, "ActiSense", GetMacAddress(scanDevices, i)));
@@ -408,7 +413,7 @@ namespace ibcdatacsharp.UI
         private void onConnect(object sender, EventArgs e)
         {
             // Funcion que se ejecuta al clicar el boton connect
-            void onConnectFunction()
+            async void onConnectFunction()
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 object selected = deviceListClass.treeView.SelectedItem;
@@ -419,32 +424,37 @@ namespace ibcdatacsharp.UI
                         TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
 
                         //´Wise connecting
-                        IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
+                        imuInfo = treeViewItem.DataContext as IMUInfo;
 
-                        for (var i = 0; i < scanDevices.Count; i++)
-                        {
-                            if (i == imuInfo.id)
-                            {
-                                scanAux.Add(scanDevices[i]);
-                            }
-                        }
-                        
+                        Trace.WriteLine("::OnConnect::: Imu seleccionado: " + imuInfo.id.ToString());
+                        scanAux.Add(scanDevices[imuInfo.id]);
                         // Operación atómica de conexión
 
                         api.Connect(scanAux, out error);
                         //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
-                        Thread.Sleep(1000);
-                        api.SetDevicesConfigurations(100, 3, out error);
-                        Thread.Sleep(1000);
-                        api.SetRTCDevices(GetDateTime(), out error);
+                        await Task.Delay(1000);
+                        api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
+                        await Task.Delay(1000);
+                        api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
                         //api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
-                        Thread.Sleep(1000);
+                        await Task.Delay(1000);
 
                         // Fin Operación atómica de conexión
+                        
+                       
 
                         //EndWise
 
                         deviceListClass.connectIMU(treeViewItem);
+                        
+                        //Borrar si existe
+
+                        if (devHandlers.Contains(imuInfo.id)) 
+                        {
+                            devHandlers.Remove(imuInfo.id);
+
+                        }
+                        
                     }
                     else if (selected is CameraInfo)
                     {
@@ -469,13 +479,17 @@ namespace ibcdatacsharp.UI
                     //Begin Wise
                     IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
 
+                    
                     for (int i = 0; i < scanAux.Count; i++)
                     {
                         if (i == imuInfo.id)
                         {
-                            List<int> devHandlers = new List<int>();
-                            devHandlers.Add(i);
-                            api.Disconnect(devHandlers, out error);
+                            if (!devHandlers.Contains(imuInfo.id))
+                            {
+                                devHandlers.Add(i);
+                                api.Disconnect(devHandlers, out error);
+                            }
+                            
                         }
                     }
                     //End Wise
