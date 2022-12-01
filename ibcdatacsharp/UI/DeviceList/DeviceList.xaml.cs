@@ -203,5 +203,12 @@ namespace ibcdatacsharp.UI.DeviceList
                 return VM.IMUs.Where(i => i.used).ToList();
             }
         }
+        public List<IMUInfo> IMUsUnused
+        {
+            get
+            {
+                return VM.IMUs.Where(i => !i.used).ToList();
+            }
+        }
     }
 }

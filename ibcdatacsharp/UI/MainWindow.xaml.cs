@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using Application = System.Windows.Application;
 using System.Threading;
 using System.IO.Ports;
+using System.Linq;
 
 namespace ibcdatacsharp.UI
 {
@@ -408,11 +409,18 @@ namespace ibcdatacsharp.UI
         }
         private void setActiveDevices()
         {
+            List<IMUInfo> unactiveIMUs = (deviceList.Content as DeviceList.DeviceList).IMUsUnused;
             List<IMUInfo> activeIMUs = (deviceList.Content as DeviceList.DeviceList).IMUsUsed;
+
+            List<int> unactiveIds = unactiveIMUs.Select(imu => (int)imu.id).ToList();
+            if(unactiveIds.Count > 0)
+            {
+                api.Disconnect(unactiveIds, out error);
+            }
 
             foreach(IMUInfo imu in activeIMUs)
             {
-                Trace.WriteLine(imu.adress);
+                Trace.WriteLine("set active devices " + imu.adress);
                 api.SetDeviceConfiguration((byte)imu.id, 100, 3, out error);
                 Thread.Sleep(1000);
                 api.SetRTCDevice((byte)imu.id, GetDateTime(), out error);
