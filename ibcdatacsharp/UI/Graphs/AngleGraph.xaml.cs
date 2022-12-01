@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace ibcdatacsharp.UI.Graphs.AngleGraph
+namespace ibcdatacsharp.UI.Graphs
 {
     /// <summary>
     /// Lógica de interacción para AngleGraph.xaml
@@ -23,15 +23,15 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             device = mainWindow.device;
             DataContext = this;
         }
-        public Model modelX { get; private set; }
-        public Model modelY { get; private set; }
-        public Model modelZ { get; private set; }
+        public Model1S modelX { get; private set; }
+        public Model1S modelY { get; private set; }
+        public Model1S modelZ { get; private set; }
         // Funcion para inicializar los graficos
         private void initModels()
         {
-            modelX = new Model(angleX);
-            modelY = new Model(angleY);
-            modelZ = new Model(angleZ);
+            modelX = new Model1S(angleX);
+            modelY = new Model1S(angleY);
+            modelZ = new Model1S(angleZ);
         }
         public void initCapture()
         {

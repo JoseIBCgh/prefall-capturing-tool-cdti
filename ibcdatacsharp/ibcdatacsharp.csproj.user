@@ -7,7 +7,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="UI\Graphs\AngleGraph\AngleGraph.xaml.cs">
+    <Compile Update="UI\Graphs\AngleGraph.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\CamaraViewport\CamaraViewport.xaml.cs">
@@ -22,13 +22,19 @@
     <Compile Update="UI\FileSaver\SavingMenu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\Graphs\GraphWindow\GraphAccelerometer.xaml.cs">
+    <Compile Update="UI\Graphs\AngleGraphX.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\Graphs\GraphWindow\GraphGyroscope.xaml.cs">
+    <Compile Update="UI\Graphs\GraphAccelerometer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\Graphs\GraphWindow\GraphMagnetometer.xaml.cs">
+    <Compile Update="UI\Graphs\GraphGyroscope.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Graphs\GraphLinAcc.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Graphs\GraphMagnetometer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\MenuBar\MenuBar.xaml.cs">
@@ -45,7 +51,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="UI\Graphs\AngleGraph\AngleGraph.xaml">
+    <Page Update="UI\Graphs\AngleGraph.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\CamaraViewport\CamaraViewport.xaml">
@@ -60,13 +66,25 @@
     <Page Update="UI\FileSaver\SavingMenu.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UI\Graphs\GraphWindow\GraphAccelerometer.xaml">
+    <Page Update="UI\Graphs\AngleGraphZ.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UI\Graphs\GraphWindow\GraphGyroscope.xaml">
+    <Page Update="UI\Graphs\AngleGraphY.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UI\Graphs\GraphWindow\GraphMagnetometer.xaml">
+    <Page Update="UI\Graphs\AngleGraphX.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\GraphAccelerometer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\GraphGyroscope.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\GraphLinAcc.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\GraphMagnetometer.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\MainWindow.xaml">

@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace ibcdatacsharp.UI.Graphs.GraphWindow
+namespace ibcdatacsharp.UI.Graphs
 {
     /// <summary>
     /// Lógica de interacción para GraphAccelerometer.xaml
@@ -15,16 +15,16 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
-        public Model model { get; private set; }
+        public Model3S model { get; private set; }
         public GraphAccelerometer()
         {
             InitializeComponent();
-            model = new Model(plot, -200, 200, title: "Accelerometer", units: "m/s^2");
+            model = new Model3S(plot, -200, 200, title: "Accelerometer", units: "m/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("m/s^2");             ;
+            this.plot.Plot.YLabel("m/s^2");
         }
         public void initCapture()
         {

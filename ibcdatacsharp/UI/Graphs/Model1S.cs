@@ -3,10 +3,10 @@ using ScottPlot.Plottable;
 using System;
 using System.Drawing;
 
-namespace ibcdatacsharp.UI.Graphs.AngleGraph
+namespace ibcdatacsharp.UI.Graphs
 {
     // Modelo de los graficos del acelerometro, giroscopio y magnetometro
-    public class Model
+    public class Model1S
     {
         private const int RIGHT_SEPARATION = 20;
         private const int MAX_POINTS = 100;
@@ -22,12 +22,10 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         private HSpan line;
         private double lineWidth = 0.2;
 
-        public Model(WpfPlot plot)
+        public Model1S(WpfPlot plot)
         {
             this.plot = plot;
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
-            plot.Plot.XAxis2.SetSizeLimit(max: 5, pad: 0);
-            plot.Plot.XAxis.SetSizeLimit(pad: 0);
             plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
             paintAreas();
             line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.Red);
@@ -103,7 +101,7 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
         public void render()
         {
             int index = nextIndex - 1;
-            if(index < 0)
+            if (index < 0)
             {
                 index = 0;
             }
@@ -120,13 +118,14 @@ namespace ibcdatacsharp.UI.Graphs.AngleGraph
             plot.Render();
         }
         // Usar esto para actualizar la line tambien
-        private int maxRenderIndex{ 
-            set 
+        private int maxRenderIndex
+        {
+            set
             {
                 signalPlot.MaxRenderIndex = value;
                 line.X1 = value - lineWidth;
                 line.X2 = value + lineWidth;
-            } 
+            }
         }
     }
 }

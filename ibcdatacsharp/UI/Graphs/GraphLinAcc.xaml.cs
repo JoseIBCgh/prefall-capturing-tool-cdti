@@ -1,49 +1,69 @@
 ﻿using ibcdatacsharp.UI.Device;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace ibcdatacsharp.UI.Graphs.GraphWindow
+namespace ibcdatacsharp.UI.Graphs
 {
     /// <summary>
-    /// Lógica de interacción para GraphGyroscope.xaml
+    /// Lógica de interacción para GraphLinAcc.xaml
     /// </summary>
-    public partial class GraphGyroscope : Page, GraphInterface
+    public partial class GraphLinAcc : Page, GraphInterface
     {
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
-        public Model model { get; private set; }
-        public GraphGyroscope()
+        public Model3S model { get; private set; }
+        public GraphLinAcc()
         {
             InitializeComponent();
-            model = new Model(plot, -50, 50, title: "Gyroscope", units: "g/s^2");
+            model = new Model3S(plot, -200, 200, title: "Accelerometer", units: "m/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
-
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("grados/s");
+            this.plot.Plot.YLabel("m/s^2"); ;
         }
         public void initCapture()
         {
             model.initCapture();
         }
+        public async void drawRealTimeData(double accX, double accY, double accZ)
+        {
+            double[] acc = new double[3] { accX, accY, accZ };
+
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(acc);
+            });
+
+        }
         public async void drawData(GraphData data)
         {
-            double[] gyrX = new double[data.length];
-            double[] gyrY = new double[data.length];
-            double[] gyrZ = new double[data.length];
+            double[] accX = new double[data.length];
+            double[] accY = new double[data.length];
+            double[] accZ = new double[data.length];
             for (int i = 0; i < data.length; i++)
             {
-                gyrX[i] = data[i].gyrX;
-                gyrY[i] = data[i].gyrY;
-                gyrZ[i] = data[i].gyrZ;
+                accX[i] = data[i].accX;
+                accY[i] = data[i].accY;
+                accZ[i] = data[i].accZ;
             }
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                model.updateData(gyrX, gyrY, gyrZ);
+                model.updateData(accX, accY, accZ);
             });
         }
         public async void onUpdateTimeLine(object sender, int frame)
@@ -53,11 +73,11 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
                 model.updateIndex(frame);
             });
         }
-        // Devuelve los datos del Giroscopio
+        // Devuelve los datos del Acelerometro
         private double[] getData()
         {
             RawArgs rawArgs = device.rawData;
-            return rawArgs.gyroscope;
+            return rawArgs.accelerometer;
         }
         // Actualiza los datos
         public async void onTick(object sender, EventArgs e)
@@ -65,39 +85,35 @@ namespace ibcdatacsharp.UI.Graphs.GraphWindow
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
                 model.updateData(getData());
+
+
             });
         }
         // Borra el contenido de los graficos
         public async void clearData()
         {
-            await Application.Current.Dispatcher.BeginInvoke(CLEAR_PRIORITY, () =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 model.clear();
             });
         }
-        // Actualiza el renderizado
-        public async void onRender(object sender, EventArgs e)
-        {
-            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
-            {
-                model.render();
-            });
-        }
+
+        //Actualiza el render
 
         public async void render()
         {
-            await Application.Current.Dispatcher.InvokeAsync( () =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 model.render();
             });
         }
-        public async void drawRealTimeData(double accX, double accY, double accZ)
-        {
-            double[] acc = new double[3] { accX, accY, accZ };
 
-            await Application.Current.Dispatcher.InvokeAsync( () =>
+        // Actualiza el render
+        public async void onRender(object sender, EventArgs e)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                model.updateData(acc);
+                model.render();
             });
         }
     }

@@ -2,8 +2,6 @@
 using ibcdatacsharp.UI.DeviceList;
 using ibcdatacsharp.UI.FileSaver;
 using ibcdatacsharp.UI.Graphs;
-using ibcdatacsharp.UI.Graphs.AngleGraph;
-using ibcdatacsharp.UI.Graphs.GraphWindow;
 using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
 using MS.WindowsAPICodePack.Internal;
@@ -48,7 +46,10 @@ namespace ibcdatacsharp.UI
             graphs.Add(mainWindow.accelerometer);
             graphs.Add(mainWindow.gyroscope);
             graphs.Add(mainWindow.magnetometer);
-            graphs.Add(mainWindow.angle);
+            graphs.Add(mainWindow.linAcc);
+            graphs.Add(mainWindow.angleX);
+            graphs.Add(mainWindow.angleY);
+            graphs.Add(mainWindow.angleZ);
             if (mainWindow.timeLine.Content == null)
             {
                 mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
@@ -107,9 +108,9 @@ namespace ibcdatacsharp.UI
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
 
-        public Graphs.GraphWindow.GraphAccelerometer accelerometer;
-        public Graphs.GraphWindow.GraphGyroscope gyroscope;
-        public Graphs.GraphWindow.GraphMagnetometer magnetometer;
+        public Graphs.GraphAccelerometer accelerometer;
+        public Graphs.GraphGyroscope gyroscope;
+        public Graphs.GraphMagnetometer magnetometer;
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
@@ -212,34 +213,34 @@ namespace ibcdatacsharp.UI
                 {
                     mainWindow.accelerometer.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
-                        accelerometer = mainWindow.accelerometer.Content as Graphs.GraphWindow.GraphAccelerometer;
+                        accelerometer = mainWindow.accelerometer.Content as GraphAccelerometer;
                     };
                 }
                 else
                 {
-                    accelerometer = mainWindow.accelerometer.Content as Graphs.GraphWindow.GraphAccelerometer;
+                    accelerometer = mainWindow.accelerometer.Content as GraphAccelerometer;
                 }
                 if (mainWindow.gyroscope.Content == null)
                 {
                     mainWindow.gyroscope.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
-                        gyroscope = mainWindow.gyroscope.Content as Graphs.GraphWindow.GraphGyroscope;
+                        gyroscope = mainWindow.gyroscope.Content as GraphGyroscope;
                     };
                 }
                 else
                 {
-                    gyroscope = mainWindow.gyroscope.Content as Graphs.GraphWindow.GraphGyroscope;
+                    gyroscope = mainWindow.gyroscope.Content as GraphGyroscope;
                 }
                 if (mainWindow.magnetometer.Content == null)
                 {
                     mainWindow.magnetometer.Navigated += delegate (object sender, NavigationEventArgs e)
                     {
-                        magnetometer = mainWindow.magnetometer.Content as Graphs.GraphWindow.GraphMagnetometer;
+                        magnetometer = mainWindow.magnetometer.Content as GraphMagnetometer;
                     };
                 }
                 else
                 {
-                    magnetometer = mainWindow.magnetometer.Content as Graphs.GraphWindow.GraphMagnetometer;
+                    magnetometer = mainWindow.magnetometer.Content as GraphMagnetometer;
                 }
 
                 virtualToolBar.pauseEvent += onPause; //funcion local

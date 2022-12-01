@@ -13,7 +13,7 @@ namespace ibcdatacsharp.UI.Graphs
         public void onUpdateTimeLine(object sender, int frame);
         // Se ejecuta cuando hay que añadir nuevos puntos al grafo
 
-        public void drawRealTimeData(double accX, double accY, double accZ);
+        //public void drawRealTimeData(double accX, double accY, double accZ);
         public void onTick(object sender, EventArgs e);
         // Borra los datos
         public void clearData();

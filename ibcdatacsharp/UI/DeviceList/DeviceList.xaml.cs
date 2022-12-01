@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,10 +14,16 @@ namespace ibcdatacsharp.UI.DeviceList
     public partial class DeviceList : Page
     {
         private const int MAX_IMU_USED = 2;
+        private const Key multiselectKey = Key.LeftCtrl;
+        private bool multiSelectionKeyPressed = false;
+        public List<TreeViewItem> selected { get;private set; } 
         public DeviceList()
         {
             InitializeComponent();
             baseItem.IsExpanded = true;
+            selected = new List<TreeViewItem>();
+            this.KeyDown += new KeyEventHandler(onKeyDownHandler);
+            this.KeyUp += new KeyEventHandler(onKeyUpHandler);
         }
 
         // Funciones para eliminar todos los elementos de IMU, camara y Insoles
@@ -143,7 +150,89 @@ namespace ibcdatacsharp.UI.DeviceList
             }
             connectCamera((TreeViewItem)sender);
         }
+        private void onSelected(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem clicked = (TreeViewItem)sender;
+            if (multiSelectionKeyPressed)
+            {
+                Trace.WriteLine("multiselect");
+                if (!selected.Contains(clicked))
+                {
+                    selected.Add(clicked);
+                }
+            }
+            else
+            {
+                Trace.WriteLine("single select");
+                foreach (TreeViewItem item in selected)
+                {
+                    if (item != clicked)
+                    {
+                        item.IsSelected = false;
+                    }
+                }
+                selected = selected.Where(x => x == clicked).ToList();
+            }
+        }
+        private void onMouseDown(object sender, MouseButtonEventArgs args)
+        {
+            Trace.WriteLine("onMouseDown");
+            TreeViewItem clicked = (TreeViewItem)sender;
+            if (sender is TreeViewItem)
+            {
+                if (!clicked.IsSelected)
+                {
+                    return;
+                }
+            }
+            if (multiSelectionKeyPressed)
+            {
+                Trace.WriteLine("multiselect");
+                if (!selected.Contains(clicked))
+                {
+                    selected.Add(clicked);
+                }
+            }
+            else
+            {
+                Trace.WriteLine("single select");
+                foreach (TreeViewItem item in selected)
+                {
+                    if (item != clicked)
+                    {
+                        item.IsSelected = false;
+                    }
+                }
+                selected = selected.Where(x => x == clicked).ToList();
+            }
+        }
+        private void onMouseUp(object sender, MouseButtonEventArgs args)
+        {
+            TreeViewItem clicked = (TreeViewItem)sender;
+            if (sender is TreeViewItem)
+            {
+                if (!clicked.IsSelected)
+                {
+                    return;
+                }
+            }
+            args.Handled = true;
+        }
         #endregion
+        private void onKeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == multiselectKey)
+            {
+                multiSelectionKeyPressed = true;
+            }
+        }
+        private void onKeyUpHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == multiselectKey)
+            {
+                multiSelectionKeyPressed = false;
+            }
+        }
         // Funcion que se llama al conectar un IMU (doble click o boton connect) para cambiar el TreeView
         public void connectIMU(TreeViewItem treeViewItem)
         {
