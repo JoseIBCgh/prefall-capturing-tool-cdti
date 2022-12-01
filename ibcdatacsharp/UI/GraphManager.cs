@@ -250,9 +250,12 @@ namespace ibcdatacsharp.UI
                 }
                 device.initTimer();
             }
-           
 
-            mainWindow.api.StartStream(out error);
+
+            Trace.WriteLine("Imu seleccionado en el graphmanager: ", mainWindow.imuInfo.id.ToString());
+
+            mainWindow.startActiveDevices();
+
 
         }
         public void deactivate()

@@ -85,7 +85,9 @@ C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\RealTim
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\RealTimeGraphX.WPF.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ScottPlot.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ScottPlot.WPF.dll
+C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\System.CodeDom.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\System.IO.Ports.dll
+C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\System.Management.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\ca-ES\AvalonDock.resources.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\cs-CZ\AvalonDock.resources.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\de\AvalonDock.resources.dll
@@ -114,6 +116,7 @@ C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtime
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\osx-x64\native\libSystem.IO.Ports.Native.dylib
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\unix\lib\net6.0\System.IO.Ports.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.IO.Ports.dll
+C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.Management.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\bin\Debug\net6.0-windows\WisewalkSDK.dll
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\ibcdatacsharp.csproj.AssemblyReference.cache
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\UI\CamaraViewport\CamaraViewport.g.cs

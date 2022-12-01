@@ -18,6 +18,8 @@ using System.Windows.Forms;
 using Application = System.Windows.Application;
 using System.Threading;
 using System.IO.Ports;
+using System.Text.RegularExpressions;
+using System.Management;
 using System.Linq;
 
 namespace ibcdatacsharp.UI
@@ -39,6 +41,9 @@ namespace ibcdatacsharp.UI
         //Wiseware API
 
         private const string pathDir = @"c:\Wiseware\Wisewalk-API\";
+
+        private const string vidPattern = @"VID_([0-9A-F]{4})";
+        private const string pidPattern = @"PID_([0-9A-F]{4})";
 
         private const int ColumnBatteryIndex = 2;
         private const int ColumnNPacketsIndex = 5;
@@ -62,9 +67,9 @@ namespace ibcdatacsharp.UI
 
         public List<int> counter;
 
-        private List<Wisewalk.Dev> scanDevices = null;
+        private List<Wisewalk.Dev> scanDevices = new List<Wisewalk.Dev>();
 
-        private List<Wisewalk.Dev> scanAux;
+        private List<Wisewalk.Dev> conn_list_dev;
 
         private bool devConnected = false;
 
@@ -74,8 +79,21 @@ namespace ibcdatacsharp.UI
         private short handlerSelected = -1;
         float[] acc = new float[3];
 
-
+        List<ComPort> ports2;
         string error = "";
+
+        string port_selected = "";
+
+        struct ComPort // custom struct with our desired values
+        {
+            public string name;
+            public string vid;
+            public string pid;
+            public string description;
+        }
+
+        public IMUInfo imuInfo;
+        public List<int> devHandlers;
 
         //end Wiseware API
         public MainWindow()
@@ -92,12 +110,13 @@ namespace ibcdatacsharp.UI
 
             //Begin Wisewalk API
             ports = new List<Wisewalk.ComPort>();
-
+            devHandlers = new List<int>();
             devices_list = new Dictionary<string, WisewalkSDK.Device>();
 
             counter = new List<int>();
             api = new Wisewalk();
-            scanAux = new List<Wisewalk.Dev>();
+            conn_list_dev = new List<Wisewalk.Dev>();
+            imuInfo = new IMUInfo();
 
             version = api.GetApiVersion();
             api.scanFinished += Api_scanFinished;
@@ -112,17 +131,49 @@ namespace ibcdatacsharp.UI
 
         //Callback de Escaneo
 
+        private List<ComPort> GetSerialPorts()
+        {
+            using (var searcher = new ManagementObjectSearcher
+                ("SELECT * FROM WIN32_SerialPort"))
+            {
+                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
+                return ports.Select(p =>
+                {
+                    ComPort c = new ComPort();
+                    c.name = p.GetPropertyValue("DeviceID").ToString();
+                    c.vid = p.GetPropertyValue("PNPDeviceID").ToString();
+                    c.description = p.GetPropertyValue("Caption").ToString();
+
+                    Match mVID = Regex.Match(c.vid, vidPattern, RegexOptions.IgnoreCase);
+                    Match mPID = Regex.Match(c.vid, pidPattern, RegexOptions.IgnoreCase);
+
+                    if (mVID.Success)
+                        c.vid = mVID.Groups[1].Value;
+                    if (mPID.Success)
+                        c.pid = mPID.Groups[1].Value;
+
+                    return c;
+
+                }).ToList();
+            }
+        }
+
+        // Selección de puerto sin tener que ponerlo manualmente
+        // En pruebas.
         private void ShowPorts()
         {
 
-            string[] ports = SerialPort.GetPortNames();
 
-            Trace.WriteLine("The following serial ports were found:");
-
-            // Display each port name to the console.
-            foreach (string port in ports)
+            ports = api.GetUsbDongles();
+            foreach (Wisewalk.ComPort port in ports)
             {
-                Trace.WriteLine(port);
+                Match match1 = Regex.Match(port.description, "nRF52 USB CDC BLE*", RegexOptions.IgnoreCase);
+                if (match1.Success)
+                {
+                    port_selected = port.name;
+                    Trace.WriteLine(port.description);
+
+                }
             }
         }
 
@@ -272,7 +323,7 @@ namespace ibcdatacsharp.UI
             {
                 
                 ShowPorts();
-                api.Open("COM3", out error);
+                api.Open(port_selected, out error);
 
                 if (!api.ScanDevices(out error))
                 {
@@ -334,7 +385,8 @@ namespace ibcdatacsharp.UI
                         }
                     }
 
-                    Thread.Sleep(4000);
+                    await Task.Delay(4000);
+
                     for (int i = 0; i < scanDevices.Count; i++)
                     {
                         deviceListClass.addIMU(new IMUInfo(i, "ActiSense", GetMacAddress(scanDevices, i)));
@@ -360,7 +412,7 @@ namespace ibcdatacsharp.UI
         private void onConnect(object sender, EventArgs e)
         {
             // Funcion que se ejecuta al clicar el boton connect
-            void onConnectFunction()
+            async void onConnectFunction()
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 object selected = deviceListClass.treeView.SelectedItem;
@@ -371,32 +423,39 @@ namespace ibcdatacsharp.UI
                         TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
 
                         //´Wise connecting
-                        IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
+                        imuInfo = treeViewItem.DataContext as IMUInfo;
 
-                        for (var i = 0; i < scanDevices.Count; i++)
-                        {
-                            if (i == imuInfo.id)
-                            {
-                                scanAux.Add(scanDevices[i]);
-                            }
-                        }
-                        
+                        Trace.WriteLine("::OnConnect::: Imu seleccionado: " + imuInfo.id.ToString());
+
+
                         // Operación atómica de conexión
+                        conn_list_dev.Add(scanDevices[imuInfo.id]);
+                        devHandlers.Remove(imuInfo.id);
 
-                        api.Connect(scanAux, out error);
+                        api.Connect(conn_list_dev, out error);
                         //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
-                        Thread.Sleep(1000);
-                        //api.SetDevicesConfigurations(100, 3, out error);
-                        //Thread.Sleep(1000);
-                        //api.SetRTCDevices(GetDateTime(), out error);
+
+                        await Task.Delay(1000);
+                        api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
+                        await Task.Delay(1000);
+                        api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
                         //api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
-                        //Thread.Sleep(1000);
+                        await Task.Delay(1000);
 
                         // Fin Operación atómica de conexión
-
+                        
                         //EndWise
 
                         deviceListClass.connectIMU(treeViewItem);
+                        
+                        //Borrar si existe
+
+                        if (devHandlers.Contains(imuInfo.id)) 
+                        {
+                            devHandlers.Remove(imuInfo.id);
+
+                        }
+                        
                     }
                     else if (selected is CameraInfo)
                     {
@@ -407,24 +466,14 @@ namespace ibcdatacsharp.UI
             }
             deviceListLoadedCheck(onConnectFunction);
         }
-        private void setActiveDevices()
+        public void startActiveDevices()
         {
-            List<IMUInfo> unactiveIMUs = (deviceList.Content as DeviceList.DeviceList).IMUsUnused;
             List<IMUInfo> activeIMUs = (deviceList.Content as DeviceList.DeviceList).IMUsUsed;
 
-            List<int> unactiveIds = unactiveIMUs.Select(imu => (int)imu.id).ToList();
-            if(unactiveIds.Count > 0)
-            {
-                api.Disconnect(unactiveIds, out error);
-            }
 
             foreach(IMUInfo imu in activeIMUs)
             {
-                Trace.WriteLine("set active devices " + imu.adress);
-                api.SetDeviceConfiguration((byte)imu.id, 100, 3, out error);
-                Thread.Sleep(1000);
-                api.SetRTCDevice((byte)imu.id, GetDateTime(), out error);
-                Thread.Sleep(1000);
+                api.StartStream((byte)imu.id, out error);
             }
         }
         // Conecta el boton disconnect
@@ -441,20 +490,16 @@ namespace ibcdatacsharp.UI
                     //Begin Wise
                     IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
 
-                    for (int i = 0; i < scanAux.Count; i++)
-                    {
-                        if (i == imuInfo.id)
-                        {
-                            List<int> devHandlers = new List<int>();
-                            devHandlers.Add(i);
-                            api.Disconnect(devHandlers, out error);
-                        }
-                    }
-                    //End Wise
+                    devHandlers.Add(imuInfo.id);
 
+                    api.Disconnect(devHandlers, out error);
+                               
+                                                                               
                     deviceListClass.disconnectIMU(treeViewItem);
                 }
             }
+
+
             deviceListLoadedCheck(onDisconnectFunction);
         }
         // Conecta el boton Open Camera
@@ -482,7 +527,6 @@ namespace ibcdatacsharp.UI
         // Funcion que se ejecuta al clicar el boton Capture
         private void onCapture(object sender, EventArgs e)
         {
-            setActiveDevices();
             graphManager.initCapture(); 
         }
         // Funcion que se ejecuta al clicar el boton Pause

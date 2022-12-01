@@ -304,6 +304,14 @@
           }
         }
       },
+      "System.CodeDom/7.0.0": {
+        "runtime": {
+          "lib/net6.0/System.CodeDom.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.51805"
+          }
+        }
+      },
       "System.Drawing.Common/6.0.0": {
         "dependencies": {
           "Microsoft.Win32.SystemEvents": "6.0.0"
@@ -351,6 +359,33 @@
             "assetType": "runtime",
             "assemblyVersion": "7.0.0.0",
             "fileVersion": "7.0.22.51805"
+          }
+        }
+      },
+      "System.Management/7.0.0": {
+        "dependencies": {
+          "System.CodeDom": "7.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/System.Management.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "7.0.22.51805"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net6.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "7.0.22.51805"
+          }
+        }
+      },
+      "System.Management.dll/1.0.0": {
+        "runtime": {
+          "lib/System.Management.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.6.1055.0"
           }
         }
       },
@@ -528,6 +563,13 @@
       "path": "scottplot.wpf/4.1.58",
       "hashPath": "scottplot.wpf.4.1.58.nupkg.sha512"
     },
+    "System.CodeDom/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GLltyqEsE5/3IE+zYRP5sNa1l44qKl9v+bfdMcwg+M9qnQf47wK3H0SUR/T+3N4JEQXF3vV4CSuuo0rsg+nq2A==",
+      "path": "system.codedom/7.0.0",
+      "hashPath": "system.codedom.7.0.0.nupkg.sha512"
+    },
     "System.Drawing.Common/6.0.0": {
       "type": "package",
       "serviceable": true,
@@ -541,6 +583,20 @@
       "sha512": "sha512-0nWQjM5IofaIGpvkifN+LLuYwBG6BHlpmphLhhOJepcW12G8qToGuNDRgBzeTVBZzp33wVsESSZ8hUOCfq+8QA==",
       "path": "system.io.ports/7.0.0",
       "hashPath": "system.io.ports.7.0.0.nupkg.sha512"
+    },
+    "System.Management/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-A4jed4QUviDOm7fJNKAJObEAEkEUXmkGL/w0iyCYTzrl1rezTj8LGFHfsVst4Vb9JwFcTpboiDrvdST48avBpw==",
+      "path": "system.management/7.0.0",
+      "hashPath": "system.management.7.0.0.nupkg.sha512"
+    },
+    "System.Management.dll/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YZH14kyNOJ6OUUYYlbAdkydPWvnvedjVMp99I1EIXTj5IS/lNI38u1V+K7nlZyr9m8sIYdG6Ycy0kWBpCSnmjQ==",
+      "path": "system.management.dll/1.0.0",
+      "hashPath": "system.management.dll.1.0.0.nupkg.sha512"
     },
     "System.Memory/4.5.4": {
       "type": "package",
