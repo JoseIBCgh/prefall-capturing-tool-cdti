@@ -70,7 +70,7 @@ namespace ibcdatacsharp.UI
 
         private List<Wisewalk.Dev> scanDevices = new List<Wisewalk.Dev>();
 
-        private List<Wisewalk.Dev> scanAux;
+        private List<Wisewalk.Dev> conn_list_dev;
 
         private bool devConnected = false;
 
@@ -116,7 +116,7 @@ namespace ibcdatacsharp.UI
 
             counter = new List<int>();
             api = new Wisewalk();
-            scanAux = new List<Wisewalk.Dev>();
+            conn_list_dev = new List<Wisewalk.Dev>();
             imuInfo = new IMUInfo();
 
             version = api.GetApiVersion();
@@ -427,11 +427,15 @@ namespace ibcdatacsharp.UI
                         imuInfo = treeViewItem.DataContext as IMUInfo;
 
                         Trace.WriteLine("::OnConnect::: Imu seleccionado: " + imuInfo.id.ToString());
-                        scanAux.Add(scanDevices[imuInfo.id]);
-                        // Operación atómica de conexión
 
-                        api.Connect(scanAux, out error);
+
+                        // Operación atómica de conexión
+                        conn_list_dev.Add(scanDevices[imuInfo.id]);
+                        devHandlers.Remove(imuInfo.id);
+
+                        api.Connect(conn_list_dev, out error);
                         //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
+
                         await Task.Delay(1000);
                         api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
                         await Task.Delay(1000);
@@ -441,8 +445,6 @@ namespace ibcdatacsharp.UI
 
                         // Fin Operación atómica de conexión
                         
-                       
-
                         //EndWise
 
                         deviceListClass.connectIMU(treeViewItem);
@@ -479,24 +481,16 @@ namespace ibcdatacsharp.UI
                     //Begin Wise
                     IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
 
-                    
-                    for (int i = 0; i < scanAux.Count; i++)
-                    {
-                        if (i == imuInfo.id)
-                        {
-                            if (!devHandlers.Contains(imuInfo.id))
-                            {
-                                devHandlers.Add(i);
-                                api.Disconnect(devHandlers, out error);
-                            }
-                            
-                        }
-                    }
-                    //End Wise
+                    devHandlers.Add(imuInfo.id);
 
+                    api.Disconnect(devHandlers, out error);
+                               
+                                                                               
                     deviceListClass.disconnectIMU(treeViewItem);
                 }
             }
+
+
             deviceListLoadedCheck(onDisconnectFunction);
         }
         // Conecta el boton Open Camera
