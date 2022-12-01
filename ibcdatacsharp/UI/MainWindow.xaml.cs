@@ -385,11 +385,11 @@ namespace ibcdatacsharp.UI
                         api.Connect(scanAux, out error);
                         //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
                         Thread.Sleep(1000);
-                        api.SetDevicesConfigurations(100, 3, out error);
-                        Thread.Sleep(1000);
-                        api.SetRTCDevices(GetDateTime(), out error);
+                        //api.SetDevicesConfigurations(100, 3, out error);
+                        //Thread.Sleep(1000);
+                        //api.SetRTCDevices(GetDateTime(), out error);
                         //api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
-                        Thread.Sleep(1000);
+                        //Thread.Sleep(1000);
 
                         // Fin Operación atómica de conexión
 
@@ -405,6 +405,19 @@ namespace ibcdatacsharp.UI
                 }
             }
             deviceListLoadedCheck(onConnectFunction);
+        }
+        private void setActiveDevices()
+        {
+            List<IMUInfo> activeIMUs = (deviceList.Content as DeviceList.DeviceList).IMUsUsed;
+
+            foreach(IMUInfo imu in activeIMUs)
+            {
+                Trace.WriteLine(imu.adress);
+                api.SetDeviceConfiguration((byte)imu.id, 100, 3, out error);
+                Thread.Sleep(1000);
+                api.SetRTCDevice((byte)imu.id, GetDateTime(), out error);
+                Thread.Sleep(1000);
+            }
         }
         // Conecta el boton disconnect
         private void onDisconnect(object sender, EventArgs e)
@@ -461,6 +474,7 @@ namespace ibcdatacsharp.UI
         // Funcion que se ejecuta al clicar el boton Capture
         private void onCapture(object sender, EventArgs e)
         {
+            setActiveDevices();
             graphManager.initCapture(); 
         }
         // Funcion que se ejecuta al clicar el boton Pause

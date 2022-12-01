@@ -1,7 +1,8 @@
 ﻿using ibcdatacsharp.DeviceList.TreeClasses;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Reflection;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -188,7 +189,18 @@ namespace ibcdatacsharp.UI.DeviceList
                         n++;
                     }
                 }
-                return n;
+                if(n != IMUsUsed.Count)
+                {
+                    throw new Exception("IMUsUsed no funciona bien");
+                }
+                return IMUsUsed.Count; // Quitar todo menos esta linea si no salta ningun error
+            }
+        }
+        public List<IMUInfo> IMUsUsed
+        {
+            get
+            {
+                return VM.IMUs.Where(i => i.used).ToList();
             }
         }
     }
