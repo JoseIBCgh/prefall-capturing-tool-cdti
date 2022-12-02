@@ -1,40 +1,30 @@
 ﻿using ibcdatacsharp.UI.Device;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace ibcdatacsharp.UI.Graphs
 {
     /// <summary>
-    /// Lógica de interacción para AngularAcceleration.xaml
+    /// Lógica de interacción para AngularVelocity.xaml
     /// </summary>
-    public partial class AngularAcceleration : Page, GraphInterface
+    public partial class GraphAngularVelocity : Page, GraphInterface
     {
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
         public Model3S model { get; private set; }
-        public AngularAcceleration()
+        public GraphAngularVelocity()
         {
             InitializeComponent();
-            model = new Model3S(plot, -200, 200, title: "Acceleracion angular", units: "grados/s^2");
+            model = new Model3S(plot, -200, 200, title: "Velocidad angular", units: "grados/s");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("grados/s^2");
+            this.plot.Plot.YLabel("grados/s");
         }
         public void initCapture()
         {
@@ -50,6 +40,16 @@ namespace ibcdatacsharp.UI.Graphs
             });
 
         }
+        public async void drawRealTimeData(Vector3 data)
+        {
+            double[] array = new double[3] { data.X, data.Y, data.Z };
+
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(array);
+            });
+
+        }
         public async void drawData(GraphData data)
         {
             double[] x = new double[data.length];
@@ -57,7 +57,7 @@ namespace ibcdatacsharp.UI.Graphs
             double[] z = new double[data.length];
             for (int i = 0; i < data.length; i++)
             {
-                // cambiar esto
+                // Cambiar esto
                 x[i] = data[i].accX;
                 y[i] = data[i].accY;
                 z[i] = data[i].accZ;

@@ -240,7 +240,7 @@ namespace ibcdatacsharp.UI.ToolBar
                 using (var reader = new StreamReader(filename))
                 {
                     List<FrameData> data = new List<FrameData>();
-                    int linesToSkip = Config.csvHeader.Split('\n').Length - 1; //Hay un salto de linea al final del header
+                    int linesToSkip = Config.csvHeader1IMU.Split('\n').Length - 1; //Hay un salto de linea al final del header
                     Trace.WriteLine("linesToSkip", linesToSkip.ToString());
                     for(int i = 0; i < linesToSkip; i++)
                     {

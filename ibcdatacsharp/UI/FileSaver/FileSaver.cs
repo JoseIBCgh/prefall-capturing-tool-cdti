@@ -4,10 +4,12 @@ using ibcdatacsharp.UI.ToolBar.Enums;
 using OpenCvSharp;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Navigation;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace ibcdatacsharp.UI.FileSaver
 {
@@ -25,9 +27,11 @@ namespace ibcdatacsharp.UI.FileSaver
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
         private VideoWriter? videoWriter;
+        private DeviceList.DeviceList deviceList;
 
         private string? path;
         private string? csvFile;
+        private string? videoFile;
         private bool recordCSV;
         private bool recordVideo;
         private StringBuilder? csvData = new StringBuilder();
@@ -63,6 +67,17 @@ namespace ibcdatacsharp.UI.FileSaver
             else
             {
                 timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+            }
+            if (mainWindow.deviceList.Content == null)
+            {
+                mainWindow.deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
+                };
+            }
+            else
+            {
+                deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
             }
             virtualToolBar = mainWindow.virtualToolBar;
             device = mainWindow.device;
@@ -133,6 +148,7 @@ namespace ibcdatacsharp.UI.FileSaver
         private void onStopRecording(object sender)
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            string message = "";
             if (recordCSV)
             {
                 timerCsv.Stop();
@@ -140,6 +156,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 mainWindow.virtualToolBar.pauseEvent -= onPauseCsv;
                 saveCsvFile();
                 recordCSV = false;
+                message += "Csv grabado en " + csvFile + ". ";
             }
             if (recordVideo)
             { 
@@ -150,7 +167,9 @@ namespace ibcdatacsharp.UI.FileSaver
                 videoWriter = null;
 
                 recordVideo = false;
+                message += "Video grabado en " + videoFile + ". ";
             }
+            MessageBox.Show(message, caption:null, button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
         }
         // inicializa los ficheros para guardar csv y video
         private void initFiles()
@@ -173,12 +192,23 @@ namespace ibcdatacsharp.UI.FileSaver
             {
                 csvFile = baseFilename + ".txt";
                 csvData = new StringBuilder();
-                csvData.Append(Config.csvHeader);
+                if(deviceList.numIMUsUsed == 1)
+                {
+                    csvData.Append(Config.csvHeader1IMU);
+                }
+                else if(deviceList.numIMUsUsed == 2)
+                {
+                    csvData.Append(Config.csvHeader2IMUs);
+                }
+                else
+                {
+                    throw new Exception("try to record with " + deviceList.numIMUsUsed.ToString() + " IMUs");
+                }
                 initRecordCsv();
             }
             if (recordVideo)
             {
-                string videoFile = baseFilename + ".avi";
+                videoFile = baseFilename + ".avi";
                 string pathVideoFile = path + "\\" + videoFile;
                 videoWriter = new VideoWriter(pathVideoFile, FourCC.DIVX, Config.VIDEO_FPS_SAVE, new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
                 initRecordVideo();

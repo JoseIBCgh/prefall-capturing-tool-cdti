@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -47,6 +48,16 @@ namespace ibcdatacsharp.UI.Graphs
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 model.updateData(acc);
+            });
+
+        }
+        public async void drawRealTimeData(Vector3 data)
+        {
+            double[] array = new double[3] { data.X, data.Y, data.Z };
+
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(array);
             });
 
         }

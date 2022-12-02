@@ -110,9 +110,18 @@ namespace ibcdatacsharp.UI
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
 
-        public Graphs.GraphAccelerometer accelerometer;
-        public Graphs.GraphGyroscope gyroscope;
-        public Graphs.GraphMagnetometer magnetometer;
+        public GraphAccelerometer accelerometer;
+        public GraphGyroscope gyroscope;
+        public GraphMagnetometer magnetometer;
+        public GraphLinAcc linAcc;
+
+        public AngleGraphX angleX;
+        public AngleGraphY angleY;
+        public AngleGraphZ angleZ;
+        public GraphAngularVelocity angleVel;
+        public GraphAngularAcceleration angleAcc;
+
+        private int numIMUs;
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
@@ -155,6 +164,7 @@ namespace ibcdatacsharp.UI
         GraphGyroscope gyr;
         GraphMagnetometer mag;
 
+
         Vector3 v0, v1, v2, v3;
 
 
@@ -165,12 +175,116 @@ namespace ibcdatacsharp.UI
             this.graphs = graphs;
             this.virtualToolBar = virtualToolBar;
             this.device = device;
+            saveGraphs();
 
             mainWindow.virtualToolBar.saveEvent += onInitRecord;
 
         }
+        private void saveGraphs()
+        {
+            if (mainWindow.accelerometer.Content == null)
+            {
+                mainWindow.accelerometer.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    accelerometer = mainWindow.accelerometer.Content as GraphAccelerometer;
+                };
+            }
+            else
+            {
+                accelerometer = mainWindow.accelerometer.Content as GraphAccelerometer;
+            }
+            if (mainWindow.gyroscope.Content == null)
+            {
+                mainWindow.gyroscope.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    gyroscope = mainWindow.gyroscope.Content as GraphGyroscope;
+                };
+            }
+            else
+            {
+                gyroscope = mainWindow.gyroscope.Content as GraphGyroscope;
+            }
+            if (mainWindow.magnetometer.Content == null)
+            {
+                mainWindow.magnetometer.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    magnetometer = mainWindow.magnetometer.Content as GraphMagnetometer;
+                };
+            }
+            else
+            {
+                magnetometer = mainWindow.magnetometer.Content as GraphMagnetometer;
+            }
+            if (mainWindow.linAcc.Content == null)
+            {
+                mainWindow.linAcc.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    linAcc = mainWindow.linAcc.Content as GraphLinAcc;
+                };
+            }
+            else
+            {
+                linAcc = mainWindow.linAcc.Content as GraphLinAcc;
+            }
 
-       
+            if (mainWindow.angleX.Content == null)
+            {
+                mainWindow.angleX.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    angleX = mainWindow.angleX.Content as AngleGraphX;
+                };
+            }
+            else
+            {
+                angleX = mainWindow.angleX.Content as AngleGraphX;
+            }
+            if (mainWindow.angleY.Content == null)
+            {
+                mainWindow.angleY.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    angleY = mainWindow.angleY.Content as AngleGraphY;
+                };
+            }
+            else
+            {
+                angleY = mainWindow.angleY.Content as AngleGraphY;
+            }
+            if (mainWindow.angleZ.Content == null)
+            {
+                mainWindow.angleZ.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    angleZ = mainWindow.angleZ.Content as AngleGraphZ;
+                };
+            }
+            else
+            {
+                angleZ = mainWindow.angleZ.Content as AngleGraphZ;
+            }
+            if (mainWindow.angularVelocity.Content == null)
+            {
+                mainWindow.angularVelocity.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    angleVel = mainWindow.angularVelocity.Content as GraphAngularVelocity;
+                };
+            }
+            else
+            {
+                angleVel = mainWindow.angularVelocity.Content as GraphAngularVelocity;
+            }
+            if (mainWindow.angularAcceleration.Content == null)
+            {
+                mainWindow.angularAcceleration.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    angleAcc = mainWindow.angularAcceleration.Content as GraphAngularAcceleration;
+                };
+            }
+            else
+            {
+                angleAcc = mainWindow.angularAcceleration.Content as GraphAngularAcceleration;
+            }
+        }
+
+
         public void activate()
         {
 
@@ -192,9 +306,9 @@ namespace ibcdatacsharp.UI
                             GraphInterface graph = frame.Content as GraphInterface;
 
                             graph.initCapture();
-                            
-              
-                            
+
+
+
                             //timerCapture.Elapsed += graph.onTick;
                             timerRender.Elapsed += graph.onRender;
                         };
@@ -203,47 +317,13 @@ namespace ibcdatacsharp.UI
                     {
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.initCapture();
-                        
-                       
+
+
                         //timerCapture.Elapsed += graph.onTick;
                         timerRender.Elapsed += graph.onRender;
                     }
                 }
 
-
-                if (mainWindow.accelerometer.Content == null)
-                {
-                    mainWindow.accelerometer.Navigated += delegate (object sender, NavigationEventArgs e)
-                    {
-                        accelerometer = mainWindow.accelerometer.Content as GraphAccelerometer;
-                    };
-                }
-                else
-                {
-                    accelerometer = mainWindow.accelerometer.Content as GraphAccelerometer;
-                }
-                if (mainWindow.gyroscope.Content == null)
-                {
-                    mainWindow.gyroscope.Navigated += delegate (object sender, NavigationEventArgs e)
-                    {
-                        gyroscope = mainWindow.gyroscope.Content as GraphGyroscope;
-                    };
-                }
-                else
-                {
-                    gyroscope = mainWindow.gyroscope.Content as GraphGyroscope;
-                }
-                if (mainWindow.magnetometer.Content == null)
-                {
-                    mainWindow.magnetometer.Navigated += delegate (object sender, NavigationEventArgs e)
-                    {
-                        magnetometer = mainWindow.magnetometer.Content as GraphMagnetometer;
-                    };
-                }
-                else
-                {
-                    magnetometer = mainWindow.magnetometer.Content as GraphMagnetometer;
-                }
 
                 virtualToolBar.pauseEvent += onPause; //funcion local
                 virtualToolBar.stopEvent += onStop; //funcion local
@@ -252,6 +332,8 @@ namespace ibcdatacsharp.UI
                     timerRender.Start();
                 }
                 device.initTimer();
+
+
             }
 
 
@@ -259,7 +341,11 @@ namespace ibcdatacsharp.UI
 
             mainWindow.startActiveDevices();
 
-
+            // Puede que haya que cambiar esto
+            Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                numIMUs = (mainWindow.deviceList.Content as DeviceList.DeviceList).numIMUsUsed;
+            });
         }
         public void deactivate()
         {
@@ -416,50 +502,49 @@ namespace ibcdatacsharp.UI
 
             //   if (anglequat % 2 == 0)
             //    {
-            //        Vector3 angle_low = new();
-            //        Vector3 angle_up = new();
-            //        Vector3 angle_ref = new();
-            //        angle_low = ToEulerAngles(q_lower);
-            //        angle_up = ToEulerAngles(q_upper);
-            //        angle_ref = ToEulerAngles(refq);
-            //        a1 = angle_low.X - angle_up.X + angle_ref.X;
-            //        a2 = angle_low.Y - angle_up.Y + angle_ref.Y;
-            //        a3 = angle_low.Z - angle_up.Z + angle_ref.Z;
-            //        a1 = ToDegrees(a1);
-            //        a2 = ToDegrees(a2);
-            //        a3 = ToDegrees(a3);
+            //        vector3 angle_low = new();
+            //        vector3 angle_up = new();
+            //        vector3 angle_ref = new();
+            //        angle_low = toeulerangles(q_lower);
+            //        angle_up = toeulerangles(q_upper);
+            //        angle_ref = toeulerangles(refq);
+            //        a1 = angle_low.x - angle_up.x + angle_ref.x;
+            //        a2 = angle_low.y - angle_up.y + angle_ref.y;
+            //        a3 = angle_low.z - angle_up.z + angle_ref.z;
+            //        a1 = todegrees(a1);
+            //        a2 = todegrees(a2);
+            //        a3 = todegrees(a3);
 
-            //       // Trace.WriteLine(":::::: ANGLE JOINT: " + a1.ToString() + " " + a2.ToString() + " " + a3.ToString());
+            //       // trace.writeline(":::::: angle joint: " + a1.tostring() + " " + a2.tostring() + " " + a3.tostring());
 
-            //        Matrix4x4 m_lower = Matrix4x4.CreateFromQuaternion(q_lower);
-            //        Matrix4x4 m_upper = Matrix4x4.CreateFromQuaternion(q_upper);
+            //        matrix4x4 m_lower = matrix4x4.createfromquaternion(q_lower);
+            //        matrix4x4 m_upper = matrix4x4.createfromquaternion(q_upper);
 
-            //        Matrix4x4 R = Matrix4x4.Multiply(m_lower, m_upper);
+            //        matrix4x4 r = matrix4x4.multiply(m_lower, m_upper);
 
-            //        double beta = Math.Atan2(R.M32 , Math.Sqrt( Math.Pow(R.M12,2) * Math.Pow(R.M22, 2) ) );
-            //        double delta = Math.Atan2(-(R.M12 / Math.Cos(beta)), R.M22 / Math.Cos(beta));
-            //        double phi = Math.Atan2(-(R.M31 / Math.Cos(beta)), R.M33 / Math.Cos(beta));
+            //        double beta = math.atan2(r.m32 , math.sqrt( math.pow(r.m12,2) * math.pow(r.m22, 2) ) );
+            //        double delta = math.atan2(-(r.m12 / math.cos(beta)), r.m22 / math.cos(beta));
+            //        double phi = math.atan2(-(r.m31 / math.cos(beta)), r.m33 / math.cos(beta));
 
             //        if (beta >= 90.0 && beta < 91.0)
             //        {
             //            beta = 90.0d;
             //            delta = 0.0d;
-            //            phi = Math.Atan2(R.M13, R.M23);
+            //            phi = math.atan2(r.m13, r.m23);
 
             //        }
 
-            //        //Trace.WriteLine("Beta: " + ToDegrees((float) beta).ToString() + " Delta:" + ToDegrees((float) delta).ToString() + 
-            //        //    " Phi: " + ToDegrees((float) phi).ToString());                   
+            //        //trace.writeline("beta: " + todegrees((float) beta).tostring() + " delta:" + todegrees((float) delta).tostring() + 
+            //        //    " phi: " + todegrees((float) phi).tostring());                   
             //    }
             //}
 
+            
+
+            
+           
             // Only a IMU
-
-
-
-            if (true)
-
-
+            if (numIMUs == 1)
             {
 
                 // Cálculo de la aceleración lineal
@@ -491,31 +576,33 @@ namespace ibcdatacsharp.UI
 
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    acc = (GraphAccelerometer)graphs[0].Content;
+                    GraphAccelerometer acc = (GraphAccelerometer)graphs[0].Content;
 
                     acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
                     acc.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
                     acc.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
                     acc.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
 
-                    gyr = (GraphGyroscope)graphs[1].Content;
+                    GraphGyroscope gyr = (GraphGyroscope)graphs[1].Content;
 
                     gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
                     gyr.drawRealTimeData(data.Imu[1].gyro_x, data.Imu[1].gyro_y, data.Imu[1].gyro_z);
                     gyr.drawRealTimeData(data.Imu[2].gyro_x, data.Imu[2].gyro_y, data.Imu[2].gyro_z);
                     gyr.drawRealTimeData(data.Imu[3].gyro_x, data.Imu[3].gyro_y, data.Imu[3].gyro_z);
 
-                    mag = (GraphMagnetometer)graphs[2].Content;
+                    GraphMagnetometer mag = (GraphMagnetometer)graphs[2].Content;
 
                     mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
                     mag.drawRealTimeData(data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z);
                     mag.drawRealTimeData(data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z);
                     mag.drawRealTimeData(data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z);
 
+                    GraphLinAcc linAcc = (GraphLinAcc)graphs[3].Content;
+                    linAcc.drawRealTimeData(v0);
+                    linAcc.drawRealTimeData(v1);
+                    linAcc.drawRealTimeData(v2);
+                    linAcc.drawRealTimeData(v3);
 
-                    //acc.render();
-                    //gyr.render();
-                    //mag.render();
                 });
 
                 
@@ -576,22 +663,64 @@ namespace ibcdatacsharp.UI
 
 
             }
-            //else if (devices_list.Count == 2)
-            //{
-            //await Task.WhenAll(new Task[] {
+            else if(numIMUs == 2)
+            {
+                float[] angleX = new float[4] { 1, 2, 3, 4 };
+                float[] angleY = new float[4] { 1, 2, 3, 4 };
+                float[] angleZ = new float[4] { 1, 2, 3, 4 };
+                Vector3[] angularVelocity = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
+                Vector3[] angularAcceleration = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
+                if (virtualToolBar.recordState == RecordState.Recording)
+                {
+                    dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + angleX[0].ToString("F3") + " " + angleY[0].ToString("F3") + " " + angleZ[0].ToString("F3") + " " + angularVelocity[0].X.ToString("F3") + " " + angularVelocity[0].Y.ToString("F3") + " " + angularVelocity[0].Z.ToString("F3") + " " + angularAcceleration[0].X.ToString("F3") + " " + angularAcceleration[0].Y.ToString("F3") + " " + angularAcceleration[0].Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + angleX[1].ToString("F3") + " " + angleY[1].ToString("F3") + " " + angleZ[1].ToString("F3") + " " + angularVelocity[1].X.ToString("F3") + " " + angularVelocity[1].Y.ToString("F3") + " " + angularVelocity[1].Z.ToString("F3") + " " + angularAcceleration[1].X.ToString("F3") + " " + angularAcceleration[1].Y.ToString("F3") + " " + angularAcceleration[1].Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + angleX[2].ToString("F3") + " " + angleY[2].ToString("F3") + " " + angleZ[2].ToString("F3") + " " + angularVelocity[2].X.ToString("F3") + " " + angularVelocity[2].Y.ToString("F3") + " " + angularVelocity[2].Z.ToString("F3") + " " + angularAcceleration[2].X.ToString("F3") + " " + angularAcceleration[2].Y.ToString("F3") + " " + angularAcceleration[2].Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + angleX[3].ToString("F3") + " " + angleY[3].ToString("F3") + " " + angleZ[3].ToString("F3") + " " + angularVelocity[3].X.ToString("F3") + " " + angularVelocity[3].Y.ToString("F3") + " " + angularVelocity[3].Z.ToString("F3") + " " + angularAcceleration[3].X.ToString("F3") + " " + angularAcceleration[3].Y.ToString("F3") + " " + angularAcceleration[3].Z.ToString("F3") + "\n";
 
-            //angleGraph.updateX(frame, a1),
-            //angleGraph.updateY(frame, a2),
-            //angleGraph.updateZ(frame, a3),
-            //angleGraph.renderX(),
-            //angleGraph.renderY(),
-            //angleGraph.renderZ()
+                    mainWindow.fileSaver.appendCSVManual(dataline);
+                }
 
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    AngleGraphX angleXGraph = (AngleGraphX)graphs[4].Content;
 
-            //});
+                    angleXGraph.drawRealTimeData(angleX[0]);
+                    angleXGraph.drawRealTimeData(angleX[1]);
+                    angleXGraph.drawRealTimeData(angleX[2]);
+                    angleXGraph.drawRealTimeData(angleX[3]);
 
+                    AngleGraphY angleYGraph = (AngleGraphY)graphs[5].Content;
 
-            //}
+                    angleYGraph.drawRealTimeData(angleY[0]);
+                    angleYGraph.drawRealTimeData(angleY[1]);
+                    angleYGraph.drawRealTimeData(angleY[2]);
+                    angleYGraph.drawRealTimeData(angleY[3]);
+
+                    AngleGraphZ angleZGraph = (AngleGraphZ)graphs[6].Content;
+
+                    angleZGraph.drawRealTimeData(angleZ[0]);
+                    angleZGraph.drawRealTimeData(angleZ[1]);
+                    angleZGraph.drawRealTimeData(angleZ[2]);
+                    angleZGraph.drawRealTimeData(angleZ[3]);
+
+                    GraphAngularVelocity graphAngularVelocity = (GraphAngularVelocity)graphs[7].Content;
+
+                    graphAngularVelocity.drawRealTimeData(angularVelocity[0]);
+                    graphAngularVelocity.drawRealTimeData(angularVelocity[1]);
+                    graphAngularVelocity.drawRealTimeData(angularVelocity[2]);
+                    graphAngularVelocity.drawRealTimeData(angularVelocity[3]);
+
+                    GraphAngularAcceleration graphAngularAcceleration = (GraphAngularAcceleration)graphs[8].Content;
+
+                    graphAngularAcceleration.drawRealTimeData(angularAcceleration[0]);
+                    graphAngularAcceleration.drawRealTimeData(angularAcceleration[1]);
+                    graphAngularAcceleration.drawRealTimeData(angularAcceleration[2]);
+                    graphAngularAcceleration.drawRealTimeData(angularAcceleration[3]);
+                });
+
+                frame += 4;
+                fakets += 0.04f;
+            }
 
         }
         //End Wise

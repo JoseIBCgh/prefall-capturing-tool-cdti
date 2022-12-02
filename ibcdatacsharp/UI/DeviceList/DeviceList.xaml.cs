@@ -270,19 +270,7 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             get
             {
-                int n = 0;
-                foreach(IMUInfo imu in VM.IMUs)
-                {
-                    if (imu.used)
-                    {
-                        n++;
-                    }
-                }
-                if(n != IMUsUsed.Count)
-                {
-                    throw new Exception("IMUsUsed no funciona bien");
-                }
-                return IMUsUsed.Count; // Quitar todo menos esta linea si no salta ningun error
+                return IMUsUsed.Count;
             }
         }
         public List<IMUInfo> IMUsUsed
