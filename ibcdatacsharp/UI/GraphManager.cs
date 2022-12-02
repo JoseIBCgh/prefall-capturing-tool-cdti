@@ -379,6 +379,8 @@ namespace ibcdatacsharp.UI
                 virtualToolBar.pauseEvent -= onPause; //funcion local
                 virtualToolBar.stopEvent -= onStop; //funcion local
                 timerRender.Dispose();
+
+                mainWindow.api.StopStream(out error);
             }
         }
         public void reset()
@@ -421,7 +423,7 @@ namespace ibcdatacsharp.UI
         // Se ejecuta al clicar stop
         void onStop(object sender)
         {
-            //deactivate();
+            deactivate();
         }
 
         public void onInitRecord(object sender, EventArgs args)
