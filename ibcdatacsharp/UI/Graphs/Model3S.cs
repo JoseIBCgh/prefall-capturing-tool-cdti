@@ -1,6 +1,7 @@
 ﻿using ScottPlot;
 using ScottPlot.Plottable;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace ibcdatacsharp.UI.Graphs
@@ -26,14 +27,44 @@ namespace ibcdatacsharp.UI.Graphs
         private double minY;
         private double maxY;
 
-        private HSpan line;
-        private double lineWidth = 0.5;
+        private Color frameColor = Color.Black;
+        private VLine lineFrame;
+        private const float verticalLineWidth = 0.5f;
+
+        private const float horizontalLineWidth = 0.5f;
+        private Color xColor = Color.Red;
+        private HLine lineX;
+        private Color yColor = Color.Blue;
+        private HLine lineY;
+        private Color zColor = Color.Green;
+        private HLine lineZ;
+
         public Model3S(WpfPlot plot, double minY, double maxY, string title = "", string units = "")
         {
             this.minY = minY;
             this.maxY = maxY;
             this.plot = plot;
-            line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.Red);
+
+            lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, style:LineStyle.Dash);
+            lineFrame.PositionLabel = true;
+            lineFrame.PositionLabelBackground = frameColor;
+            lineFrame.PositionFormatter = customFormatter;
+
+            lineX = plot.Plot.AddHorizontalLine(0, color: xColor, width: horizontalLineWidth, style: LineStyle.Dash);
+            lineX.PositionLabel = true;
+            lineX.PositionLabelBackground = xColor;
+            lineX.PositionFormatter = customFormatter;
+
+            lineY = plot.Plot.AddHorizontalLine(0, color: yColor, width: horizontalLineWidth, style: LineStyle.Dash);
+            lineY.PositionLabel = true;
+            lineY.PositionLabelBackground = yColor;
+            lineY.PositionFormatter = customFormatter;
+
+            lineZ = plot.Plot.AddHorizontalLine(0, color: zColor, width: horizontalLineWidth, style: LineStyle.Dash);
+            lineZ.PositionLabel = true;
+            lineZ.PositionLabelBackground = zColor;
+            lineZ.PositionFormatter = customFormatter;
+
             plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
             plot.Plot.Legend(location: Alignment.UpperRight);
 
@@ -43,6 +74,15 @@ namespace ibcdatacsharp.UI.Graphs
 
             plot.Refresh();
         }
+        static string customFormatter(double position)
+        {
+            if (position == 0)
+                return "zero";
+            else if (position > 0)
+                return $"+{position:F2}";
+            else
+                return $"({Math.Abs(position):F2})";
+        }
         public void initCapture()
         {
             valuesX = new double[CAPACITY];
@@ -51,9 +91,9 @@ namespace ibcdatacsharp.UI.Graphs
             plot.Plot.Remove(signalPlotX);
             plot.Plot.Remove(signalPlotY);
             plot.Plot.Remove(signalPlotZ);
-            signalPlotX = plot.Plot.AddSignal(valuesX, color: Color.Red, label: "X");
-            signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green, label: "Y");
-            signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue, label: "Z");
+            signalPlotX = plot.Plot.AddSignal(valuesX, color: xColor, label: "X");
+            signalPlotY = plot.Plot.AddSignal(valuesY, color: yColor, label: "Y");
+            signalPlotZ = plot.Plot.AddSignal(valuesZ, color: zColor, label: "Z");
             plot.Plot.SetAxisLimitsY(yMin: minY, yMax: maxY);
             nextIndex = 0;
             maxRenderIndex = nextIndex;
@@ -68,9 +108,9 @@ namespace ibcdatacsharp.UI.Graphs
             plot.Plot.Remove(signalPlotX);
             plot.Plot.Remove(signalPlotY);
             plot.Plot.Remove(signalPlotZ);
-            signalPlotX = plot.Plot.AddSignal(valuesX, color: Color.Red, label: "X");
-            signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green, label: "Y");
-            signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue, label: "Z");
+            signalPlotX = plot.Plot.AddSignal(valuesX, color: xColor, label: "X");
+            signalPlotY = plot.Plot.AddSignal(valuesY, color: yColor, label: "Y");
+            signalPlotZ = plot.Plot.AddSignal(valuesZ, color: zColor, label: "Z");
             maxRenderIndex = 0;
             plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, valuesX.Length));
             plot.Plot.SetAxisLimitsY(yMin: minY, yMax: maxY);
@@ -80,6 +120,7 @@ namespace ibcdatacsharp.UI.Graphs
         {
             index = Math.Min(index, valuesX.Length); //Por si acaso
             maxRenderIndex = index;
+
             plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
                 xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, valuesX.Length)));
             plot.Render();
@@ -131,13 +172,19 @@ namespace ibcdatacsharp.UI.Graphs
         // Usar esto para actualizar la line tambien
         private int maxRenderIndex
         {
+            get
+            {
+                return (int)lineFrame.X;
+            }
             set
             {
                 signalPlotX.MaxRenderIndex = value;
                 signalPlotY.MaxRenderIndex = value;
                 signalPlotZ.MaxRenderIndex = value;
-                line.X1 = value - lineWidth;
-                line.X2 = value + lineWidth;
+                lineFrame.X = value;
+                lineX.Y = valuesX[value];
+                lineY.Y = valuesY[value];
+                lineZ.Y = valuesZ[value];
             }
         }
     }

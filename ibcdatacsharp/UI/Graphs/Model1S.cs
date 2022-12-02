@@ -19,18 +19,42 @@ namespace ibcdatacsharp.UI.Graphs
 
         private const double MIN_Y = -200;
         private const double MAX_Y = 200;
-        private HSpan line;
-        private double lineWidth = 0.2;
 
+        private Color frameColor = Color.Black;
+        private VLine lineFrame;
+        private const float verticalLineWidth = 0.5f;
+
+        private Color dataColor = Color.Red;
+        private HLine lineData;
+        private const float horizontalLineWidth = 0.5f;
         public Model1S(WpfPlot plot)
         {
             this.plot = plot;
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
             plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
             paintAreas();
-            line = plot.Plot.AddHorizontalSpan(0 - lineWidth, 0 + lineWidth, Color.Red);
+
+            lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, LineStyle.Dash);
+            lineFrame.PositionLabel = true;
+            lineFrame.PositionLabelBackground = frameColor;
+            lineFrame.PositionFormatter = customFormatter;
+
+            lineData = plot.Plot.AddHorizontalLine(0, color: dataColor, width: horizontalLineWidth, style: LineStyle.Dash);
+            lineData.PositionLabel = true;
+            lineData.PositionLabelBackground = dataColor;
+            lineData.PositionFormatter = customFormatter;
+
             plot.Plot.Style(Style.Seaborn);
             plot.Refresh();
+        }
+        static string customFormatter(double position)
+        {
+            if (position == 0)
+                return "zero";
+            else if (position > 0)
+                return $"+{position:F2}";
+            else
+                return $"({Math.Abs(position):F2})";
         }
         // Pinta el fondo
         private void paintAreas()
@@ -57,7 +81,7 @@ namespace ibcdatacsharp.UI.Graphs
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
             plot.Plot.XAxis2.SetSizeLimit(max: 5);
             plot.Plot.Remove(signalPlot);
-            signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
+            signalPlot = plot.Plot.AddSignal(values, color: dataColor);
             nextIndex = 0;
             maxRenderIndex = nextIndex;
         }
@@ -67,7 +91,7 @@ namespace ibcdatacsharp.UI.Graphs
         {
             values = data;
             plot.Plot.Remove(signalPlot);
-            signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
+            signalPlot = plot.Plot.AddSignal(values, color: dataColor);
             maxRenderIndex = 0;
             plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, values.Length));
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
@@ -92,7 +116,7 @@ namespace ibcdatacsharp.UI.Graphs
                 CAPACITY = CAPACITY * GROW_FACTOR;
                 Array.Resize(ref values, CAPACITY);
                 plot.Plot.Remove(signalPlot);
-                signalPlot = plot.Plot.AddSignal(values, color: Color.Red);
+                signalPlot = plot.Plot.AddSignal(values, color: dataColor);
             }
             values[nextIndex] = data;
             nextIndex++;
@@ -123,8 +147,9 @@ namespace ibcdatacsharp.UI.Graphs
             set
             {
                 signalPlot.MaxRenderIndex = value;
-                line.X1 = value - lineWidth;
-                line.X2 = value + lineWidth;
+                lineFrame.X = value;
+                lineFrame.X = value;
+                lineData.Y = values[value];
             }
         }
     }
