@@ -1,70 +1,59 @@
 ﻿using ibcdatacsharp.UI.Device;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace ibcdatacsharp.UI.Graphs
 {
     /// <summary>
-    /// Lógica de interacción para GraphLinAcc.xaml
+    /// Lógica de interacción para AngularVelocity.xaml
     /// </summary>
-    public partial class GraphLinAcc : Page, GraphInterface
+    public partial class AngularVelocity : Page, GraphInterface
     {
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
         public Model3S model { get; private set; }
-        public GraphLinAcc()
+        public AngularVelocity()
         {
             InitializeComponent();
-            model = new Model3S(plot, -200, 200, title: "Acceleracion Lineal", units: "m/s^2");
+            model = new Model3S(plot, -200, 200, title: "Velocidad angular", units: "grados/s");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("m/s^2"); ;
+            this.plot.Plot.YLabel("grados/s");
         }
         public void initCapture()
         {
             model.initCapture();
         }
-        public async void drawRealTimeData(double accX, double accY, double accZ)
+        public async void drawRealTimeData(double x, double y, double z)
         {
-            double[] acc = new double[3] { accX, accY, accZ };
+            double[] data = new double[3] { x, y, z };
 
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                model.updateData(acc);
+                model.updateData(data);
             });
 
         }
         public async void drawData(GraphData data)
         {
-            double[] accX = new double[data.length];
-            double[] accY = new double[data.length];
-            double[] accZ = new double[data.length];
+            double[] x = new double[data.length];
+            double[] y = new double[data.length];
+            double[] z = new double[data.length];
             for (int i = 0; i < data.length; i++)
             {
                 // Cambiar esto
-                accX[i] = data[i].accX;
-                accY[i] = data[i].accY;
-                accZ[i] = data[i].accZ;
+                x[i] = data[i].accX;
+                y[i] = data[i].accY;
+                z[i] = data[i].accZ;
             }
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                model.updateData(accX, accY, accZ);
+                model.updateData(x, y, z);
             });
         }
         public async void onUpdateTimeLine(object sender, int frame)
@@ -86,8 +75,6 @@ namespace ibcdatacsharp.UI.Graphs
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
                 model.updateData(getData());
-
-
             });
         }
         // Borra el contenido de los graficos

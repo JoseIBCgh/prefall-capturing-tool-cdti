@@ -50,6 +50,8 @@ namespace ibcdatacsharp.UI
             graphs.Add(mainWindow.angleX);
             graphs.Add(mainWindow.angleY);
             graphs.Add(mainWindow.angleZ);
+            graphs.Add(mainWindow.angularVelocity);
+            graphs.Add(mainWindow.angularAcceleration);
             if (mainWindow.timeLine.Content == null)
             {
                 mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)

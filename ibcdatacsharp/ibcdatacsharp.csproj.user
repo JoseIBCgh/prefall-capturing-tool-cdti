@@ -25,6 +25,12 @@
     <Compile Update="UI\Graphs\AngleGraphX.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\Graphs\AngularAcceleration.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Graphs\AngularVelocity.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\Graphs\GraphAccelerometer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -73,6 +79,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Graphs\AngleGraphX.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\AngularAcceleration.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\AngularVelocity.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Graphs\GraphAccelerometer.xaml">

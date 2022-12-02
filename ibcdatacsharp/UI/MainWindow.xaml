@@ -43,6 +43,12 @@
                                     <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle Z">
                                         <Frame Source="pack://application:,,,/UI/Graphs/AngleGraphZ.xaml" x:Name="angleZ"/>
                                     </dock:LayoutAnchorable>
+                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Velocidad Angular">
+                                        <Frame Source="pack://application:,,,/UI/Graphs/AngularVelocity.xaml" x:Name="angularVelocity"/>
+                                    </dock:LayoutAnchorable>
+                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Acceleracion Angular">
+                                        <Frame Source="pack://application:,,,/UI/Graphs/AngularAcceleration.xaml" x:Name="angularAcceleration"/>
+                                    </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
                                 <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
                                     <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Camera">
