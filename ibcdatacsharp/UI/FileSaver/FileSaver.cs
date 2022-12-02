@@ -159,7 +159,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 message += "Csv grabado en " + csvFile + ". ";
             }
             if (recordVideo)
-            { 
+            {
                 timerVideo.Stop();
                 timerVideo = null;
                 mainWindow.virtualToolBar.pauseEvent -= onPauseVideo;
@@ -169,7 +169,10 @@ namespace ibcdatacsharp.UI.FileSaver
                 recordVideo = false;
                 message += "Video grabado en " + videoFile + ". ";
             }
-            MessageBox.Show(message, caption:null, button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+            if (recordCSV || recordVideo)
+            {
+                MessageBox.Show(message, caption: null, button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+            }
         }
         // inicializa los ficheros para guardar csv y video
         private void initFiles()
