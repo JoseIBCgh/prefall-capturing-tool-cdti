@@ -171,11 +171,21 @@ namespace ibcdatacsharp.UI.ToolBar
             if(recordState == RecordState.RecordStopped)
             {
                 toolBar.savingMenu.Visibility = Visibility.Visible;
+                if (!Directory.Exists(saveMenu.route.Text))
+                {
+                    saveMenu.route.Text = "";
+                    MessageBox.Show("La carpeta " + saveMenu.route.Text + " no existe, selecciona otra", caption:null, button: MessageBoxButton.OK, icon: MessageBoxImage.Warning);
+                }
                 saveMenu.ok.Click += continueRecord;
             }
         }
         private void continueRecord(object sender, RoutedEventArgs e)
         {
+            if (!Directory.Exists(saveMenu.route.Text))
+            {
+                MessageBox.Show("La carpeta " + saveMenu.route.Text + " no existe, selecciona otra", caption: null, button: MessageBoxButton.OK, icon: MessageBoxImage.Error);
+                return;
+            }
             if(saveEvent != null)
             {
                 saveEvent?.Invoke(this, new SaveArgs { directory = saveMenu.route.Text, csv = (bool)saveMenu.csv.IsChecked, video = (bool)saveMenu.video.IsChecked });
