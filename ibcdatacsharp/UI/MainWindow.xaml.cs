@@ -395,7 +395,7 @@ namespace ibcdatacsharp.UI
 
 
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
-                deviceListClass.clearAll();
+                //deviceListClass.clearAll();
                 addCameras(deviceListClass);
                 deviceListClass.showCameras();
                 // Añade datos inventados quitar

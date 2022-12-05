@@ -59,9 +59,33 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             VM.IMUs = IMUs;
         }
+        public void setIMUs(List<IMUInfo> IMUs)
+        {
+            foreach (IMUInfo imu in IMUs)
+            {
+                if (!IMUinList(imu))
+                {
+                    VM.IMUs.Add(imu);
+                }
+            }
+        }
         public void addIMU(IMUInfo IMU)
         {
-            VM.IMUs.Add(IMU);
+            if (!IMUinList(IMU))
+            {
+                VM.IMUs.Add(IMU);
+            }
+        }
+        private bool IMUinList(IMUInfo imu)
+        {
+            foreach(IMUInfo imuInList in VM.IMUs)
+            {
+                if(imu.adress == imuInList.adress) // Tiene que identificar a un IMU de forma unica
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         #endregion
         #region Cameras
@@ -73,9 +97,33 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             VM.cameras = cameras;
         }
+        public void setCameras(List<CameraInfo> cameras)
+        {
+            foreach(CameraInfo cam in cameras)
+            {
+                if (!camerainList(cam))
+                {
+                    VM.cameras.Add(cam);
+                }
+            }
+        }
         public void addCamera(CameraInfo camera)
         {
-            VM.cameras.Add(camera);
+            if (!camerainList(camera))
+            {
+                VM.cameras.Add(camera);
+            }
+        }
+        private bool camerainList(CameraInfo camera)
+        {
+            foreach (CameraInfo cameraInList in VM.cameras)
+            {
+                if (camera.number == cameraInList.number) // Tiene que identificar a una camara de forma unica
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         #endregion
         #region Insoles
@@ -89,7 +137,10 @@ namespace ibcdatacsharp.UI.DeviceList
         }
         public void addInsole(InsolesInfo insole)
         {
-            VM.insoles.Add(insole);
+            if (!VM.insoles.Contains(insole))
+            {
+                VM.insoles.Add(insole);
+            }
         }
         #endregion
         #endregion
