@@ -340,7 +340,10 @@ namespace ibcdatacsharp.UI
             Trace.WriteLine("Imu seleccionado en el graphmanager: ", mainWindow.imuInfo.id.ToString());
 
             mainWindow.api.StopStream(out error);
-            mainWindow.startActiveDevices();
+            if (virtualToolBar.pauseState == PauseState.Play)
+            {
+                mainWindow.startActiveDevices();
+            }
 
             // Puede que haya que cambiar esto
             Application.Current.Dispatcher.InvokeAsync(() =>
@@ -408,7 +411,10 @@ namespace ibcdatacsharp.UI
                     }
                 }
                 mainWindow.api.StopStream(out error);
-                mainWindow.startActiveDevices();
+                if (virtualToolBar.pauseState == PauseState.Play)
+                {
+                    mainWindow.startActiveDevices();
+                }
 
                 // Puede que haya que cambiar esto
                 Application.Current.Dispatcher.InvokeAsync(() =>
