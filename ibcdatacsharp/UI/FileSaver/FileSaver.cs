@@ -149,6 +149,7 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             string message = "";
+            bool show = false;
             if (recordCSV)
             {
                 timerCsv.Stop();
@@ -157,6 +158,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 saveCsvFile();
                 recordCSV = false;
                 message += "Csv grabado en " + csvFile + ". ";
+                show = true;
             }
             if (recordVideo)
             {
@@ -168,8 +170,9 @@ namespace ibcdatacsharp.UI.FileSaver
 
                 recordVideo = false;
                 message += "Video grabado en " + videoFile + ". ";
+                show=true;
             }
-            if (recordCSV || recordVideo)
+            if (show)
             {
                 MessageBox.Show(message, caption: null, button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
             }
