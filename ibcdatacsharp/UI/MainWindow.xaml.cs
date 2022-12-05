@@ -417,12 +417,14 @@ namespace ibcdatacsharp.UI
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 IList<object> selectedItems = (IList<object>)deviceListClass.treeView.SelectedItems;
                 List<IMUInfo> connectedIMUs = new List<IMUInfo>();
+                List<object> selectedIMUs = new List<object>(); // Necesario porque deviceListClass.treeView.SelectedItems puede cambiar despues de clicar connect
                 foreach (object selected in selectedItems)
                 {
                     if (selected != null) // No se si se puede quitar
                     {
                         if (selected is IMUInfo)
                         {
+                            selectedIMUs.Add(selected);
                             MultiSelectTreeViewItem treeViewItem = (MultiSelectTreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
 
                             //´Wise connecting
@@ -467,7 +469,7 @@ namespace ibcdatacsharp.UI
 
                 //EndWise
 
-                deviceListClass.connectIMUs(selectedItems);
+                deviceListClass.connectIMUs(selectedIMUs);
 
                 //Borrar si existe
                 foreach (IMUInfo imu in connectedIMUs)

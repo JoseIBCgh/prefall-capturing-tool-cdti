@@ -151,7 +151,7 @@ namespace ibcdatacsharp.UI.DeviceList
             //connectCamera((MultiSelectTreeViewItem)sender);
         }
         #endregion
-        public void connectIMUs(IList<object> treeViewItems)
+        public void connectIMUs(List<object> treeViewItems)
         {
             foreach(object item in treeViewItems)
             {
