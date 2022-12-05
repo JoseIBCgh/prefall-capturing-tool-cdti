@@ -95,6 +95,9 @@ namespace ibcdatacsharp.UI.Graphs
             signalPlotX = plot.Plot.AddSignal(valuesX, color: xColor, label: "X");
             signalPlotY = plot.Plot.AddSignal(valuesY, color: yColor, label: "Y");
             signalPlotZ = plot.Plot.AddSignal(valuesZ, color: zColor, label: "Z");
+            signalPlotX.MarkerSize = 0;
+            signalPlotY.MarkerSize = 0;
+            signalPlotZ.MarkerSize = 0;
             plot.Plot.SetAxisLimitsY(yMin: minY, yMax: maxY);
             nextIndex = 0;
             maxRenderIndex = nextIndex;
@@ -112,6 +115,9 @@ namespace ibcdatacsharp.UI.Graphs
             signalPlotX = plot.Plot.AddSignal(valuesX, color: xColor, label: "X");
             signalPlotY = plot.Plot.AddSignal(valuesY, color: yColor, label: "Y");
             signalPlotZ = plot.Plot.AddSignal(valuesZ, color: zColor, label: "Z");
+            signalPlotX.MarkerSize = 0;
+            signalPlotY.MarkerSize = 0;
+            signalPlotZ.MarkerSize = 0;
             maxRenderIndex = 0;
             plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, valuesX.Length));
             plot.Plot.SetAxisLimitsY(yMin: minY, yMax: maxY);
@@ -148,6 +154,9 @@ namespace ibcdatacsharp.UI.Graphs
                 signalPlotX = plot.Plot.AddSignal(valuesX, color: Color.Red, label: "X");
                 signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green, label: "Y");
                 signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue, label: "Z");
+                signalPlotX.MarkerSize = 0;
+                signalPlotY.MarkerSize = 0;
+                signalPlotZ.MarkerSize = 0;
             }
             valuesX[nextIndex] = data[0];
             valuesY[nextIndex] = data[1];
