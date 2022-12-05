@@ -37,9 +37,9 @@ namespace ibcdatacsharp.UI.Graphs
             double[] gyrZ = new double[data.length];
             for (int i = 0; i < data.length; i++)
             {
-                gyrX[i] = data[i].gyrX;
-                gyrY[i] = data[i].gyrY;
-                gyrZ[i] = data[i].gyrZ;
+                gyrX[i] = ((FrameData1IMU)data[i]).gyrX;
+                gyrY[i] = ((FrameData1IMU)data[i]).gyrY;
+                gyrZ[i] = ((FrameData1IMU)data[i]).gyrZ;
             }
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {

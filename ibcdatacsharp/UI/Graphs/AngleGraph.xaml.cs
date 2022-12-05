@@ -47,9 +47,9 @@ namespace ibcdatacsharp.UI.Graphs
             for (int i = 0; i < data.length; i++)
             {
                 // Provisional hay que cambiarlo por los angulos
-                angleX[i] = data[i].accX;
-                angleY[i] = data[i].accY;
-                angleZ[i] = data[i].accZ;
+                angleX[i] = ((FrameData1IMU)data[i]).accX;
+                angleY[i] = ((FrameData1IMU)data[i]).accY;
+                angleZ[i] = ((FrameData1IMU)data[i]).accZ;
             }
             await Task.WhenAll(new Task[]
             {

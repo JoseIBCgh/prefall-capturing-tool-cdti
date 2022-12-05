@@ -47,9 +47,9 @@ namespace ibcdatacsharp.UI.Graphs
             double[] accZ = new double[data.length];
             for (int i = 0; i < data.length; i++)
             {
-                accX[i] = data[i].accX;
-                accY[i] = data[i].accY;
-                accZ[i] = data[i].accZ;
+                accX[i] = ((FrameData1IMU)data[i]).accX;
+                accY[i] = ((FrameData1IMU)data[i]).accY;
+                accZ[i] = ((FrameData1IMU)data[i]).accZ;
             }
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {

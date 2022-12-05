@@ -37,9 +37,9 @@ namespace ibcdatacsharp.UI.Graphs
             double[] magZ = new double[data.length];
             for (int i = 0; i < data.length; i++)
             {
-                magX[i] = data[i].magX;
-                magY[i] = data[i].magY;
-                magZ[i] = data[i].magZ;
+                magX[i] = ((FrameData1IMU)data[i]).magX;
+                magY[i] = ((FrameData1IMU)data[i]).magY;
+                magZ[i] = ((FrameData1IMU)data[i]).magZ;
             }
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {

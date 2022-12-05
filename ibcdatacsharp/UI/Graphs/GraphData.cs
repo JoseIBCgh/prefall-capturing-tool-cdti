@@ -1,8 +1,7 @@
-﻿using OpenCvSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
+using System.Numerics;
 
 namespace ibcdatacsharp.UI.Graphs
 {
@@ -34,15 +33,30 @@ namespace ibcdatacsharp.UI.Graphs
             int index = frame - minFrame;
             return frames[index].time;
         }
-        public GraphData(List<FrameData> frames)
+        public GraphData(FrameData[] frames)
         {
-            this.frames = frames.ToArray();
+            this.frames = frames;
         }
     }
-    public class FrameData
+    public abstract class FrameData
     {
         public double time { get; set; }
         public int frame { get; set; }
+        protected double parseDouble(string s)
+        {
+            string s_comma = s.Replace(",", ".");
+            double result = double.Parse(s_comma, CultureInfo.InvariantCulture);
+            return result;
+        }
+        protected float parseFloat(string s)
+        {
+            string s_comma = s.Replace(",", ".");
+            float result = float.Parse(s_comma, CultureInfo.InvariantCulture);
+            return result;
+        }
+    }
+    public class FrameData1IMU: FrameData
+    {
         public double accX { get; set; }
         public double accY { get; set; }
         public double accZ { get; set; }
@@ -55,15 +69,14 @@ namespace ibcdatacsharp.UI.Graphs
         public double magZ { get; set; }
 
         public double laccX { get; set; }
-        public double laccY { get; set; }
-        
+        public double laccY { get; set; } 
         public double laccZ { get; set; }
-        public FrameData(string csvLine)
+        public FrameData1IMU(string csvLine)
         {
             string[] values = csvLine.Split(' ');
             if(values.Length > 15) //default 12
             {
-                throw new Exception("Deben haber 12 valores por fila");
+                throw new Exception("Deben haber 15 valores por fila");
             }
             time = parseDouble(values[1]);
             frame = int.Parse(values[2]);
@@ -80,15 +93,30 @@ namespace ibcdatacsharp.UI.Graphs
             laccY = parseDouble(values[13]);
             laccZ = parseDouble(values[14]);
         }
-        private double parseDouble(string s)
+    }
+    public class FrameData2IMUs : FrameData
+    {
+        public double angleX { get; set; }
+        public double angleY { get; set; }
+        public double angleZ { get; set; }
+        public Vector3 angularVelocity { get; set; }
+        public Vector3 angularAcceleration { get; set; }
+        public FrameData2IMUs(string csvLine)
         {
-            string s_comma = s.Replace(",", ".");
-            double result =  double.Parse(s_comma, CultureInfo.InvariantCulture);
-            if(Math.Abs(result) > 10000)
+            string[] values = csvLine.Split(' ');
+            if (values.Length > 12) //default 12
             {
-                throw new Exception("Conversion a double incorrecta");
+                throw new Exception("Deben haber 11 valores por fila");
             }
-            return result;
+            time = parseDouble(values[1]);
+            frame = int.Parse(values[2]);
+            angleX = parseDouble(values[3]);
+            angleY = parseDouble(values[4]);
+            angleZ = parseDouble(values[5]);
+            angularVelocity = new Vector3(parseFloat(values[6]), parseFloat(values[7]),
+                parseFloat(values[8]));
+            angularAcceleration = new Vector3(parseFloat(values[9]), parseFloat(values[10]),
+                parseFloat(values[11]));
         }
     }
 }
