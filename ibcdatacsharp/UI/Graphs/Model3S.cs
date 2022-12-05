@@ -46,10 +46,10 @@ namespace ibcdatacsharp.UI.Graphs
             this.plot = plot;
 
             lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, style:LineStyle.Dash);
-            lineFrame.PositionLabel = true;
-            lineFrame.PositionLabelBackground = frameColor;
-            lineFrame.PositionFormatter = customFormatter;
-
+            //lineFrame.PositionLabel = true;
+            //lineFrame.PositionLabelBackground = frameColor;
+            //lineFrame.PositionFormatter = customFormatter;
+            /*
             lineX = plot.Plot.AddHorizontalLine(0, color: xColor, width: horizontalLineWidth, style: LineStyle.Dash);
             lineX.PositionLabel = true;
             lineX.PositionLabelBackground = xColor;
@@ -64,6 +64,7 @@ namespace ibcdatacsharp.UI.Graphs
             lineZ.PositionLabel = true;
             lineZ.PositionLabelBackground = zColor;
             lineZ.PositionFormatter = customFormatter;
+            */
 
             plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
             plot.Plot.Legend(location: Alignment.UpperRight);
@@ -121,6 +122,10 @@ namespace ibcdatacsharp.UI.Graphs
             index = Math.Min(index, valuesX.Length); //Por si acaso
             maxRenderIndex = index;
 
+            signalPlotX.Label = "X= " + valuesX[index].ToString("0.##");
+            signalPlotY.Label = "Y= " + valuesY[index].ToString("0.##");
+            signalPlotZ.Label = "Z= " + valuesZ[index].ToString("0.##");
+
             plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
                 xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, valuesX.Length)));
             plot.Render();
@@ -147,6 +152,9 @@ namespace ibcdatacsharp.UI.Graphs
             valuesX[nextIndex] = data[0];
             valuesY[nextIndex] = data[1];
             valuesZ[nextIndex] = data[2];
+            signalPlotX.Label = "X= " + data[0].ToString("0.##");
+            signalPlotY.Label = "Y= " + data[1].ToString("0.##");
+            signalPlotZ.Label = "Z= " + data[2].ToString("0.##");
             nextIndex++;
         }
         // Actualiza el renderizado
@@ -182,9 +190,9 @@ namespace ibcdatacsharp.UI.Graphs
                 signalPlotY.MaxRenderIndex = value;
                 signalPlotZ.MaxRenderIndex = value;
                 lineFrame.X = value;
-                lineX.Y = valuesX[value];
-                lineY.Y = valuesY[value];
-                lineZ.Y = valuesZ[value];
+                //lineX.Y = valuesX[value];
+                //lineY.Y = valuesY[value];
+                //lineZ.Y = valuesZ[value];
             }
         }
     }
