@@ -415,52 +415,67 @@ namespace ibcdatacsharp.UI
             async void onConnectFunction()
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
-                object selected = deviceListClass.treeView.SelectedItem;
-                if (selected != null)
+                IList<object> selectedItems = (IList<object>)deviceListClass.treeView.SelectedItems;
+                List<IMUInfo> connectedIMUs = new List<IMUInfo>();
+                foreach (object selected in selectedItems)
                 {
-                    if (selected is IMUInfo)
+                    if (selected != null) // No se si se puede quitar
                     {
-                        TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
+                        if (selected is IMUInfo)
+                        {
+                            MultiSelectTreeViewItem treeViewItem = (MultiSelectTreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
 
-                        //´Wise connecting
-                        imuInfo = treeViewItem.DataContext as IMUInfo;
+                            //´Wise connecting
+                            imuInfo = treeViewItem.DataContext as IMUInfo;
+                            connectedIMUs.Add(imuInfo);
+                        }
+                        else if (selected is CameraInfo)
+                        {
+                            //MultiSelectTreeViewItem treeViewItem = (MultiSelectTreeViewItem)deviceListClass.cameras.ItemContainerGenerator.ContainerFromItem(selected);
+                            //deviceListClass.connectCamera(treeViewItem);
+                        }
+                    }
+                }
 
-                        Trace.WriteLine("::OnConnect::: Imu seleccionado: " + imuInfo.id.ToString());
+                //Trace.WriteLine("::OnConnect::: Imu seleccionado: " + imuInfo.id.ToString());
 
 
-                        // Operación atómica de conexión
-                        conn_list_dev.Add(scanDevices[imuInfo.id]);
+                // Operación atómica de conexión
+                foreach (IMUInfo imu in connectedIMUs)
+                {
+                    conn_list_dev.Add(scanDevices[imu.id]);
+                    devHandlers.Remove(imu.id);
+                }
+
+                api.Connect(conn_list_dev, out error);
+                //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
+
+                await Task.Delay(1000);
+                foreach (IMUInfo imu in connectedIMUs)
+                {
+                    api.SetDeviceConfiguration((byte)imu.id, 100, 3, out error);
+                }
+                await Task.Delay(1000);
+                foreach (IMUInfo imu in connectedIMUs)
+                {
+                    api.SetRTCDevice((byte)imu.id, GetDateTime(), out error);
+                }
+                //api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
+                await Task.Delay(1000);
+
+                // Fin Operación atómica de conexión
+
+                //EndWise
+
+                deviceListClass.connectIMUs(selectedItems);
+
+                //Borrar si existe
+                foreach (IMUInfo imu in connectedIMUs)
+                {
+                    if (devHandlers.Contains(imuInfo.id))
+                    {
                         devHandlers.Remove(imuInfo.id);
 
-                        api.Connect(conn_list_dev, out error);
-                        //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
-
-                        await Task.Delay(1000);
-                        api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
-                        await Task.Delay(1000);
-                        api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
-                        //api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
-                        await Task.Delay(1000);
-
-                        // Fin Operación atómica de conexión
-                        
-                        //EndWise
-
-                        deviceListClass.connectIMU(treeViewItem);
-                        
-                        //Borrar si existe
-
-                        if (devHandlers.Contains(imuInfo.id)) 
-                        {
-                            devHandlers.Remove(imuInfo.id);
-
-                        }
-                        
-                    }
-                    else if (selected is CameraInfo)
-                    {
-                        TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.cameras.ItemContainerGenerator.ContainerFromItem(selected);
-                        deviceListClass.connectCamera(treeViewItem);
                     }
                 }
             }
@@ -483,19 +498,22 @@ namespace ibcdatacsharp.UI
             void onDisconnectFunction()
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
-                object selected = deviceListClass.treeView.SelectedItem;
-                if (selected != null && selected is IMUInfo)
+                IList<object> selectedItems = (IList<object>)deviceListClass.treeView.SelectedItems;
+                foreach (object selected in selectedItems)
                 {
-                    TreeViewItem treeViewItem = (TreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
-                    //Begin Wise
-                    IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
+                    if (selected != null && selected is IMUInfo)
+                    {
+                        MultiSelectTreeViewItem treeViewItem = (MultiSelectTreeViewItem)deviceListClass.IMUs.ItemContainerGenerator.ContainerFromItem(selected);
+                        //Begin Wise
+                        IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
 
-                    devHandlers.Add(imuInfo.id);
+                        devHandlers.Add(imuInfo.id);
 
-                    api.Disconnect(devHandlers, out error);
-                               
-                                                                               
-                    deviceListClass.disconnectIMU(treeViewItem);
+                        api.Disconnect(devHandlers, out error);
+
+
+                        deviceListClass.disconnectIMU(treeViewItem);
+                    }
                 }
             }
 
@@ -509,7 +527,7 @@ namespace ibcdatacsharp.UI
             void onOpenCameraFunction()
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
-                object selected = deviceListClass.treeView.SelectedItem;
+                object selected = deviceListClass.treeView.SelectedItems;
                 if (selected != null && selected is CameraInfo)
                 {
                     CameraInfo cameraInfo = (CameraInfo)selected;

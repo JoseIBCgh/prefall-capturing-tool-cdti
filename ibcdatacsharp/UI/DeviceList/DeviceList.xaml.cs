@@ -14,16 +14,16 @@ namespace ibcdatacsharp.UI.DeviceList
     public partial class DeviceList : Page
     {
         private const int MAX_IMU_USED = 2;
-        private const Key multiselectKey = Key.LeftCtrl;
-        private bool multiSelectionKeyPressed = false;
-        public List<TreeViewItem> selected { get;private set; } 
+        //private const Key multiselectKey = Key.LeftCtrl;
+        //private bool multiSelectionKeyPressed = false;
+        //public List<TreeViewItem> selected { get;private set; } 
         public DeviceList()
         {
             InitializeComponent();
             baseItem.IsExpanded = true;
-            selected = new List<TreeViewItem>();
-            this.KeyDown += new KeyEventHandler(onKeyDownHandler);
-            this.KeyUp += new KeyEventHandler(onKeyUpHandler);
+            //selected = new List<TreeViewItem>();
+            //this.KeyDown += new KeyEventHandler(onKeyDownHandler);
+            //this.KeyUp += new KeyEventHandler(onKeyUpHandler);
         }
 
         // Funciones para eliminar todos los elementos de IMU, camara y Insoles
@@ -130,118 +130,42 @@ namespace ibcdatacsharp.UI.DeviceList
         #region double click handlers
         private void onIMUDoubleClick(object sender, MouseButtonEventArgs args)
         {
-            if (sender is TreeViewItem)
+            if (sender is MultiSelectTreeViewItem)
             {
-                if (!((TreeViewItem)sender).IsSelected)
+                if (!((MultiSelectTreeViewItem)sender).IsSelected)
                 {
                     return;
                 }
             }
-            connectIMU((TreeViewItem)sender);
+            //connectIMU((MultiSelectTreeViewItem)sender);
         }
         private void onCameraDoubleClick(object sender, MouseButtonEventArgs args)
         {
-            if (sender is TreeViewItem)
+            if (sender is MultiSelectTreeViewItem)
             {
-                if (!((TreeViewItem)sender).IsSelected)
+                if (!((MultiSelectTreeViewItem)sender).IsSelected)
                 {
                     return;
                 }
             }
-            connectCamera((TreeViewItem)sender);
-        }
-        private void onSelected(object sender, RoutedEventArgs e)
-        {
-            TreeViewItem clicked = (TreeViewItem)sender;
-            if (multiSelectionKeyPressed)
-            {
-                Trace.WriteLine("multiselect");
-                if (!selected.Contains(clicked))
-                {
-                    selected.Add(clicked);
-                }
-            }
-            else
-            {
-                Trace.WriteLine("single select");
-                foreach (TreeViewItem item in selected)
-                {
-                    if (item != clicked)
-                    {
-                        item.IsSelected = false;
-                    }
-                }
-                selected = selected.Where(x => x == clicked).ToList();
-            }
-        }
-        private void onMouseDown(object sender, MouseButtonEventArgs args)
-        {
-            Trace.WriteLine("onMouseDown");
-            TreeViewItem clicked = (TreeViewItem)sender;
-            if (sender is TreeViewItem)
-            {
-                if (!clicked.IsSelected)
-                {
-                    return;
-                }
-            }
-            if (multiSelectionKeyPressed)
-            {
-                Trace.WriteLine("multiselect");
-                if (!selected.Contains(clicked))
-                {
-                    selected.Add(clicked);
-                }
-            }
-            else
-            {
-                Trace.WriteLine("single select");
-                foreach (TreeViewItem item in selected)
-                {
-                    if (item != clicked)
-                    {
-                        item.IsSelected = false;
-                    }
-                }
-                selected = selected.Where(x => x == clicked).ToList();
-            }
-        }
-        private void onMouseUp(object sender, MouseButtonEventArgs args)
-        {
-            TreeViewItem clicked = (TreeViewItem)sender;
-            if (sender is TreeViewItem)
-            {
-                if (!clicked.IsSelected)
-                {
-                    return;
-                }
-            }
-            args.Handled = true;
+            //connectCamera((MultiSelectTreeViewItem)sender);
         }
         #endregion
-        private void onKeyDownHandler(object sender, KeyEventArgs e)
+        public void connectIMUs(IList<object> treeViewItems)
         {
-            if (e.Key == multiselectKey)
+            foreach(object item in treeViewItems)
             {
-                multiSelectionKeyPressed = true;
+                if (item is IMUInfo)
+                {
+                    MultiSelectTreeViewItem treeViewItem = (MultiSelectTreeViewItem)IMUs.ItemContainerGenerator.ContainerFromItem(item);
+                    IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
+                    imuInfo.connected = true;
+                    treeViewItem.Foreground = new SolidColorBrush(Colors.Green);
+                }
             }
-        }
-        private void onKeyUpHandler(object sender, KeyEventArgs e)
-        {
-            if (e.Key == multiselectKey)
-            {
-                multiSelectionKeyPressed = false;
-            }
-        }
-        // Funcion que se llama al conectar un IMU (doble click o boton connect) para cambiar el TreeView
-        public void connectIMU(TreeViewItem treeViewItem)
-        {
-            IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
-            imuInfo.connected = true;
-            treeViewItem.Foreground = new SolidColorBrush(Colors.Green);
         }
         // Funcion que se llama al conectar una camara (doble click o boton connect) para cambiar el TreeView
-        public void connectCamera(TreeViewItem treeViewItem)
+        public void connectCamera(MultiSelectTreeViewItem treeViewItem)
         {
             int calculateFps(int number)
             {
@@ -251,7 +175,7 @@ namespace ibcdatacsharp.UI.DeviceList
             cameraInfo.fps = calculateFps(cameraInfo.number);
         }
         // Funcion que se llama al desconectar un IMU para cambiar el TreeView
-        public void disconnectIMU(TreeViewItem treeViewItem)
+        public void disconnectIMU(MultiSelectTreeViewItem treeViewItem)
         {
             IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
             imuInfo.connected = false;
