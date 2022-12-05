@@ -564,124 +564,117 @@ namespace ibcdatacsharp.UI
             if (numIMUs == 1)
             {
                 // Cálculo de la aceleración lineal
-                try
+                v0 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[0].W, (float)data.Quat[0].X, (float)data.Quat[0].Y, (float)data.Quat[0].Z), new Vector3(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z));
+                v1 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[1].W, (float)data.Quat[1].X, (float)data.Quat[1].Y, (float)data.Quat[1].Z), new Vector3(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z));
+                v2 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[2].W, (float)data.Quat[2].X, (float)data.Quat[2].Y, (float)data.Quat[2].Z), new Vector3(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z));
+                v3 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[3].W, (float)data.Quat[3].X, (float)data.Quat[3].Y, (float)data.Quat[3].Z), new Vector3(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z));
+
+
+                if (virtualToolBar.recordState == RecordState.Recording)
                 {
-                    v0 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[0].W, (float)data.Quat[0].X, (float)data.Quat[0].Y, (float)data.Quat[0].Z), new Vector3(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z));
-                    v1 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[1].W, (float)data.Quat[1].X, (float)data.Quat[1].Y, (float)data.Quat[1].Z), new Vector3(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z));
-                    v2 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[2].W, (float)data.Quat[2].X, (float)data.Quat[2].Y, (float)data.Quat[2].Z), new Vector3(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z));
-                    v3 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[3].W, (float)data.Quat[3].X, (float)data.Quat[3].Y, (float)data.Quat[3].Z), new Vector3(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z));
+                    dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + data.Imu[0].acc_x.ToString("F3") + " " + data.Imu[0].acc_y.ToString("F3") + " " + data.Imu[0].acc_z.ToString("F3") + " " + data.Imu[0].gyro_x.ToString("F3") + " " + data.Imu[0].gyro_y.ToString("F3") + " " + data.Imu[0].gyro_z.ToString("F3") + " " + data.Imu[0].mag_x.ToString("F3") + " " + data.Imu[0].mag_y.ToString("F3") + " " + data.Imu[0].mag_z.ToString("F3") + " " + v0.X.ToString("F3") + " " + v0.Y.ToString("F3") + " " + v0.Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_z.ToString("F3") + " " + data.Imu[1].gyro_x.ToString("F3") + " " + data.Imu[1].gyro_y.ToString("F3") + " " + data.Imu[1].gyro_z.ToString("F3") + " " + data.Imu[1].mag_x.ToString("F3") + " " + data.Imu[1].mag_y.ToString("F3") + " " + data.Imu[1].mag_z.ToString("F3") + " " + v1.X.ToString("F3") + " " + v1.Y.ToString("F3") + " " + v1.Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + " " + data.Imu[2].gyro_x.ToString("F3") + " " + data.Imu[2].gyro_y.ToString("F3") + " " + data.Imu[2].gyro_z.ToString("F3") + " " + data.Imu[2].mag_x.ToString("F3") + " " + data.Imu[2].mag_y.ToString("F3") + " " + data.Imu[2].mag_z.ToString("F3") + " " + v2.X.ToString("F3") + " " + v2.Y.ToString("F3") + " " + v2.Z.ToString("F3") + "\n" +
+                    "1 " + (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3") + " " + data.Imu[3].gyro_x.ToString("F3") + " " + data.Imu[3].gyro_y.ToString("F3") + " " + data.Imu[3].gyro_z.ToString("F3") + " " + data.Imu[3].mag_x.ToString("F3") + " " + data.Imu[3].mag_y.ToString("F3") + " " + data.Imu[3].mag_z.ToString("F3") + " " + v3.X.ToString("F3") + " " + v3.Y.ToString("F3") + " " + v3.Z.ToString("F3") + "\n";
 
-
-                    if (virtualToolBar.recordState == RecordState.Recording)
-                    {
-                        dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + data.Imu[0].acc_x.ToString("F3") + " " + data.Imu[0].acc_y.ToString("F3") + " " + data.Imu[0].acc_z.ToString("F3") + " " + data.Imu[0].gyro_x.ToString("F3") + " " + data.Imu[0].gyro_y.ToString("F3") + " " + data.Imu[0].gyro_z.ToString("F3") + " " + data.Imu[0].mag_x.ToString("F3") + " " + data.Imu[0].mag_y.ToString("F3") + " " + data.Imu[0].mag_z.ToString("F3") + " " + v0.X.ToString("F3") + " " + v0.Y.ToString("F3") + " " + v0.Z.ToString("F3") + "\n" +
-                        "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_z.ToString("F3") + " " + data.Imu[1].gyro_x.ToString("F3") + " " + data.Imu[1].gyro_y.ToString("F3") + " " + data.Imu[1].gyro_z.ToString("F3") + " " + data.Imu[1].mag_x.ToString("F3") + " " + data.Imu[1].mag_y.ToString("F3") + " " + data.Imu[1].mag_z.ToString("F3") + " " + v1.X.ToString("F3") + " " + v1.Y.ToString("F3") + " " + v1.Z.ToString("F3") + "\n" +
-                        "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + " " + data.Imu[2].gyro_x.ToString("F3") + " " + data.Imu[2].gyro_y.ToString("F3") + " " + data.Imu[2].gyro_z.ToString("F3") + " " + data.Imu[2].mag_x.ToString("F3") + " " + data.Imu[2].mag_y.ToString("F3") + " " + data.Imu[2].mag_z.ToString("F3") + " " + v2.X.ToString("F3") + " " + v2.Y.ToString("F3") + " " + v2.Z.ToString("F3") + "\n" +
-                        "1 " + (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3") + " " + data.Imu[3].gyro_x.ToString("F3") + " " + data.Imu[3].gyro_y.ToString("F3") + " " + data.Imu[3].gyro_z.ToString("F3") + " " + data.Imu[3].mag_x.ToString("F3") + " " + data.Imu[3].mag_y.ToString("F3") + " " + data.Imu[3].mag_z.ToString("F3") + " " + v3.X.ToString("F3") + " " + v3.Y.ToString("F3") + " " + v3.Z.ToString("F3") + "\n";
-
-                        mainWindow.fileSaver.appendCSVManual(dataline);
-                    }
-
-                    //Trace.WriteLine(dataline);
-
-                    //accelerometer.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
-                    //accelerometer.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
-                    //accelerometer.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
-                    //accelerometer.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
-
-                    //Forma Async de pintar gráficas
-
-                    Application.Current.Dispatcher.InvokeAsync(() =>
-                    {
-                        GraphAccelerometer acc = (GraphAccelerometer)graphs[0].Content;
-
-                        acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
-                        acc.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
-                        acc.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
-                        acc.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
-
-                        GraphGyroscope gyr = (GraphGyroscope)graphs[1].Content;
-
-                        gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
-                        gyr.drawRealTimeData(data.Imu[1].gyro_x, data.Imu[1].gyro_y, data.Imu[1].gyro_z);
-                        gyr.drawRealTimeData(data.Imu[2].gyro_x, data.Imu[2].gyro_y, data.Imu[2].gyro_z);
-                        gyr.drawRealTimeData(data.Imu[3].gyro_x, data.Imu[3].gyro_y, data.Imu[3].gyro_z);
-
-                        GraphMagnetometer mag = (GraphMagnetometer)graphs[2].Content;
-
-                        mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
-                        mag.drawRealTimeData(data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z);
-                        mag.drawRealTimeData(data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z);
-                        mag.drawRealTimeData(data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z);
-
-                        GraphLinAcc linAcc = (GraphLinAcc)graphs[3].Content;
-                        linAcc.drawRealTimeData(v0);
-                        linAcc.drawRealTimeData(v1);
-                        linAcc.drawRealTimeData(v2);
-                        linAcc.drawRealTimeData(v3);
-
-                    });
-
-
-                    //Application.Current.Dispatcher.InvokeAsync(() =>
-                    //{
-                    //    gyr = (GraphGyroscope)graphs[1].Content;
-
-                    //    gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
-                    //    gyr.render();
-
-                    //});
-
-                    //Application.Current.Dispatcher.InvokeAsync(() =>
-                    //{
-                    //    mag = (GraphMagnetometer)graphs[2].Content;
-
-                    //    mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
-                    //    mag.render();
-
-                    //});
-
-
-
-
-
-                    //using (StreamWriter sw = File.AppendText("C:\\Temp\\output.txt"))
-                    //{
-                    //    sw.WriteLine(dataline);
-
-                    //}
-                    frame += 4;
-                    fakets += 0.04f;
-
-                    //    await Task.WhenAll(new Task[] {
-                    //        updateAccelerometer(frame, data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z),
-                    //        updateMagnetometer(frame, data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z),
-                    //        updateGyroscope(frame, data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z),
-                    //        renderAcceletometer(),
-                    //        renderGyroscope(),
-                    //        renderMagnetometer(),
-
-
-
-                    //    //v.appendCSV( data.timespans[0] , frame,data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z, data.Imu[0].gyro_x, 
-                    //    //data.Imu[0].gyro_y, data.Imu[0].gyro_z, data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z),
-
-                    //    //v.appendCSV( data.timespans[1] , frame + 1,data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z, data.Imu[1].gyro_x,
-                    //    //data.Imu[1].gyro_y, data.Imu[1].gyro_z, data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z),
-
-                    //    //v.appendCSV( data.timespans[2] , frame + 2,data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z, data.Imu[2].gyro_x,
-                    //    //data.Imu[2].gyro_y, data.Imu[2].gyro_z, data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z),
-
-                    //    // v.appendCSV( data.timespans[3] , frame + 3, data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z, data.Imu[3].gyro_x,
-                    //    //data.Imu[3].gyro_y, data.Imu[3].gyro_z, data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z),
-
-
-                    //});
+                    mainWindow.fileSaver.appendCSVManual(dataline);
                 }
-                catch (ArgumentOutOfRangeException)
+
+                //Trace.WriteLine(dataline);
+
+                //accelerometer.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
+                //accelerometer.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
+                //accelerometer.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
+                //accelerometer.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
+
+                //Forma Async de pintar gráficas
+
+                Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    Trace.WriteLine(data.Imu.Count);
-                }
+                    GraphAccelerometer acc = (GraphAccelerometer)graphs[0].Content;
+
+                    acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
+                    acc.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
+                    acc.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
+                    acc.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
+
+                    GraphGyroscope gyr = (GraphGyroscope)graphs[1].Content;
+
+                    gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
+                    gyr.drawRealTimeData(data.Imu[1].gyro_x, data.Imu[1].gyro_y, data.Imu[1].gyro_z);
+                    gyr.drawRealTimeData(data.Imu[2].gyro_x, data.Imu[2].gyro_y, data.Imu[2].gyro_z);
+                    gyr.drawRealTimeData(data.Imu[3].gyro_x, data.Imu[3].gyro_y, data.Imu[3].gyro_z);
+
+                    GraphMagnetometer mag = (GraphMagnetometer)graphs[2].Content;
+
+                    mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
+                    mag.drawRealTimeData(data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z);
+                    mag.drawRealTimeData(data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z);
+                    mag.drawRealTimeData(data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z);
+
+                    GraphLinAcc linAcc = (GraphLinAcc)graphs[3].Content;
+                    linAcc.drawRealTimeData(v0);
+                    linAcc.drawRealTimeData(v1);
+                    linAcc.drawRealTimeData(v2);
+                    linAcc.drawRealTimeData(v3);
+
+                });
+
+
+                //Application.Current.Dispatcher.InvokeAsync(() =>
+                //{
+                //    gyr = (GraphGyroscope)graphs[1].Content;
+
+                //    gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
+                //    gyr.render();
+
+                //});
+
+                //Application.Current.Dispatcher.InvokeAsync(() =>
+                //{
+                //    mag = (GraphMagnetometer)graphs[2].Content;
+
+                //    mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
+                //    mag.render();
+
+                //});
+
+
+
+
+
+                //using (StreamWriter sw = File.AppendText("C:\\Temp\\output.txt"))
+                //{
+                //    sw.WriteLine(dataline);
+
+                //}
+                frame += 4;
+                fakets += 0.04f;
+
+                //    await Task.WhenAll(new Task[] {
+                //        updateAccelerometer(frame, data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z),
+                //        updateMagnetometer(frame, data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z),
+                //        updateGyroscope(frame, data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z),
+                //        renderAcceletometer(),
+                //        renderGyroscope(),
+                //        renderMagnetometer(),
+
+
+
+                //    //v.appendCSV( data.timespans[0] , frame,data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z, data.Imu[0].gyro_x, 
+                //    //data.Imu[0].gyro_y, data.Imu[0].gyro_z, data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z),
+
+                //    //v.appendCSV( data.timespans[1] , frame + 1,data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z, data.Imu[1].gyro_x,
+                //    //data.Imu[1].gyro_y, data.Imu[1].gyro_z, data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z),
+
+                //    //v.appendCSV( data.timespans[2] , frame + 2,data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z, data.Imu[2].gyro_x,
+                //    //data.Imu[2].gyro_y, data.Imu[2].gyro_z, data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z),
+
+                //    // v.appendCSV( data.timespans[3] , frame + 3, data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z, data.Imu[3].gyro_x,
+                //    //data.Imu[3].gyro_y, data.Imu[3].gyro_z, data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z),
+
+
+                //});
 
             }
             else if(numIMUs == 2)

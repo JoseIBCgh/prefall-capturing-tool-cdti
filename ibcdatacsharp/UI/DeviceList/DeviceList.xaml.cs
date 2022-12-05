@@ -61,31 +61,39 @@ namespace ibcdatacsharp.UI.DeviceList
         }
         public void setIMUs(List<IMUInfo> IMUs)
         {
+            // Quitar los IMUs que no se han escaneado 
+            // Los que estaban conectados no los escanea de alli => imu.connected ||
+            VM.IMUs = new ObservableCollection<IMUInfo>(VM.IMUs.Where(imu => imu.connected || IMUs.Any(newImu => newImu.adress == imu.adress)));
             foreach (IMUInfo imu in IMUs)
             {
-                if (!IMUinList(imu))
+                if (!VM.IMUs.Any(imuOld => imuOld.adress == imu.adress))
                 {
                     VM.IMUs.Add(imu);
                 }
-            }
-        }
-        public void addIMU(IMUInfo IMU)
-        {
-            if (!IMUinList(IMU))
-            {
-                VM.IMUs.Add(IMU);
-            }
-        }
-        private bool IMUinList(IMUInfo imu)
-        {
-            foreach(IMUInfo imuInList in VM.IMUs)
-            {
-                if(imu.adress == imuInList.adress) // Tiene que identificar a un IMU de forma unica
+                else // Cambiar el id del IMU si es diferente
                 {
-                    return true;
+                    int index = VM.IMUs.ToList().FindIndex(imuOld => imuOld.adress == imu.adress);
+                    if (VM.IMUs[index].id != imu.id)
+                    {
+                        VM.IMUs[index].id = imu.id;
+                    }
                 }
             }
-            return false;
+        }
+        public void addIMU(IMUInfo imu)
+        {
+            if (VM.IMUs.Any(imuOld => imuOld.adress == imu.adress))
+            {
+                int index = VM.IMUs.ToList().FindIndex(imuOld => imuOld.adress == imu.adress);
+                if (VM.IMUs[index].id != imu.id)
+                {
+                    VM.IMUs[index].id = imu.id;
+                }
+            }
+            else
+            {
+                VM.IMUs.Add(imu);
+            }
         }
         #endregion
         #region Cameras
@@ -99,11 +107,20 @@ namespace ibcdatacsharp.UI.DeviceList
         }
         public void setCameras(List<CameraInfo> cameras)
         {
-            foreach(CameraInfo cam in cameras)
+            VM.cameras = new ObservableCollection<CameraInfo>(VM.cameras.Where(cam => cameras.Any(newCamera => newCamera.name == cam.name)));
+            foreach (CameraInfo cam in cameras)
             {
-                if (!camerainList(cam))
+                if (!VM.cameras.Any(camOld => camOld.name == cam.name))
                 {
                     VM.cameras.Add(cam);
+                }
+                else // Cambiar el numero de la camara si es diferente (no se si con las camaras es necesario)
+                {
+                    int index = VM.cameras.ToList().FindIndex(camOld => camOld.name == cam.name);
+                    if (VM.cameras[index].number != cam.number)
+                    {
+                        VM.cameras[index].number = cam.number;
+                    }
                 }
             }
         }

@@ -21,6 +21,9 @@ using System.IO.Ports;
 using System.Text.RegularExpressions;
 using System.Management;
 using System.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System.Drawing;
+using MessageBox = System.Windows.MessageBox;
 
 namespace ibcdatacsharp.UI
 {
@@ -376,21 +379,25 @@ namespace ibcdatacsharp.UI
                     //indices.ForEach(i => Trace.WriteLine(i));
                     await Task.Run(() => getIMUs()); //necesario para escanear IMUs
 
-
+                    List<CameraInfo> cameras = new List<CameraInfo>();
                     for (int i = 0; i < names.Count; i++)
                     {
                         if (indices.Contains(i))
                         {
-                            deviceListClass.addCamera(new CameraInfo(i, names[i]));
+                            cameras.Add(new CameraInfo(i, names[i]));
                         }
                     }
+                    deviceListClass.setCameras(cameras);
 
                     await Task.Delay(4000);
 
+                    List<IMUInfo> imus = new List<IMUInfo>();
                     for (int i = 0; i < scanDevices.Count; i++)
                     {
-                        deviceListClass.addIMU(new IMUInfo(i, "ActiSense", GetMacAddress(scanDevices, i)));
+                        imus.Add(new IMUInfo(i, "ActiSense", GetMacAddress(scanDevices, i)));
                     }
+                    deviceListClass.setIMUs(imus);
+                    MessageBox.Show(scanDevices.Count + " sensores escaneados", null, MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
 
