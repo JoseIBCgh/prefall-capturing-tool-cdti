@@ -70,6 +70,9 @@
                                     <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Linear Acceleration">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphLinAcc.xaml" x:Name="linAcc"/>
                                     </dock:LayoutAnchorable>
+                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Quaternions">
+                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphQuaternion.xaml" x:Name="quaternions"/>
+                                    </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
                             </dock:LayoutAnchorablePaneGroup>
                         </dock:LayoutAnchorablePaneGroup>

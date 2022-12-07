@@ -43,6 +43,9 @@
     <Compile Update="UI\Graphs\GraphMagnetometer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\Graphs\GraphQuaternion.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\MenuBar\MenuBar.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -97,6 +100,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Graphs\GraphMagnetometer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\GraphQuaternion.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\MainWindow.xaml">

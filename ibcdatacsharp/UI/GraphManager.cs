@@ -53,6 +53,7 @@ namespace ibcdatacsharp.UI
             graphs.Add(mainWindow.angleZ);
             graphs.Add(mainWindow.angularVelocity);
             graphs.Add(mainWindow.angularAcceleration);
+            graphs.Add(mainWindow.quaternions);
             if (mainWindow.timeLine.Content == null)
             {
                 mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
@@ -115,6 +116,7 @@ namespace ibcdatacsharp.UI
         public GraphGyroscope gyroscope;
         public GraphMagnetometer magnetometer;
         public GraphLinAcc linAcc;
+        public GraphQuaternion quaternions;
 
         public AngleGraphX angleX;
         public AngleGraphY angleY;
@@ -283,6 +285,17 @@ namespace ibcdatacsharp.UI
             else
             {
                 angleAcc = mainWindow.angularAcceleration.Content as GraphAngularAcceleration;
+            }
+            if (mainWindow.quaternions.Content == null)
+            {
+                mainWindow.quaternions.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    quaternions = mainWindow.quaternions.Content as GraphQuaternion;
+                };
+            }
+            else
+            {
+                quaternions = mainWindow.quaternions.Content as GraphQuaternion;
             }
         }
 
@@ -623,6 +636,12 @@ namespace ibcdatacsharp.UI
                     linAcc.drawRealTimeData(v2);
                     linAcc.drawRealTimeData(v3);
 
+                    for(int i= 0; i < 4; i++)
+                    {
+                        Quaternion q = new Quaternion((float)data.Quat[i].W, (float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z);
+                        q = Quaternion.Normalize(q);
+                        quaternions.drawRealTimeData(q);
+                    }
                 });
 
 
