@@ -18,6 +18,7 @@ namespace ibcdatacsharp
         }
         public static Vector3 calcLinAcc(Quaternion q, Vector3 acc)
         {
+            q = Quaternion.Normalize(q);
             Vector3 gRot = quaternionRotateVector(q, g);
             return gRot - acc;
         }

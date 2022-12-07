@@ -129,6 +129,9 @@ namespace ibcdatacsharp.UI
             api.deviceConnected += Api_deviceConnected;
 
             //End Wisewalk API
+
+            //Test linear acceleration
+            //LinearAcceleration.test();
         }
 
         /** 
