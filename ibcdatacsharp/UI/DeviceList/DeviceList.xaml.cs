@@ -238,6 +238,9 @@ namespace ibcdatacsharp.UI.DeviceList
                     MultiSelectTreeViewItem treeViewItem = (MultiSelectTreeViewItem)IMUs.ItemContainerGenerator.ContainerFromItem(item);
                     IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
                     imuInfo.connected = true;
+                    // No estoy seguro de que esta sea la lista y este key
+                    imuInfo.battery = mainWindow.devices_list[imuInfo.id.ToString()].HeaderInfo.battery;
+                    imuInfo.fw = mainWindow.devices_list[imuInfo.id.ToString()].HeaderInfo.fwVersion;
                     treeViewItem.Foreground = new SolidColorBrush(Colors.Green);
                 }
             }
@@ -257,6 +260,8 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
             imuInfo.connected = false;
+            imuInfo.battery = null;
+            imuInfo.fw = null;
             treeViewItem.Foreground = new SolidColorBrush(Colors.Black);
         }
         private void onCheckIMU(object sender, RoutedEventArgs e)

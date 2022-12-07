@@ -44,6 +44,11 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<bool>("used"); }
             set { SetValue("used", value); }
         }
+        public string? fw
+        {
+            get { return GetValue<string>("fw"); }
+            set { SetValue("fw", value); }
+        }
 
         public IMUInfo() { }
         public IMUInfo(int id, string name, string adress)
@@ -54,6 +59,7 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             this.battery = null;
             this.connected = false;
             this.used = false;
+            this.fw = null;
         }
     }
 }
