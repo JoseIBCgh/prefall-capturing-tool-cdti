@@ -594,7 +594,7 @@ namespace ibcdatacsharp.UI
                 v3 = v[3];
 
                 int index = 3;
-                Quaternion q = new Quaternion((float)data.Quat[index].W, (float)data.Quat[index].X, (float)data.Quat[index].Y, (float)data.Quat[index].Z);
+                Quaternion q = new Quaternion((float)data.Quat[index].X, (float)data.Quat[index].Y, (float)data.Quat[index].Z, (float)data.Quat[index].W);
                 quaternionEvent?.Invoke(this, deviceHandler, q);
 
                 if (virtualToolBar.recordState == RecordState.Recording)
