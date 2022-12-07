@@ -60,6 +60,11 @@
                 <controls:MultiSelectTreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:IMUInfo}">
                         <Grid Margin="-19,0,0,0" Width="350">
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem IsEnabled="{Binding Path=used}" Header="Set as Reference" Click="setIMUasReference" />
+                                </ContextMenu>
+                            </Grid.ContextMenu>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="15"/>
                                 <ColumnDefinition Width="15"/>

@@ -1,4 +1,5 @@
 ﻿using ibcdatacsharp.DeviceList.TreeClasses;
+using ScottPlot.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,12 +15,14 @@ namespace ibcdatacsharp.UI.DeviceList
     public partial class DeviceList : Page
     {
         private const int MAX_IMU_USED = 2;
+        private MainWindow mainWindow;
         //private const Key multiselectKey = Key.LeftCtrl;
         //private bool multiSelectionKeyPressed = false;
         //public List<TreeViewItem> selected { get;private set; } 
         public DeviceList()
         {
             InitializeComponent();
+            mainWindow = Application.Current.MainWindow as MainWindow;
             baseItem.IsExpanded = true;
             //selected = new List<TreeViewItem>();
             //this.KeyDown += new KeyEventHandler(onKeyDownHandler);
@@ -285,6 +288,17 @@ namespace ibcdatacsharp.UI.DeviceList
             {
                 return VM.IMUs.Where(i => !i.used).ToList();
             }
+        }
+
+        private void setIMUasReference(object sender, RoutedEventArgs e)
+        {
+            // Otra forma de sacarlo. Hay que establer la propiedad Tag al valor que quieras en el xaml
+            /*
+            string id = ((MenuItem)sender).Tag.ToString();
+            */
+            MenuItem menuItem = (MenuItem)sender;
+            IMUInfo imu = (IMUInfo)menuItem.DataContext;
+            mainWindow.readQuaternion(imu);
         }
     }
 }

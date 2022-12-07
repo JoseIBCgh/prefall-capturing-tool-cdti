@@ -24,6 +24,7 @@ using System.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using System.Drawing;
 using MessageBox = System.Windows.MessageBox;
+using System.Numerics;
 
 namespace ibcdatacsharp.UI
 {
@@ -97,6 +98,8 @@ namespace ibcdatacsharp.UI
 
         public IMUInfo imuInfo;
         public List<int> devHandlers;
+
+        public Quaternion referenceQuaternion;
 
         //end Wiseware API
         public MainWindow()
@@ -577,6 +580,38 @@ namespace ibcdatacsharp.UI
         private void onCapturedFiles(object sender, EventArgs e)
         {
             virtualToolBar.openClick();
+        }
+        // IMPORTANTE: La funcion eventHandler tiene que ser local
+        public void readQuaternion(IMUInfo imu)
+        {
+            // usar imu para acceder a la informacion del imu
+            var tokenSource = new CancellationTokenSource();
+            CancellationToken ct = tokenSource.Token;
+            void eventHandler(object sender, byte id, Quaternion q)
+            {
+                if(id == imu.id)
+                {
+                    graphManager.captureManager.quaternionEvent -= eventHandler;
+                    tokenSource.Cancel();
+                    referenceQuaternion = q;
+                    string text = "Referencia creada con el valor del quaternion: " +
+                        "x = " + q.X.ToString("0.##") +
+                        ",y = " + q.Y.ToString("0.##") +
+                        ",z = " + q.Z.ToString("0.##") +
+                        ",w = " + q.W.ToString("0.##");
+                    Task.Run(() => MessageBox.Show(text, "Set as Reference"));
+                }
+            }
+            graphManager.captureManager.quaternionEvent += eventHandler;
+            Task.Delay(1000).ContinueWith(t =>
+            {
+                if (!ct.IsCancellationRequested)
+                {
+                    string text = "No se han recivido datos del sensor " + imu.id.ToString();
+                    graphManager.captureManager.quaternionEvent -= eventHandler;
+                    MessageBox.Show(text, "Set as Reference");
+                }
+            });
         }
         // Funcion que se ejecuta al clicar el menú Exit
         private void onExit(object sender, EventArgs e)

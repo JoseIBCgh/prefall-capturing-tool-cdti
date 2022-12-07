@@ -168,10 +168,11 @@ namespace ibcdatacsharp.UI
 
         Vector3 v0, v1, v2, v3;
 
-
+        public delegate void QuaternionEventHandler(object sender, byte id, Quaternion q);
+        public event QuaternionEventHandler quaternionEvent;
         //End Wise
         public CaptureManager(List<Frame> graphs, VirtualToolBar virtualToolBar, Device.Device device)
-        {
+        { 
             active = false;
             this.graphs = graphs;
             this.virtualToolBar = virtualToolBar;
@@ -570,6 +571,9 @@ namespace ibcdatacsharp.UI
                 v2 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[2].W, (float)data.Quat[2].X, (float)data.Quat[2].Y, (float)data.Quat[2].Z), new Vector3(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z));
                 v3 = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[3].W, (float)data.Quat[3].X, (float)data.Quat[3].Y, (float)data.Quat[3].Z), new Vector3(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z));
 
+                int index = 3;
+                Quaternion q = new Quaternion((float)data.Quat[index].W, (float)data.Quat[index].X, (float)data.Quat[index].Y, (float)data.Quat[index].Z);
+                quaternionEvent?.Invoke(this, deviceHandler, q);
 
                 if (virtualToolBar.recordState == RecordState.Recording)
                 {
