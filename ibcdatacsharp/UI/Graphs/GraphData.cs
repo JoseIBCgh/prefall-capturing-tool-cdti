@@ -44,14 +44,14 @@ namespace ibcdatacsharp.UI.Graphs
         public int frame { get; set; }
         protected double parseDouble(string s)
         {
-            string s_comma = s.Replace(",", ".");
-            double result = double.Parse(s_comma, CultureInfo.InvariantCulture);
+            string s_point = s.Replace(",", ".");
+            double result = double.Parse(s_point, CultureInfo.InvariantCulture);
             return result;
         }
         protected float parseFloat(string s)
         {
-            string s_comma = s.Replace(",", ".");
-            float result = float.Parse(s_comma, CultureInfo.InvariantCulture);
+            string s_point = s.Replace(",", ".");
+            float result = float.Parse(s_point, CultureInfo.InvariantCulture);
             return result;
         }
     }

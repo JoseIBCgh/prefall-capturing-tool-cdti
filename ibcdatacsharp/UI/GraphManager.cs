@@ -19,6 +19,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 using Quaternion = System.Numerics.Quaternion;
+using ibcdatacsharp.UI.Common;
 
 namespace ibcdatacsharp.UI
 {
@@ -679,9 +680,9 @@ namespace ibcdatacsharp.UI
             }
             else if(numIMUs == 2)
             {
-                float[] angleX = new float[4] { 1, 2, 3, 4 };
-                float[] angleY = new float[4] { 1, 2, 3, 4 };
-                float[] angleZ = new float[4] { 1, 2, 3, 4 };
+                float[] angleX = new float[4] { Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90) };
+                float[] angleY = new float[4] { Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90) };
+                float[] angleZ = new float[4] { Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90) };
                 Vector3[] angularVelocity = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
                 Vector3[] angularAcceleration = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
                 if (virtualToolBar.recordState == RecordState.Recording)

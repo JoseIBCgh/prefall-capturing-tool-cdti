@@ -1,4 +1,5 @@
-﻿using ScottPlot;
+﻿using OpenCvSharp.Flann;
+using ScottPlot;
 using ScottPlot.Plottable;
 using System;
 using System.Drawing;
@@ -8,6 +9,8 @@ namespace ibcdatacsharp.UI.Graphs
     // Modelo de los graficos del acelerometro, giroscopio y magnetometro
     public class Model1S
     {
+        public delegate void ValueEventHandler(object sender, double value);
+        public event ValueEventHandler valueEvent;
         private const int RIGHT_SEPARATION = 20;
         private const int MAX_POINTS = 100;
         private int CAPACITY = 100000; //Usar un valor sufientemente grande para que en la mayoria de los casos no haya que cambiar el tamaño de los arrays
@@ -82,6 +85,7 @@ namespace ibcdatacsharp.UI.Graphs
             plot.Plot.XAxis2.SetSizeLimit(max: 5);
             plot.Plot.Remove(signalPlot);
             signalPlot = plot.Plot.AddSignal(values, color: dataColor);
+            signalPlot.OffsetY = _offset;
             nextIndex = 0;
             maxRenderIndex = nextIndex;
         }
@@ -92,6 +96,8 @@ namespace ibcdatacsharp.UI.Graphs
             values = data;
             plot.Plot.Remove(signalPlot);
             signalPlot = plot.Plot.AddSignal(values, color: dataColor);
+            signalPlot.OffsetY = _offset;
+
             maxRenderIndex = 0;
             plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, values.Length));
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
@@ -105,6 +111,7 @@ namespace ibcdatacsharp.UI.Graphs
             plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS),
                 xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
+            valueEvent?.Invoke(this, values[index]);
         }
         #endregion Replay
 
@@ -117,9 +124,11 @@ namespace ibcdatacsharp.UI.Graphs
                 Array.Resize(ref values, CAPACITY);
                 plot.Plot.Remove(signalPlot);
                 signalPlot = plot.Plot.AddSignal(values, color: dataColor);
+                signalPlot.OffsetY = _offset;
             }
             values[nextIndex] = data;
             nextIndex++;
+            valueEvent?.Invoke(this, data);
         }
         // Actualiza el renderizado
         public void render()
@@ -150,6 +159,22 @@ namespace ibcdatacsharp.UI.Graphs
                 lineFrame.X = value;
                 lineFrame.X = value;
                 lineData.Y = values[value];
+            }
+        }
+        private double _offset = 0;
+        public double offset
+        {
+            get
+            {
+                return _offset;
+            }
+            set
+            {
+                _offset = value;
+                if (signalPlot != null)
+                {
+                    signalPlot.OffsetY = value;
+                }
             }
         }
     }

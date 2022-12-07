@@ -1,5 +1,6 @@
 ﻿using ibcdatacsharp.UI.Device;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,12 +21,17 @@ namespace ibcdatacsharp.UI.Graphs
         {
             InitializeComponent();
             model = new Model1S(plot);
+            model.valueEvent += onUpdateAngle;
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
 
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("grados");
+        }
+        private void onUpdateAngle(object sender, double value)
+        {
+            angle.Text = value.ToString("0.#");
         }
         public void initCapture()
         {
@@ -89,6 +95,12 @@ namespace ibcdatacsharp.UI.Graphs
             {
                 model.updateData(angle);
             });
+        }
+
+        private void onSetOffset(object sender, RoutedEventArgs e)
+        {
+            string offset_point = offset.Text.Replace(",", ".");
+            model.offset = float.Parse(offset_point, CultureInfo.InvariantCulture);
         }
     }
 }

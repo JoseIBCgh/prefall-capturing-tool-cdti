@@ -84,11 +84,18 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             if (VM.IMUs.Any(imuOld => imuOld.adress == imu.adress))
             {
+                return;
                 int index = VM.IMUs.ToList().FindIndex(imuOld => imuOld.adress == imu.adress);
                 if (VM.IMUs[index].id != imu.id)
                 {
                     VM.IMUs[index].id = imu.id;
                 }
+            }
+            if(VM.IMUs.Any(imuOld => imuOld.id == imu.id))
+            {
+                int maxID = VM.IMUs.Max(imuOld => imuOld.id);
+                imu.id = maxID + 1;
+                VM.IMUs.Add(imu);
             }
             else
             {

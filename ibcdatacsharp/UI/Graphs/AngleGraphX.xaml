@@ -10,5 +10,13 @@
 
     <Grid>
         <WpfPlot  x:Name="plot"/>
+        <StackPanel Margin="0 0 30 50" Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <TextBlock FontSize="20" HorizontalAlignment="Center" x:Name="angle">0.0</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Padding="5 5 5 5">Offset</TextBlock>
+                <TextBox Background="Transparent" BorderBrush="Transparent" Padding="5 5 5 5" x:Name="offset">0.0</TextBox>
+            </StackPanel>
+            <Button Click="onSetOffset">Set Offset</Button>
+        </StackPanel>
     </Grid>
 </Page>

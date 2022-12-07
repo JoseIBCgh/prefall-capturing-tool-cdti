@@ -397,7 +397,7 @@ namespace ibcdatacsharp.UI
                         imus.Add(new IMUInfo(i, "ActiSense", GetMacAddress(scanDevices, i)));
                     }
                     deviceListClass.setIMUs(imus);
-                    MessageBox.Show(scanDevices.Count + " sensores escaneados", null, MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(scanDevices.Count + " sensores escaneados", "", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
 
@@ -517,6 +517,7 @@ namespace ibcdatacsharp.UI
                         IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
 
                         devHandlers.Add(imuInfo.id);
+                        conn_list_dev.Remove(scanDevices[imuInfo.id]);
 
                         api.Disconnect(devHandlers, out error);
 
