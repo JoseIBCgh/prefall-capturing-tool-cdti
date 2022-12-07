@@ -397,7 +397,7 @@ namespace ibcdatacsharp.UI
                         imus.Add(new IMUInfo(i, "ActiSense", GetMacAddress(scanDevices, i)));
                     }
                     deviceListClass.setIMUs(imus);
-                    MessageBox.Show(scanDevices.Count + " sensores escaneados", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(scanDevices.Count + " IMUs encontrados", "Scan Devices", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
 
