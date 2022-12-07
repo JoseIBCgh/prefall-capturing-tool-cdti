@@ -38,6 +38,7 @@ namespace ibcdatacsharp.UI.Graphs
             paintAreas();
 
             lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, LineStyle.Dash);
+            /*
             lineFrame.PositionLabel = true;
             lineFrame.PositionLabelBackground = frameColor;
             lineFrame.PositionFormatter = customFormatter;
@@ -46,7 +47,7 @@ namespace ibcdatacsharp.UI.Graphs
             lineData.PositionLabel = true;
             lineData.PositionLabelBackground = dataColor;
             lineData.PositionFormatter = customFormatter;
-
+            */
             plot.Plot.Style(Style.Seaborn);
             plot.Refresh();
         }
@@ -157,8 +158,7 @@ namespace ibcdatacsharp.UI.Graphs
             {
                 signalPlot.MaxRenderIndex = value;
                 lineFrame.X = value;
-                lineFrame.X = value;
-                lineData.Y = values[value];
+                //lineData.Y = values[value];
             }
         }
         private double _offset = 0;
