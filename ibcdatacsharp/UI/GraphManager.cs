@@ -29,9 +29,10 @@ namespace ibcdatacsharp.UI
     {
         public CaptureManager captureManager;
         public ReplayManager replayManager;
-        public List<Frame> graphs;
+        public List<Frame> graphs1IMU;
+        public List<Frame> graphs2IMU;
 
-       
+
 
         public GraphManager()
         {
@@ -44,29 +45,30 @@ namespace ibcdatacsharp.UI
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             VirtualToolBar virtualToolBar = mainWindow.virtualToolBar;
             Device.Device device = mainWindow.device;
-            graphs = new List<Frame>();
-            graphs.Add(mainWindow.accelerometer);
-            graphs.Add(mainWindow.gyroscope);
-            graphs.Add(mainWindow.magnetometer);
-            graphs.Add(mainWindow.linAcc);
-            graphs.Add(mainWindow.angleX);
-            graphs.Add(mainWindow.angleY);
-            graphs.Add(mainWindow.angleZ);
-            graphs.Add(mainWindow.angularVelocity);
-            graphs.Add(mainWindow.angularAcceleration);
-            graphs.Add(mainWindow.quaternions);
+            graphs1IMU = new List<Frame>();
+            graphs2IMU = new List<Frame>();
+            graphs1IMU.Add(mainWindow.accelerometer);
+            graphs1IMU.Add(mainWindow.gyroscope);
+            graphs1IMU.Add(mainWindow.magnetometer);
+            graphs1IMU.Add(mainWindow.linAcc);
+            graphs2IMU.Add(mainWindow.angleX);
+            graphs2IMU.Add(mainWindow.angleY);
+            graphs2IMU.Add(mainWindow.angleZ);
+            graphs2IMU.Add(mainWindow.angularVelocity);
+            graphs2IMU.Add(mainWindow.angularAcceleration);
+            graphs1IMU.Add(mainWindow.quaternions);
             if (mainWindow.timeLine.Content == null)
             {
                 mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
                 {
                     TimeLine.TimeLine timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
-                    replayManager = new ReplayManager(timeLine, graphs);
+                    replayManager = new ReplayManager(timeLine, graphs1IMU, graphs2IMU);
                 };
             }
             else
             {
                 TimeLine.TimeLine timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
-                replayManager = new ReplayManager(timeLine, graphs);
+                replayManager = new ReplayManager(timeLine, graphs1IMU, graphs2IMU);
             }
 
             if (mainWindow.deviceList.Content == null)
@@ -74,13 +76,13 @@ namespace ibcdatacsharp.UI
                 mainWindow.deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
                 {
                     DeviceList.DeviceList deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
-                    captureManager = new CaptureManager(graphs, virtualToolBar, device, deviceList);
+                    captureManager = new CaptureManager(graphs1IMU, graphs2IMU, virtualToolBar, device, deviceList);
                 };
             }
             else
             {
                 DeviceList.DeviceList deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
-                captureManager = new CaptureManager(graphs, virtualToolBar, device, deviceList);
+                captureManager = new CaptureManager(graphs1IMU, graphs2IMU, virtualToolBar, device, deviceList);
             }
         }
         public void initReplay(GraphData data)
@@ -120,7 +122,8 @@ namespace ibcdatacsharp.UI
         public bool active { get; private set; }
         private const int RENDER_MS = 100;
         private System.Timers.Timer timerRender;
-        private List<Frame> graphs;
+        private List<Frame> graphs1IMU;
+        private List<Frame> graphs2IMU;
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
         private DeviceList.DeviceList deviceList;
@@ -188,10 +191,11 @@ namespace ibcdatacsharp.UI
         public delegate void QuaternionEventHandler(object sender, byte id, Quaternion q);
         public event QuaternionEventHandler quaternionEvent;
         //End Wise
-        public CaptureManager(List<Frame> graphs, VirtualToolBar virtualToolBar, Device.Device device, DeviceList.DeviceList deviceList)
+        public CaptureManager(List<Frame> graphs1IMU, List<Frame> graphs2IMU, VirtualToolBar virtualToolBar, Device.Device device, DeviceList.DeviceList deviceList)
         { 
             active = false;
-            this.graphs = graphs;
+            this.graphs1IMU = graphs1IMU;
+            this.graphs2IMU = graphs2IMU;
             this.virtualToolBar = virtualToolBar;
             this.device = device;
             this.deviceList = deviceList;
@@ -335,7 +339,35 @@ namespace ibcdatacsharp.UI
 
                 mainWindow.api.dataReceived += Api_dataReceived;
 
-                foreach (Frame frame in graphs)
+                foreach (Frame frame in graphs1IMU)
+                {
+                    if (frame.Content == null)
+                    {
+                        frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                        {
+                            // Todos los grafos deberian implementar esta interface
+                            GraphInterface graph = frame.Content as GraphInterface;
+
+                            graph.initCapture();
+
+
+
+                            //timerCapture.Elapsed += graph.onTick;
+                            timerRender.Elapsed += graph.onRender;
+                        };
+                    }
+                    else
+                    {
+                        GraphInterface graph = frame.Content as GraphInterface;
+                        graph.initCapture();
+
+
+                        //timerCapture.Elapsed += graph.onTick;
+                        timerRender.Elapsed += graph.onRender;
+                    }
+                }
+                // En el futuro activar solo uno de los 2 (???)
+                foreach (Frame frame in graphs2IMU)
                 {
                     if (frame.Content == null)
                     {
@@ -395,7 +427,7 @@ namespace ibcdatacsharp.UI
             {
                 active = false;
                 timerRender.Stop();
-                foreach (Frame frame in graphs)
+                foreach (Frame frame in graphs1IMU)
                 {
                     if (frame.Content == null)
                     {
@@ -405,7 +437,6 @@ namespace ibcdatacsharp.UI
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.clearData();
                             graph.initCapture();
-                            //timerCapture.Elapsed -= graph.onTick;
                             //timerRender.Elapsed -= graph.onRender;
                         };
                     }
@@ -414,7 +445,27 @@ namespace ibcdatacsharp.UI
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.clearData();
                         graph.initCapture();
-                        //timerCapture.Elapsed -= graph.onTick;
+                        //timerRender.Elapsed -= graph.onRender;
+                    }
+                }
+                foreach (Frame frame in graphs2IMU)
+                {
+                    if (frame.Content == null)
+                    {
+                        frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                        {
+                            // Todos los grafos deberian implementar esta interface
+                            GraphInterface graph = frame.Content as GraphInterface;
+                            graph.clearData();
+                            graph.initCapture();
+                            //timerRender.Elapsed -= graph.onRender;
+                        };
+                    }
+                    else
+                    {
+                        GraphInterface graph = frame.Content as GraphInterface;
+                        graph.clearData();
+                        graph.initCapture();
                         //timerRender.Elapsed -= graph.onRender;
                     }
                 }
@@ -429,7 +480,26 @@ namespace ibcdatacsharp.UI
         {
             if (active)
             {
-                foreach (Frame frame in graphs)
+                foreach (Frame frame in graphs1IMU)
+                {
+                    if (frame.Content == null)
+                    {
+                        frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                        {
+                            // Todos los grafos deberian implementar esta interface
+                            GraphInterface graph = frame.Content as GraphInterface;
+                            graph.clearData();
+                            graph.initCapture();
+                        };
+                    }
+                    else
+                    {
+                        GraphInterface graph = frame.Content as GraphInterface;
+                        graph.clearData();
+                        graph.initCapture();
+                    }
+                }
+                foreach (Frame frame in graphs2IMU)
                 {
                     if (frame.Content == null)
                     {
@@ -533,28 +603,27 @@ namespace ibcdatacsharp.UI
 
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    GraphAccelerometer acc = (GraphAccelerometer)graphs[0].Content;
+                    GraphAccelerometer acc = accelerometer;
 
                     acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
                     acc.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
                     acc.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
                     acc.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
 
-                    GraphGyroscope gyr = (GraphGyroscope)graphs[1].Content;
+                    GraphGyroscope gyr = gyroscope;
 
                     gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
                     gyr.drawRealTimeData(data.Imu[1].gyro_x, data.Imu[1].gyro_y, data.Imu[1].gyro_z);
                     gyr.drawRealTimeData(data.Imu[2].gyro_x, data.Imu[2].gyro_y, data.Imu[2].gyro_z);
                     gyr.drawRealTimeData(data.Imu[3].gyro_x, data.Imu[3].gyro_y, data.Imu[3].gyro_z);
 
-                    GraphMagnetometer mag = (GraphMagnetometer)graphs[2].Content;
+                    GraphMagnetometer mag = magnetometer;
 
                     mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
                     mag.drawRealTimeData(data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z);
                     mag.drawRealTimeData(data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z);
                     mag.drawRealTimeData(data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z);
 
-                    GraphLinAcc linAcc = (GraphLinAcc)graphs[3].Content;
                     linAcc.drawRealTimeData(v0);
                     linAcc.drawRealTimeData(v1);
                     linAcc.drawRealTimeData(v2);
@@ -659,35 +728,35 @@ namespace ibcdatacsharp.UI
                     }
                     Application.Current.Dispatcher.InvokeAsync(() =>
                     {
-                        AngleGraphX angleXGraph = (AngleGraphX)graphs[4].Content;
+                        AngleGraphX angleXGraph = this.angleX;
 
                         angleXGraph.drawRealTimeData(angleX[0]);
                         angleXGraph.drawRealTimeData(angleX[1]);
                         angleXGraph.drawRealTimeData(angleX[2]);
                         angleXGraph.drawRealTimeData(angleX[3]);
 
-                        AngleGraphY angleYGraph = (AngleGraphY)graphs[5].Content;
+                        AngleGraphY angleYGraph = this.angleY;
 
                         angleYGraph.drawRealTimeData(angleY[0]);
                         angleYGraph.drawRealTimeData(angleY[1]);
                         angleYGraph.drawRealTimeData(angleY[2]);
                         angleYGraph.drawRealTimeData(angleY[3]);
 
-                        AngleGraphZ angleZGraph = (AngleGraphZ)graphs[6].Content;
+                        AngleGraphZ angleZGraph = this.angleZ;
 
                         angleZGraph.drawRealTimeData(angleZ[0]);
                         angleZGraph.drawRealTimeData(angleZ[1]);
                         angleZGraph.drawRealTimeData(angleZ[2]);
                         angleZGraph.drawRealTimeData(angleZ[3]);
 
-                        GraphAngularVelocity graphAngularVelocity = (GraphAngularVelocity)graphs[7].Content;
+                        GraphAngularVelocity graphAngularVelocity = this.angleVel;
 
                         graphAngularVelocity.drawRealTimeData(angularVelocity[0]);
                         graphAngularVelocity.drawRealTimeData(angularVelocity[1]);
                         graphAngularVelocity.drawRealTimeData(angularVelocity[2]);
                         graphAngularVelocity.drawRealTimeData(angularVelocity[3]);
 
-                        GraphAngularAcceleration graphAngularAcceleration = (GraphAngularAcceleration)graphs[8].Content;
+                        GraphAngularAcceleration graphAngularAcceleration = this.angleAcc;
 
                         graphAngularAcceleration.drawRealTimeData(angularAcceleration[0]);
                         graphAngularAcceleration.drawRealTimeData(angularAcceleration[1]);
@@ -711,12 +780,14 @@ namespace ibcdatacsharp.UI
 
         private GraphData graphData;
         private TimeLine.TimeLine timeLine;
-        private List<Frame> graphs;
-        public ReplayManager(TimeLine.TimeLine timeLine, List<Frame> graphs)
+        private List<Frame> graphs1IMU;
+        private List<Frame> graphs2IMU;
+        public ReplayManager(TimeLine.TimeLine timeLine, List<Frame> graphs1IMU, List<Frame> graphs2IMU)
         {
             active = false;
             this.timeLine = timeLine;
-            this.graphs = graphs;
+            this.graphs1IMU = graphs1IMU;
+            this.graphs2IMU = graphs2IMU;
         }
         public void activate(GraphData graphData)
         {
@@ -725,23 +796,50 @@ namespace ibcdatacsharp.UI
                 active = true;
                 this.graphData = graphData;
                 timeLine.model.timeEvent += onUpdateTimeLine;
-                foreach (Frame frame in graphs)
+                if (graphData.numIMUs == 1)
                 {
-                    if (frame.Content == null)
+                    Trace.WriteLine("1 IMUs");
+                    foreach (Frame frame in graphs1IMU)
                     {
-                        frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                        if (frame.Content == null)
                         {
-                            // Todos los grafos deberian implementar esta interface
+                            frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                            {
+                                // Todos los grafos deberian implementar esta interface
+                                GraphInterface graph = frame.Content as GraphInterface;
+                                graph.drawData(graphData);
+                                frameEvent += graph.onUpdateTimeLine;
+                            };
+                        }
+                        else
+                        {
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.drawData(graphData);
                             frameEvent += graph.onUpdateTimeLine;
-                        };
+                        }
                     }
-                    else
+                }
+                else if(graphData.numIMUs == 2)
+                {
+                    Trace.WriteLine("2 IMUs");
+                    foreach (Frame frame in graphs2IMU)
                     {
-                        GraphInterface graph = frame.Content as GraphInterface;
-                        graph.drawData(graphData);
-                        frameEvent += graph.onUpdateTimeLine;
+                        if (frame.Content == null)
+                        {
+                            frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                            {
+                                // Todos los grafos deberian implementar esta interface
+                                GraphInterface graph = frame.Content as GraphInterface;
+                                graph.drawData(graphData);
+                                frameEvent += graph.onUpdateTimeLine;
+                            };
+                        }
+                        else
+                        {
+                            GraphInterface graph = frame.Content as GraphInterface;
+                            graph.drawData(graphData);
+                            frameEvent += graph.onUpdateTimeLine;
+                        }
                     }
                 }
                 timeLine.startReplay();
@@ -752,28 +850,54 @@ namespace ibcdatacsharp.UI
             if (active)
             {
                 active = false;
-                graphData = null;
                 timeLine.model.timeEvent -= onUpdateTimeLine;
-                foreach (Frame frame in graphs)
+                if (graphData.numIMUs == 1)
                 {
-                    if (frame.Content == null)
+                    foreach (Frame frame in graphs1IMU)
                     {
-                        frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                        if (frame.Content == null)
                         {
-                            // Todos los grafos deberian implementar esta interface
+                            frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                            {
+                                // Todos los grafos deberian implementar esta interface
+                                GraphInterface graph = frame.Content as GraphInterface;
+
+                                graph.clearData();
+                                frameEvent -= graph.onUpdateTimeLine;
+                            };
+                        }
+                        else
+                        {
                             GraphInterface graph = frame.Content as GraphInterface;
-                            
                             graph.clearData();
                             frameEvent -= graph.onUpdateTimeLine;
-                        };
-                    }
-                    else
-                    {
-                        GraphInterface graph = frame.Content as GraphInterface;
-                        graph.clearData();
-                        frameEvent -= graph.onUpdateTimeLine;
+                        }
                     }
                 }
+                else if(graphData.numIMUs == 2)
+                {
+                    foreach (Frame frame in graphs2IMU)
+                    {
+                        if (frame.Content == null)
+                        {
+                            frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                            {
+                                // Todos los grafos deberian implementar esta interface
+                                GraphInterface graph = frame.Content as GraphInterface;
+
+                                graph.clearData();
+                                frameEvent -= graph.onUpdateTimeLine;
+                            };
+                        }
+                        else
+                        {
+                            GraphInterface graph = frame.Content as GraphInterface;
+                            graph.clearData();
+                            frameEvent -= graph.onUpdateTimeLine;
+                        }
+                    }
+                }
+                graphData = null;
             }
         }
         public void reset(GraphData graphData)
@@ -781,23 +905,48 @@ namespace ibcdatacsharp.UI
             if (active)
             {
                 this.graphData = graphData;
-                foreach (Frame frame in graphs)
+                if (graphData.numIMUs == 1)
                 {
-                    if (frame.Content == null)
+                    foreach (Frame frame in graphs1IMU)
                     {
-                        frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                        if (frame.Content == null)
                         {
-                            // Todos los grafos deberian implementar esta interface
+                            frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                            {
+                                // Todos los grafos deberian implementar esta interface
+                                GraphInterface graph = frame.Content as GraphInterface;
+                                graph.clearData();
+                                graph.drawData(graphData);
+                            };
+                        }
+                        else
+                        {
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.clearData();
                             graph.drawData(graphData);
-                        };
+                        }
                     }
-                    else
+                }
+                else if (graphData.numIMUs == 2)
+                {
+                    foreach (Frame frame in graphs2IMU)
                     {
-                        GraphInterface graph = frame.Content as GraphInterface;
-                        graph.clearData();
-                        graph.drawData(graphData);
+                        if (frame.Content == null)
+                        {
+                            frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                            {
+                                // Todos los grafos deberian implementar esta interface
+                                GraphInterface graph = frame.Content as GraphInterface;
+                                graph.clearData();
+                                graph.drawData(graphData);
+                            };
+                        }
+                        else
+                        {
+                            GraphInterface graph = frame.Content as GraphInterface;
+                            graph.clearData();
+                            graph.drawData(graphData);
+                        }
                     }
                 }
                 timeLine.startReplay();

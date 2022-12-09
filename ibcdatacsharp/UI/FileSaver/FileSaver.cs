@@ -152,9 +152,9 @@ namespace ibcdatacsharp.UI.FileSaver
             bool show = false;
             if (recordCSV)
             {
-                timerCsv.Stop();
-                timerCsv = null;
-                mainWindow.virtualToolBar.pauseEvent -= onPauseCsv;
+                //timerCsv.Stop();
+                //timerCsv = null;
+                //mainWindow.virtualToolBar.pauseEvent -= onPauseCsv;
                 saveCsvFile();
                 recordCSV = false;
                 message += "Csv grabado en " + csvFile + ". ";
@@ -210,7 +210,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 {
                     throw new Exception("try to record with " + deviceList.numIMUsUsed.ToString() + " IMUs");
                 }
-                initRecordCsv();
+                //initRecordCsv();
             }
             if (recordVideo)
             {

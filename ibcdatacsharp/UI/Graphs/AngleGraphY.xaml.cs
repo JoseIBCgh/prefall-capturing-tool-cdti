@@ -43,7 +43,7 @@ namespace ibcdatacsharp.UI.Graphs
             for (int i = 0; i < data.length; i++)
             {
                 // Provisional hay que cambiarlo por los angulos
-                angleY[i] = ((FrameData1IMU)data[i]).accY;
+                angleY[i] = ((FrameData2IMUs)data[i]).angleY;
             }
             await update(angleY);
         }

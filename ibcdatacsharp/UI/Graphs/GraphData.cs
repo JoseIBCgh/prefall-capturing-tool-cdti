@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
 
@@ -16,7 +17,10 @@ namespace ibcdatacsharp.UI.Graphs
         {
             get { return frames.Length; }
         }
-        public int minFrame = 0;
+        public int minFrame
+        {
+            get { return frames[0].frame; }
+        }
         public int maxFrame
         {
             get { return frames[frames.Length - 1].frame; }
@@ -30,12 +34,27 @@ namespace ibcdatacsharp.UI.Graphs
             get { return frames[frames.Length - 1].time; }
         }
         public double time(int frame){
-            int index = frame - minFrame;
-            return frames[index].time;
+            try
+            {
+                int index = frame - minFrame;
+                return frames[index].time;
+            }
+            catch(Exception e)
+            {
+                Trace.WriteLine(minFrame);
+                throw e;
+            }
         }
         public GraphData(FrameData[] frames)
         {
             this.frames = frames;
+        }
+        public int numIMUs
+        {
+            get
+            {
+                return frames[0].numIMUs();
+            }
         }
     }
     public abstract class FrameData
@@ -54,6 +73,7 @@ namespace ibcdatacsharp.UI.Graphs
             float result = float.Parse(s_point, CultureInfo.InvariantCulture);
             return result;
         }
+        public abstract int numIMUs();
     }
     public class FrameData1IMU: FrameData
     {
@@ -74,9 +94,9 @@ namespace ibcdatacsharp.UI.Graphs
         public FrameData1IMU(string csvLine)
         {
             string[] values = csvLine.Split(' ');
-            if(values.Length > 15) //default 12
+            if(values.Length != 15 && values.Length != 12)
             {
-                throw new Exception("Deben haber 15 valores por fila");
+                throw new Exception("Deben haber 12 o 15 valores por fila");
             }
             time = parseDouble(values[1]);
             frame = int.Parse(values[2]);
@@ -89,9 +109,23 @@ namespace ibcdatacsharp.UI.Graphs
             magX = parseDouble(values[9]);
             magY = parseDouble(values[10]);
             magZ = parseDouble(values[11]);
-            laccX = parseDouble(values[12]);
-            laccY = parseDouble(values[13]);
-            laccZ = parseDouble(values[14]);
+            if (values.Length == 14)
+            {
+                laccX = parseDouble(values[12]);
+                laccY = parseDouble(values[13]);
+                laccZ = parseDouble(values[14]);
+            }
+            else
+            {
+                laccX = 0;
+                laccY = 0;
+                laccZ = 0;
+            }
+        }
+
+        public override int numIMUs()
+        {
+            return 1;
         }
     }
     public class FrameData2IMUs : FrameData
@@ -104,9 +138,9 @@ namespace ibcdatacsharp.UI.Graphs
         public FrameData2IMUs(string csvLine)
         {
             string[] values = csvLine.Split(' ');
-            if (values.Length > 12) //default 12
+            if (values.Length != 12) //default 12
             {
-                throw new Exception("Deben haber 11 valores por fila");
+                throw new Exception("Deben haber 12 valores por fila");
             }
             time = parseDouble(values[1]);
             frame = int.Parse(values[2]);
@@ -117,6 +151,10 @@ namespace ibcdatacsharp.UI.Graphs
                 parseFloat(values[8]));
             angularAcceleration = new Vector3(parseFloat(values[9]), parseFloat(values[10]),
                 parseFloat(values[11]));
+        }
+        public override int numIMUs()
+        {
+            return 2;
         }
     }
 }
