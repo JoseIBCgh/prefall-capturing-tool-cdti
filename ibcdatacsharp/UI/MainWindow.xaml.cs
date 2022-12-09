@@ -542,16 +542,21 @@ namespace ibcdatacsharp.UI
             void onOpenCameraFunction()
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
-                object selected = deviceListClass.treeView.SelectedItems;
-                if (selected != null && selected is CameraInfo)
+                IList<object> selectedItems = (IList<object>)deviceListClass.treeView.SelectedItems;
+                foreach(object selected in selectedItems)
                 {
-                    CameraInfo cameraInfo = (CameraInfo)selected;
-                    int id = cameraInfo.number; //Id de la camara
-                    CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;
-                    if (!camaraViewportClass.someCameraOpened())
+                    if (selected != null && selected is CameraInfo)
                     {
-                        camaraViewportClass.Title = cameraInfo.name + " CAM " + id;
-                        camaraViewportClass.initializeCamara(id);
+                        MultiSelectTreeViewItem treeViewItem = (MultiSelectTreeViewItem)deviceListClass.cameras.ItemContainerGenerator.ContainerFromItem(selected);
+                        CameraInfo cameraInfo = treeViewItem.DataContext as CameraInfo;
+                        int id = cameraInfo.number; //Id de la camara
+                        CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;
+                        if (!camaraViewportClass.someCameraOpened())
+                        {
+                            camaraViewportClass.Title = cameraInfo.name + " CAM " + id;
+                            camaraViewportClass.initializeCamara(id);
+                        }
+                        break;
                     }
                 }
             }
