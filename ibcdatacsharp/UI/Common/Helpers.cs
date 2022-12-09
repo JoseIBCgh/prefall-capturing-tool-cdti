@@ -1,5 +1,9 @@
 ﻿using System.Windows.Media;
 using System.Windows;
+using System.Numerics;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.Common
 {
@@ -25,6 +29,47 @@ namespace ibcdatacsharp.UI.Common
             System.Random random = new System.Random();
             double val = (random.NextDouble() * (max - min) + min);
             return (float)val;
+        }
+        public static Vector3 ToEulerAngles(Quaternion q)
+        {
+            Vector3 angles = new();
+
+            // roll / x
+            double sinr_cosp = 2 * (q.W * q.X + q.Y * q.Z);
+            double cosr_cosp = 1 - 2 * (q.X * q.X + q.Y * q.Y);
+            angles.X = (float)Math.Atan2(sinr_cosp, cosr_cosp);
+
+            // pitch / y
+            double sinp = 2 * (q.W * q.Y - q.Z * q.X);
+            if (Math.Abs(sinp) >= 1)
+            {
+                angles.Y = (float)Math.CopySign(Math.PI / 2, sinp);
+            }
+            else
+            {
+                angles.Y = (float)Math.Asin(sinp);
+            }
+
+            // yaw / z
+            double siny_cosp = 2 * (q.W * q.Z + q.X * q.Y);
+            double cosy_cosp = 1 - 2 * (q.Y * q.Y + q.Z * q.Z);
+            angles.Z = (float)Math.Atan2(siny_cosp, cosy_cosp);
+
+            return angles;
+        }
+
+        public static float ToDegrees(float radians)
+        {
+            float degrees = (180 / (float)Math.PI) * radians;
+            return (degrees);
+        }
+        public static void printDict(Dictionary<string, WisewalkSDK.Device> dict)
+        {
+            foreach (var kvp in dict)
+            {
+                string s = string.Format("Key = {0}, Value = {1}", kvp.Key, kvp.Value.Id);
+                Trace.WriteLine(s);
+            }
         }
     }
 }

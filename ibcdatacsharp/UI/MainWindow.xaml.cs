@@ -99,8 +99,6 @@ namespace ibcdatacsharp.UI
         public IMUInfo imuInfo;
         public List<int> devHandlers;
 
-        public Quaternion referenceQuaternion;
-
         //end Wiseware API
         public MainWindow()
         {
@@ -128,7 +126,7 @@ namespace ibcdatacsharp.UI
             api.scanFinished += Api_scanFinished;
             api.deviceConnected += Api_deviceConnected;
 
-            EFK.EKF.test();
+            //EFK.EKF.test();
             //End Wisewalk API
 
             //Test linear acceleration
@@ -597,7 +595,7 @@ namespace ibcdatacsharp.UI
                 {
                     graphManager.captureManager.quaternionEvent -= eventHandler;
                     tokenSource.Cancel();
-                    referenceQuaternion = q;
+                    graphManager.captureManager.setReference(q);
                     string text = "Referencia creada con el valor del quaternion: " +
                         "x = " + q.X.ToString("0.##") +
                         ",y = " + q.Y.ToString("0.##") +

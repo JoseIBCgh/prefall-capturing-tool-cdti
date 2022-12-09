@@ -155,8 +155,8 @@ namespace ibcdatacsharp.UI
 
         Quaternion q1 = new Quaternion();
         Quaternion refq = new Quaternion();
-        Quaternion q_lower = new Quaternion();
-        Quaternion q_upper = new Quaternion();
+        Quaternion[] q_lower = new Quaternion[4];
+        Quaternion[] q_upper = new Quaternion[4];
 
         int anglequat = 0;
         int mac1 = 0;
@@ -199,6 +199,14 @@ namespace ibcdatacsharp.UI
 
             mainWindow.virtualToolBar.saveEvent += onInitRecord;
 
+            refq.W = 0.176144f;
+            refq.X = -0.189621f;
+            refq.Y = 0.693031f;
+            refq.Z = -0.672846f;
+        }
+        public void setReference(Quaternion q)
+        {
+            refq = q;
         }
         private void saveGraphs()
         {
@@ -481,119 +489,6 @@ namespace ibcdatacsharp.UI
         //Callback para recoger datas del IMU
         public void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
-
-            List<IMUInfo> imusSelected =  deviceList.IMUsUsed;
-            foreach (IMUInfo imu in imusSelected)
-            {
-                Trace.WriteLine(imu.adress);
-            }
-
-            // refq = 0.823125, 0.000423, 0.009129, -0.567773
-
-
-            /**
-             * 
-             *  
-                X1 = Q1*X*conj(Q1);
-                Y1 = Q1*Y*conj(Q1);
-                Z1 = Q1*Z*conj(Q1);
-                X2 = Q2*X*conj(Q2);
-                Y2 = Q2*Y*conj(Q2);
-                Z2 = Q2*Z*conj(Q2);
-                DiffAngleX = acos(dot(X1,X2));
-                DiffAngleY = acos(dot(Y1,Y2));
-                DiffAngleZ = acos(dot(Z1,Z2));
-             */
-
-            /*
-            
-            Q1 = C0:97:3C:F2:DA:40
-            Q2 = D8:D3:A5:0A:4F:BC
-             */
-
-
-            //ref_quaternion:
-            //0.823125, 0.000423, 0.009129, -0.567773 Z para arriba
-            // 0.176144, -0.189621, 0.693031, -0.672846 Y para arriba
-            // 0.516224, 0.4542, 0.55528, -0.467841 X para arriba
-
-            refq.W = 0.176144f;
-            refq.X = -0.189621f;
-            refq.Y = 0.693031f;
-            refq.Z = -0.672846f;
-
-
-            Matrix4x4 refmat = Matrix4x4.CreateFromQuaternion(refq);
-
-
-            //if (data.Imu.Count > 0 ) {
-            ////    Trace.WriteLine("Data: " + " " + devices_list[deviceHandler.ToString()].Id.ToString() + " " + tsA.ToString("F3") + " " + devices_list[deviceHandler.ToString()].NPackets.ToString() + " "
-            ////+ data.Quat[0].W.ToString() + ", " + data.Quat[0].X.ToString() + ", " + data.Quat[0].Y.ToString() + ", " + data.Quat[0].Z.ToString());
-
-            //    if (devices_list[deviceHandler.ToString()].Id.ToString() == "C0:97:3C:F2:DA:40"  )  
-            //    {
-            //        q_lower.W = (float)data.Quat[0].W;
-            //        q_lower.X = (float)data.Quat[0].X;
-            //        q_lower.Y = (float)data.Quat[0].Y;
-            //        q_lower.Z = (float)data.Quat[0].Z;
-            //        anglequat++;
-
-            //    }
-
-            //    else if ( devices_list[deviceHandler.ToString()].Id.ToString() == "D8:D3:A5:0A:4F:BC" )
-            //    {
-            //        q_upper.W = (float)data.Quat[0].W;
-            //        q_upper.X = (float)data.Quat[0].X;
-            //        q_upper.Y = (float)data.Quat[0].Y;
-            //        q_upper.Z = (float)data.Quat[0].Z;
-            //        anglequat++;
-            //    }
-
-
-
-            //   if (anglequat % 2 == 0)
-            //    {
-            //        vector3 angle_low = new();
-            //        vector3 angle_up = new();
-            //        vector3 angle_ref = new();
-            //        angle_low = toeulerangles(q_lower);
-            //        angle_up = toeulerangles(q_upper);
-            //        angle_ref = toeulerangles(refq);
-            //        a1 = angle_low.x - angle_up.x + angle_ref.x;
-            //        a2 = angle_low.y - angle_up.y + angle_ref.y;
-            //        a3 = angle_low.z - angle_up.z + angle_ref.z;
-            //        a1 = todegrees(a1);
-            //        a2 = todegrees(a2);
-            //        a3 = todegrees(a3);
-
-            //       // trace.writeline(":::::: angle joint: " + a1.tostring() + " " + a2.tostring() + " " + a3.tostring());
-
-            //        matrix4x4 m_lower = matrix4x4.createfromquaternion(q_lower);
-            //        matrix4x4 m_upper = matrix4x4.createfromquaternion(q_upper);
-
-            //        matrix4x4 r = matrix4x4.multiply(m_lower, m_upper);
-
-            //        double beta = math.atan2(r.m32 , math.sqrt( math.pow(r.m12,2) * math.pow(r.m22, 2) ) );
-            //        double delta = math.atan2(-(r.m12 / math.cos(beta)), r.m22 / math.cos(beta));
-            //        double phi = math.atan2(-(r.m31 / math.cos(beta)), r.m33 / math.cos(beta));
-
-            //        if (beta >= 90.0 && beta < 91.0)
-            //        {
-            //            beta = 90.0d;
-            //            delta = 0.0d;
-            //            phi = math.atan2(r.m13, r.m23);
-
-            //        }
-
-            //        //trace.writeline("beta: " + todegrees((float) beta).tostring() + " delta:" + todegrees((float) delta).tostring() + 
-            //        //    " phi: " + todegrees((float) phi).tostring());                   
-            //    }
-            //}
-
-            
-
-            
-           
             // Only a IMU
             if (numIMUs == 1)
             {
@@ -673,120 +568,135 @@ namespace ibcdatacsharp.UI
                     }
                 });
 
-
-                //Application.Current.Dispatcher.InvokeAsync(() =>
-                //{
-                //    gyr = (GraphGyroscope)graphs[1].Content;
-
-                //    gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
-                //    gyr.render();
-
-                //});
-
-                //Application.Current.Dispatcher.InvokeAsync(() =>
-                //{
-                //    mag = (GraphMagnetometer)graphs[2].Content;
-
-                //    mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
-                //    mag.render();
-
-                //});
-
-
-
-
-
-                //using (StreamWriter sw = File.AppendText("C:\\Temp\\output.txt"))
-                //{
-                //    sw.WriteLine(dataline);
-
-                //}
                 frame += 4;
                 fakets += 0.04f;
-
-                //    await Task.WhenAll(new Task[] {
-                //        updateAccelerometer(frame, data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z),
-                //        updateMagnetometer(frame, data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z),
-                //        updateGyroscope(frame, data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z),
-                //        renderAcceletometer(),
-                //        renderGyroscope(),
-                //        renderMagnetometer(),
-
-
-
-                //    //v.appendCSV( data.timespans[0] , frame,data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z, data.Imu[0].gyro_x, 
-                //    //data.Imu[0].gyro_y, data.Imu[0].gyro_z, data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z),
-
-                //    //v.appendCSV( data.timespans[1] , frame + 1,data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z, data.Imu[1].gyro_x,
-                //    //data.Imu[1].gyro_y, data.Imu[1].gyro_z, data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z),
-
-                //    //v.appendCSV( data.timespans[2] , frame + 2,data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z, data.Imu[2].gyro_x,
-                //    //data.Imu[2].gyro_y, data.Imu[2].gyro_z, data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z),
-
-                //    // v.appendCSV( data.timespans[3] , frame + 3, data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z, data.Imu[3].gyro_x,
-                //    //data.Imu[3].gyro_y, data.Imu[3].gyro_z, data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z),
-
-
-                //});
 
             }
             else if(numIMUs == 2)
             {
-                float[] angleX = new float[4] { Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90) };
-                float[] angleY = new float[4] { Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90) };
-                float[] angleZ = new float[4] { Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90), Helpers.NextFloat(-90, 90) };
-                Vector3[] angularVelocity = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
-                Vector3[] angularAcceleration = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
-                if (virtualToolBar.recordState == RecordState.Recording)
+                List<IMUInfo> imus = deviceList.IMUsUsed;
+                int id_lower = imus[0].id;
+                int id_upper = imus[1].id;
+                if (deviceHandler == id_lower)
                 {
-                    dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + angleX[0].ToString("F3") + " " + angleY[0].ToString("F3") + " " + angleZ[0].ToString("F3") + " " + angularVelocity[0].X.ToString("F3") + " " + angularVelocity[0].Y.ToString("F3") + " " + angularVelocity[0].Z.ToString("F3") + " " + angularAcceleration[0].X.ToString("F3") + " " + angularAcceleration[0].Y.ToString("F3") + " " + angularAcceleration[0].Z.ToString("F3") + "\n" +
-                    "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + angleX[1].ToString("F3") + " " + angleY[1].ToString("F3") + " " + angleZ[1].ToString("F3") + " " + angularVelocity[1].X.ToString("F3") + " " + angularVelocity[1].Y.ToString("F3") + " " + angularVelocity[1].Z.ToString("F3") + " " + angularAcceleration[1].X.ToString("F3") + " " + angularAcceleration[1].Y.ToString("F3") + " " + angularAcceleration[1].Z.ToString("F3") + "\n" +
-                    "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + angleX[2].ToString("F3") + " " + angleY[2].ToString("F3") + " " + angleZ[2].ToString("F3") + " " + angularVelocity[2].X.ToString("F3") + " " + angularVelocity[2].Y.ToString("F3") + " " + angularVelocity[2].Z.ToString("F3") + " " + angularAcceleration[2].X.ToString("F3") + " " + angularAcceleration[2].Y.ToString("F3") + " " + angularAcceleration[2].Z.ToString("F3") + "\n" +
-                    "1 " + (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + angleX[3].ToString("F3") + " " + angleY[3].ToString("F3") + " " + angleZ[3].ToString("F3") + " " + angularVelocity[3].X.ToString("F3") + " " + angularVelocity[3].Y.ToString("F3") + " " + angularVelocity[3].Z.ToString("F3") + " " + angularAcceleration[3].X.ToString("F3") + " " + angularAcceleration[3].Y.ToString("F3") + " " + angularAcceleration[3].Z.ToString("F3") + "\n";
+                    for(int i = 0; i < 4; i++)
+                    {
+                        float W = (float)data.Quat[i].W;
+                        float X = (float)data.Quat[i].X;
+                        float Y = (float)data.Quat[i].Y;
+                        float Z = (float)data.Quat[i].Z;
+                        q_lower[i] = new Quaternion(X, Y, Z, W);
+                    }
+                    anglequat++;
 
-                    mainWindow.fileSaver.appendCSVManual(dataline);
                 }
-
-                Application.Current.Dispatcher.InvokeAsync(() =>
+                else if (deviceHandler == id_upper)
                 {
-                    AngleGraphX angleXGraph = (AngleGraphX)graphs[4].Content;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        float W = (float)data.Quat[i].W;
+                        float X = (float)data.Quat[i].X;
+                        float Y = (float)data.Quat[i].Y;
+                        float Z = (float)data.Quat[i].Z;
+                        q_upper[i] = new Quaternion(X, Y, Z, W);
+                    }
+                    anglequat++;
+                }
+                if (anglequat % 2 == 0)
+                {
+                    float[] angleX = new float[4];
+                    float[] angleY = new float[4];
+                    float[] angleZ = new float[4];
+                    Matrix4x4 refmat = Matrix4x4.CreateFromQuaternion(refq);
+                    Vector3 angle_ref = new();
+                    angle_ref = Helpers.ToEulerAngles(refq);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Vector3 angle_low = new();
+                        Vector3 angle_up = new();
+                        angle_low = Helpers.ToEulerAngles(q_lower[i]);
+                        angle_up = Helpers.ToEulerAngles(q_upper[i]);
+                        a1 = angle_low.X - angle_up.X + angle_ref.X;
+                        a2 = angle_low.Y - angle_up.Y + angle_ref.Y;
+                        a3 = angle_low.Z - angle_up.Z + angle_ref.Z;
+                        a1 = Helpers.ToDegrees(a1);
+                        a2 = Helpers.ToDegrees(a2);
+                        a3 = Helpers.ToDegrees(a3);
+                        angleX[i] = a1;
+                        angleY[i] = a2;
+                        angleZ[i] = a3;
 
-                    angleXGraph.drawRealTimeData(angleX[0]);
-                    angleXGraph.drawRealTimeData(angleX[1]);
-                    angleXGraph.drawRealTimeData(angleX[2]);
-                    angleXGraph.drawRealTimeData(angleX[3]);
+                        // trace.writeline(":::::: angle joint: " + a1.tostring() + " " + a2.tostring() + " " + a3.tostring());
 
-                    AngleGraphY angleYGraph = (AngleGraphY)graphs[5].Content;
+                        Matrix4x4 m_lower = Matrix4x4.CreateFromQuaternion(q_lower[i]);
+                        Matrix4x4 m_upper = Matrix4x4.CreateFromQuaternion(q_upper[i]);
 
-                    angleYGraph.drawRealTimeData(angleY[0]);
-                    angleYGraph.drawRealTimeData(angleY[1]);
-                    angleYGraph.drawRealTimeData(angleY[2]);
-                    angleYGraph.drawRealTimeData(angleY[3]);
+                        Matrix4x4 r = Matrix4x4.Multiply(m_lower, m_upper);
 
-                    AngleGraphZ angleZGraph = (AngleGraphZ)graphs[6].Content;
+                        double beta = Math.Atan2(r.M32, Math.Sqrt(Math.Pow(r.M12, 2) * Math.Pow(r.M22, 2)));
+                        double delta = Math.Atan2(-(r.M12 / Math.Cos(beta)), r.M22 / Math.Cos(beta));
+                        double phi = Math.Atan2(-(r.M31 / Math.Cos(beta)), r.M33 / Math.Cos(beta));
 
-                    angleZGraph.drawRealTimeData(angleZ[0]);
-                    angleZGraph.drawRealTimeData(angleZ[1]);
-                    angleZGraph.drawRealTimeData(angleZ[2]);
-                    angleZGraph.drawRealTimeData(angleZ[3]);
+                        if (beta >= 90.0 && beta < 91.0)
+                        {
+                            beta = 90.0d;
+                            delta = 0.0d;
+                            phi = Math.Atan2(r.M13, r.M23);
 
-                    GraphAngularVelocity graphAngularVelocity = (GraphAngularVelocity)graphs[7].Content;
+                        }
+                    }
+                    Vector3[] angularVelocity = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
+                    Vector3[] angularAcceleration = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
 
-                    graphAngularVelocity.drawRealTimeData(angularVelocity[0]);
-                    graphAngularVelocity.drawRealTimeData(angularVelocity[1]);
-                    graphAngularVelocity.drawRealTimeData(angularVelocity[2]);
-                    graphAngularVelocity.drawRealTimeData(angularVelocity[3]);
+                    if (virtualToolBar.recordState == RecordState.Recording)
+                    {
+                        dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + angleX[0].ToString("F3") + " " + angleY[0].ToString("F3") + " " + angleZ[0].ToString("F3") + " " + angularVelocity[0].X.ToString("F3") + " " + angularVelocity[0].Y.ToString("F3") + " " + angularVelocity[0].Z.ToString("F3") + " " + angularAcceleration[0].X.ToString("F3") + " " + angularAcceleration[0].Y.ToString("F3") + " " + angularAcceleration[0].Z.ToString("F3") + "\n" +
+                        "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + angleX[1].ToString("F3") + " " + angleY[1].ToString("F3") + " " + angleZ[1].ToString("F3") + " " + angularVelocity[1].X.ToString("F3") + " " + angularVelocity[1].Y.ToString("F3") + " " + angularVelocity[1].Z.ToString("F3") + " " + angularAcceleration[1].X.ToString("F3") + " " + angularAcceleration[1].Y.ToString("F3") + " " + angularAcceleration[1].Z.ToString("F3") + "\n" +
+                        "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + angleX[2].ToString("F3") + " " + angleY[2].ToString("F3") + " " + angleZ[2].ToString("F3") + " " + angularVelocity[2].X.ToString("F3") + " " + angularVelocity[2].Y.ToString("F3") + " " + angularVelocity[2].Z.ToString("F3") + " " + angularAcceleration[2].X.ToString("F3") + " " + angularAcceleration[2].Y.ToString("F3") + " " + angularAcceleration[2].Z.ToString("F3") + "\n" +
+                        "1 " + (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + angleX[3].ToString("F3") + " " + angleY[3].ToString("F3") + " " + angleZ[3].ToString("F3") + " " + angularVelocity[3].X.ToString("F3") + " " + angularVelocity[3].Y.ToString("F3") + " " + angularVelocity[3].Z.ToString("F3") + " " + angularAcceleration[3].X.ToString("F3") + " " + angularAcceleration[3].Y.ToString("F3") + " " + angularAcceleration[3].Z.ToString("F3") + "\n";
 
-                    GraphAngularAcceleration graphAngularAcceleration = (GraphAngularAcceleration)graphs[8].Content;
+                        mainWindow.fileSaver.appendCSVManual(dataline);
+                    }
+                    Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        AngleGraphX angleXGraph = (AngleGraphX)graphs[4].Content;
 
-                    graphAngularAcceleration.drawRealTimeData(angularAcceleration[0]);
-                    graphAngularAcceleration.drawRealTimeData(angularAcceleration[1]);
-                    graphAngularAcceleration.drawRealTimeData(angularAcceleration[2]);
-                    graphAngularAcceleration.drawRealTimeData(angularAcceleration[3]);
-                });
+                        angleXGraph.drawRealTimeData(angleX[0]);
+                        angleXGraph.drawRealTimeData(angleX[1]);
+                        angleXGraph.drawRealTimeData(angleX[2]);
+                        angleXGraph.drawRealTimeData(angleX[3]);
 
-                frame += 4;
-                fakets += 0.04f;
+                        AngleGraphY angleYGraph = (AngleGraphY)graphs[5].Content;
+
+                        angleYGraph.drawRealTimeData(angleY[0]);
+                        angleYGraph.drawRealTimeData(angleY[1]);
+                        angleYGraph.drawRealTimeData(angleY[2]);
+                        angleYGraph.drawRealTimeData(angleY[3]);
+
+                        AngleGraphZ angleZGraph = (AngleGraphZ)graphs[6].Content;
+
+                        angleZGraph.drawRealTimeData(angleZ[0]);
+                        angleZGraph.drawRealTimeData(angleZ[1]);
+                        angleZGraph.drawRealTimeData(angleZ[2]);
+                        angleZGraph.drawRealTimeData(angleZ[3]);
+
+                        GraphAngularVelocity graphAngularVelocity = (GraphAngularVelocity)graphs[7].Content;
+
+                        graphAngularVelocity.drawRealTimeData(angularVelocity[0]);
+                        graphAngularVelocity.drawRealTimeData(angularVelocity[1]);
+                        graphAngularVelocity.drawRealTimeData(angularVelocity[2]);
+                        graphAngularVelocity.drawRealTimeData(angularVelocity[3]);
+
+                        GraphAngularAcceleration graphAngularAcceleration = (GraphAngularAcceleration)graphs[8].Content;
+
+                        graphAngularAcceleration.drawRealTimeData(angularAcceleration[0]);
+                        graphAngularAcceleration.drawRealTimeData(angularAcceleration[1]);
+                        graphAngularAcceleration.drawRealTimeData(angularAcceleration[2]);
+                        graphAngularAcceleration.drawRealTimeData(angularAcceleration[3]);
+                    });
+                    frame += 4;
+                    fakets += 0.04f;
+                }
             }
 
         }

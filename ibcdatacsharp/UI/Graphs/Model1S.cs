@@ -20,8 +20,8 @@ namespace ibcdatacsharp.UI.Graphs
         private int nextIndex = 0;
         private WpfPlot plot;
 
-        private const double MIN_Y = -200;
-        private const double MAX_Y = 200;
+        private const double MIN_Y = -360;
+        private const double MAX_Y = 360;
 
         private Color frameColor = Color.Black;
         private VLine lineFrame;
@@ -63,8 +63,8 @@ namespace ibcdatacsharp.UI.Graphs
         // Pinta el fondo
         private void paintAreas()
         {
-            int separation12 = -170;
-            int separation23 = -90;
+            int separation12 = -320;
+            int separation23 = -160;
             int separation34 = -separation23;
             int separation45 = -separation12;
             byte alpha = 96;
