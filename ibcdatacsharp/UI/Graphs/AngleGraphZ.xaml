@@ -9,14 +9,20 @@
       Title="AngleGraphX">
 
     <Grid>
-        <WpfPlot  x:Name="plot"/>
-        <StackPanel Margin="0 0 30 50" Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <TextBlock FontSize="20" HorizontalAlignment="Center" x:Name="angle">0.0</TextBlock>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Padding="5 5 5 5">Offset</TextBlock>
-                <TextBox Background="Transparent" BorderBrush="Transparent" Padding="5 5 5 5" x:Name="offset">0.0</TextBox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <WpfPlot Grid.Row="1"  x:Name="plot"/>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock FontSize="24" Padding="0 0 10 0" VerticalAlignment="Center" x:Name="angle" Foreground="Red">0.0</TextBlock>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="12" VerticalAlignment="Center">Offset</TextBlock>
+                    <TextBox FontSize="12" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Center" x:Name="offset">0.0</TextBox>
+                </StackPanel>
+                <Button VerticalAlignment="Center" FontSize="12" Click="onSetOffset">Set Offset</Button>
             </StackPanel>
-            <Button Click="onSetOffset">Set Offset</Button>
         </StackPanel>
     </Grid>
 </Page>

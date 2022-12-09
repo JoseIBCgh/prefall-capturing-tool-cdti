@@ -34,7 +34,7 @@ namespace ibcdatacsharp.UI.Graphs
         {
             this.plot = plot;
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
-            plot.Plot.SetAxisLimitsX(xMin: 0, MAX_POINTS);
+            plot.Plot.SetAxisLimitsX(xMin: 0, xMax:MAX_POINTS);
             paintAreas();
 
             lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, LineStyle.Dash);
@@ -97,7 +97,7 @@ namespace ibcdatacsharp.UI.Graphs
             values = data;
             plot.Plot.Remove(signalPlot);
             signalPlot = plot.Plot.AddSignal(values, color: dataColor);
-            signalPlot.OffsetY = _offset;
+            signalPlot.OffsetY = offset;
 
             maxRenderIndex = 0;
             plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, values.Length));
@@ -112,7 +112,7 @@ namespace ibcdatacsharp.UI.Graphs
             plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS),
                 xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
-            valueEvent?.Invoke(this, values[index]);
+            valueEvent?.Invoke(this, values[index] + offset);
         }
         #endregion Replay
 
@@ -125,11 +125,11 @@ namespace ibcdatacsharp.UI.Graphs
                 Array.Resize(ref values, CAPACITY);
                 plot.Plot.Remove(signalPlot);
                 signalPlot = plot.Plot.AddSignal(values, color: dataColor);
-                signalPlot.OffsetY = _offset;
+                signalPlot.OffsetY = offset;
             }
             values[nextIndex] = data;
             nextIndex++;
-            valueEvent?.Invoke(this, data);
+            valueEvent?.Invoke(this, data + offset);
         }
         // Actualiza el renderizado
         public void render()
