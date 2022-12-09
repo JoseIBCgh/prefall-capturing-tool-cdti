@@ -605,7 +605,6 @@ namespace ibcdatacsharp.UI
                 Vector3[] v = new Vector3[4];
                 for(int i = 0; i < 4; i++)
                 {
-                    Trace.WriteLine("x " + (float)data.Quat[i].X + " y " + (float)data.Quat[i].Y + " z " + (float)data.Quat[i].Z +  " w " + (float)data.Quat[i].W);
                     v[i] = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z, (float)data.Quat[i].W), new Vector3(data.Imu[i].acc_x, data.Imu[i].acc_y, data.Imu[i].acc_z));
                     //Trace.WriteLine(v[i]);
                 }
