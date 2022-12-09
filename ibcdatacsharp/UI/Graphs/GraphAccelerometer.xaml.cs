@@ -19,7 +19,7 @@ namespace ibcdatacsharp.UI.Graphs
         public GraphAccelerometer()
         {
             InitializeComponent();
-            model = new Model3S(plot, -200, 200, title: "Accelerometer", units: "m/s^2");
+            model = new Model3S(plot, -50, 50, title: "Accelerometer", units: "m/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;

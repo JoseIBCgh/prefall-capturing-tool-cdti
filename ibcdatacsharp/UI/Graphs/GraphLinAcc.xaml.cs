@@ -30,7 +30,7 @@ namespace ibcdatacsharp.UI.Graphs
         public GraphLinAcc()
         {
             InitializeComponent();
-            model = new Model3S(plot, -200, 200, title: "Acceleracion Lineal", units: "m/s^2");
+            model = new Model3S(plot, -50, 50, title: "Acceleracion Lineal", units: "m/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;

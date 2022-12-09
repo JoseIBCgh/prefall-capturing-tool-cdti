@@ -20,6 +20,7 @@ using System.Windows.Navigation;
 using System.Windows.Threading;
 using Quaternion = System.Numerics.Quaternion;
 using ibcdatacsharp.UI.Common;
+using ibcdatacsharp.DeviceList.TreeClasses;
 
 namespace ibcdatacsharp.UI
 {
@@ -68,8 +69,19 @@ namespace ibcdatacsharp.UI
                 replayManager = new ReplayManager(timeLine, graphs);
             }
 
-
-            captureManager = new CaptureManager(graphs, virtualToolBar, device);
+            if (mainWindow.deviceList.Content == null)
+            {
+                mainWindow.deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    DeviceList.DeviceList deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
+                    captureManager = new CaptureManager(graphs, virtualToolBar, device, deviceList);
+                };
+            }
+            else
+            {
+                DeviceList.DeviceList deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
+                captureManager = new CaptureManager(graphs, virtualToolBar, device, deviceList);
+            }
         }
         public void initReplay(GraphData data)
         {
@@ -111,6 +123,7 @@ namespace ibcdatacsharp.UI
         private List<Frame> graphs;
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
+        private DeviceList.DeviceList deviceList;
 
         public GraphAccelerometer accelerometer;
         public GraphGyroscope gyroscope;
@@ -170,15 +183,18 @@ namespace ibcdatacsharp.UI
 
         Vector3 v0, v1, v2, v3;
 
+        const float G = 9.8f;
+
         public delegate void QuaternionEventHandler(object sender, byte id, Quaternion q);
         public event QuaternionEventHandler quaternionEvent;
         //End Wise
-        public CaptureManager(List<Frame> graphs, VirtualToolBar virtualToolBar, Device.Device device)
+        public CaptureManager(List<Frame> graphs, VirtualToolBar virtualToolBar, Device.Device device, DeviceList.DeviceList deviceList)
         { 
             active = false;
             this.graphs = graphs;
             this.virtualToolBar = virtualToolBar;
             this.device = device;
+            this.deviceList = deviceList;
             saveGraphs();
 
             mainWindow.virtualToolBar.saveEvent += onInitRecord;
@@ -346,7 +362,6 @@ namespace ibcdatacsharp.UI
                 {
                     timerRender.Start();
                 }
-                device.initTimer();
 
 
             }
@@ -467,7 +482,11 @@ namespace ibcdatacsharp.UI
         public void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
 
-            
+            List<IMUInfo> imusSelected =  deviceList.IMUsUsed;
+            foreach (IMUInfo imu in imusSelected)
+            {
+                Trace.WriteLine(imu.adress);
+            }
 
             // refq = 0.823125, 0.000423, 0.009129, -0.567773
 
@@ -586,7 +605,9 @@ namespace ibcdatacsharp.UI
                 Vector3[] v = new Vector3[4];
                 for(int i = 0; i < 4; i++)
                 {
+                    Trace.WriteLine("x " + (float)data.Quat[i].X + " y " + (float)data.Quat[i].Y + " z " + (float)data.Quat[i].Z +  " w " + (float)data.Quat[i].W);
                     v[i] = LinearAcceleration.calcLinAcc(new Quaternion((float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z, (float)data.Quat[i].W), new Vector3(data.Imu[i].acc_x, data.Imu[i].acc_y, data.Imu[i].acc_z));
+                    //Trace.WriteLine(v[i]);
                 }
                 v0 = v[0];
                 v1 = v[1];

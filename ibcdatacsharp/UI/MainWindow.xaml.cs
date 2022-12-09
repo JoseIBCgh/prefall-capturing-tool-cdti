@@ -128,6 +128,7 @@ namespace ibcdatacsharp.UI
             api.scanFinished += Api_scanFinished;
             api.deviceConnected += Api_deviceConnected;
 
+            EFK.EKF.test();
             //End Wisewalk API
 
             //Test linear acceleration
