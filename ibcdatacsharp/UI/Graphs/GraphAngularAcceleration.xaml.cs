@@ -30,7 +30,7 @@ namespace ibcdatacsharp.UI.Graphs
         public GraphAngularAcceleration()
         {
             InitializeComponent();
-            model = new Model3S(plot, -10000, 10000, title: "Acceleracion angular", units: "grados/s^2");
+            model = new Model3S(plot, -500, 500, title: "Acceleracion angular", units: "grados/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;

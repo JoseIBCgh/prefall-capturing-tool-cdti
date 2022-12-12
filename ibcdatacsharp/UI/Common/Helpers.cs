@@ -63,6 +63,23 @@ namespace ibcdatacsharp.UI.Common
             float degrees = (180 / (float)Math.PI) * radians;
             return (degrees);
         }
+        public static float ToRadians(float degrees)
+        {
+            float radians = ((float)Math.PI / 180) * degrees;
+            return radians;
+        }
+        public static float NormalizeAngle(float angle)
+        {
+            while(angle > 360)
+            {
+                angle -= 360;
+            }
+            while(angle < -360)
+            {
+                angle += 360;
+            }
+            return angle;
+        }
         public static Vector3 AngularVelocityFromQuaternions(Quaternion q1, Quaternion q2, double dt)
         {
 
@@ -74,6 +91,12 @@ namespace ibcdatacsharp.UI.Common
 
             return v;
 
+        }
+        public static float AngularVelocityFromDegrees(float angle1, float angle0, float dt)
+        {
+            float angle1Rad = ToRadians(angle1);
+            float angle0Rad = ToRadians(angle0);
+            return AngularVelocity(angle1Rad, angle0Rad, dt);
         }
         public static float AngularVelocity(float angle1, float angle0, float dt)
         {

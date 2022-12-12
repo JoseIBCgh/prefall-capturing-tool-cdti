@@ -16,7 +16,7 @@
         <WpfPlot Grid.Row="1"  x:Name="plot"/>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
             <Border Padding="10 0 10 0" BorderThickness="1" BorderBrush="Red">
-                <TextBlock FontSize="36" VerticalAlignment="Center" x:Name="angle" Foreground="Red">0.0</TextBlock>
+                <TextBlock FontSize="36" VerticalAlignment="Center" x:Name="angle" Foreground="Red">000.000</TextBlock>
             </Border>
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">

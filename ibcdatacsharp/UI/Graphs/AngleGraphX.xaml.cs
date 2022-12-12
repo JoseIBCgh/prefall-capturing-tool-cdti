@@ -31,7 +31,7 @@ namespace ibcdatacsharp.UI.Graphs
         }
         private void onUpdateAngle(object sender, double value)
         {
-            angle.Text = value.ToString("0.#");
+            angle.Text = value.ToString("000.000");
         }
         public void initCapture()
         {
@@ -105,7 +105,7 @@ namespace ibcdatacsharp.UI.Graphs
         private void onClearOffset(object sender, RoutedEventArgs e)
         {
             model.offset = 0;
-            offset.Text = "0.0";
+            offset.Text = "000.000";
         }
     }
 }

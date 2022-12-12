@@ -695,6 +695,9 @@ namespace ibcdatacsharp.UI
                         a1 = Helpers.ToDegrees(a1);
                         a2 = Helpers.ToDegrees(a2);
                         a3 = Helpers.ToDegrees(a3);
+                        a1 = Helpers.NormalizeAngle(a1);
+                        a2 = Helpers.NormalizeAngle(a2);
+                        a3 = Helpers.NormalizeAngle(a3);
                         angleX[i] = a1;
                         angleY[i] = a2;
                         angleZ[i] = a3;
@@ -719,14 +722,14 @@ namespace ibcdatacsharp.UI
                         }
                     }
                     Vector3[] angularVelocity = new Vector3[4];
-                    angularVelocity[0].X = Helpers.AngularVelocity(angleX[0], prev_angle.X, dt);
-                    angularVelocity[0].Y = Helpers.AngularVelocity(angleY[0], prev_angle.Y, dt);
-                    angularVelocity[0].Z = Helpers.AngularVelocity(angleZ[0], prev_angle.Z, dt);
+                    angularVelocity[0].X = Helpers.AngularVelocityFromDegrees(angleX[0], prev_angle.X, dt);
+                    angularVelocity[0].Y = Helpers.AngularVelocityFromDegrees(angleY[0], prev_angle.Y, dt);
+                    angularVelocity[0].Z = Helpers.AngularVelocityFromDegrees(angleZ[0], prev_angle.Z, dt);
                     for (int i = 1; i < 4; i++)
                     {
-                        angularVelocity[i].X = Helpers.AngularVelocity(angleX[i], angleX[i - 1], dt);
-                        angularVelocity[i].Y = Helpers.AngularVelocity(angleY[i], angleY[i - 1], dt);
-                        angularVelocity[i].Z = Helpers.AngularVelocity(angleZ[i], angleZ[i - 1], dt);
+                        angularVelocity[i].X = Helpers.AngularVelocityFromDegrees(angleX[i], angleX[i - 1], dt);
+                        angularVelocity[i].Y = Helpers.AngularVelocityFromDegrees(angleY[i], angleY[i - 1], dt);
+                        angularVelocity[i].Z = Helpers.AngularVelocityFromDegrees(angleZ[i], angleZ[i - 1], dt);
                     }
                     prev_angle = new Vector3(angleX[3], angleY[3], angleZ[3]);
 
