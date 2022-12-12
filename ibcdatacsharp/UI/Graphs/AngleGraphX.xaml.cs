@@ -16,6 +16,8 @@ namespace ibcdatacsharp.UI.Graphs
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
+        private const string INITIAL_OFFSET = "0.0";
+        //private string oldOffset = INITIAL_OFFSET;
         public Model1S model { get; private set; }
         public AngleGraphX()
         {
@@ -105,7 +107,25 @@ namespace ibcdatacsharp.UI.Graphs
         private void onClearOffset(object sender, RoutedEventArgs e)
         {
             model.offset = 0;
-            offset.Text = "000.000";
+            offset.Text = INITIAL_OFFSET;
         }
+        /*
+        private void onOffsetTextChanged(object sender, EventArgs e)
+        {
+            string offset_point = offset.Text.Replace(",", ".");
+            double result;
+            if(double.TryParse(offset_point, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out result))
+            {
+                string parsedResult = result.ToString("000.000");
+                offset.Text = parsedResult;
+                oldOffset = parsedResult;
+            }
+            else
+            {
+                offset.Text = oldOffset;
+            }
+            
+        }
+        */
     }
 }
