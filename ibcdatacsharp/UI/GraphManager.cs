@@ -563,6 +563,9 @@ namespace ibcdatacsharp.UI
         //Callback para recoger datas del IMU
         public void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
+            int index = 3;
+            Quaternion q = new Quaternion((float)data.Quat[index].X, (float)data.Quat[index].Y, (float)data.Quat[index].Z, (float)data.Quat[index].W);
+            quaternionEvent?.Invoke(this, deviceHandler, q);
             // Only a IMU
             if (numIMUs == 1)
             {
@@ -581,10 +584,6 @@ namespace ibcdatacsharp.UI
                 v1 = v[1];
                 v2 = v[2];
                 v3 = v[3];
-
-                int index = 3;
-                Quaternion q = new Quaternion((float)data.Quat[index].X, (float)data.Quat[index].Y, (float)data.Quat[index].Z, (float)data.Quat[index].W);
-                quaternionEvent?.Invoke(this, deviceHandler, q);
 
                 if (virtualToolBar.recordState == RecordState.Recording)
                 {
