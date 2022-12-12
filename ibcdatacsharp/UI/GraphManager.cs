@@ -161,6 +161,9 @@ namespace ibcdatacsharp.UI
         Quaternion[] q_lower = new Quaternion[4];
         Quaternion[] q_upper = new Quaternion[4];
 
+        Vector3 prev_angle = new Vector3(0, 0, 0);
+        Vector3 prev_angle_vel = new Vector3(0, 0, 0);
+
         int anglequat = 0;
         int mac1 = 0;
         int mac2 = 0;
@@ -176,6 +179,7 @@ namespace ibcdatacsharp.UI
         string dataline;
 
         float fakets = 0.01f;
+        float dt = 0.01f;
 
         string error = "";
 
@@ -714,8 +718,25 @@ namespace ibcdatacsharp.UI
 
                         }
                     }
-                    Vector3[] angularVelocity = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
-                    Vector3[] angularAcceleration = new Vector3[4] { Vector3.One, Vector3.One, Vector3.One, Vector3.One };
+                    Vector3[] angularVelocity = new Vector3[4];
+                    angularVelocity[0].X = Helpers.AngularVelocity(angleX[0], prev_angle.X, dt);
+                    angularVelocity[0].Y = Helpers.AngularVelocity(angleY[0], prev_angle.Y, dt);
+                    angularVelocity[0].Z = Helpers.AngularVelocity(angleZ[0], prev_angle.Z, dt);
+                    for (int i = 1; i < 4; i++)
+                    {
+                        angularVelocity[i].X = Helpers.AngularVelocity(angleX[i], angleX[i - 1], dt);
+                        angularVelocity[i].Y = Helpers.AngularVelocity(angleY[i], angleY[i - 1], dt);
+                        angularVelocity[i].Z = Helpers.AngularVelocity(angleZ[i], angleZ[i - 1], dt);
+                    }
+                    prev_angle = new Vector3(angleX[3], angleY[3], angleZ[3]);
+
+                    Vector3[] angularAcceleration = new Vector3[4];
+                    angularAcceleration[0] = Helpers.AngularAcceleration(angularVelocity[0], prev_angle_vel, dt);
+                    for(int i = 1; i < 4; i++)
+                    {
+                        angularAcceleration[i] = Helpers.AngularAcceleration(angularVelocity[i], angularVelocity[i - 1], dt);
+                    }
+                    prev_angle_vel = angularVelocity[3];
 
                     if (virtualToolBar.recordState == RecordState.Recording)
                     {

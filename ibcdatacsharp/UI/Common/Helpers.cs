@@ -63,6 +63,30 @@ namespace ibcdatacsharp.UI.Common
             float degrees = (180 / (float)Math.PI) * radians;
             return (degrees);
         }
+        public static Vector3 AngularVelocityFromQuaternions(Quaternion q1, Quaternion q2, double dt)
+        {
+
+
+            Vector3 v = new Vector3();
+            v.X = (float)((2 / dt) * (q1.W * q2.X - q1.X * q2.W - q1.Y * q2.Z + q1.Z * q2.Y));
+            v.Y = (float)((2 / dt) * (q1.W * q2.Y + q1.X * q2.Z - q1.Y * q2.W - q1.Z * q2.X));
+            v.Z = (float)((2 / dt) * (q1.W * q2.Z - q1.X * q2.Y + q1.Y * q2.X - q1.Z * q2.W));
+
+            return v;
+
+        }
+        public static float AngularVelocity(float angle1, float angle0, float dt)
+        {
+            return (angle1 - angle0) / dt;
+        }
+        public static Vector3 AngularAcceleration(Vector3 w1, Vector3 w0, float dt)
+        {
+            return (w1 - w0) / dt;
+        }
+        public static float AngularAcceleration(float w1, float w0, float dt)
+        {
+            return (w1 - w0) / dt;
+        }
         public static void printDict(Dictionary<string, WisewalkSDK.Device> dict)
         {
             foreach (var kvp in dict)
