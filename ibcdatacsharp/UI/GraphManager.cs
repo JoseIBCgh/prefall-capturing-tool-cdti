@@ -341,6 +341,10 @@ namespace ibcdatacsharp.UI
                 timerRender = new System.Timers.Timer(RENDER_MS);
                 timerRender.AutoReset = true;
 
+                // Se puede poner esta linea para quitar el evento si havia 
+                // alguno en caso que haya problemas de que el csv tenga el doble de
+                // duracion si no se encuentra otra solucion
+                //mainWindow.api.dataReceived -= Api_dataReceived;
                 mainWindow.api.dataReceived += Api_dataReceived;
 
                 foreach (Frame frame in graphs1IMU)
@@ -551,6 +555,7 @@ namespace ibcdatacsharp.UI
         void onStop(object sender)
         {
             deactivate();
+            mainWindow.api.dataReceived -= Api_dataReceived;
         }
 
         public void onInitRecord(object sender, EventArgs args)
