@@ -20,7 +20,7 @@
             </Border>
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="12" VerticalAlignment="Center">Offset</TextBlock>
+                    <TextBlock FontSize="16" VerticalAlignment="Center">Offset</TextBlock>
                     <Border Margin="2 0 0 0" BorderThickness="1" BorderBrush="Blue">
                         <TextBox FontSize="24" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Center" x:Name="offset">0.0</TextBox>
                     </Border>
