@@ -102,5 +102,10 @@ namespace ibcdatacsharp.UI.Graphs
             string offset_point = offset.Text.Replace(",", ".");
             model.offset = float.Parse(offset_point, CultureInfo.InvariantCulture);
         }
+        private void onClearOffset(object sender, RoutedEventArgs e)
+        {
+            model.offset = 0;
+            offset.Text = "0.0";
+        }
     }
 }

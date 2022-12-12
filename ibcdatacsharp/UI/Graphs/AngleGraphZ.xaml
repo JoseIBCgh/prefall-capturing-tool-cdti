@@ -15,13 +15,16 @@
         </Grid.RowDefinitions>
         <WpfPlot Grid.Row="1"  x:Name="plot"/>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <TextBlock FontSize="24" Padding="0 0 10 0" VerticalAlignment="Center" x:Name="angle" Foreground="Red">0.0</TextBlock>
+            <Border Padding="10 0 10 0" BorderThickness="1" BorderBrush="Red">
+                <TextBlock FontSize="36" VerticalAlignment="Center" x:Name="angle" Foreground="Red">0.0</TextBlock>
+            </Border>
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontSize="12" VerticalAlignment="Center">Offset</TextBlock>
                     <TextBox FontSize="12" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Center" x:Name="offset">0.0</TextBox>
                 </StackPanel>
                 <Button VerticalAlignment="Center" FontSize="12" Click="onSetOffset">Set Offset</Button>
+                <Button VerticalAlignment="Center" FontSize="12" Click="onClearOffset">Clear</Button>
             </StackPanel>
         </StackPanel>
     </Grid>
