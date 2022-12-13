@@ -34,24 +34,24 @@
                         <dock:LayoutAnchorablePaneGroup Orientation="Vertical" DockHeight="*" DockWidth="4*">
                             <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
                                 <dock:LayoutAnchorablePane DockHeight="*" DockWidth="1.8*">
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle X">
+                                    <dock:LayoutAnchorable x:Name="angleXAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle X">
                                         <Frame Source="pack://application:,,,/UI/Graphs/AngleGraphX.xaml" x:Name="angleX"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle Y">
+                                    <dock:LayoutAnchorable x:Name="angleYAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle Y">
                                         <Frame Source="pack://application:,,,/UI/Graphs/AngleGraphY.xaml" x:Name="angleY"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle Z">
+                                    <dock:LayoutAnchorable x:Name="angleZAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle Z">
                                         <Frame Source="pack://application:,,,/UI/Graphs/AngleGraphZ.xaml" x:Name="angleZ"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Velocidad Angular">
+                                    <dock:LayoutAnchorable x:Name="angularVelocityAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Velocidad Angular">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphAngularVelocity.xaml" x:Name="angularVelocity"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Acceleracion Angular">
+                                    <dock:LayoutAnchorable x:Name="angularAccelerationAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Acceleracion Angular">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphAngularAcceleration.xaml" x:Name="angularAcceleration"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
                                 <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Camera">
+                                    <dock:LayoutAnchorable x:Name="camaraAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Camera">
                                         <Frame Source="pack://application:,,,/UI/CamaraViewport/CamaraViewport.xaml" x:Name="camaraViewport"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>

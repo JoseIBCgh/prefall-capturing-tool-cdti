@@ -10,20 +10,20 @@ namespace ibcdatacsharp
 {
     public struct LinearAcceleration
     {
-        private static Vector3 g = new Vector3(0, 0, -1);
+        private static Vector3 g = new Vector3(0, 0, 9.8f);
         private static Quaternion MultNorm(Quaternion q1, Quaternion q2)
         {
             return Quaternion.Normalize(q1 * q2);
         }
         private static Vector3 quaternionRotateVector(Quaternion q, Vector3 v)
         {
-            //Quaternion qvq = Quaternion.Conjugate(q) * new Quaternion(v, 0) * q;
-            Quaternion qvq = MultNorm(MultNorm(Quaternion.Conjugate(q), new Quaternion(v, 0)), q);
+            Quaternion qvq = Quaternion.Conjugate(q) * new Quaternion(v, 0) * q;
+            //Quaternion qvq = MultNorm(MultNorm(Quaternion.Conjugate(q), new Quaternion(v, 0)), q);
             return new Vector3(qvq.X, qvq.Y, qvq.Z);
         }
         public static Vector3 calcLinAcc(Quaternion q, Vector3 acc)
         {
-            q = Quaternion.Normalize(q);
+            //q = Quaternion.Normalize(q);
             Vector3 gRot = quaternionRotateVector(q, g);
             return gRot - acc;
         }
@@ -39,6 +39,8 @@ namespace ibcdatacsharp
                 float maxError = 0;
                 float totalError = 0;
                 int numLines = 0;
+                Vector3 lacc_max_error = Vector3.One;
+                Vector3 lacc_cal_max_error = Vector3.One;
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
@@ -67,12 +69,15 @@ namespace ibcdatacsharp
                     if(error > maxError)
                     {
                         maxError = error;
+                        lacc_max_error = lacc;
+                        lacc_cal_max_error = lacc_cal;
                     }
                     Trace.WriteLine("teorico " + lacc + " calculado " + lacc_cal);
                 }
                 Trace.WriteLine("Max error " + (maxError * 100).ToString() + " %");
                 float errorMedio = totalError / numLines;
                 Trace.WriteLine("Error medio " + (errorMedio * 100).ToString() + " %");
+                Trace.WriteLine("Max error " + lacc_max_error + " " + lacc_cal_max_error);
             }
         }
     }
