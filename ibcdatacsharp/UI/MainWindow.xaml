@@ -58,19 +58,19 @@
                             </dock:LayoutAnchorablePaneGroup>
                             <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="*" DockWidth="*">
                                 <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Accelerometer">
+                                    <dock:LayoutAnchorable x:Name="accelerometerAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Accelerometer">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphAccelerometer.xaml" x:Name="accelerometer"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Gyroscope">
+                                    <dock:LayoutAnchorable x:Name="gyroscopeAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Gyroscope">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphGyroscope.xaml" x:Name="gyroscope"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Magnetometer">
+                                    <dock:LayoutAnchorable x:Name="magnetometerAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Magnetometer">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphMagnetometer.xaml" x:Name="magnetometer"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Linear Acceleration">
+                                    <dock:LayoutAnchorable x:Name="linAccAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Linear Acceleration">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphLinAcc.xaml" x:Name="linAcc"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Quaternions">
+                                    <dock:LayoutAnchorable x:Name="quaternionAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Quaternions">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphQuaternion.xaml" x:Name="quaternions"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>

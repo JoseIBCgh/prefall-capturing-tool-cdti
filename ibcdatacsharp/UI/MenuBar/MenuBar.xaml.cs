@@ -1,4 +1,5 @@
-﻿using ibcdatacsharp.UI.ToolBar.Enums;
+﻿using ibcdatacsharp.UI.MenuBar.View;
+using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,10 +12,27 @@ namespace ibcdatacsharp.UI.MenuBar
     /// </summary>
     public partial class MenuBar : Page
     {
+        private MainWindow mainWindow;
         public MenuBar()
         {
             InitializeComponent();
             deactivateButtons();
+            mainWindow = Application.Current.MainWindow as MainWindow;
+            initWindows();
+        }
+        private void initWindows()
+        {
+            ViewVM.Add(new WindowInfo(mainWindow.accelerometerAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.gyroscopeAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.magnetometerAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.linAccAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.quaternionAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.angleXAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.angleYAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.angleZAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.angularVelocityAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.angularAccelerationAnchorable));
+            ViewVM.Add(new WindowInfo(mainWindow.camaraAnchorable));
         }
         private void deactivateButtons()
         {
@@ -71,6 +89,13 @@ namespace ibcdatacsharp.UI.MenuBar
         {
             Version version = new Version();
             version.ShowDialog();
+        }
+
+        private void showWindow(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = (MenuItem)sender;
+            WindowInfo windowInfo = menuItem.DataContext as WindowInfo;
+            windowInfo.show();
         }
     }
 }

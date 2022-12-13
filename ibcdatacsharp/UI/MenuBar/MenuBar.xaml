@@ -4,9 +4,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ibcdatacsharp.UI.MenuBar"
+      xmlns:view="clr-namespace:ibcdatacsharp.UI.MenuBar.View"
       mc:Ignorable="d" 
       d:DesignHeight="30" d:DesignWidth="1000"
       Title="MenuBar">
+    <Page.DataContext>
+        <view:ViewInfo x:Name="ViewVM"/>
+    </Page.DataContext>
     <!--Algunos color del menuItem no se pueden cambiar directamente-->
     <Page.Resources>
         <!--Control colors.-->
@@ -587,6 +591,14 @@
                         <Image Height="25" Width="25" Source="pack://application:,,,/UI/ToolBar/Icons/Blue/capturedFiles-blue-icon.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+            </MenuItem>
+            <MenuItem x:Name="View" Header="View" ItemsSource="{Binding windows}" Height="30">
+                <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                        <MenuItem Header="{Binding title}" IsEnabled="{Binding hidden}" Height="30" Click="showWindow">
+                        </MenuItem>
+                    </DataTemplate>
+                </MenuItem.ItemTemplate>
             </MenuItem>
             <MenuItem Header="About" Height="30">
                 <MenuItem Header="Version" Click="showVersion" Height="30"/>

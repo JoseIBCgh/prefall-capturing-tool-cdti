@@ -639,7 +639,7 @@ namespace ibcdatacsharp.UI
 
                     for(int i= 0; i < 4; i++)
                     {
-                        Quaternion q = new Quaternion((float)data.Quat[i].W, (float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z);
+                        Quaternion q = new Quaternion((float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z, (float)data.Quat[i].W);
                         q = Quaternion.Normalize(q);
                         quaternions.drawRealTimeData(q);
                     }
