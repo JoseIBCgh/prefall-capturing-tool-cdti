@@ -11,9 +11,14 @@ namespace ibcdatacsharp
     public struct LinearAcceleration
     {
         private static Vector3 g = new Vector3(0, 0, -1);
+        private static Quaternion MultNorm(Quaternion q1, Quaternion q2)
+        {
+            return Quaternion.Normalize(q1 * q2);
+        }
         private static Vector3 quaternionRotateVector(Quaternion q, Vector3 v)
         {
-            Quaternion qvq = Quaternion.Conjugate(q) * new Quaternion(v, 1) * q;
+            //Quaternion qvq = Quaternion.Conjugate(q) * new Quaternion(v, 0) * q;
+            Quaternion qvq = MultNorm(MultNorm(Quaternion.Conjugate(q), new Quaternion(v, 0)), q);
             return new Vector3(qvq.X, qvq.Y, qvq.Z);
         }
         public static Vector3 calcLinAcc(Quaternion q, Vector3 acc)
