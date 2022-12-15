@@ -16,6 +16,8 @@ namespace ibcdatacsharp.UI.Graphs
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
+
+        const bool hasToRender = true;
         public Model1S model { get; private set; }
         public AngleGraphY()
         {
@@ -25,7 +27,6 @@ namespace ibcdatacsharp.UI.Graphs
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
-            hasToRender = false;
 
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("grados");
@@ -111,6 +112,5 @@ namespace ibcdatacsharp.UI.Graphs
             model.offset = 0;
             offset.Text = "000.000";
         }
-        public bool hasToRender { get; set; }
     }
 }

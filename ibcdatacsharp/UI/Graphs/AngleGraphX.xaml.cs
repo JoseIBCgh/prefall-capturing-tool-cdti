@@ -17,6 +17,8 @@ namespace ibcdatacsharp.UI.Graphs
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
         private const string INITIAL_OFFSET = "0.0";
+
+        const bool hasToRender = true;
         //private string oldOffset = INITIAL_OFFSET;
         public Model1S model { get; private set; }
         public AngleGraphX()
@@ -27,7 +29,6 @@ namespace ibcdatacsharp.UI.Graphs
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
-            hasToRender = false;
 
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("grados");
@@ -131,6 +132,5 @@ namespace ibcdatacsharp.UI.Graphs
             
         }
         */
-        public bool hasToRender { get; set; }
     }
 }

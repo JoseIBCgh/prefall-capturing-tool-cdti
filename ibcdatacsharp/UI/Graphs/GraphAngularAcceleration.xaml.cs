@@ -26,6 +26,7 @@ namespace ibcdatacsharp.UI.Graphs
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
+        const bool hasToRender = true;
         public Model3S model { get; private set; }
         public GraphAngularAcceleration()
         {
@@ -33,7 +34,6 @@ namespace ibcdatacsharp.UI.Graphs
             model = new Model3S(plot, -500, 500, title: "Acceleracion angular", units: "grados/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
-            hasToRender = false;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("grados/s^2");
@@ -133,6 +133,5 @@ namespace ibcdatacsharp.UI.Graphs
                 });
             }
         }
-        public bool hasToRender { get; set; }
     }
 }

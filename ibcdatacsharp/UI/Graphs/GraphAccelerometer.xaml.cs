@@ -15,6 +15,8 @@ namespace ibcdatacsharp.UI.Graphs
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         private const DispatcherPriority CLEAR_PRIORITY = DispatcherPriority.Render;
         protected Device.Device device;
+
+        const bool hasToRender = true;
         public Model3S model { get; private set; }
         public GraphAccelerometer()
         {
@@ -23,7 +25,6 @@ namespace ibcdatacsharp.UI.Graphs
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
-            hasToRender = false;
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("m/s^2");
         }
@@ -113,6 +114,5 @@ namespace ibcdatacsharp.UI.Graphs
                 });
             }
         }
-        public bool hasToRender { get; set; }
     }
 }
