@@ -308,6 +308,7 @@ namespace ibcdatacsharp.UI.ToolBar
             }
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = true;
+            openFileDialog.InitialDirectory = Config.INITIAL_PATH;
             openFileDialog.Filter = "Allowed Files(*.txt;*.csv;*.avi)|*.txt;*.csv;*.avi";
             if(openFileDialog.ShowDialog() == true)
             {

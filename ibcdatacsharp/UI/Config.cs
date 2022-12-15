@@ -1,4 +1,6 @@
 ﻿using OpenCvSharp;
+using System;
+using System.Diagnostics;
 
 namespace ibcdatacsharp.UI
 {
@@ -6,7 +8,15 @@ namespace ibcdatacsharp.UI
     {
         public static string[] allowedExtensions = new string[] { ".txt", ".avi", ".csv" };
         public const bool showOnlyInitialPath = true;
-        public const string INITIAL_PATH = "C:\\Temp";
+        public static string INITIAL_PATH
+        {
+            get
+            {
+                string userName = Environment.UserName;
+                Trace.WriteLine(userName);
+                return "C:\\Users\\" + userName + "\\Documents";
+            }
+        }
         public const int VIDEO_FPS = 30;
         public const int VIDEO_FPS_SAVE = 25;
         public const int FRAME_HEIGHT = 480;

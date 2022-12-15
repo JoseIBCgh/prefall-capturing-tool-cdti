@@ -12,6 +12,7 @@ namespace ibcdatacsharp.UI.FileSaver
         public SavingMenu()
         {
             InitializeComponent();
+            route.Text = Config.INITIAL_PATH;
         }
         private void changeDirectory(object sender, RoutedEventArgs e)
         {
