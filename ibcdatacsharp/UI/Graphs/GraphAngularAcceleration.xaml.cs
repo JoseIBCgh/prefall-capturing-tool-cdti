@@ -33,6 +33,7 @@ namespace ibcdatacsharp.UI.Graphs
             model = new Model3S(plot, -500, 500, title: "Acceleracion angular", units: "grados/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
+            hasToRender = false;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("grados/s^2");
@@ -112,19 +113,26 @@ namespace ibcdatacsharp.UI.Graphs
 
         public async void render()
         {
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+            if (hasToRender)
             {
-                model.render();
-            });
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    model.render();
+                });
+            }
         }
 
         // Actualiza el render
         public async void onRender(object sender, EventArgs e)
         {
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+            if (hasToRender)
             {
-                model.render();
-            });
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    model.render();
+                });
+            }
         }
+        public bool hasToRender { get; set; }
     }
 }

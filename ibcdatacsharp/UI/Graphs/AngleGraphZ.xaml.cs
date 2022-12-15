@@ -25,6 +25,7 @@ namespace ibcdatacsharp.UI.Graphs
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
+            hasToRender = false;
 
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("grados");
@@ -83,10 +84,13 @@ namespace ibcdatacsharp.UI.Graphs
         // Actualiza el render de los grafos
         public async void onRender(object sender, EventArgs e)
         {
-            await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            if (hasToRender)
             {
-                model.render();
-            });
+                await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+                {
+                    model.render();
+                });
+            }
         }
 
         public async void drawRealTimeData(double angle)
@@ -107,5 +111,6 @@ namespace ibcdatacsharp.UI.Graphs
             model.offset = 0;
             offset.Text = "000.000";
         }
+        public bool hasToRender { get; set; }
     }
 }

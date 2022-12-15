@@ -22,6 +22,7 @@ namespace ibcdatacsharp.UI.Graphs
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
+            hasToRender = false;
 
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("grados/s");
@@ -78,18 +79,24 @@ namespace ibcdatacsharp.UI.Graphs
         // Actualiza el renderizado
         public async void onRender(object sender, EventArgs e)
         {
-            await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+            if (hasToRender)
             {
-                model.render();
-            });
+                await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+                {
+                    model.render();
+                });
+            }
         }
 
         public async void render()
         {
-            await Application.Current.Dispatcher.InvokeAsync( () =>
+            if (hasToRender)
             {
-                model.render();
-            });
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    model.render();
+                });
+            }
         }
         public async void drawRealTimeData(double accX, double accY, double accZ)
         {
@@ -100,5 +107,6 @@ namespace ibcdatacsharp.UI.Graphs
                 model.updateData(acc);
             });
         }
+        public bool hasToRender { get; set; }
     }
 }

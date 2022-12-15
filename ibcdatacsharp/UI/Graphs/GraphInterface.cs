@@ -19,5 +19,7 @@ namespace ibcdatacsharp.UI.Graphs
         public void clearData();
         // Se ejecuta cuando hay que actualizar el renderizado
         public void onRender(object sender, EventArgs e);
+
+        public bool hasToRender { get; set; }
     }
 }

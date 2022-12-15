@@ -120,7 +120,7 @@ namespace ibcdatacsharp.UI
     public class CaptureManager
     {
         public bool active { get; private set; }
-        private const int RENDER_MS = 100;
+        private const int RENDER_MS = 10;
         private System.Timers.Timer timerRender;
         private List<Frame> graphs1IMU;
         private List<Frame> graphs2IMU;
@@ -215,6 +215,63 @@ namespace ibcdatacsharp.UI
         public void setReference(Quaternion q)
         {
             refq = q;
+        }
+        private void onNumIMUsFunction(int n)
+        {
+            if (n == 0)
+            {
+                //if(numIMUs == 1)
+                //{
+                accelerometer.hasToRender = false;
+                gyroscope.hasToRender = false;
+                magnetometer.hasToRender = false;
+                linAcc.hasToRender = false;
+                quaternions.hasToRender = false;
+                //}
+                //else if(numIMUs == 2)
+                //{
+                angleX.hasToRender = false;
+                angleY.hasToRender = false;
+                angleZ.hasToRender = false;
+                angleVel.hasToRender = false;
+                angleAcc.hasToRender = false;
+                //}
+                numIMUs = n;
+            }
+            else if (n == 1)
+            {
+                accelerometer.hasToRender = true;
+                gyroscope.hasToRender = true;
+                magnetometer.hasToRender = true;
+                linAcc.hasToRender = true;
+                quaternions.hasToRender = true;
+                //if(numIMUs == 2)
+                //{
+                angleX.hasToRender = false;
+                angleY.hasToRender = false;
+                angleZ.hasToRender = false;
+                angleVel.hasToRender = false;
+                angleAcc.hasToRender = false;
+                //}
+                numIMUs = n;
+            }
+            else if (n == 2)
+            {
+                angleX.hasToRender = true;
+                angleY.hasToRender = true;
+                angleZ.hasToRender = true;
+                angleVel.hasToRender = true;
+                angleAcc.hasToRender = true;
+                //if(numIMUs == 1)
+                //{
+                accelerometer.hasToRender = false;
+                gyroscope.hasToRender = false;
+                magnetometer.hasToRender = false;
+                linAcc.hasToRender = false;
+                quaternions.hasToRender = false;
+                //}
+                numIMUs = n;
+            }
         }
         private void saveGraphs()
         {
@@ -426,7 +483,8 @@ namespace ibcdatacsharp.UI
             // Puede que haya que cambiar esto
             Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                numIMUs = (mainWindow.deviceList.Content as DeviceList.DeviceList).numIMUsUsed;
+                int numIMUs = (mainWindow.deviceList.Content as DeviceList.DeviceList).numIMUsUsed;
+                onNumIMUsFunction(numIMUs);
             });
         }
         public void deactivate()
@@ -445,7 +503,7 @@ namespace ibcdatacsharp.UI
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.clearData();
                             graph.initCapture();
-                            //timerRender.Elapsed -= graph.onRender;
+                            timerRender.Elapsed -= graph.onRender;
                         };
                     }
                     else
@@ -453,7 +511,7 @@ namespace ibcdatacsharp.UI
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.clearData();
                         graph.initCapture();
-                        //timerRender.Elapsed -= graph.onRender;
+                        timerRender.Elapsed -= graph.onRender;
                     }
                 }
                 foreach (Frame frame in graphs2IMU)
@@ -466,7 +524,7 @@ namespace ibcdatacsharp.UI
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.clearData();
                             graph.initCapture();
-                            //timerRender.Elapsed -= graph.onRender;
+                            timerRender.Elapsed -= graph.onRender;
                         };
                     }
                     else
@@ -474,7 +532,7 @@ namespace ibcdatacsharp.UI
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.clearData();
                         graph.initCapture();
-                        //timerRender.Elapsed -= graph.onRender;
+                        timerRender.Elapsed -= graph.onRender;
                     }
                 }
                 virtualToolBar.pauseEvent -= onPause; //funcion local
@@ -535,7 +593,8 @@ namespace ibcdatacsharp.UI
                 // Puede que haya que cambiar esto
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    numIMUs = (mainWindow.deviceList.Content as DeviceList.DeviceList).numIMUsUsed;
+                    int numIMUs = (mainWindow.deviceList.Content as DeviceList.DeviceList).numIMUsUsed;
+                    onNumIMUsFunction(numIMUs);
                 });
             }
         }

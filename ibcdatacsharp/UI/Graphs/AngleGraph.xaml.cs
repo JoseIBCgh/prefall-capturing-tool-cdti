@@ -228,5 +228,6 @@ namespace ibcdatacsharp.UI.Graphs
         {
             throw new NotImplementedException();
         }
+        public bool hasToRender { get; set; }
     }
 }
