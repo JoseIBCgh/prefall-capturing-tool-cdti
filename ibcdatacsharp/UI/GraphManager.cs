@@ -120,7 +120,7 @@ namespace ibcdatacsharp.UI
     public class CaptureManager
     {
         public bool active { get; private set; }
-        private const int RENDER_MS = 10;
+        private const int RENDER_MS = Config.RENDER_MS_CAPTUE;
         private System.Timers.Timer timerRender;
         private List<Frame> graphs1IMU;
         private List<Frame> graphs2IMU;
