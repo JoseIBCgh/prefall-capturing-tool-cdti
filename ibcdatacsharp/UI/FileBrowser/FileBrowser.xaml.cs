@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows.Input;
 using ibcdatacsharp.UI.FileBrowser.ShellClasses;
 using System.Diagnostics;
+using System.Windows;
+using ibcdatacsharp.DeviceList.TreeClasses;
 
 namespace ibcdatacsharp.UI.FileBrowser
 {
@@ -155,6 +157,15 @@ namespace ibcdatacsharp.UI.FileBrowser
         }
 
         #endregion
+
+        public void OpenWith(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = (MenuItem)sender;
+            FileSystemObjectInfo fileSystemObjectInfo = (FileSystemObjectInfo)menuItem.DataContext;
+            FileSystemInfo fileSystemInfo = fileSystemObjectInfo.FileSystemInfo;
+            string file = fileSystemInfo.FullName;
+            Process.Start("rundll32.exe", string.Format("shell32.dll,OpenAs_RunDLL {0}", file));
+        }
     }
 }
 

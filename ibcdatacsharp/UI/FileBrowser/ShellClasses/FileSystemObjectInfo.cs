@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Media;
 using ibcdatacsharp.UI.FileBrowser.Enums;
 using ibcdatacsharp.Common;
+using System.Windows;
 
 // Almacena todos los drives, carpetas y ficheros. Se encarga de la interacción entre el usuario y la UI.
 namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
@@ -136,6 +137,18 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
             set { SetValue("Drive", value); }
         }
 
+        public Visibility CanOpenWith
+        {
+            get 
+            { 
+                if(FileSystemInfo is FileInfo)
+                {
+                    return Visibility.Visible;
+                }
+                return Visibility.Collapsed;
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -213,6 +226,7 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
                         (file.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden && showFile(file))
                         {
                             Children.Add(new FileSystemObjectInfo(file));
+                            
                         }
                     }
                 }

@@ -1,19 +1,19 @@
 ﻿using OpenCvSharp;
 using System;
 using System.Diagnostics;
+using System.Runtime.Intrinsics.X86;
 
 namespace ibcdatacsharp.UI
 {
     public static class Config
     {
-        public static string[] allowedExtensions = new string[] { ".txt", ".avi", ".csv" };
+        public static string[] allowedExtensions = new string[] { ".txt", ".csv", ".c3d", ".avi", ".mov", ".mp4" };
         public const bool showOnlyInitialPath = true;
         public static string INITIAL_PATH
         {
             get
             {
                 string userName = Environment.UserName;
-                Trace.WriteLine(userName);
                 return "C:\\Users\\" + userName + "\\Documents";
             }
         }

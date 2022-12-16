@@ -22,6 +22,11 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="{Binding Path=ImageSource, UpdateSourceTrigger=PropertyChanged}" Margin="0,1,8,1"></Image>
                     <TextBlock Text="{Binding Path=FileSystemInfo.Name}"></TextBlock>
+                    <StackPanel.ContextMenu>
+                        <ContextMenu Visibility="{Binding Path=CanOpenWith}">
+                            <MenuItem Header="Abrir con" Click="OpenWith"/>
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
                 </StackPanel>
             </HierarchicalDataTemplate>
         </TreeView.Resources>
