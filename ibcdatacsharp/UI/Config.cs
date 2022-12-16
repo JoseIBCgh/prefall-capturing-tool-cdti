@@ -21,7 +21,7 @@ namespace ibcdatacsharp.UI
         public const int VIDEO_FPS_SAVE = 25;
         public const int FRAME_HEIGHT = 480;
         public const int FRAME_WIDTH = 640;
-        public const int RENDER_MS_CAPTUE = 10;
+        public const int RENDER_MS_CAPTUE = 20;
         public static readonly MatType DEFAULT_MAT_TYPE = MatType.CV_8UC3; //Se tienen que grabar todos los frames con el mismo tipo de datos
         public static MatType? MAT_TYPE = null; 
         public const string csvHeader1IMU = @"DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT

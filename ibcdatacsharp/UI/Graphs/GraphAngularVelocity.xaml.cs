@@ -51,6 +51,13 @@ namespace ibcdatacsharp.UI.Graphs
             });
 
         }
+        public async void drawData(Vector3[] vel)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(vel);
+            });
+        }
         public async void drawData(GraphData data)
         {
             double[] x = new double[data.length];

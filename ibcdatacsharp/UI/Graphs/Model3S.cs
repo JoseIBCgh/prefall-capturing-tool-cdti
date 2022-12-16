@@ -3,6 +3,7 @@ using ScottPlot.Plottable;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 
 namespace ibcdatacsharp.UI.Graphs
 {
@@ -165,6 +166,39 @@ namespace ibcdatacsharp.UI.Graphs
             signalPlotY.Label = "Y= " + data[1].ToString("0.##");
             signalPlotZ.Label = "Z= " + data[2].ToString("0.##");
             nextIndex++;
+        }
+        public async void updateData(Vector3[] data, bool render = true)
+        {
+            if (nextIndex + data.Length >= CAPACITY) // No deberia pasar
+            {
+                CAPACITY = CAPACITY * GROW_FACTOR;
+                Array.Resize(ref valuesX, CAPACITY);
+                Array.Resize(ref valuesY, CAPACITY);
+                Array.Resize(ref valuesZ, CAPACITY);
+                plot.Plot.Remove(signalPlotX);
+                plot.Plot.Remove(signalPlotY);
+                plot.Plot.Remove(signalPlotZ);
+                signalPlotX = plot.Plot.AddSignal(valuesX, color: Color.Red, label: "X");
+                signalPlotY = plot.Plot.AddSignal(valuesY, color: Color.Green, label: "Y");
+                signalPlotZ = plot.Plot.AddSignal(valuesZ, color: Color.Blue, label: "Z");
+                signalPlotX.MarkerSize = 0;
+                signalPlotY.MarkerSize = 0;
+                signalPlotZ.MarkerSize = 0;
+            }
+            for (int i = 0; i < data.Length; i++)
+            {
+                valuesX[nextIndex + i] = data[i].X;
+                valuesY[nextIndex + i ] = data[i].Y;
+                valuesZ[nextIndex + i ] = data[i].Z;
+            }
+            signalPlotX.Label = "X= " + data[data.Length - 1].X.ToString("0.##");
+            signalPlotY.Label = "Y= " + data[data.Length - 1].Y.ToString("0.##");
+            signalPlotZ.Label = "Z= " + data[data.Length - 1].Z.ToString("0.##");
+            nextIndex+= data.Length;
+            if (render)
+            {
+                this.render();
+            }
         }
         // Actualiza el renderizado
         public async void render()

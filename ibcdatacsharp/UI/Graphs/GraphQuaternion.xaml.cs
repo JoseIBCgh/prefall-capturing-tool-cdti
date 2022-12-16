@@ -62,6 +62,13 @@ namespace ibcdatacsharp.UI.Graphs
             });
 
         }
+        public async void drawData(Quaternion[] q)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(q);
+            });
+        }
         // Temporal
         public async void drawData(GraphData data)
         {

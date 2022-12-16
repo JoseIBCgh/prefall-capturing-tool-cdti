@@ -1,5 +1,6 @@
 ﻿using ibcdatacsharp.UI.Device;
 using System;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -105,6 +106,13 @@ namespace ibcdatacsharp.UI.Graphs
             await Application.Current.Dispatcher.InvokeAsync( () =>
             {
                 model.updateData(acc);
+            });
+        }
+        public async void drawData(Vector3[] gyr)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(gyr);
             });
         }
     }

@@ -95,8 +95,26 @@ namespace ibcdatacsharp.UI.Graphs
                 });
             }
         }
+        public async void render()
+        {
+            if (hasToRender)
+            {
+                await Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
+                {
+                    model.render();
+                });
+            }
+        }
 
         public async void drawRealTimeData(double angle)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(angle);
+            });
+        }
+
+        public async void drawData(float[] angle)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {

@@ -101,6 +101,13 @@ namespace ibcdatacsharp.UI.Graphs
                 model.updateData(angle);
             });
         }
+        public async void drawData(float[] angle)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.updateData(angle);
+            });
+        }
 
         private void onSetOffset(object sender, RoutedEventArgs e)
         {

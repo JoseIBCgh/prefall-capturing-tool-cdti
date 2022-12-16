@@ -131,6 +131,27 @@ namespace ibcdatacsharp.UI.Graphs
             nextIndex++;
             valueEvent?.Invoke(this, data + offset);
         }
+        public void updateData(float[] data, bool render = true)
+        {
+            if(nextIndex + data.Length >= CAPACITY) // No deberia pasar
+            {
+                CAPACITY = CAPACITY * GROW_FACTOR;
+                Array.Resize(ref values, CAPACITY);
+                plot.Plot.Remove(signalPlot);
+                signalPlot = plot.Plot.AddSignal(values, color: dataColor);
+                signalPlot.OffsetY = offset;
+            }
+            for(int i = 0; i < data.Length; i++)
+            {
+                values[nextIndex + i] = data[i];
+            }
+            nextIndex+= data.Length;
+            valueEvent?.Invoke(this, data[data.Length - 1] + offset);
+            if (render)
+            {
+                this.render();
+            }
+        }
         // Actualiza el renderizado
         public void render()
         {

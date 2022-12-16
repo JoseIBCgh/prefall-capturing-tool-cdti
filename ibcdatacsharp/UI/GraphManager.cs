@@ -121,7 +121,7 @@ namespace ibcdatacsharp.UI
     {
         public bool active { get; private set; }
         private const int RENDER_MS = Config.RENDER_MS_CAPTUE;
-        private System.Timers.Timer timerRender;
+        //private System.Timers.Timer timerRender;
         private List<Frame> graphs1IMU;
         private List<Frame> graphs2IMU;
         private VirtualToolBar virtualToolBar;
@@ -397,8 +397,8 @@ namespace ibcdatacsharp.UI
             if (!active)
             {
                 active = true;
-                timerRender = new System.Timers.Timer(RENDER_MS);
-                timerRender.AutoReset = true;
+                //timerRender = new System.Timers.Timer(RENDER_MS);
+                //timerRender.AutoReset = true;
 
                 // Se puede poner esta linea para quitar el evento si havia 
                 // alguno en caso que haya problemas de que el csv tenga el doble de
@@ -426,7 +426,7 @@ namespace ibcdatacsharp.UI
 
 
                                     //timerCapture.Elapsed += graph.onTick;
-                                    timerRender.Elapsed += graph.onRender;
+                                    //timerRender.Elapsed += graph.onRender;
                                 };
                             }
                             else
@@ -436,7 +436,7 @@ namespace ibcdatacsharp.UI
 
 
                                 //timerCapture.Elapsed += graph.onTick;
-                                timerRender.Elapsed += graph.onRender;
+                                //timerRender.Elapsed += graph.onRender;
                             }
                         }
                     }
@@ -457,7 +457,7 @@ namespace ibcdatacsharp.UI
 
 
                                     //timerCapture.Elapsed += graph.onTick;
-                                    timerRender.Elapsed += graph.onRender;
+                                    //timerRender.Elapsed += graph.onRender;
                                 };
                             }
                             else
@@ -467,18 +467,18 @@ namespace ibcdatacsharp.UI
 
 
                                 //timerCapture.Elapsed += graph.onTick;
-                                timerRender.Elapsed += graph.onRender;
+                                //timerRender.Elapsed += graph.onRender;
                             }
                         }
                     }
 
 
-                    virtualToolBar.pauseEvent += onPause; //funcion local
+                    //virtualToolBar.pauseEvent += onPause; //funcion local
                     virtualToolBar.stopEvent += onStop; //funcion local
-                    if (virtualToolBar.pauseState == PauseState.Play)
-                    {
-                        timerRender.Start();
-                    }
+                    //if (virtualToolBar.pauseState == PauseState.Play)
+                    //{
+                        //timerRender.Start();
+                    //}
 
                 });
             }
@@ -497,7 +497,7 @@ namespace ibcdatacsharp.UI
             if (active)
             {
                 active = false;
-                timerRender.Stop();
+                //timerRender.Stop();
                 foreach (Frame frame in graphs1IMU)
                 {
                     if (frame.Content == null)
@@ -508,7 +508,7 @@ namespace ibcdatacsharp.UI
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.clearData();
                             graph.initCapture();
-                            timerRender.Elapsed -= graph.onRender;
+                            //timerRender.Elapsed -= graph.onRender;
                         };
                     }
                     else
@@ -516,7 +516,7 @@ namespace ibcdatacsharp.UI
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.clearData();
                         graph.initCapture();
-                        timerRender.Elapsed -= graph.onRender;
+                        //timerRender.Elapsed -= graph.onRender;
                     }
                 }
                 foreach (Frame frame in graphs2IMU)
@@ -529,7 +529,7 @@ namespace ibcdatacsharp.UI
                             GraphInterface graph = frame.Content as GraphInterface;
                             graph.clearData();
                             graph.initCapture();
-                            timerRender.Elapsed -= graph.onRender;
+                            //timerRender.Elapsed -= graph.onRender;
                         };
                     }
                     else
@@ -537,12 +537,12 @@ namespace ibcdatacsharp.UI
                         GraphInterface graph = frame.Content as GraphInterface;
                         graph.clearData();
                         graph.initCapture();
-                        timerRender.Elapsed -= graph.onRender;
+                        //timerRender.Elapsed -= graph.onRender;
                     }
                 }
-                virtualToolBar.pauseEvent -= onPause; //funcion local
+                //virtualToolBar.pauseEvent -= onPause; //funcion local
                 virtualToolBar.stopEvent -= onStop; //funcion local
-                timerRender.Dispose();
+                //timerRender.Dispose();
 
                 mainWindow.api.StopStream(out error);
             }
@@ -612,11 +612,11 @@ namespace ibcdatacsharp.UI
         {
             if (pauseState == PauseState.Pause)
             {
-                timerRender.Stop();
+                //timerRender.Stop();
             }
             else if (pauseState == PauseState.Play)
             {
-                timerRender.Start();
+                //timerRender.Start();
             }
         }
         // Se ejecuta al clicar stop
@@ -681,36 +681,41 @@ namespace ibcdatacsharp.UI
                 {
                     GraphAccelerometer acc = accelerometer;
 
-                    acc.drawRealTimeData(data.Imu[0].acc_x, data.Imu[0].acc_y, data.Imu[0].acc_z);
-                    acc.drawRealTimeData(data.Imu[1].acc_x, data.Imu[1].acc_y, data.Imu[1].acc_z);
-                    acc.drawRealTimeData(data.Imu[2].acc_x, data.Imu[2].acc_y, data.Imu[2].acc_z);
-                    acc.drawRealTimeData(data.Imu[3].acc_x, data.Imu[3].acc_y, data.Imu[3].acc_z);
+                    Vector3[] acc_data = new Vector3[4];
+                    for(int i = 0; i < 4; i++)
+                    {
+                        acc_data[i] = new Vector3(data.Imu[i].acc_x, data.Imu[i].acc_y, data.Imu[i].acc_z);
+                    }
+                    acc.drawData(acc_data);
 
                     GraphGyroscope gyr = gyroscope;
 
-                    gyr.drawRealTimeData(data.Imu[0].gyro_x, data.Imu[0].gyro_y, data.Imu[0].gyro_z);
-                    gyr.drawRealTimeData(data.Imu[1].gyro_x, data.Imu[1].gyro_y, data.Imu[1].gyro_z);
-                    gyr.drawRealTimeData(data.Imu[2].gyro_x, data.Imu[2].gyro_y, data.Imu[2].gyro_z);
-                    gyr.drawRealTimeData(data.Imu[3].gyro_x, data.Imu[3].gyro_y, data.Imu[3].gyro_z);
+                    Vector3[] gyr_data = new Vector3[4];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        gyr_data[i] = new Vector3(data.Imu[i].gyro_x, data.Imu[i].gyro_y, data.Imu[i].gyro_z);
+                    }
+                    gyr.drawData(gyr_data);
 
                     GraphMagnetometer mag = magnetometer;
 
-                    mag.drawRealTimeData(data.Imu[0].mag_x, data.Imu[0].mag_y, data.Imu[0].mag_z);
-                    mag.drawRealTimeData(data.Imu[1].mag_x, data.Imu[1].mag_y, data.Imu[1].mag_z);
-                    mag.drawRealTimeData(data.Imu[2].mag_x, data.Imu[2].mag_y, data.Imu[2].mag_z);
-                    mag.drawRealTimeData(data.Imu[3].mag_x, data.Imu[3].mag_y, data.Imu[3].mag_z);
+                    Vector3[] mag_data = new Vector3[4];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        mag_data[i] = new Vector3(data.Imu[i].mag_x, data.Imu[i].mag_y, data.Imu[i].mag_z);
+                    }
+                    mag.drawData(mag_data);
 
-                    linAcc.drawRealTimeData(v0);
-                    linAcc.drawRealTimeData(v1);
-                    linAcc.drawRealTimeData(v2);
-                    linAcc.drawRealTimeData(v3);
+                    linAcc.drawData(v);
 
+                    Quaternion[] quat_data = new Quaternion[4];
                     for(int i= 0; i < 4; i++)
                     {
                         Quaternion q = new Quaternion((float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z, (float)data.Quat[i].W);
                         q = Quaternion.Normalize(q);
-                        quaternions.drawRealTimeData(q);
+                        quat_data[i] = q;
                     }
+                    quaternions.drawData(quat_data);
                 });
 
                 frame += 4;
@@ -826,38 +831,23 @@ namespace ibcdatacsharp.UI
                     {
                         AngleGraphX angleXGraph = this.angleX;
 
-                        angleXGraph.drawRealTimeData(angleX[0]);
-                        angleXGraph.drawRealTimeData(angleX[1]);
-                        angleXGraph.drawRealTimeData(angleX[2]);
-                        angleXGraph.drawRealTimeData(angleX[3]);
+                        angleXGraph.drawData(angleX);
 
                         AngleGraphY angleYGraph = this.angleY;
 
-                        angleYGraph.drawRealTimeData(angleY[0]);
-                        angleYGraph.drawRealTimeData(angleY[1]);
-                        angleYGraph.drawRealTimeData(angleY[2]);
-                        angleYGraph.drawRealTimeData(angleY[3]);
+                        angleYGraph.drawData(angleY);
 
                         AngleGraphZ angleZGraph = this.angleZ;
 
-                        angleZGraph.drawRealTimeData(angleZ[0]);
-                        angleZGraph.drawRealTimeData(angleZ[1]);
-                        angleZGraph.drawRealTimeData(angleZ[2]);
-                        angleZGraph.drawRealTimeData(angleZ[3]);
+                        angleZGraph.drawData(angleZ);
 
                         GraphAngularVelocity graphAngularVelocity = this.angleVel;
 
-                        graphAngularVelocity.drawRealTimeData(angularVelocity[0]);
-                        graphAngularVelocity.drawRealTimeData(angularVelocity[1]);
-                        graphAngularVelocity.drawRealTimeData(angularVelocity[2]);
-                        graphAngularVelocity.drawRealTimeData(angularVelocity[3]);
+                        graphAngularVelocity.drawData(angularVelocity);
 
                         GraphAngularAcceleration graphAngularAcceleration = this.angleAcc;
 
-                        graphAngularAcceleration.drawRealTimeData(angularAcceleration[0]);
-                        graphAngularAcceleration.drawRealTimeData(angularAcceleration[1]);
-                        graphAngularAcceleration.drawRealTimeData(angularAcceleration[2]);
-                        graphAngularAcceleration.drawRealTimeData(angularAcceleration[3]);
+                        graphAngularAcceleration.drawData(angularAcceleration);
                     });
                     frame += 4;
                     fakets += 0.04f;

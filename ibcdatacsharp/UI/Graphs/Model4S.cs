@@ -3,6 +3,7 @@ using ScottPlot.Plottable;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 
 namespace ibcdatacsharp.UI.Graphs
 {
@@ -159,6 +160,45 @@ namespace ibcdatacsharp.UI.Graphs
             signalPlotY.Label = "Y= " + data[2].ToString("0.##");
             signalPlotZ.Label = "Z= " + data[3].ToString("0.##");
             nextIndex++;
+        }
+        public async void updateData(Quaternion[] data, bool render = true)
+        {
+            if (nextIndex + data.Length >= CAPACITY) // No deberia pasar
+            {
+                CAPACITY = CAPACITY * GROW_FACTOR;
+                Array.Resize(ref valuesW, CAPACITY);
+                Array.Resize(ref valuesX, CAPACITY);
+                Array.Resize(ref valuesY, CAPACITY);
+                Array.Resize(ref valuesZ, CAPACITY);
+                plot.Plot.Remove(signalPlotW);
+                plot.Plot.Remove(signalPlotX);
+                plot.Plot.Remove(signalPlotY);
+                plot.Plot.Remove(signalPlotZ);
+                signalPlotX = plot.Plot.AddSignal(valuesW, color: wColor, label: "X");
+                signalPlotX = plot.Plot.AddSignal(valuesX, color: xColor, label: "X");
+                signalPlotY = plot.Plot.AddSignal(valuesY, color: yColor, label: "Y");
+                signalPlotZ = plot.Plot.AddSignal(valuesZ, color: zColor, label: "Z");
+                signalPlotW.MarkerSize = 0;
+                signalPlotX.MarkerSize = 0;
+                signalPlotY.MarkerSize = 0;
+                signalPlotZ.MarkerSize = 0;
+            }
+            for (int i = 0; i < data.Length; i++)
+            {
+                valuesW[nextIndex + i] = data[i].W;
+                valuesX[nextIndex + i] = data[i].X;
+                valuesY[nextIndex + i] = data[i].Y;
+                valuesZ[nextIndex + i] = data[i].W;
+            }
+            signalPlotW.Label = "W= " + data[data.Length - 1].W.ToString("0.##");
+            signalPlotX.Label = "X= " + data[data.Length - 1].X.ToString("0.##");
+            signalPlotY.Label = "Y= " + data[data.Length - 1].Y.ToString("0.##");
+            signalPlotZ.Label = "Z= " + data[data.Length - 1].Z.ToString("0.##");
+            nextIndex++;
+            if (render)
+            {
+                this.render();
+            }
         }
         // Actualiza el renderizado
         public async void render()
