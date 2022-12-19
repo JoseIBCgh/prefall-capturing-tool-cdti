@@ -125,18 +125,51 @@ namespace ibcdatacsharp.UI
             version = api.GetApiVersion();
             api.scanFinished += Api_scanFinished;
             api.deviceConnected += Api_deviceConnected;
+            api.onError += Api_onError;
 
             //EFK.EKF.test();
             //End Wisewalk API
 
             //Test linear acceleration
-            LinearAcceleration.test();
+            //LinearAcceleration.test();
         }
 
         /** 
          * Métodos de Wiseware
          */
+        private void Api_onError(byte deviceHandler, string error)
+        {
+            if (deviceHandler != 0xFF)
+            {
+                SetLogText(devices_list[deviceHandler.ToString()].Id, error);
+            }
+            else
+            {
+                SetLogText("", error);
+            }
+        }
+        private void SetLogText(string device, string text)
+        {
 
+
+            var output = "";
+            var message = "";
+
+            if (device != "")
+            {
+                message = $"{DateTime.Now:HH:mm:ss.fff}   RX from [{device}]:   {text} ";
+            }
+            else
+            {
+                message = $"{DateTime.Now:HH:mm:ss.fff}:   {text} ";
+            }
+
+            output += message + Environment.NewLine;
+
+            Trace.Write(output);
+
+
+        }
         //Callback de Escaneo
 
         private List<ComPort> GetSerialPorts()
