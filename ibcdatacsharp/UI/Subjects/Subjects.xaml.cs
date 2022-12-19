@@ -22,16 +22,19 @@ namespace ibcdatacsharp.UI.Subjects
     /// </summary>
     public partial class Subjects : Page
     {
-        public ObservableCollection<Subject> subjectsList;
+        public ObservableCollection<Subject> subjectsList
+        {
+            get; set;
+        }
         public Subjects()
         {
             InitializeComponent();
+            DataContext = this;
             subjectsList = new ObservableCollection<Subject>
             {
                 new Subject { nombre = "Pepe", centroMedico = "Hospital X", doctor = "Juan" },
                 new Subject { nombre = "Pedro", centroMedico = "Hospital Y", doctor = "Juan" }
             };
-            treeView.ItemsSource = subjectsList;
 
         }
     }

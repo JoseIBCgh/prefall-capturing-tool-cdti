@@ -9,21 +9,14 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Subjects">
 
-    <controls:MultiSelectTreeView BorderThickness="0" x:Name="treeView">
+    <controls:MultiSelectTreeView BorderThickness="0" x:Name="treeView" ItemsSource="{Binding subjectsList}">
         <controls:MultiSelectTreeView.ItemTemplate>
             <DataTemplate DataType="{x:Type local:Subject}">
                 <controls:MultiSelectTreeViewItem>
-                    <controls:MultiSelectTreeViewItem.Header>
-                        <TextBlock Text="{Binding nombre}"/>
-                    </controls:MultiSelectTreeViewItem.Header>
-                    <controls:MultiSelectTreeView>
-                        <controls:MultiSelectTreeViewItem>
-                            <TextBlock Text="{Binding centroMedico}"/>
-                        </controls:MultiSelectTreeViewItem>
-                        <controls:MultiSelectTreeViewItem>
-                            <TextBlock Text="{Binding doctor}"/>
-                        </controls:MultiSelectTreeViewItem>
-                    </controls:MultiSelectTreeView>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding centroMedico}"/>
+                        <TextBlock Text="{Binding doctor}"/>
+                    </StackPanel>
                 </controls:MultiSelectTreeViewItem>
             </DataTemplate>
         </controls:MultiSelectTreeView.ItemTemplate>
