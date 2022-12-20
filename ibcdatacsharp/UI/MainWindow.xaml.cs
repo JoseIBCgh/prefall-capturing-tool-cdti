@@ -224,7 +224,6 @@ namespace ibcdatacsharp.UI
             scanDevices = devices;
             Trace.WriteLine("# of devices: " + devices.Count);
             ShowScanList(scanDevices);
-           
         }
 
         private string GetMacAddress(List<Wisewalk.Dev> devices, int idx)
@@ -251,8 +250,20 @@ namespace ibcdatacsharp.UI
 
         }
 
-        private void Api_deviceConnected(byte handler, WisewalkSDK.Device dev)
+        private async void Api_deviceConnected(byte handler, WisewalkSDK.Device dev)
         {
+            void setRTCDevice(byte deviceHandler, byte sampleRate, byte packetType)
+            {
+                if(deviceHandler == handler)
+                {
+                    api.SetRTCDevice(deviceHandler, GetDateTime(), out error);
+                    Dispatcher.BeginInvoke(
+                    () => (deviceList.Content as DeviceList.DeviceList).
+                    updateHeaderInfo(dev.Id, handler)
+                );
+                    api.updateDeviceConfiguration -= setRTCDevice;
+                }
+            }
             if (!devices_list.ContainsKey(handler.ToString()))
             {
                 // Add new device to list
@@ -272,6 +283,16 @@ namespace ibcdatacsharp.UI
                 devices_list[handler.ToString()].Stream = false;
                 devices_list[handler.ToString()].Record = false;
 
+                Trace.WriteLine("Api_deviceConnected info");
+                Trace.WriteLine("Id = "+ dev.Id);
+                Trace.WriteLine("fw = " + dev.HeaderInfo.fwVersion);
+                Trace.WriteLine("battery = " + dev.HeaderInfo.battery.ToString());
+                await Dispatcher.BeginInvoke(
+                    () => (deviceList.Content as DeviceList.DeviceList).
+                    connectIMU(dev.Id, handler)
+                );
+                api.SetDeviceConfiguration(handler, 100, 3, out error);
+                api.updateDeviceConfiguration += setRTCDevice;
                 counter.Add(0);
 
                 Trace.WriteLine("DevList: " + devices_list[handler.ToString()].Id);
@@ -496,7 +517,7 @@ namespace ibcdatacsharp.UI
 
                 api.Connect(conn_list_dev, out error);
                 //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
-
+                /*
                 await Task.Delay(1000);
                 foreach (IMUInfo imu in connectedIMUs)
                 {
@@ -507,14 +528,13 @@ namespace ibcdatacsharp.UI
                 {
                     api.SetRTCDevice((byte)imu.id, GetDateTime(), out error);
                 }
+                */
                 //api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
 
                 // Fin Operación atómica de conexión
 
                 //EndWise
-
-                deviceListClass.connectIMUs(selectedIMUs);
 
                 //Borrar si existe
                 foreach (IMUInfo imu in connectedIMUs)
@@ -535,7 +555,7 @@ namespace ibcdatacsharp.UI
 
             foreach(IMUInfo imu in activeIMUs)
             {
-                api.StartStream((byte)imu.id, out error);
+                api.StartStream((byte)imu.handler, out error);
             }
         }
         // Conecta el boton disconnect

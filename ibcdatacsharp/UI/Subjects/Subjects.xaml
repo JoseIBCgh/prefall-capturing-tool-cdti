@@ -11,14 +11,11 @@
 
     <controls:MultiSelectTreeView BorderThickness="0" x:Name="treeView" ItemsSource="{Binding subjectsList}">
         <controls:MultiSelectTreeView.ItemTemplate>
-            <DataTemplate DataType="{x:Type local:Subject}">
-                <controls:MultiSelectTreeViewItem>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding centroMedico}"/>
-                        <TextBlock Text="{Binding doctor}"/>
-                    </StackPanel>
+            <HierarchicalDataTemplate DataType="{x:Type local:Subject}">
+                <controls:MultiSelectTreeViewItem Header="{Binding nombre}">
+                    <controls:MultiSelectTreeViewItem Header="{Binding centroMedico}"/>
                 </controls:MultiSelectTreeViewItem>
-            </DataTemplate>
+            </HierarchicalDataTemplate>
         </controls:MultiSelectTreeView.ItemTemplate>
     </controls:MultiSelectTreeView>
 </Page>

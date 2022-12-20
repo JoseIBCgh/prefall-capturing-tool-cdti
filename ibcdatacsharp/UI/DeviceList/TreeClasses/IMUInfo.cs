@@ -50,6 +50,8 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             set { SetValue("fw", value); }
         }
 
+        public byte? handler { get; set; }
+
         public IMUInfo() { }
         public IMUInfo(int id, string name, string adress)
         {

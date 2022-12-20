@@ -54,6 +54,10 @@ namespace ibcdatacsharp.UI.DeviceList
         // y funciones para añadir un elemento a la coleccion
         #region getters setters
         #region IMU
+        public IMUInfo getIMU(int id)
+        {
+            return VM.IMUs.Where((imu) => imu.id == id).First();
+        }
         public ObservableCollection<IMUInfo> getIMUs()
         {
             return VM.IMUs;
@@ -229,6 +233,18 @@ namespace ibcdatacsharp.UI.DeviceList
             //connectCamera((MultiSelectTreeViewItem)sender);
         }
         #endregion
+        public void connectIMU(string mac, byte handler)
+        {
+            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
+            imuInfo.handler = handler;
+            imuInfo.connected = true;
+        }
+        public void updateHeaderInfo(string mac, byte handler)
+        {
+            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
+            imuInfo.battery = mainWindow.devices_list[handler.ToString()].HeaderInfo.battery;
+            imuInfo.fw = mainWindow.devices_list[handler.ToString()].HeaderInfo.fwVersion;
+        }
         public void connectIMUs(List<object> treeViewItems)
         {
             foreach(object item in treeViewItems)
@@ -239,8 +255,9 @@ namespace ibcdatacsharp.UI.DeviceList
                     IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
                     imuInfo.connected = true;
                     // No estoy seguro de que esta sea la lista y este key
-                    imuInfo.battery = mainWindow.devices_list[imuInfo.id.ToString()].HeaderInfo.battery;
-                    imuInfo.fw = mainWindow.devices_list[imuInfo.id.ToString()].HeaderInfo.fwVersion;
+
+                    imuInfo.battery = mainWindow.devices_list[imuInfo.handler.ToString()].HeaderInfo.battery;
+                    imuInfo.fw = mainWindow.devices_list[imuInfo.handler.ToString()].HeaderInfo.fwVersion;
                     treeViewItem.Foreground = new SolidColorBrush(Colors.Green);
                 }
             }
