@@ -25,6 +25,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using System.Drawing;
 using MessageBox = System.Windows.MessageBox;
 using System.Numerics;
+using static WisewalkSDK.Wisewalk;
 
 namespace ibcdatacsharp.UI
 {
@@ -126,6 +127,7 @@ namespace ibcdatacsharp.UI
             api.scanFinished += Api_scanFinished;
             api.deviceConnected += Api_deviceConnected;
             api.onError += Api_onError;
+            api.deviceDisconnected += Api_onDisconnect;
 
             //EFK.EKF.test();
             //End Wisewalk API
@@ -137,6 +139,13 @@ namespace ibcdatacsharp.UI
         /** 
          * Métodos de Wiseware
          */
+        private void Api_onDisconnect(byte deviceHandler)
+        {
+            Dispatcher.BeginInvoke(
+                    () => (deviceList.Content as DeviceList.DeviceList).
+                    disconnectIMU(deviceHandler)
+                );
+        }
         private void Api_onError(byte deviceHandler, string error)
         {
             if (deviceHandler != 0xFF)
@@ -287,12 +296,10 @@ namespace ibcdatacsharp.UI
                 Trace.WriteLine("Id = "+ dev.Id);
                 Trace.WriteLine("fw = " + dev.HeaderInfo.fwVersion);
                 Trace.WriteLine("battery = " + dev.HeaderInfo.battery.ToString());
-                await Dispatcher.BeginInvoke(
-                    () => (deviceList.Content as DeviceList.DeviceList).
-                    connectIMU(dev.Id, handler)
-                );
+                /*
                 api.SetDeviceConfiguration(handler, 100, 3, out error);
                 api.updateDeviceConfiguration += setRTCDevice;
+                */
                 counter.Add(0);
 
                 Trace.WriteLine("DevList: " + devices_list[handler.ToString()].Id);
@@ -304,6 +311,10 @@ namespace ibcdatacsharp.UI
                 // Update info device
                 devices_list[handler.ToString()].HeaderInfo = dev.HeaderInfo;
             }
+            await Dispatcher.BeginInvoke(
+                    () => (deviceList.Content as DeviceList.DeviceList).
+                    setIMUHandler(dev.Id, handler)
+                );
 
             //ShowDevices(devices_list);
 
@@ -507,17 +518,19 @@ namespace ibcdatacsharp.UI
 
                 //Trace.WriteLine("::OnConnect::: Imu seleccionado: " + imuInfo.id.ToString());
 
-
+                conn_list_dev = new List<Dev>();
                 // Operación atómica de conexión
                 foreach (IMUInfo imu in connectedIMUs)
                 {
                     conn_list_dev.Add(scanDevices[imu.id]);
                     devHandlers.Remove(imu.id);
                 }
-
-                api.Connect(conn_list_dev, out error);
+                if(!api.Connect(conn_list_dev, out error))
+                {
+                    Trace.WriteLine("Connect error " + error);
+                }
                 //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
-                /*
+                
                 await Task.Delay(1000);
                 foreach (IMUInfo imu in connectedIMUs)
                 {
@@ -528,7 +541,9 @@ namespace ibcdatacsharp.UI
                 {
                     api.SetRTCDevice((byte)imu.id, GetDateTime(), out error);
                 }
-                */
+                await Task.Delay(1000);
+
+                deviceListClass.connectIMUs(selectedIMUs);
                 //api.SetRTCDevice((byte)imuInfo.id, GetDateTime(), out error);
                 //await Task.Delay(1000);
 
@@ -562,10 +577,12 @@ namespace ibcdatacsharp.UI
         private void onDisconnect(object sender, EventArgs e)
         {
             // Funcion que se ejecuta al clicar el boton disconnect
-            void onDisconnectFunction()
+            async void onDisconnectFunction()
             {
                 DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
                 IList<object> selectedItems = (IList<object>)deviceListClass.treeView.SelectedItems;
+                List<string> IMUsToDisconnect = new List<string>();
+                devHandlers = new List<int>();
                 foreach (object selected in selectedItems)
                 {
                     if (selected != null && selected is IMUInfo)
@@ -576,12 +593,23 @@ namespace ibcdatacsharp.UI
 
                         devHandlers.Add(imuInfo.id);
                         conn_list_dev.Remove(scanDevices[imuInfo.id]);
+                        IMUsToDisconnect.Add(imuInfo.adress);
 
-                        api.Disconnect(devHandlers, out error);
-
-
-                        deviceListClass.disconnectIMU(treeViewItem);
+                        
                     }
+                }
+                if (!api.Disconnect(devHandlers, out error))
+                {
+                    Trace.WriteLine("Disconnect error " + error);
+                }
+                await Task.Delay(4000);
+                deviceListClass.disconnectIMUs(IMUsToDisconnect);
+                Dictionary<string, WisewalkSDK.Device> devicesConnected =  api.GetDevicesConnected();
+                Trace.WriteLine("devices connected");
+                foreach (KeyValuePair<string, WisewalkSDK.Device> device in devicesConnected)
+                {
+                    Trace.WriteLine(device.Key);
+                    Trace.WriteLine(device.Value.Id);
                 }
             }
 

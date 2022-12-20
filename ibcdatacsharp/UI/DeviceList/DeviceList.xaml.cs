@@ -233,6 +233,11 @@ namespace ibcdatacsharp.UI.DeviceList
             //connectCamera((MultiSelectTreeViewItem)sender);
         }
         #endregion
+        public void setIMUHandler(string mac, byte handler)
+        {
+            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
+            imuInfo.handler = handler;
+        }
         public void connectIMU(string mac, byte handler)
         {
             IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
@@ -271,6 +276,23 @@ namespace ibcdatacsharp.UI.DeviceList
             }
             CameraInfo cameraInfo = treeViewItem.DataContext as CameraInfo;
             cameraInfo.fps = calculateFps(cameraInfo.number);
+        }
+        public void disconnectIMU(byte handler)
+        {
+            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.handler == handler).First();
+            imuInfo.connected = false;
+            imuInfo.battery = null;
+            imuInfo.fw = null;
+        }
+        public void disconnectIMUs(List<string> IMUsToDisconnect)
+        {
+            foreach (string mac in IMUsToDisconnect)
+            {
+                IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
+                imuInfo.connected = false;
+                imuInfo.battery = null;
+                imuInfo.fw = null;
+            }
         }
         // Funcion que se llama al desconectar un IMU para cambiar el TreeView
         public void disconnectIMU(MultiSelectTreeViewItem treeViewItem)
