@@ -704,7 +704,7 @@ namespace ibcdatacsharp.UI
             {
                 if (!ct.IsCancellationRequested)
                 {
-                    string text = "No se han recivido datos del sensor " + imu.id.ToString();
+                    string text = "No se han recibido datos del sensor " + imu.id.ToString();
                     graphManager.captureManager.quaternionEvent -= eventHandler;
                     MessageBox.Show(text, "Set as Reference");
                 }
