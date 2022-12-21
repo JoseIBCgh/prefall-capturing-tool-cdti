@@ -20,7 +20,7 @@ namespace ibcdatacsharp.UI.Graphs
         public GraphAngularVelocity()
         {
             InitializeComponent();
-            model = new Model3S(plot, -10, 10, title: "Velocidad angular", units: "grados/s");
+            model = new Model3S(plot, -25, 25, title: "Velocidad angular", units: "grados/s");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
