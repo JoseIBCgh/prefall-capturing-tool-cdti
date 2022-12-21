@@ -22,6 +22,7 @@ namespace ibcdatacsharp.UI.MenuBar
         }
         private void initWindows()
         {
+            ViewVM.Add(new WindowInfoTitle(mainWindow.leftPanelAnchorable, "Devices Panel"));
             ViewVM.Add(new WindowInfo(mainWindow.accelerometerAnchorable));
             ViewVM.Add(new WindowInfo(mainWindow.gyroscopeAnchorable));
             ViewVM.Add(new WindowInfo(mainWindow.magnetometerAnchorable));

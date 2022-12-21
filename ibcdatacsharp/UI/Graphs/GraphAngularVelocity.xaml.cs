@@ -25,7 +25,7 @@ namespace ibcdatacsharp.UI.Graphs
             device = mainWindow.device;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("grados/s");
+            this.plot.Plot.YLabel("degrees/s");
         }
         public void initCapture()
         {

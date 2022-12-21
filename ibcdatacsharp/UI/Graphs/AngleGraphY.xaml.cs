@@ -29,7 +29,7 @@ namespace ibcdatacsharp.UI.Graphs
             DataContext = this;
 
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("grados");
+            this.plot.Plot.YLabel("degrees");
         }
         private void onUpdateAngle(object sender, double value)
         {

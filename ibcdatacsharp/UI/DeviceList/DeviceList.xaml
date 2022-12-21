@@ -29,7 +29,7 @@
         </controls:MultiSelectTreeView.Resources>
         <controls:MultiSelectTreeViewItem x:Name="baseItem">
             <controls:MultiSelectTreeViewItem.Header>
-                <TextBlock>IBC DA System</TextBlock>
+                <TextBlock>DAT System</TextBlock>
             </controls:MultiSelectTreeViewItem.Header>
             <controls:MultiSelectTreeViewItem ItemsSource="{Binding IMUs}" Visibility="Collapsed" x:Name="IMUs" Padding="0 10 0 2.5">
                 <controls:MultiSelectTreeViewItem.ItemContainerStyle>

@@ -32,7 +32,7 @@
                     </Hyperlink>
                 </TextBlock>
                 <TextBlock FontWeight="Black">
-                    IMU Data Adquisition Tool v0.9.3
+                    IMU Data Adquisition Tool v1.0.0
                 </TextBlock>
                 <TextBlock>
                     http://ibc.bio

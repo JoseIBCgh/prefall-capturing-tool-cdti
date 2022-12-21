@@ -36,7 +36,7 @@ namespace ibcdatacsharp.UI.Graphs
             device = mainWindow.device;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("m/s^2"); ;
+            this.plot.Plot.YLabel("m/s\xB2"); ;
         }
         public void initCapture()
         {

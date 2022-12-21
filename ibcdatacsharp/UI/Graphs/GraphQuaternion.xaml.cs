@@ -36,7 +36,7 @@ namespace ibcdatacsharp.UI.Graphs
             device = mainWindow.device;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("Quaternion(norm)");
+            this.plot.Plot.YLabel("Quaternion");
         }
         public void initCapture()
         {

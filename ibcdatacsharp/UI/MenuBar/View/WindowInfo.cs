@@ -6,7 +6,7 @@ namespace ibcdatacsharp.UI.MenuBar.View
 {
     public class WindowInfo : PropertyNotifier
     {
-        private LayoutAnchorable _layout;
+        protected LayoutAnchorable _layout;
         public LayoutAnchorable layout
         {
             get

@@ -6,7 +6,7 @@
         xmlns:dock="https://github.com/Dirkster99/AvalonDock"
         xmlns:local="clr-namespace:ibcdatacsharp.UI"
         mc:Ignorable="d"
-        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 0.9.3]" Height="900" Width="1400">
+        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 1.0.0]" Height="900" Width="1400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -20,7 +20,7 @@
                 <dock:LayoutPanel Orientation="Vertical" DockHeight="*" DockWidth="*">
                     <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
                         <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.75*">
-                            <dock:LayoutAnchorable CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
+                            <dock:LayoutAnchorable x:Name="leftPanelAnchorable" CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
                                 <TabControl Grid.Column="0" TabStripPlacement="Top">
                                     <TabItem Header="Devices">
                                         <Frame Source="pack://application:,,,/UI/DeviceList/DeviceList.xaml" x:Name="deviceList"/>
@@ -46,10 +46,10 @@
                                     <dock:LayoutAnchorable x:Name="angleZAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle Z">
                                         <Frame Source="pack://application:,,,/UI/Graphs/AngleGraphZ.xaml" x:Name="angleZ"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable x:Name="angularVelocityAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Velocidad Angular">
+                                    <dock:LayoutAnchorable x:Name="angularVelocityAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Angular Velocity">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphAngularVelocity.xaml" x:Name="angularVelocity"/>
                                     </dock:LayoutAnchorable>
-                                    <dock:LayoutAnchorable x:Name="angularAccelerationAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Acceleracion Angular">
+                                    <dock:LayoutAnchorable x:Name="angularAccelerationAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Angular Acceleration">
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphAngularAcceleration.xaml" x:Name="angularAcceleration"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
