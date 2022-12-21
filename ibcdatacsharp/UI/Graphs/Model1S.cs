@@ -3,6 +3,7 @@ using ScottPlot;
 using ScottPlot.Plottable;
 using System;
 using System.Drawing;
+using System.Windows.Markup;
 
 namespace ibcdatacsharp.UI.Graphs
 {
@@ -181,6 +182,10 @@ namespace ibcdatacsharp.UI.Graphs
                 lineFrame.X = value;
                 //lineData.Y = values[value];
             }
+            get
+            {
+                return signalPlot.MaxRenderIndex;
+            }
         }
         private double _offset = 0;
         public double offset
@@ -195,6 +200,9 @@ namespace ibcdatacsharp.UI.Graphs
                 if (signalPlot != null)
                 {
                     signalPlot.OffsetY = value;
+                    plot.Render();
+                    int index = Math.Max(0, maxRenderIndex - 1);
+                    valueEvent?.Invoke(this, values[index] + offset);
                 }
             }
         }
