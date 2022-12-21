@@ -28,9 +28,6 @@
                                     <TabItem Header="Sessions">
                                         <Frame Source="pack://application:,,,/UI/FileBrowser/FileBrowser.xaml" x:Name="sessions"/>
                                     </TabItem>
-                                    <TabItem Header="Subjects">
-                                        <Frame Source="pack://application:,,,/UI/Subjects/Subjects.xaml" x:Name="subjects"/>
-                                    </TabItem>
                                 </TabControl>
                             </dock:LayoutAnchorable>
                         </dock:LayoutAnchorablePane>
