@@ -7,6 +7,7 @@ using ibcdatacsharp.UI.FileBrowser.ShellClasses;
 using System.Diagnostics;
 using System.Windows;
 using ibcdatacsharp.DeviceList.TreeClasses;
+using System.Collections.Generic;
 
 namespace ibcdatacsharp.UI.FileBrowser
 {
@@ -16,6 +17,20 @@ namespace ibcdatacsharp.UI.FileBrowser
         {
             InitializeComponent();
             InitializeFileSystemObjects();
+            try
+            {
+                finishInit();
+            }
+            catch
+            {
+                MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+                mainWindow.initialized += (sender, args) => finishInit();
+            }
+        }
+        private void finishInit()
+        {
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.fileSaver.filesAdded += OnFilesAdded;
         }
         #region Events
 
@@ -123,6 +138,80 @@ namespace ibcdatacsharp.UI.FileBrowser
                 }
             }
         }
+        private void ReExplore(string path)
+        {
+            Trace.WriteLine("ReExplore " + path);
+            if (!File.Exists(path))
+            {
+                Trace.WriteLine("path doesn't exist");
+                return;
+            }
+            var driveFileSystemObjectInfo = GetDriveFileSystemObjectInfo(path);
+            if (driveFileSystemObjectInfo.IsVisited)
+            {
+                ReExplore(driveFileSystemObjectInfo, path);
+            }
+        }
+        private void ReExplore(FileSystemObjectInfo fileSystemObjectInfo,
+            string path)
+        {
+            Trace.WriteLine("ReExplore " + fileSystemObjectInfo.FileSystemInfo.FullName + " " + path);
+            foreach (var childFileSystemObjectInfo in fileSystemObjectInfo.Children)
+            {
+                var isParentPath = IsParentPath(path, childFileSystemObjectInfo.FileSystemInfo.FullName);
+                if (isParentPath)
+                {
+                    if (childFileSystemObjectInfo.IsVisited)
+                    {
+                        if (IsContainerFolder(childFileSystemObjectInfo.FileSystemInfo, path))
+                        {
+                            childFileSystemObjectInfo.ReExploreFiles();
+                        }
+                        else
+                        {
+                            ReExplore(childFileSystemObjectInfo, path);
+                        }
+                    }
+                }
+            }
+        }
+        private void Explore(string path)
+        {
+            Trace.WriteLine("ReExplore " + path);
+            if (!File.Exists(path))
+            {
+                Trace.WriteLine("path doesn't exist");
+                return;
+            }
+            var driveFileSystemObjectInfo = GetDriveFileSystemObjectInfo(path);
+            if (driveFileSystemObjectInfo.IsVisited)
+            {
+                Explore(driveFileSystemObjectInfo, path);
+            }
+        }
+        private void Explore(FileSystemObjectInfo fileSystemObjectInfo,
+            string path)
+        {
+            Trace.WriteLine("Explore " + fileSystemObjectInfo.FileSystemInfo.FullName + " " + path);
+            foreach (var childFileSystemObjectInfo in fileSystemObjectInfo.Children)
+            {
+                var isParentPath = IsParentPath(path, childFileSystemObjectInfo.FileSystemInfo.FullName);
+                if (isParentPath)
+                {
+                    if (childFileSystemObjectInfo.IsVisited)
+                    {
+                        if (IsContainerFolder(childFileSystemObjectInfo.FileSystemInfo, path))
+                        {
+                            childFileSystemObjectInfo.ExploreFile(path);
+                        }
+                        else
+                        {
+                            Explore(childFileSystemObjectInfo, path);
+                        }
+                    }
+                }
+            }
+        }
 
         #endregion
 
@@ -156,7 +245,59 @@ namespace ibcdatacsharp.UI.FileBrowser
             return path.StartsWith(targetPath);
         }
 
+        public static bool IsContainerFolder(FileSystemInfo folderInfo, string path)
+        {
+            Trace.WriteLine("IsContainerFolder");
+            FileSystemInfo pathInfo = new FileInfo(path);
+            Trace.WriteLine(folderInfo.FullName + Path.DirectorySeparatorChar + pathInfo.Name);
+            Trace.WriteLine(pathInfo.FullName);
+            return string.Equals(folderInfo.FullName + Path.DirectorySeparatorChar + pathInfo.Name, pathInfo.FullName);
+        }
+        /*
+        public static bool IsContainerFolder(string folderPath, string filePath)
+        { 
+            Trace.WriteLine("IsContainerFolder " + folderPath + " " + filePath);
+            if(IsParentPath(filePath, folderPath))
+            {
+                int index = filePath.IndexOf(folderPath);
+                string cleanPath = (index < 0)
+                    ? filePath
+                    : filePath.Remove(index, folderPath.Length);
+                string [] parts = cleanPath.Split(Path.DirectorySeparatorChar);
+                Trace.WriteLine(parts.Length);
+                foreach(string part in parts)
+                {
+                    Trace.Write(part + " ");
+                }
+                Trace.WriteLine("");
+                return parts.Length == 1;
+            }
+            return false;
+        }
+        */
+
         #endregion
+
+        private void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            if (e.ChangeType != WatcherChangeTypes.Changed)
+            {
+                return;
+            }
+            Trace.WriteLine($"Changed: {e.FullPath}");
+        }
+        private void OnFilesAdded(object sender, List<string> files)
+        {
+            Trace.WriteLine("OnFilesAdded");
+            foreach(var file in files)
+            {
+                Explore(file);
+            }
+        }
+        private void OnCreated(object sender, FileSystemEventArgs e)
+        {
+            ReExplore(e.FullPath);
+        }
 
         public void OpenWith(object sender, RoutedEventArgs e)
         {

@@ -3,6 +3,7 @@ using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
 using OpenCvSharp;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -35,6 +36,9 @@ namespace ibcdatacsharp.UI.FileSaver
         private bool recordCSV;
         private bool recordVideo;
         private StringBuilder? csvData = new StringBuilder();
+
+        public delegate void filesAddedEvent(object sender, List<string> files);
+        public event filesAddedEvent filesAdded;
         public FileSaver()
         {
             recordCSV = false;
@@ -150,6 +154,7 @@ namespace ibcdatacsharp.UI.FileSaver
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             string message = "";
             bool show = false;
+            List<string> files = new List<string>();
             if (recordCSV)
             {
                 //timerCsv.Stop();
@@ -159,6 +164,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 recordCSV = false;
                 message += "Csv grabado en " + csvFile + ". ";
                 show = true;
+                files.Add(path + Path.DirectorySeparatorChar + csvFile);
             }
             if (recordVideo)
             {
@@ -171,10 +177,12 @@ namespace ibcdatacsharp.UI.FileSaver
                 recordVideo = false;
                 message += "Video grabado en " + videoFile + ". ";
                 show=true;
+                files.Add(path + Path.DirectorySeparatorChar + videoFile);
             }
             if (show)
             {
                 MessageBox.Show(message, caption: null, button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+                filesAdded?.Invoke(this, files);
             }
         }
         // inicializa los ficheros para guardar csv y video
@@ -215,7 +223,7 @@ namespace ibcdatacsharp.UI.FileSaver
             if (recordVideo)
             {
                 videoFile = baseFilename + ".avi";
-                string pathVideoFile = path + "\\" + videoFile;
+                string pathVideoFile = path + Path.DirectorySeparatorChar + videoFile;
                 videoWriter = new VideoWriter(pathVideoFile, FourCC.DIVX, Config.VIDEO_FPS_SAVE, new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
                 initRecordVideo();
             }
@@ -266,7 +274,7 @@ namespace ibcdatacsharp.UI.FileSaver
         // Guarda el csv
         private async void saveCsvFile()
         {
-            string filePath = path + "\\" + csvFile;
+            string filePath = path + Path.DirectorySeparatorChar + csvFile;
             await File.WriteAllTextAsync(filePath, csvData.ToString());
         }
         // Se llama al seleccionar las opciones de grabacion

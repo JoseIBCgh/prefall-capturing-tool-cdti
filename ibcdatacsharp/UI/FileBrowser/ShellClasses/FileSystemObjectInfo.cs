@@ -7,6 +7,8 @@ using System.Windows.Media;
 using ibcdatacsharp.UI.FileBrowser.Enums;
 using ibcdatacsharp.Common;
 using System.Windows;
+using System.Diagnostics;
+using System.Windows.Threading;
 
 // Almacena todos los drives, carpetas y ficheros. Se encarga de la interacción entre el usuario y la UI.
 namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
@@ -125,6 +127,14 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
             set { SetValue("IsExpanded", value); }
         }
 
+        public bool IsVisited
+        {
+            get
+            {
+                return !HasDummy();
+            }
+        }
+
         public FileSystemInfo FileSystemInfo
         {
             get { return GetValue<FileSystemInfo>("FileSystemInfo"); }
@@ -152,7 +162,6 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
         #endregion
 
         #region Methods
-
         private void AddDummy()
         {
             Children.Add(new DummyFileSystemObjectInfo());
@@ -226,8 +235,58 @@ namespace ibcdatacsharp.UI.FileBrowser.ShellClasses
                         (file.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden && showFile(file))
                         {
                             Children.Add(new FileSystemObjectInfo(file));
-                            
                         }
+                    }
+                }
+            }
+        }
+        public void ReExploreFiles()
+        {
+            if (Drive?.IsReady == false)
+            {
+                return;
+            }
+            if (FileSystemInfo is DirectoryInfo)
+            {
+                var files = ((DirectoryInfo)FileSystemInfo).GetFiles();
+                foreach (var file in files.OrderBy(d => d.Name))
+                {
+                    FileSystemObjectInfo fileSystemObjectInfo = new FileSystemObjectInfo(file);
+                    if (showFile(file) && !Children.Any((FileSystemObjectInfo fsoi) =>
+                    {
+                        Trace.WriteLine(fsoi.FileSystemInfo.FullName);
+                        Trace.WriteLine(file.FullName);
+                        return string.Equals(fsoi.FileSystemInfo.FullName, file.FullName);
+                    }))
+                    {
+                        Dispatcher.CurrentDispatcher.BeginInvoke(() =>
+                        {
+                            Children.Add(fileSystemObjectInfo);
+                            Trace.WriteLine("Added " + fileSystemObjectInfo.FileSystemInfo.FullName);
+                        });
+                    }
+                }
+            }
+        }
+        public void ExploreFile(string filename)
+        {
+            if (Drive?.IsReady == false)
+            {
+                return;
+            }
+            if (FileSystemInfo is DirectoryInfo)
+            {
+                var files = ((DirectoryInfo)FileSystemInfo).GetFiles();
+                foreach (var file in files.OrderBy(d => d.Name))
+                {
+                    if(string.Equals(file.FullName, filename))
+                    {
+                        FileSystemObjectInfo fileSystemObjectInfo = new FileSystemObjectInfo(file);
+                        Dispatcher.CurrentDispatcher.BeginInvoke(() =>
+                        {
+                            Children.Add(fileSystemObjectInfo);
+                            Trace.WriteLine("Added " + fileSystemObjectInfo.FileSystemInfo.FullName);
+                        });
                     }
                 }
             }

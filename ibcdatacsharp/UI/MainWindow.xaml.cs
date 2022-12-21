@@ -268,7 +268,7 @@ namespace ibcdatacsharp.UI
             {
                 if(deviceHandler == handler)
                 {
-                    api.SetRTCDevice(deviceHandler, DateTime.Now, out error);
+                    api.SetRTCDevice(deviceHandler, GetDateTime(), out error);
                     Dispatcher.BeginInvoke(
                     () => (deviceList.Content as DeviceList.DeviceList).
                     updateHeaderInfo(dev.Id, handler)
@@ -280,9 +280,9 @@ namespace ibcdatacsharp.UI
                 // Add new device to list
                 WisewalkSDK.Device device = new WisewalkSDK.Device();
 
-            Trace.WriteLine("DevList: " + dev.Id + " handler: " + handler.ToString());
+                Trace.WriteLine("DevList: " + dev.Id + " handler: " + handler.ToString());
 
-            devices_list.Add(handler.ToString(), device);
+                devices_list.Add(handler.ToString(), device);
 
                 // Update values
                 devices_list[handler.ToString()].Id = dev.Id;
@@ -296,17 +296,15 @@ namespace ibcdatacsharp.UI
                 devices_list[handler.ToString()].Stream = false;
                 devices_list[handler.ToString()].Record = false;
 
-                Trace.WriteLine("Api_deviceConnected info");
-                Trace.WriteLine("Id = "+ dev.Id);
-                Trace.WriteLine("fw = " + dev.HeaderInfo.fwVersion);
-                Trace.WriteLine("battery = " + dev.HeaderInfo.battery.ToString());
+                
                 await Dispatcher.BeginInvoke(
                     () => (deviceList.Content as DeviceList.DeviceList).
                     connectIMU(dev.Id, handler)
                 );
-
+                
                 api.SetDeviceConfiguration(handler, 100, 3, out error);
                 api.updateDeviceConfiguration += setRTCDevice;
+                
                 
                 counter.Add(0);
 
@@ -535,15 +533,15 @@ namespace ibcdatacsharp.UI
                 }
                 //api.SetDeviceConfiguration((byte)imuInfo.id, 100, 3, out error);
                 /*
-                await Task.Delay(10000);
+                await Task.Delay(4000);
                 foreach (IMUInfo imu in connectedIMUs)
                 {
-                    api.SetDeviceConfiguration((byte)imu.handler, 100, 3, out error);
+                    api.SetDeviceConfiguration((byte)imu.id, 100, 3, out error);
                 }
                 await Task.Delay(1000);
                 foreach (IMUInfo imu in connectedIMUs)
                 {
-                    api.SetRTCDevice((byte)imu.handler, GetDateTime(), out error);
+                    api.SetRTCDevice((byte)imu.id, GetDateTime(), out error);
                 }
                 await Task.Delay(1000);
 
