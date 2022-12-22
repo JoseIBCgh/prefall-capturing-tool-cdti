@@ -248,8 +248,12 @@ namespace ibcdatacsharp.UI.DeviceList
         public void updateHeaderInfo(string mac, byte handler)
         {
             IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
-            imuInfo.battery = mainWindow.devices_list[handler.ToString()].HeaderInfo.battery;
-            imuInfo.fw = mainWindow.devices_list[handler.ToString()].HeaderInfo.fwVersion;
+            Dictionary<string, WisewalkSDK.Device> devicesConnected =  mainWindow.api.GetDevicesConnected();
+            WisewalkSDK.Device device = devicesConnected[handler.ToString()];
+            imuInfo.battery = device.HeaderInfo.battery;
+            imuInfo.fw = device.HeaderInfo.fwVersion;
+            //imuInfo.battery = mainWindow.devices_list[handler.ToString()].HeaderInfo.battery;
+            //imuInfo.fw = mainWindow.devices_list[handler.ToString()].HeaderInfo.fwVersion;
         }
         public void connectIMUs(List<object> treeViewItems)
         {
