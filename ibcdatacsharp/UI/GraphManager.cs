@@ -127,6 +127,7 @@ namespace ibcdatacsharp.UI
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
         private DeviceList.DeviceList deviceList;
+        private TimeLine.TimeLine timeLine;
 
         public GraphAccelerometer accelerometer;
         public GraphGyroscope gyroscope;
@@ -204,6 +205,7 @@ namespace ibcdatacsharp.UI
             this.device = device;
             this.deviceList = deviceList;
             saveGraphs();
+            saveTimeLine();
 
             mainWindow.virtualToolBar.saveEvent += onInitRecord;
 
@@ -275,6 +277,20 @@ namespace ibcdatacsharp.UI
             }
         }
         */
+        private void saveTimeLine()
+        {
+            if(mainWindow.timeLine.Content == null)
+            {
+                mainWindow.timeLine.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+                };
+            }
+            else
+            {
+                timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
+            }
+        }
         private void saveGraphs()
         {
             if (mainWindow.accelerometer.Content == null)
@@ -397,6 +413,7 @@ namespace ibcdatacsharp.UI
             if (!active)
             {
                 active = true;
+                timeLine.endReplay(); // De momento cuando empieza a stremear apaga el replay
                 //timerRender = new System.Timers.Timer(RENDER_MS);
                 //timerRender.AutoReset = true;
 
@@ -936,6 +953,7 @@ namespace ibcdatacsharp.UI
             if (active)
             {
                 active = false;
+                timeLine.endReplay();
                 timeLine.model.timeEvent -= onUpdateTimeLine;
                 if (graphData.numIMUs == 1)
                 {

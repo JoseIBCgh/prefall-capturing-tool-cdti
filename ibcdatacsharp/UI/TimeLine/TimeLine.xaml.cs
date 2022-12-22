@@ -1,6 +1,7 @@
 ﻿using ibcdatacsharp.UI.ToolBar;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,38 @@ namespace ibcdatacsharp.UI.TimeLine
             model = new Model(timeLine, time, UPDATE_TIME_MS);
             replayManager = new ReplayManager(this);
             recordManager = new RecordManager(this, UPDATE_TIME_MS);
+            // Patron por si no esta inicializado
+            try
+            {
+                finishInit();
+            }
+            catch
+            {
+                ((MainWindow)Application.Current.MainWindow).initialized += (s, e) => finishInit();
+            }
+        }
+        private void finishInit()
+        {
+            ((MainWindow)Application.Current.MainWindow).virtualToolBar.fileOpenEvent += onFileOpen;
+        }
+        private void onFileOpen(object sender, string? csv, string? video)
+        {
+            if (csv != null)
+            {
+                this.csv.Text = Path.GetFileName(csv);
+            }
+            else
+            {
+                this.csv.Text = "";
+            }
+            if(video != null)
+            {
+                this.video.Text = Path.GetFileName(video);
+            }
+            else
+            {
+                this.video.Text = "";
+            }
         }
         public void startReplay()
         {
@@ -39,6 +72,13 @@ namespace ibcdatacsharp.UI.TimeLine
             else
             {
                 replayManager.reset();
+            }
+        }
+        public void endReplay()
+        {
+            if (replayManager.active)
+            {
+                replayManager.deactivate();
             }
         }
 
@@ -56,6 +96,13 @@ namespace ibcdatacsharp.UI.TimeLine
             else
             {
                 recordManager.reset();
+            }
+        }
+        public void endRecord()
+        {
+            if (recordManager.active)
+            {
+                recordManager.deactivate();
             }
         }
         public Model model { get; private set; }
@@ -78,6 +125,8 @@ namespace ibcdatacsharp.UI.TimeLine
         private Button end;
         private Button pause;
         private Image pauseImage;
+        private TextBlock csv;
+        private TextBlock video;
         public ReplayManager(TimeLine timeLine)
         {
             model = timeLine.model;
@@ -87,6 +136,8 @@ namespace ibcdatacsharp.UI.TimeLine
             end = timeLine.end;
             pause = timeLine.pause;
             pauseImage = timeLine.pauseImage;
+            csv = timeLine.csv;
+            video = timeLine.video;
             
 
             active = false;
@@ -101,6 +152,8 @@ namespace ibcdatacsharp.UI.TimeLine
             if (!active)
             {
                 active = true;
+                csv.Visibility = Visibility.Visible;
+                video.Visibility = Visibility.Visible;
                 timer = new System.Timers.Timer();
                 timer.Interval = TICK_MS;
                 timer.Elapsed += tick;
@@ -119,6 +172,8 @@ namespace ibcdatacsharp.UI.TimeLine
             if (active)
             {
                 active = false;
+                csv.Visibility = Visibility.Hidden;
+                video.Visibility = Visibility.Hidden;
                 timer.Elapsed -= tick;
                 timer.Dispose(); 
                 play.Click -= onPlay;

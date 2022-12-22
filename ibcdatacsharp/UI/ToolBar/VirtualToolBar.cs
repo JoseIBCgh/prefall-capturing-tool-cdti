@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using System.Linq;
+using static System.Net.WebRequestMethods;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -35,6 +36,9 @@ namespace ibcdatacsharp.UI.ToolBar
         public event StopEventHandler stopEvent;
         // Se lanza cuando se configuran los ficheros de grabar
         public event EventHandler<SaveArgs> saveEvent;
+
+        public delegate void FileOpenHandler(object sender, string? csv, string? video);
+        public event FileOpenHandler fileOpenEvent;
 
         private bool buttonsEnabled = false;
 
@@ -327,6 +331,7 @@ namespace ibcdatacsharp.UI.ToolBar
                             setTimeLineLimits(csvData, videoPath);
                             graphManager.initReplay(csvData);
                             camaraViewport.initReplay(videoPath);
+                            fileOpenEvent?.Invoke(this, file2, file1);
                             MessageBox.Show("Ficheros " + file1 + " " + file2 + "cargados.");
                         }
                         else
@@ -344,6 +349,7 @@ namespace ibcdatacsharp.UI.ToolBar
                             setTimeLineLimits(csvData, videoPath);
                             graphManager.initReplay(csvData);
                             camaraViewport.initReplay(videoPath);
+                            fileOpenEvent?.Invoke(this, file1, file2);
                             MessageBox.Show("Ficheros " + file1 + " " + file2 + " cargados.");
                         }
                         else
@@ -365,6 +371,7 @@ namespace ibcdatacsharp.UI.ToolBar
                         string videoPath = file;
                         timeLine.model.updateLimits(0, getVideoDuration(videoPath));
                         camaraViewport.initReplay(videoPath);
+                        fileOpenEvent?.Invoke(this, null, file);
                         MessageBox.Show("Fichero " + file + " cargado.");
                     }
                     else if(extension == ".csv" || extension == ".txt")
@@ -372,6 +379,7 @@ namespace ibcdatacsharp.UI.ToolBar
                         GraphData csvData = extractCSV(file);
                         timeLine.model.updateLimits(0, csvData.maxTime);
                         graphManager.initReplay(csvData);
+                        fileOpenEvent?.Invoke(this, file, null);
                         MessageBox.Show("Fichero " + file + " cargado.");
                     }
                     else

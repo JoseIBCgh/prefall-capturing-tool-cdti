@@ -39,9 +39,17 @@
                         </Button>
                     </StackPanel>
                 </StackPanel>
-                </StackPanel>
-                <TextBlock x:Name="time" Grid.Row="1" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Text="00:00:00:000"/>
+            </StackPanel>
+            <TextBlock x:Name="time" Grid.Row="1" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Text="00:00:00:000"/>
         </Grid>
         <WpfPlot Grid.Column="1" x:Name="timeLine"/>
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" x:Name="csv" HorizontalAlignment="Center" Visibility="Hidden"></TextBlock>
+            <TextBlock Grid.Column="1" x:Name="video" HorizontalAlignment="Center" Visibility="Hidden"></TextBlock>
+        </Grid>
     </Grid>
 </Page>

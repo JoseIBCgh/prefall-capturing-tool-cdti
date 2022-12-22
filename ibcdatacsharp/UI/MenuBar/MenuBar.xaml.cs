@@ -44,7 +44,7 @@ namespace ibcdatacsharp.UI.MenuBar
             capture.IsEnabled = false;
             pause.IsEnabled = false;
             stop.IsEnabled = false;
-            capturedFiles.IsEnabled = false;
+            //capturedFiles.IsEnabled = false;
         }
         public void activateButtons()
         {
@@ -55,7 +55,7 @@ namespace ibcdatacsharp.UI.MenuBar
             capture.IsEnabled = true;
             pause.IsEnabled = true;
             stop.IsEnabled = true;
-            capturedFiles.IsEnabled = true;
+            //capturedFiles.IsEnabled = true;
         } 
         // Cambia el icono del boton pause
         public void changePauseState(PauseState pauseState)
