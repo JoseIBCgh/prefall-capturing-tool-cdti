@@ -71,16 +71,16 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             // Quitar los IMUs que no se han escaneado 
             // Los que estaban conectados no los escanea de alli => imu.connected ||
-            VM.IMUs = new ObservableCollection<IMUInfo>(VM.IMUs.Where(imu => imu.connected || IMUs.Any(newImu => newImu.adress == imu.adress)));
+            VM.IMUs = new ObservableCollection<IMUInfo>(VM.IMUs.Where(imu => imu.connected || IMUs.Any(newImu => newImu.address == imu.address)));
             foreach (IMUInfo imu in IMUs)
             {
-                if (!VM.IMUs.Any(imuOld => imuOld.adress == imu.adress))
+                if (!VM.IMUs.Any(imuOld => imuOld.address == imu.address))
                 {
                     VM.IMUs.Add(imu);
                 }
                 else // Cambiar el id del IMU si es diferente
                 {
-                    int index = VM.IMUs.ToList().FindIndex(imuOld => imuOld.adress == imu.adress);
+                    int index = VM.IMUs.ToList().FindIndex(imuOld => imuOld.address == imu.address);
                     if (VM.IMUs[index].id != imu.id)
                     {
                         VM.IMUs[index].id = imu.id;
@@ -90,10 +90,10 @@ namespace ibcdatacsharp.UI.DeviceList
         }
         public void addIMU(IMUInfo imu)
         {
-            if (VM.IMUs.Any(imuOld => imuOld.adress == imu.adress))
+            if (VM.IMUs.Any(imuOld => imuOld.address == imu.address))
             {
                 return;
-                int index = VM.IMUs.ToList().FindIndex(imuOld => imuOld.adress == imu.adress);
+                int index = VM.IMUs.ToList().FindIndex(imuOld => imuOld.address == imu.address);
                 if (VM.IMUs[index].id != imu.id)
                 {
                     VM.IMUs[index].id = imu.id;
@@ -236,18 +236,18 @@ namespace ibcdatacsharp.UI.DeviceList
         #endregion
         public void setIMUHandler(string mac, byte handler)
         {
-            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
+            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.address == mac).First();
             imuInfo.handler = handler;
         }
         public void connectIMU(string mac, byte handler)
         {
-            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
+            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.address == mac).First();
             imuInfo.handler = handler;
             imuInfo.connected = true;
         }
         public void updateHeaderInfo(string mac, byte handler)
         {
-            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
+            IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.address == mac).First();
             Dictionary<string, WisewalkSDK.Device> devicesConnected =  mainWindow.api.GetDevicesConnected();
             WisewalkSDK.Device device = devicesConnected[handler.ToString()];
             imuInfo.battery = device.HeaderInfo.battery;
@@ -293,7 +293,7 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             foreach (string mac in IMUsToDisconnect)
             {
-                IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.adress == mac).First();
+                IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.address == mac).First();
                 imuInfo.connected = false;
                 imuInfo.battery = null;
                 imuInfo.fw = null;

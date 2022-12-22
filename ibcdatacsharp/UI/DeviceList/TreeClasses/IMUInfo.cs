@@ -15,10 +15,10 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<string>("name"); }
             set { SetValue("name", value); }
         }
-        public string adress
+        public string address
         {
-            get { return GetValue<string>("adress"); }
-            set { SetValue("adress", value); }
+            get { return GetValue<string>("address"); }
+            set { SetValue("address", value); }
         }
         public int? battery
         {
@@ -53,11 +53,11 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
         public byte? handler { get; set; }
 
         public IMUInfo() { }
-        public IMUInfo(int id, string name, string adress)
+        public IMUInfo(int id, string name, string address)
         {
             this.id = id;
             this.name = name;
-            this.adress = adress;
+            this.address = address;
             this.battery = null;
             this.connected = false;
             this.used = false;

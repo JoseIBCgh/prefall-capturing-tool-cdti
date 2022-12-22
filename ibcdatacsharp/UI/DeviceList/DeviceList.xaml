@@ -83,7 +83,7 @@
                             <Image Grid.Column="3" Height="15" Width="15" Source="{Binding Path=connected, Converter={StaticResource connectedConverter}}"/>
                             <TextBlock Text="{Binding Path=id}" Grid.Column="4" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="5" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=adress}" Grid.Column="6" TextAlignment="Center" />
+                            <TextBlock Text="{Binding Path=address}" Grid.Column="6" TextAlignment="Center" />
                             <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="7" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=fw}" Grid.Column="8" TextAlignment="Center" />
                         </Grid>

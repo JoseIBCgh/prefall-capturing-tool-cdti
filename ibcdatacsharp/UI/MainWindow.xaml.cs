@@ -598,7 +598,7 @@ namespace ibcdatacsharp.UI
                         conn_list_dev.Remove(scanDevices[imuInfo.id]);
                         devices_list.Remove(imuInfo.handler.ToString());
                         imuInfo.handler = null;
-                        IMUsToDisconnect.Add(imuInfo.adress);
+                        IMUsToDisconnect.Add(imuInfo.address);
 
                         
                     }
