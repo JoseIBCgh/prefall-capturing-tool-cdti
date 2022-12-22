@@ -101,7 +101,8 @@ namespace ibcdatacsharp.UI.Graphs
             signalPlot.OffsetY = offset;
 
             maxRenderIndex = 0;
-            plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, values.Length));
+            //plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, values.Length));
+            plot.Plot.SetAxisLimitsX(xMin: 0, xMax: values.Length);
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
             plot.Render();
         }
@@ -110,8 +111,8 @@ namespace ibcdatacsharp.UI.Graphs
         {
             index = Math.Min(index, values.Length); //Por si acaso
             maxRenderIndex = index;
-            plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS),
-                xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
+            //plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS),
+            //    xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
             valueEvent?.Invoke(this, values[index] + offset);
         }

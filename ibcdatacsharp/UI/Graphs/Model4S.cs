@@ -107,7 +107,8 @@ namespace ibcdatacsharp.UI.Graphs
             signalPlotY.MarkerSize = 0;
             signalPlotZ.MarkerSize = 0;
             maxRenderIndex = 0;
-            plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, valuesX.Length));
+            //plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, valuesX.Length));
+            plot.Plot.SetAxisLimitsX(xMin: 0, xMax: valuesX.Length);
             plot.Plot.SetAxisLimitsY(yMin: minY, yMax: maxY);
         }
         // Cambia los datos a mostrar
@@ -121,8 +122,8 @@ namespace ibcdatacsharp.UI.Graphs
             signalPlotY.Label = "Y= " + valuesY[index].ToString("0.##");
             signalPlotZ.Label = "Z= " + valuesZ[index].ToString("0.##");
 
-            plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
-                xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, valuesX.Length)));
+            //plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
+            //    xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, valuesX.Length)));
             plot.Render();
         }
         #endregion Replay
