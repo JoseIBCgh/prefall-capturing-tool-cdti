@@ -193,7 +193,7 @@ namespace ibcdatacsharp.UI
 
         const float G = 9.8f;
 
-        public delegate void QuaternionEventHandler(object sender, byte id, Quaternion q);
+        public delegate void QuaternionEventHandler(object sender, byte handler, Quaternion q);
         public event QuaternionEventHandler quaternionEvent;
         //End Wise
         public CaptureManager(List<Frame> graphs1IMU, List<Frame> graphs2IMU, VirtualToolBar virtualToolBar, Device.Device device, DeviceList.DeviceList deviceList)

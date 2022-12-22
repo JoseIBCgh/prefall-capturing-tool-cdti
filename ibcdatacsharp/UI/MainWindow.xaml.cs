@@ -682,9 +682,9 @@ namespace ibcdatacsharp.UI
             // usar imu para acceder a la informacion del imu
             var tokenSource = new CancellationTokenSource();
             CancellationToken ct = tokenSource.Token;
-            void eventHandler(object sender, byte id, Quaternion q)
+            void eventHandler(object sender, byte handler, Quaternion q)
             {
-                if(id == imu.id)
+                if(imu.handler != null && handler == imu.handler)
                 {
                     graphManager.captureManager.quaternionEvent -= eventHandler;
                     tokenSource.Cancel();
