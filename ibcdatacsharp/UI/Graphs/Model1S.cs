@@ -74,11 +74,11 @@ namespace ibcdatacsharp.UI.Graphs
             Color color24 = Color.FromArgb(alpha, Color.YellowGreen);
             Color color3 = Color.FromArgb(alpha, Color.MediumPurple);
 
-            plot.Plot.AddVerticalSpan(double.MinValue, separation12, color15);
+            plot.Plot.AddVerticalSpan(-360, separation12, color15);
             plot.Plot.AddVerticalSpan(separation12, separation23, color24);
             plot.Plot.AddVerticalSpan(separation23, separation34, color3);
             plot.Plot.AddVerticalSpan(separation34, separation45, color24);
-            plot.Plot.AddVerticalSpan(separation45, double.MaxValue, color15);
+            plot.Plot.AddVerticalSpan(separation45, 360, color15);
         }
         public void initCapture()
         {
