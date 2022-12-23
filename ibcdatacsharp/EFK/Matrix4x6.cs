@@ -1,5 +1,9 @@
 ﻿
 
+using System.Diagnostics;
+using System;
+using System.Numerics;
+
 namespace ibcdatacsharp.EFK
 {
     public struct Matrix4x6
@@ -176,5 +180,159 @@ namespace ibcdatacsharp.EFK
 
             return result;
         }
+        public static Matrix4x6 Multiply(Matrix4x4 value1, Matrix4x6 value2)
+        {
+            Matrix4x6 result;
+            // First row
+            result.M11 = value1.M11 * value2.M11 + value1.M12 * value2.M21 + value1.M13 * value2.M31 + value1.M14 * value2.M41;
+            result.M12 = value1.M11 * value2.M12 + value1.M12 * value2.M22 + value1.M13 * value2.M32 + value1.M14 * value2.M42;
+            result.M13 = value1.M11 * value2.M13 + value1.M12 * value2.M23 + value1.M13 * value2.M33 + value1.M14 * value2.M43;
+            result.M14 = value1.M11 * value2.M14 + value1.M12 * value2.M24 + value1.M13 * value2.M34 + value1.M14 * value2.M44;
+            result.M15 = value1.M11 * value2.M15 + value1.M12 * value2.M25 + value1.M13 * value2.M35 + value1.M14 * value2.M45;
+            result.M16 = value1.M11 * value2.M16 + value1.M12 * value2.M26 + value1.M13 * value2.M36 + value1.M14 * value2.M46;
+            
+            // Second row
+            result.M21 = value1.M21 * value2.M11 + value1.M22 * value2.M21 + value1.M23 * value2.M31 + value1.M24 * value2.M41;
+            result.M22 = value1.M21 * value2.M12 + value1.M22 * value2.M22 + value1.M23 * value2.M32 + value1.M24 * value2.M42;
+            result.M23 = value1.M21 * value2.M13 + value1.M22 * value2.M23 + value1.M23 * value2.M33 + value1.M24 * value2.M43;
+            result.M24 = value1.M21 * value2.M14 + value1.M22 * value2.M24 + value1.M23 * value2.M34 + value1.M24 * value2.M44;
+            result.M25 = value1.M21 * value2.M15 + value1.M22 * value2.M25 + value1.M23 * value2.M35 + value1.M24 * value2.M45;
+            result.M26 = value1.M21 * value2.M16 + value1.M22 * value2.M26 + value1.M23 * value2.M36 + value1.M24 * value2.M46;
+
+            // Third row
+            result.M31 = value1.M31 * value2.M11 + value1.M32 * value2.M21 + value1.M33 * value2.M31 + value1.M34 * value2.M41;
+            result.M32 = value1.M31 * value2.M12 + value1.M32 * value2.M22 + value1.M33 * value2.M32 + value1.M34 * value2.M42;
+            result.M33 = value1.M31 * value2.M13 + value1.M32 * value2.M23 + value1.M33 * value2.M33 + value1.M34 * value2.M43;
+            result.M34 = value1.M31 * value2.M14 + value1.M32 * value2.M24 + value1.M33 * value2.M34 + value1.M34 * value2.M44;
+            result.M35 = value1.M31 * value2.M15 + value1.M32 * value2.M25 + value1.M33 * value2.M35 + value1.M34 * value2.M45;
+            result.M36 = value1.M31 * value2.M16 + value1.M32 * value2.M26 + value1.M33 * value2.M36 + value1.M34 * value2.M46;
+
+            // Fourth row
+            result.M41 = value1.M41 * value2.M11 + value1.M42 * value2.M21 + value1.M43 * value2.M31 + value1.M44 * value2.M41;
+            result.M42 = value1.M41 * value2.M12 + value1.M42 * value2.M22 + value1.M43 * value2.M32 + value1.M44 * value2.M42;
+            result.M43 = value1.M41 * value2.M13 + value1.M42 * value2.M23 + value1.M43 * value2.M33 + value1.M44 * value2.M43;
+            result.M44 = value1.M41 * value2.M14 + value1.M42 * value2.M24 + value1.M43 * value2.M34 + value1.M44 * value2.M44;
+            result.M45 = value1.M41 * value2.M15 + value1.M42 * value2.M25 + value1.M43 * value2.M35 + value1.M44 * value2.M45;
+            result.M46 = value1.M41 * value2.M16 + value1.M42 * value2.M26 + value1.M43 * value2.M36 + value1.M44 * value2.M46;
+
+            return result;
+        }
+        public static Matrix4x6 operator *(Matrix4x4 value1, Matrix4x6 value2)
+        {
+            return Multiply(value1, value2);
+        }
+        public static Matrix4x6 Multiply(Matrix4x6 value1, Matrix6x6 value2)
+        {
+            Matrix4x6 result;
+            // First row
+            result.M11 = value1.M11 * value2.M11 + value1.M12 * value2.M21 + value1.M13 * value2.M31 + value1.M14 * value2.M41 + value1.M15 * value2.M51 + value1.M16 * value2.M61;
+            result.M12 = value1.M11 * value2.M12 + value1.M12 * value2.M22 + value1.M13 * value2.M32 + value1.M14 * value2.M42 + value1.M15 * value2.M52 + value1.M16 * value2.M62;
+            result.M13 = value1.M11 * value2.M13 + value1.M12 * value2.M23 + value1.M13 * value2.M33 + value1.M14 * value2.M43 + value1.M15 * value2.M53 + value1.M16 * value2.M63;
+            result.M14 = value1.M11 * value2.M14 + value1.M12 * value2.M24 + value1.M13 * value2.M34 + value1.M14 * value2.M44 + value1.M15 * value2.M54 + value1.M16 * value2.M64;
+            result.M15 = value1.M11 * value2.M15 + value1.M12 * value2.M25 + value1.M13 * value2.M35 + value1.M14 * value2.M45 + value1.M15 * value2.M55 + value1.M16 * value2.M65;
+            result.M16 = value1.M11 * value2.M16 + value1.M12 * value2.M26 + value1.M13 * value2.M36 + value1.M14 * value2.M46 + value1.M15 * value2.M56 + value1.M16 * value2.M66;
+
+            // Second row
+            result.M21 = value1.M21 * value2.M11 + value1.M22 * value2.M21 + value1.M23 * value2.M31 + value1.M24 * value2.M41 + value1.M25 * value2.M51 + value1.M26 * value2.M61;
+            result.M22 = value1.M21 * value2.M12 + value1.M22 * value2.M22 + value1.M23 * value2.M32 + value1.M24 * value2.M42 + value1.M25 * value2.M52 + value1.M26 * value2.M62;
+            result.M23 = value1.M21 * value2.M13 + value1.M22 * value2.M23 + value1.M23 * value2.M33 + value1.M24 * value2.M43 + value1.M25 * value2.M53 + value1.M26 * value2.M63;
+            result.M24 = value1.M21 * value2.M14 + value1.M22 * value2.M24 + value1.M23 * value2.M34 + value1.M24 * value2.M44 + value1.M25 * value2.M54 + value1.M26 * value2.M64;
+            result.M25 = value1.M21 * value2.M15 + value1.M22 * value2.M25 + value1.M23 * value2.M35 + value1.M24 * value2.M45 + value1.M25 * value2.M55 + value1.M26 * value2.M65;
+            result.M26 = value1.M21 * value2.M16 + value1.M22 * value2.M26 + value1.M23 * value2.M36 + value1.M24 * value2.M46 + value1.M25 * value2.M56 + value1.M26 * value2.M66;
+
+            // Third row
+            result.M31 = value1.M31 * value2.M11 + value1.M32 * value2.M21 + value1.M33 * value2.M31 + value1.M34 * value2.M41 + value1.M35 * value2.M51 + value1.M36 * value2.M61;
+            result.M32 = value1.M31 * value2.M12 + value1.M32 * value2.M22 + value1.M33 * value2.M32 + value1.M34 * value2.M42 + value1.M35 * value2.M52 + value1.M36 * value2.M62;
+            result.M33 = value1.M31 * value2.M13 + value1.M32 * value2.M23 + value1.M33 * value2.M33 + value1.M34 * value2.M43 + value1.M35 * value2.M53 + value1.M36 * value2.M63;
+            result.M34 = value1.M31 * value2.M14 + value1.M32 * value2.M24 + value1.M33 * value2.M34 + value1.M34 * value2.M44 + value1.M35 * value2.M54 + value1.M36 * value2.M64;
+            result.M35 = value1.M31 * value2.M15 + value1.M32 * value2.M25 + value1.M33 * value2.M35 + value1.M34 * value2.M45 + value1.M35 * value2.M55 + value1.M36 * value2.M65;
+            result.M36 = value1.M31 * value2.M16 + value1.M32 * value2.M26 + value1.M33 * value2.M36 + value1.M34 * value2.M46 + value1.M35 * value2.M56 + value1.M36 * value2.M66;
+
+            // Fourth row
+            result.M41 = value1.M41 * value2.M11 + value1.M42 * value2.M21 + value1.M43 * value2.M31 + value1.M44 * value2.M41 + value1.M45 * value2.M51 + value1.M46 * value2.M61;
+            result.M42 = value1.M41 * value2.M12 + value1.M42 * value2.M22 + value1.M43 * value2.M32 + value1.M44 * value2.M42 + value1.M45 * value2.M52 + value1.M46 * value2.M62;
+            result.M43 = value1.M41 * value2.M13 + value1.M42 * value2.M23 + value1.M43 * value2.M33 + value1.M44 * value2.M43 + value1.M45 * value2.M53 + value1.M46 * value2.M63;
+            result.M44 = value1.M41 * value2.M14 + value1.M42 * value2.M24 + value1.M43 * value2.M34 + value1.M44 * value2.M44 + value1.M45 * value2.M54 + value1.M46 * value2.M64;
+            result.M45 = value1.M41 * value2.M15 + value1.M42 * value2.M25 + value1.M43 * value2.M35 + value1.M44 * value2.M45 + value1.M45 * value2.M55 + value1.M46 * value2.M65;
+            result.M46 = value1.M41 * value2.M16 + value1.M42 * value2.M26 + value1.M43 * value2.M36 + value1.M44 * value2.M46 + value1.M45 * value2.M56 + value1.M46 * value2.M66;
+
+
+            return result;
+        }
+        public static Matrix4x6 operator *(Matrix4x6 value1, Matrix6x6 value2)
+        {
+            return Multiply(value1, value2);
+        }
+        public static void test()
+        {
+            void test1()
+            {
+                Matrix4x6 matrix4X6 = new Matrix4x6(
+                    1, 2, -4, 1, 0, 4,
+                    3, 5, -1, 2, 1, -2,
+                    0, -3, 2, 5, 3, -4,
+                    1, 7, 6, 9, 1, 0
+                    );
+                Matrix4x4 matrix4X4 = new Matrix4x4(
+                    -9, -18, 7, 1,
+                    -4, 19, 10, 5,
+                    7, 2, -2, 6,
+                    6, 72, -3, -9
+                    );
+                Matrix4x6 expected = new Matrix4x6(
+                    -62, -122, 74, -1, 4, -28,
+                    58, 92, 47, 129, 54, -94,
+                    19, 72, 2, 55, 2, 32,
+                    213, 318, -156, 54, 54, -108
+                    );
+
+                Matrix4x6 result = Multiply(matrix4X4, matrix4X6);
+                if (!result.Equals(expected))
+                {
+                    throw new System.Exception("matrix4x4 matrix4x6 multiply error");
+                }
+                else
+                {
+                    Trace.WriteLine("matrix4x4 matrix4x6 multiply correct");
+                    Console.WriteLine("matrix4x4 matrix4x6 multiply correct");
+                }
+            }
+            void test2()
+            {
+                Matrix6x6 matrix6X6 = new Matrix6x6(
+                    1, 2, -4, 1, 12, -5,
+                    3, 5, -1, 2, 2, 0,
+                    0, -3, 2, 5, -21, 12,
+                    1, 7, 6, 9, 3, 9,
+                    3, 5, -1, 2, -1, -9,
+                    0, -3, 2, 5, -8, 5
+                    );
+                Matrix4x6 matrix4X6 = new Matrix4x6(
+                    1, 2, 3, 5, 1, 0,
+                    -1, 4, 0, -2, 5, 3,
+                    2, 7, -1, 0, -1, 4,
+                    1, 2, 3, 5, 1, 0
+                    );
+                Matrix4x6 expected = new Matrix4x6(
+                    15,  43,  29,  67, - 33, 67,
+                    24, 20, - 11, 14, - 39, - 43,
+                    20,  25, - 8,  29,  28,  7,
+                    15,  43,  29,  67, - 33, 67
+                    );
+                Matrix4x6 result = Multiply(matrix4X6, matrix6X6);
+                if (!result.Equals(expected))
+                {
+                    throw new System.Exception("matrix4x6 matrix6x6 multiply error");
+                }
+                else
+                {
+                    Trace.WriteLine("matrix4x6 matrix6x6 multiply correct");
+                    Console.WriteLine("matrix4x6 matrix6x6 multiply correct");
+                }
+            }
+            test1();
+            test2();
+        }
     }
 }
+

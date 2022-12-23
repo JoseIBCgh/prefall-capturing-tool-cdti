@@ -129,7 +129,7 @@ namespace ibcdatacsharp.UI
             api.onError += Api_onError;
             api.deviceDisconnected += Api_onDisconnect;
 
-            //EFK.EKF.test();
+            EFK.EKF.test();
             //End Wisewalk API
 
             //Test linear acceleration

@@ -77,7 +77,24 @@ namespace ibcdatacsharp.EFK
 
             return result;
         }
-
+        public static Matrix3x3 Identity()
+        {
+            Matrix3x3 result = new Matrix3x3(
+                1, 0, 0,
+                0, 1, 0,
+                0, 0, 1
+                );
+            return result;
+        }
+        public static Matrix3x3 Zero()
+        {
+            Matrix3x3 result = new Matrix3x3(
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0
+                );
+            return result;
+        }
         public static Vector3 Multiply(Matrix3x3 value1, Vector3 value2)
         {
             Vector3 result;
@@ -90,6 +107,29 @@ namespace ibcdatacsharp.EFK
         public static Vector3 operator *(Matrix3x3 value1, Vector3 value2)
         {
             return Multiply(value1, value2);
+        }
+        public static Matrix3x3 Multiply(Matrix3x3 value1, float value2)
+        {
+            Matrix3x3 result;
+            result.M11 = value1.M11 * value2;
+            result.M12 = value1.M12 * value2;
+            result.M13 = value1.M13 * value2;
+            result.M21 = value1.M21 * value2;
+            result.M22 = value1.M22 * value2;
+            result.M23 = value1.M23 * value2;
+            result.M31 = value1.M31 * value2;
+            result.M32 = value1.M32 * value2;
+            result.M33 = value1.M33 * value2;
+
+            return result;
+        }
+        public static Matrix3x3 operator *(Matrix3x3 value1, float value2)
+        {
+            return Multiply(value1, value2);
+        }
+        public static Matrix3x3 operator *(float value1, Matrix3x3 value2)
+        {
+            return Multiply(value2, value1);
         }
         public static void test()
         {

@@ -89,40 +89,49 @@ namespace ibcdatacsharp.EFK
             Vector6 result = new Vector6(a_hat, m_hat);
             return result;
         }
-        private Matrix6x4 buildH(Quaternion q)
+        private Matrix6x4 buildH(Quaternion q) // Lo he revisado no creo que este mal (tampoco estoy seguro)
         {
             Matrix6x4 result;
 
             result.M11 = g.Y * q.Z - g.Z * q.Y;
             result.M12 = g.Y * q.Y + g.Z * q.Z;
-            result.M13 = -2 * g.Z * q.Y + g.Y * q.X - g.Z * q.W;
-            result.M14 = -2 * g.Z * q.Z;
+            result.M13 = -2 * g.X * q.Y + g.Y * q.X - g.Z * q.W;
+            result.M14 = -2 * g.X * q.Z + g.Y * q.W + g.Z * q.X;
 
             result.M21 = -g.X * q.Z + g.Z * q.X;
             result.M22 = g.X * q.Y - 2 * g.Y * q.X + g.Z * q.W;
             result.M23 = g.X * q.X + g.Z * q.Z;
             result.M24 = -g.X * q.W - 2 * g.Y * q.Z + g.Z * q.Y;
 
-            result.M31 = 0;
-            result.M32 = 0;
-            result.M33 = 0;
-            result.M34 = 0;
+            result.M31 = g.X * q.Y -g.Y * q.X;
+            result.M32 = g.X * q.Z -g.Y * q.W - 2 * g.Z * q.X;
+            result.M33 = g.X * q.W + g.Y * q.Z - 2 * g.Z * q.Y;
+            result.M34 = g.X * q.X + g.Y * q.Y;
 
-            result.M41 = 0;
-            result.M42 = 0;
-            result.M43 = 0;
-            result.M44 = 0;
+            result.M41 = r.Y * q.Z - r.Z * q.Y;
+            result.M42 = r.Y * q.Y + r.Z * q.Z;
+            result.M43 = -2 * r.X * q.Y + r.Y * q.X - r.Z * q.W;
+            result.M44 = -2 * r.X * q.Z + r.Y * q.W + r.Z * q.X;
 
-            result.M51 = 0;
-            result.M52 = 0;
-            result.M53 = 0;
-            result.M54 = 0;
+            result.M51 = -r.X * q.Z + r.Z * q.X;
+            result.M52 = r.X * q.Y - 2 * r.Y * q.X + r.Z * q.W;
+            result.M53 = r.X * q.X + r.Z * q.Z;
+            result.M54 = -r.X * q.W - 2 * r.Y * q.Z + r.Z * q.Y;
 
-            result.M61 = 0;
-            result.M62 = 0;
-            result.M63 = 0;
-            result.M64 = 0;
+            result.M61 = r.X * q.Y - r.Y * q.X;
+            result.M62 = r.X * q.Z - r.Y * q.W - 2 * r.Z * q.X;
+            result.M63 = r.X * q.W + r.Y * q.Z - 2 * r.Z * q.Y;
+            result.M64 = r.X * q.X + r.Y * q.Y;
 
+            return result;
+        }
+        private Matrix6x6 buildR(float noiseVarianceA, float noiseVarianceW)
+        {
+            Matrix3x3 M11 = noiseVarianceA * Matrix3x3.Identity();
+            Matrix3x3 M12 = Matrix3x3.Zero();
+            Matrix3x3 M21 = Matrix3x3.Zero();
+            Matrix3x3 M22 = noiseVarianceW * Matrix3x3.Identity();
+            Matrix6x6 result = new Matrix6x6(M11, M12, M21, M22);
             return result;
         }
         public Quaternion update(Quaternion q, Vector3 gyr, Vector3 acc, Vector3 mag)
@@ -146,6 +155,15 @@ namespace ibcdatacsharp.EFK
             Vector6 z = new Vector6(acc, mag);
             Vector6 h = buildh(q_hat);
             Vector6 v = z - h;
+            Matrix6x4 H = buildH(q_hat);
+            Matrix6x6 R = buildR(0.5f * 0.5f, 0.3f * 0.3f);
+            Matrix6x6 S = H * P_hat * Matrix4x6.Transpose(H) + R;
+            Matrix6x6 S_inv;
+            if (Matrix6x6.Invert(S, out S_inv))
+            {
+                Matrix4x6 K = P_hat * Matrix4x6.Transpose(H) * S_inv;
+                //Quaternion q = q_hat + K * v;
+            }
             #endregion correction
             return new Quaternion();
         }
@@ -153,6 +171,7 @@ namespace ibcdatacsharp.EFK
         {
             Matrix3x3.test();
             Matrix4x3.test();
+            Matrix4x6.test();
             Matrix6x4.test();
             Matrix6x6.test();
         }
