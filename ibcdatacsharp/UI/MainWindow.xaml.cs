@@ -26,6 +26,7 @@ using System.Drawing;
 using MessageBox = System.Windows.MessageBox;
 using System.Numerics;
 using static WisewalkSDK.Wisewalk;
+using ibcdatacsharp.EFK;
 
 namespace ibcdatacsharp.UI
 {
@@ -129,9 +130,8 @@ namespace ibcdatacsharp.UI
             api.onError += Api_onError;
             api.deviceDisconnected += Api_onDisconnect;
 
-            EFK.EKF.test();
             //End Wisewalk API
-
+            EKF.test();
             //Test linear acceleration
             //LinearAcceleration.test();
         }

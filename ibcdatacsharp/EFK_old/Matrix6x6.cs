@@ -9,7 +9,7 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 
-namespace ibcdatacsharp.EFK
+namespace ibcdatacsharp.EFK_old
 {
     public struct Matrix6x6
     {

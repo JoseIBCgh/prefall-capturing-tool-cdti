@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-namespace ibcdatacsharp.EFK
+namespace ibcdatacsharp.EFK_old
 {
     public struct Vector6
     {

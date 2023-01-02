@@ -1,4 +1,4 @@
-﻿namespace ibcdatacsharp.EFK
+﻿namespace ibcdatacsharp.EFK_old
 {
     public static class Gaus
     {

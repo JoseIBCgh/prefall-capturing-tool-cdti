@@ -52,6 +52,7 @@
     <PackageReference Include="DirectShowLib" Version="1.0.0" />
     <PackageReference Include="DirectShowLib.Standard" Version="2.1.0" />
     <PackageReference Include="Dirkster.AvalonDock" Version="4.70.2" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Include="MultiSelectTreeView" Version="1.0.9" />
