@@ -1,17 +1,20 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using ibcdatacsharp.UI.Common;
+using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Diagnostics;
 using System.Numerics;
 
 namespace ibcdatacsharp.EFK
 {
-    public struct EKF
+    public class EKF
     {
         private MathNet.Numerics.LinearAlgebra.Vector<float> g;
         private MathNet.Numerics.LinearAlgebra.Vector<float> r;
         private float deltaT;
         private Matrix<float>? spectralNoiseCovarianceMatrix;
         private float? spectralNoise;
+        public Matrix<float> H { get; private set; }
+        public MathNet.Numerics.LinearAlgebra.Vector<float> h { get; private set; }
 
         public EKF(float deltaT, MathNet.Numerics.LinearAlgebra.Vector<float> spectralDensity, 
             float magnetic_dip_angle, bool NED = true)
@@ -103,7 +106,7 @@ namespace ibcdatacsharp.EFK
             MathNet.Numerics.LinearAlgebra.Vector<float> m_hat = C * r;
             MathNet.Numerics.LinearAlgebra.Vector<float> result = CreateFromVectors(
                 new MathNet.Numerics.LinearAlgebra.Vector<float>[] {a_hat, m_hat}
-                );
+                ) * 2;
             return result;
         }
         public static Matrix<float> CreateFromQuaternion3x3(Quaternion quaternion)
@@ -174,10 +177,9 @@ namespace ibcdatacsharp.EFK
         {
             return new Quaternion(v[0], v[1], v[2], v[3]);
         }
-        private Matrix<float> buildH(Quaternion q) // Lo he revisado no creo que este mal (tampoco estoy seguro)
+        private Matrix<float> buildH(Quaternion q)
         {
-            Matrix<float> result = Matrix<float>.Build.DenseOfArray(
-                new float[,]
+            float[,] array = new float[,]
                 {
                     {
                         g[1] * q.Z - g[2] * q.Y,
@@ -215,8 +217,8 @@ namespace ibcdatacsharp.EFK
                         r[0] * q.W + r[1] * q.Z - 2 * r[2] * q.Y,
                         r[0] * q.X + r[1] * q.Y
                     }
-                }
-                );
+                };
+            Matrix<float> result = Matrix<float>.Build.DenseOfArray(array) * 2;
             return result;
         }
         private Matrix<float> buildR(float noiseVarianceA, float noiseVarianceW)
@@ -258,9 +260,9 @@ namespace ibcdatacsharp.EFK
                 {
                     acc, mag
                 });
-            MathNet.Numerics.LinearAlgebra.Vector<float> h = buildh(q_hat);
+            h = buildh(q_hat);
             MathNet.Numerics.LinearAlgebra.Vector<float> v = z - h;
-            Matrix<float> H = buildH(q_hat);
+            H = buildH(q_hat);
             Matrix<float> R = buildR(0.5f * 0.5f, 0.3f * 0.3f);
             Matrix<float> S = H * P_hat * H.Transpose() + R;
             Matrix<float> K = P_hat * H.Transpose() * S.Inverse();
@@ -272,24 +274,52 @@ namespace ibcdatacsharp.EFK
         }
         public static void test()
         {
-            Trace.WriteLine("start EKF test");
-            EKF ekf = new EKF(deltaT: 0.01f, spectralNoise: 0.1f * 0.1f, magnetic_dip_angle: 60f);
-            Quaternion q0 = new Quaternion(0.7071f, 0.0f, -0.7071f, 0.0f);
-            MathNet.Numerics.LinearAlgebra.Vector<float> gyr =
-                MathNet.Numerics.LinearAlgebra.Vector<float>.Build.Dense(new float[]{
+            void test1()
+            {
+                Trace.WriteLine("start EKF test");
+                EKF ekf = new EKF(deltaT: 0.01f, spectralNoise: 0.1f * 0.1f, magnetic_dip_angle: 60f, NED:false);
+                Quaternion q0 = new Quaternion(0.7071f, 0.0f, -0.7071f, 0.0f);
+                MathNet.Numerics.LinearAlgebra.Vector<float> gyr =
+                    MathNet.Numerics.LinearAlgebra.Vector<float>.Build.Dense(new float[]{
                 196.55102539f, 555.07427979f, -756.51245117f
-                });
-            MathNet.Numerics.LinearAlgebra.Vector<float> acc =
-                MathNet.Numerics.LinearAlgebra.Vector<float>.Build.Dense(new float[]{
+                    });
+                MathNet.Numerics.LinearAlgebra.Vector<float> acc =
+                    MathNet.Numerics.LinearAlgebra.Vector<float>.Build.Dense(new float[]{
                 1.98162329f, -0.37048489f, -0.25054383f
-                });
-            MathNet.Numerics.LinearAlgebra.Vector<float> mag =
-                MathNet.Numerics.LinearAlgebra.Vector<float>.Build.Dense(new float[]{
+                    });
+                MathNet.Numerics.LinearAlgebra.Vector<float> mag =
+                    MathNet.Numerics.LinearAlgebra.Vector<float>.Build.Dense(new float[]{
                  -9.86029911f, -16.94231987f, 37.22705078f
-                });
-            Quaternion q = ekf.update(q0, gyr, acc, mag);
-            Trace.WriteLine("end EKF test");
-            Trace.WriteLine(q);
+                    });
+                Quaternion q = ekf.update(q0, gyr, acc, mag);
+                Trace.WriteLine("end EKF test");
+                Trace.WriteLine("calculated:");
+                Trace.WriteLine(q);
+                Trace.WriteLine("expected:");
+                Trace.WriteLine("[ 0.12445828,  0.27588646,  0.95203421, - 0.04502944]");
+                Trace.WriteLine("h");
+                Trace.WriteLine("expected:");
+                Trace.WriteLine("[-1.00000000e+00  0.00000000e+00  2.22044605e-16  8.66025404e-01 0.00000000e+00 -5.00000000e-01]");
+                Trace.WriteLine("calculated:");
+                Trace.WriteLine(ekf.h);
+                Trace.WriteLine("calculated directly:");
+                Trace.WriteLine(ekf.buildh(q0));
+                Trace.WriteLine("H");
+                Trace.WriteLine("expected:");
+                Trace.WriteLine(@"
+[[-1.41421356 -0.          1.41421356  0.        ]
+ [-0.         -1.41421356  0.          1.41421356]
+ [-0.          0.         -2.82842712  0.        ]
+ [ 1.22474487  0.          0.18946869  0.        ]
+ [ 0.          0.51763809  0.         -1.93185165]
+ [-0.70710678  0.          3.15659652  0.        ]]
+");
+                Trace.WriteLine("calculated:");
+                Trace.WriteLine(ekf.H);
+                Trace.WriteLine("calculated directly:");
+                Trace.WriteLine(ekf.buildH(q0));
+            }
+            test1();
         }
     }
 }

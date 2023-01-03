@@ -328,14 +328,14 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             get
             {
-                return VM.IMUs.Where(i => i.used).ToList();
+                return VM.IMUs.Where(i => i.used && i.connected).ToList();
             }
         }
         public List<IMUInfo> IMUsUnused
         {
             get
             {
-                return VM.IMUs.Where(i => !i.used).ToList();
+                return VM.IMUs.Where(i => !i.used || !i.connected).ToList();
             }
         }
 

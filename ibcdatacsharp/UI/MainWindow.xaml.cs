@@ -27,6 +27,8 @@ using MessageBox = System.Windows.MessageBox;
 using System.Numerics;
 using static WisewalkSDK.Wisewalk;
 using ibcdatacsharp.EFK;
+using Microsoft.VisualBasic.ApplicationServices;
+using ibcdatacsharp.UI.Common;
 
 namespace ibcdatacsharp.UI
 {
@@ -63,7 +65,13 @@ namespace ibcdatacsharp.UI
         private bool isConnected = false;
         private bool startStream = false;
         private bool startRecord = false;
-        public Dictionary<string, WisewalkSDK.Device> devices_list;
+        public Dictionary<string, WisewalkSDK.Device> devices_list
+        {
+            get
+            {
+                return api.GetDevicesConnected();
+            }
+        }
 
         private byte counterUI = 0;
 
@@ -117,7 +125,7 @@ namespace ibcdatacsharp.UI
             //Begin Wisewalk API
             ports = new List<Wisewalk.ComPort>();
             devHandlers = new List<int>();
-            devices_list = new Dictionary<string, WisewalkSDK.Device>();
+            //devices_list = new Dictionary<string, WisewalkSDK.Device>();
 
             counter = new List<int>();
             api = new Wisewalk();
@@ -131,7 +139,7 @@ namespace ibcdatacsharp.UI
             api.deviceDisconnected += Api_onDisconnect;
 
             //End Wisewalk API
-            EKF.test();
+            //EKF.test();
             //Test linear acceleration
             //LinearAcceleration.test();
         }
@@ -146,7 +154,7 @@ namespace ibcdatacsharp.UI
                     () => (deviceList.Content as DeviceList.DeviceList).
                     disconnectIMU(deviceHandler)
                 );
-            devices_list.Remove(deviceHandler.ToString());
+            //devices_list.Remove(deviceHandler.ToString());
         }
         private void Api_onError(byte deviceHandler, string error)
         {
@@ -276,15 +284,16 @@ namespace ibcdatacsharp.UI
                     api.updateDeviceConfiguration -= setRTCDevice;
                 }
             }
-            if (!devices_list.ContainsKey(handler.ToString())) { 
+            //if (!devices_list.ContainsKey(handler.ToString())) { 
                 // Add new device to list
-                WisewalkSDK.Device device = new WisewalkSDK.Device();
+                //WisewalkSDK.Device device = new WisewalkSDK.Device();
 
-                Trace.WriteLine("DevList: " + dev.Id + " handler: " + handler.ToString());
+                //Trace.WriteLine("DevList: " + dev.Id + " handler: " + handler.ToString());
 
-                devices_list.Add(handler.ToString(), device);
+                //devices_list.Add(handler.ToString(), device);
 
                 // Update values
+                /*
                 devices_list[handler.ToString()].Id = dev.Id;
                 devices_list[handler.ToString()].Name = dev.Name;
                 devices_list[handler.ToString()].Connected = dev.Connected;
@@ -295,7 +304,7 @@ namespace ibcdatacsharp.UI
                 devices_list[handler.ToString()].Rtc = dev.Rtc;
                 devices_list[handler.ToString()].Stream = false;
                 devices_list[handler.ToString()].Record = false;
-
+                */
                 
                 await Dispatcher.BeginInvoke(
                     () => (deviceList.Content as DeviceList.DeviceList).
@@ -310,7 +319,7 @@ namespace ibcdatacsharp.UI
 
                 Trace.WriteLine("DevList: " + devices_list[handler.ToString()].Id + " handler: " + handler.ToString());
 
-
+            /*
             }
             else
             {
@@ -319,7 +328,7 @@ namespace ibcdatacsharp.UI
             }
 
             //ShowDevices(devices_list);
-
+            */
         }
 
         
@@ -566,14 +575,26 @@ namespace ibcdatacsharp.UI
             }
             deviceListLoadedCheck(onConnectFunction);
         }
+        private byte handler(IMUInfo imu)
+        {
+            string handler = devices_list.Where(d => d.Value.Id == imu.address).FirstOrDefault().Key;
+            return byte.Parse(handler);
+        }
         public void startActiveDevices()
         {
+            Trace.WriteLine("startActiveDevices");
+            Helpers.printDevicesConnected();
             List<IMUInfo> activeIMUs = (deviceList.Content as DeviceList.DeviceList).IMUsUsed;
             Trace.WriteLine("num active IMUs " + activeIMUs.Count.ToString());
 
             foreach(IMUInfo imu in activeIMUs)
             {
-                api.StartStream((byte)imu.handler, out error);
+                Trace.WriteLine(imu.address);
+                Trace.WriteLine("handler: " + handler(imu).ToString());
+                if(!api.StartStream(handler(imu), out error))
+                {
+                    Trace.WriteLine("error: " + error);
+                }
             }
         }
         // Conecta el boton disconnect
@@ -586,6 +607,8 @@ namespace ibcdatacsharp.UI
                 IList<object> selectedItems = (IList<object>)deviceListClass.treeView.SelectedItems;
                 List<string> IMUsToDisconnect = new List<string>();
                 devHandlers = new List<int>();
+                Trace.WriteLine("before disconnect");
+                Helpers.printDevicesConnected();
                 foreach (object selected in selectedItems)
                 {
                     if (selected != null && selected is IMUInfo)
@@ -594,9 +617,9 @@ namespace ibcdatacsharp.UI
                         //Begin Wise
                         IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
 
-                        devHandlers.Add(imuInfo.id);
+                        devHandlers.Add(handler(imuInfo));
                         conn_list_dev.Remove(scanDevices[imuInfo.id]);
-                        devices_list.Remove(imuInfo.handler.ToString());
+                        //devices_list.Remove(imuInfo.handler.ToString());
                         imuInfo.handler = null;
                         IMUsToDisconnect.Add(imuInfo.address);
 
@@ -611,12 +634,15 @@ namespace ibcdatacsharp.UI
                 await Task.Delay(4000);
                 deviceListClass.disconnectIMUs(IMUsToDisconnect);
                 Dictionary<string, WisewalkSDK.Device> devicesConnected =  api.GetDevicesConnected();
-                Trace.WriteLine("devices connected");
+                /*Trace.WriteLine("devices connected");
                 foreach (KeyValuePair<string, WisewalkSDK.Device> device in devicesConnected)
                 {
                     Trace.WriteLine(device.Key);
                     Trace.WriteLine(device.Value.Id);
                 }
+                */
+                Trace.WriteLine("after disconnect");
+                Helpers.printDevicesConnected();
                 
             }
 

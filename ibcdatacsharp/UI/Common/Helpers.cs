@@ -118,6 +118,20 @@ namespace ibcdatacsharp.UI.Common
                 Trace.WriteLine(s);
             }
         }
+        public static void printArray(float[,] array)
+        {
+            Trace.WriteLine("array");
+            for(int i = 0; i < array.GetLength(0); i++)
+            {
+                string temp = "[";
+                for(int j = 0; j < array.GetLength(1); j++)
+                {
+                    temp += array[i, j] + ", ";
+                }
+                temp += "]";
+                Trace.WriteLine(temp);
+            }
+        }
         public static bool NearlyEqual(float a, float b, float epsilon = 0.1f)
         {
             float absA = Math.Abs(a);
@@ -137,6 +151,16 @@ namespace ibcdatacsharp.UI.Common
             else
             { // use relative error
                 return diff / (absA + absB) < epsilon;
+            }
+        }
+        public static void printDevicesConnected()
+        {
+            Trace.WriteLine("devices connected:");
+            var devicesConnected = ((MainWindow)Application.Current.MainWindow).api.GetDevicesConnected();
+            foreach (KeyValuePair<string, WisewalkSDK.Device> entry in devicesConnected)
+            {
+                Trace.WriteLine("handler: " + entry.Key);
+                Trace.WriteLine(entry.Value.Id);
             }
         }
     }
