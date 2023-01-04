@@ -139,7 +139,7 @@ namespace ibcdatacsharp.UI
             api.deviceDisconnected += Api_onDisconnect;
 
             //End Wisewalk API
-            //EKF.test();
+            EKF.test();
             //Test linear acceleration
             //LinearAcceleration.test();
         }
@@ -631,9 +631,9 @@ namespace ibcdatacsharp.UI
                     Trace.WriteLine("Disconnect error " + error);
                 }
                 
-                await Task.Delay(4000);
-                deviceListClass.disconnectIMUs(IMUsToDisconnect);
-                Dictionary<string, WisewalkSDK.Device> devicesConnected =  api.GetDevicesConnected();
+                //await Task.Delay(4000);
+                //deviceListClass.disconnectIMUs(IMUsToDisconnect);
+                //Dictionary<string, WisewalkSDK.Device> devicesConnected =  api.GetDevicesConnected();
                 /*Trace.WriteLine("devices connected");
                 foreach (KeyValuePair<string, WisewalkSDK.Device> device in devicesConnected)
                 {
@@ -642,7 +642,7 @@ namespace ibcdatacsharp.UI
                 }
                 */
                 Trace.WriteLine("after disconnect");
-                Helpers.printDevicesConnected();
+                //Helpers.printDevicesConnected();
                 
             }
 
