@@ -131,7 +131,12 @@ namespace ibcdatacsharp.UI.ToolBar
                 toolBar.activateButtons();
                 menuBar.activateButtons();
                 buttonsEnabled = true;
+                disablePause();
             }
+        }
+        public void captureClick()
+        {
+            enablePause();
         }
         // Se ejecuta al clicar el boton pause
         public void pauseClick()
@@ -171,6 +176,16 @@ namespace ibcdatacsharp.UI.ToolBar
                     pauseEvent?.Invoke(this, PauseState.Play);
                 }
             }
+        }
+        private void disablePause()
+        {
+            toolBar.pause.IsEnabled = false;
+            menuBar.pause.IsEnabled = false;
+        }
+        private void enablePause()
+        {
+            toolBar.pause.IsEnabled = true;
+            menuBar.pause.IsEnabled = true;
         }
         private void disableCapture()
         {
@@ -214,6 +229,7 @@ namespace ibcdatacsharp.UI.ToolBar
             menuBar.changeRecordState(RecordState.Recording);
             disableDisconnect();
             timeLine.startRecord();
+            enablePause();
         }
         private void disableDisconnect()
         {
@@ -228,6 +244,7 @@ namespace ibcdatacsharp.UI.ToolBar
         // Se ejecuta al clicar stop
         public void stopClick()
         {
+            disablePause();
             if(pauseState == PauseState.Pause)
             {
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;

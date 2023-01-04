@@ -679,6 +679,7 @@ namespace ibcdatacsharp.UI
         // Funcion que se ejecuta al clicar el boton Capture
         private void onCapture(object sender, EventArgs e)
         {
+            virtualToolBar.captureClick();
             graphManager.initCapture(); 
         }
         // Funcion que se ejecuta al clicar el boton Pause
