@@ -116,7 +116,7 @@ namespace ibcdatacsharp.UI.TimeLine
         private System.Timers.Timer timer;
         private Stopwatch stopwatch;
         private bool playing;
-        private bool paused;
+        private bool _paused;
         private double deltaTime;
 
         private Model model;
@@ -142,7 +142,7 @@ namespace ibcdatacsharp.UI.TimeLine
 
             active = false;
             playing = false;
-            paused = false;
+            _paused = false;
             deltaTime = 0;
 
             stopwatch = new Stopwatch();
@@ -252,16 +252,44 @@ namespace ibcdatacsharp.UI.TimeLine
         public void onEnd(object sender, EventArgs e)
         {
             paused = true;
+            /*
             pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
             timer.Stop();
             stopwatch.Stop();
+            */
         }
         // Se ejecuta al pulsar el boton de pausa
         public void onPause(object sender, EventArgs e){
             if (playing)
             {
                 paused = !paused;
+                /*
                 if (paused)
+                {
+                    pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
+                    timer.Stop();
+                    stopwatch.Stop();
+                }
+                else
+                {
+                    pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
+                    timer.Start();
+                    stopwatch.Start();
+                }
+                */
+            }
+        }
+        private bool paused
+        {
+            get
+            {
+                return _paused;
+            }
+            set
+            {
+                _paused = value;
+                play.IsEnabled = !value;
+                if (value)
                 {
                     pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/play-pause-icon.png"));
                     timer.Stop();

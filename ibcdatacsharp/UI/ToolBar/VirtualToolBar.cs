@@ -150,6 +150,7 @@ namespace ibcdatacsharp.UI.ToolBar
                 pauseState = PauseState.Pause;
                 toolBar.changePauseState(PauseState.Play);
                 menuBar.changePauseState(PauseState.Play);
+                disableCapture();
                 if(pauseEvent != null)
                 {
                     pauseEvent?.Invoke(this, PauseState.Pause);
@@ -164,11 +165,22 @@ namespace ibcdatacsharp.UI.ToolBar
                 pauseState = PauseState.Play;
                 toolBar.changePauseState(PauseState.Pause);
                 menuBar.changePauseState(PauseState.Pause);
+                enableCapture();
                 if (pauseEvent != null)
                 {
                     pauseEvent?.Invoke(this, PauseState.Play);
                 }
             }
+        }
+        private void disableCapture()
+        {
+            toolBar.capture.IsEnabled = false;
+            menuBar.capture.IsEnabled = false;
+        }
+        private void enableCapture()
+        {
+            toolBar.capture.IsEnabled = true;
+            menuBar.capture.IsEnabled = true;
         }
         // Se ejecuta al clicar record
         public void recordClick()
