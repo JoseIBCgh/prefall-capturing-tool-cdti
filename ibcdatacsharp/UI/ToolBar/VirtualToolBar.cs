@@ -200,7 +200,18 @@ namespace ibcdatacsharp.UI.ToolBar
             recordState = RecordState.Recording;
             toolBar.changeRecordState(RecordState.Recording);
             menuBar.changeRecordState(RecordState.Recording);
+            disableDisconnect();
             timeLine.startRecord();
+        }
+        private void disableDisconnect()
+        {
+            toolBar.disconnect.IsEnabled = false;
+            menuBar.disconnect.IsEnabled = false;
+        }
+        private void enableDisconnect()
+        {
+            toolBar.disconnect.IsEnabled = true;
+            menuBar.disconnect.IsEnabled = true;
         }
         // Se ejecuta al clicar stop
         public void stopClick()
@@ -221,6 +232,7 @@ namespace ibcdatacsharp.UI.ToolBar
                 recordState = RecordState.RecordStopped;
                 toolBar.changeRecordState(RecordState.RecordStopped);
                 menuBar.changeRecordState(RecordState.RecordStopped);
+                enableDisconnect();
             }
             if(stopEvent != null)
             {
