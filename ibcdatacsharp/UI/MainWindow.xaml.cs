@@ -631,8 +631,8 @@ namespace ibcdatacsharp.UI
                     Trace.WriteLine("Disconnect error " + error);
                 }
                 
-                //await Task.Delay(4000);
-                //deviceListClass.disconnectIMUs(IMUsToDisconnect);
+                await Task.Delay(4000);
+                deviceListClass.disconnectIMUs(IMUsToDisconnect);
                 //Dictionary<string, WisewalkSDK.Device> devicesConnected =  api.GetDevicesConnected();
                 /*Trace.WriteLine("devices connected");
                 foreach (KeyValuePair<string, WisewalkSDK.Device> device in devicesConnected)
