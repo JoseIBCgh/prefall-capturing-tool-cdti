@@ -677,10 +677,25 @@ namespace ibcdatacsharp.UI
 
                 if (virtualToolBar.recordState == RecordState.Recording)
                 {
+                    /*
                     dataline = "1 " + (fakets).ToString("F2") + " " + frame.ToString() + " " + data.Imu[0].acc_x.ToString("F3") + " " + data.Imu[0].acc_y.ToString("F3") + " " + data.Imu[0].acc_z.ToString("F3") + " " + data.Imu[0].gyro_x.ToString("F3") + " " + data.Imu[0].gyro_y.ToString("F3") + " " + data.Imu[0].gyro_z.ToString("F3") + " " + data.Imu[0].mag_x.ToString("F3") + " " + data.Imu[0].mag_y.ToString("F3") + " " + data.Imu[0].mag_z.ToString("F3") + " " + v0.X.ToString("F3") + " " + v0.Y.ToString("F3") + " " + v0.Z.ToString("F3") + "\n" +
                     "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + data.Imu[1].acc_x.ToString("F3") + " " + data.Imu[1].acc_y.ToString("F3") + " " + data.Imu[1].acc_z.ToString("F3") + " " + data.Imu[1].gyro_x.ToString("F3") + " " + data.Imu[1].gyro_y.ToString("F3") + " " + data.Imu[1].gyro_z.ToString("F3") + " " + data.Imu[1].mag_x.ToString("F3") + " " + data.Imu[1].mag_y.ToString("F3") + " " + data.Imu[1].mag_z.ToString("F3") + " " + v1.X.ToString("F3") + " " + v1.Y.ToString("F3") + " " + v1.Z.ToString("F3") + "\n" +
                     "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + data.Imu[2].acc_x.ToString("F3") + " " + data.Imu[2].acc_y.ToString("F3") + " " + data.Imu[2].acc_z.ToString("F3") + " " + data.Imu[2].gyro_x.ToString("F3") + " " + data.Imu[2].gyro_y.ToString("F3") + " " + data.Imu[2].gyro_z.ToString("F3") + " " + data.Imu[2].mag_x.ToString("F3") + " " + data.Imu[2].mag_y.ToString("F3") + " " + data.Imu[2].mag_z.ToString("F3") + " " + v2.X.ToString("F3") + " " + v2.Y.ToString("F3") + " " + v2.Z.ToString("F3") + "\n" +
                     "1 " + (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + data.Imu[3].acc_x.ToString("F3") + " " + data.Imu[3].acc_y.ToString("F3") + " " + data.Imu[3].acc_z.ToString("F3") + " " + data.Imu[3].gyro_x.ToString("F3") + " " + data.Imu[3].gyro_y.ToString("F3") + " " + data.Imu[3].gyro_z.ToString("F3") + " " + data.Imu[3].mag_x.ToString("F3") + " " + data.Imu[3].mag_y.ToString("F3") + " " + data.Imu[3].mag_z.ToString("F3") + " " + v3.X.ToString("F3") + " " + v3.Y.ToString("F3") + " " + v3.Z.ToString("F3") + "\n";
+                    */
+                    string dataline = "";
+                    for(int i = 0; i < 4; i++)
+                    {
+                        dataline += "1 " + (fakets + 0.01 * i).ToString("F2") + " " + (frame + i).ToString() + " " +
+                            data.Imu[i].acc_x.ToString("F3") + " " + data.Imu[i].acc_y.ToString("F3") + " " +
+                            data.Imu[i].acc_z.ToString("F3") + " " + data.Imu[i].gyro_x.ToString("F3") + " " +
+                            data.Imu[i].gyro_y.ToString("F3") + " " + data.Imu[i].gyro_z.ToString("F3") + " " +
+                            data.Imu[i].mag_x.ToString("F3") + " " + data.Imu[i].mag_y.ToString("F3") + " " +
+                            data.Imu[i].mag_z.ToString("F3") + " " + v[i].X.ToString("F3") + " " + 
+                            v[i].Y.ToString("F3") + " " + v[i].Z.ToString("F3") + " " +
+                            data.Quat[i].X.ToString("0.##") + " " + data.Quat[i].Y.ToString("0.##") + " " +
+                            data.Quat[i].Z.ToString("0.##") + " " + data.Quat[i].W.ToString("0.##") + "\n";
+                    }
 
                     mainWindow.fileSaver.appendCSVManual(dataline);
                 }
