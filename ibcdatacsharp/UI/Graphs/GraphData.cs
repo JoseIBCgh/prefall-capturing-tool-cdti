@@ -91,12 +91,17 @@ namespace ibcdatacsharp.UI.Graphs
         public double laccX { get; set; }
         public double laccY { get; set; } 
         public double laccZ { get; set; }
+
+        public double quatX { get; set; }
+        public double quatY { get; set; }
+        public double quatZ { get; set; }
+        public double quatW { get; set; }
         public FrameData1IMU(string csvLine)
         {
             string[] values = csvLine.Split(' ');
-            if(values.Length != 15 && values.Length != 12)
+            if(values.Length != 19 && values.Length != 15 && values.Length != 12)
             {
-                throw new Exception("Deben haber 12 o 15 valores por fila");
+                throw new Exception("Deben haber 12, 15 o 19 valores por fila");
             }
             time = parseDouble(values[1]);
             frame = int.Parse(values[2]);
@@ -109,7 +114,7 @@ namespace ibcdatacsharp.UI.Graphs
             magX = parseDouble(values[9]);
             magY = parseDouble(values[10]);
             magZ = parseDouble(values[11]);
-            if (values.Length == 14)
+            if (values.Length > 12)
             {
                 laccX = parseDouble(values[12]);
                 laccY = parseDouble(values[13]);
@@ -120,6 +125,20 @@ namespace ibcdatacsharp.UI.Graphs
                 laccX = 0;
                 laccY = 0;
                 laccZ = 0;
+            }
+            if(values.Length > 15)
+            {
+                quatX = parseDouble(values[15]);
+                quatY = parseDouble(values[16]);
+                quatZ = parseDouble(values[17]);
+                quatW = parseDouble(values[18]);
+            }
+            else
+            {
+                quatX = 0;
+                quatY = 0;
+                quatZ = 0;
+                quatW = 0;
             }
         }
 

@@ -72,18 +72,20 @@ namespace ibcdatacsharp.UI.Graphs
         // Temporal
         public async void drawData(GraphData data)
         {
-            double[] accX = new double[data.length];
-            double[] accY = new double[data.length];
-            double[] accZ = new double[data.length];
+            double[] quatX = new double[data.length];
+            double[] quatY = new double[data.length];
+            double[] quatZ = new double[data.length];
+            double[] quatW = new double[data.length];
             for (int i = 0; i < data.length; i++)
             {
-                accX[i] = ((FrameData1IMU)data[i]).accX;
-                accY[i] = ((FrameData1IMU)data[i]).accY;
-                accZ[i] = ((FrameData1IMU)data[i]).accZ;
+                quatX[i] = ((FrameData1IMU)data[i]).quatX;
+                quatY[i] = ((FrameData1IMU)data[i]).quatY;
+                quatZ[i] = ((FrameData1IMU)data[i]).quatZ;
+                quatW[i] = ((FrameData1IMU)data[i]).quatW;
             }
             await Application.Current.Dispatcher.BeginInvoke(UPDATE_PRIORITY, () =>
             {
-                model.updateData(accX, accY, accZ, accX);
+                model.updateData(w:quatW, x:quatX, y:quatY, z:quatZ);
             });
         }
         public async void onUpdateTimeLine(object sender, int frame)
