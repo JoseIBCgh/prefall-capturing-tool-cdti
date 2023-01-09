@@ -143,7 +143,7 @@ namespace ibcdatacsharp.UI.Graphs
                 plot.Plot.Remove(signalPlotX);
                 plot.Plot.Remove(signalPlotY);
                 plot.Plot.Remove(signalPlotZ);
-                signalPlotX = plot.Plot.AddSignal(valuesW, color: wColor, label: "X");
+                signalPlotW = plot.Plot.AddSignal(valuesW, color: wColor, label: "X");
                 signalPlotX = plot.Plot.AddSignal(valuesX, color: xColor, label: "X");
                 signalPlotY = plot.Plot.AddSignal(valuesY, color: yColor, label: "Y");
                 signalPlotZ = plot.Plot.AddSignal(valuesZ, color: zColor, label: "Z");
