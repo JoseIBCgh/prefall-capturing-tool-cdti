@@ -175,7 +175,7 @@ namespace ibcdatacsharp.UI.Graphs
                 plot.Plot.Remove(signalPlotX);
                 plot.Plot.Remove(signalPlotY);
                 plot.Plot.Remove(signalPlotZ);
-                signalPlotX = plot.Plot.AddSignal(valuesW, color: wColor, label: "X");
+                signalPlotW = plot.Plot.AddSignal(valuesW, color: wColor, label: "W");
                 signalPlotX = plot.Plot.AddSignal(valuesX, color: xColor, label: "X");
                 signalPlotY = plot.Plot.AddSignal(valuesY, color: yColor, label: "Y");
                 signalPlotZ = plot.Plot.AddSignal(valuesZ, color: zColor, label: "Z");
@@ -189,7 +189,7 @@ namespace ibcdatacsharp.UI.Graphs
                 valuesW[nextIndex + i] = data[i].W;
                 valuesX[nextIndex + i] = data[i].X;
                 valuesY[nextIndex + i] = data[i].Y;
-                valuesZ[nextIndex + i] = data[i].W;
+                valuesZ[nextIndex + i] = data[i].Z;
             }
             signalPlotW.Label = "W= " + data[data.Length - 1].W.ToString("0.##");
             signalPlotX.Label = "X= " + data[data.Length - 1].X.ToString("0.##");
