@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\
+C:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\obj\Debug\net6.0-windows\
 ibcdatacsharp
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
-C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\App.xaml
-131091485075
+C:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\App.xaml
+21-2087905871
 
-60-42303525
-220646698460
-UI\CamaraViewport\CamaraViewport.xaml;UI\DeviceList\DeviceList.xaml;UI\FileBrowser\FileBrowser.xaml;UI\FileSaver\SavingMenu.xaml;UI\Graphs\AngleGraph\AngleGraph.xaml;UI\Graphs\GraphWindow\GraphAccelerometer.xaml;UI\Graphs\GraphWindow\GraphGyroscope.xaml;UI\Graphs\GraphWindow\GraphMagnetometer.xaml;UI\MainWindow.xaml;UI\MenuBar\MenuBar.xaml;UI\MenuBar\Version.xaml;UI\TimeLine\TimeLine.xaml;UI\ToolBar\ToolBar.xaml;
+83668906840
+2221972335435
+UI\CamaraViewport\CamaraViewport.xaml;UI\DeviceList\DeviceList.xaml;UI\FileBrowser\FileBrowser.xaml;UI\FileSaver\SavingMenu.xaml;UI\Graphs\AngleGraph.xaml;UI\Graphs\AngleGraphX.xaml;UI\Graphs\AngleGraphY.xaml;UI\Graphs\AngleGraphZ.xaml;UI\Graphs\GraphAccelerometer.xaml;UI\Graphs\GraphAngularAcceleration.xaml;UI\Graphs\GraphAngularVelocity.xaml;UI\Graphs\GraphGyroscope.xaml;UI\Graphs\GraphLinAcc.xaml;UI\Graphs\GraphMagnetometer.xaml;UI\Graphs\GraphQuaternion.xaml;UI\MainWindow.xaml;UI\MenuBar\MenuBar.xaml;UI\MenuBar\Version.xaml;UI\Subjects\Subjects.xaml;UI\TimeLine\TimeLine.xaml;UI\ToolBar\ToolBar.xaml;
 
 False
 

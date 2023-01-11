@@ -1,16 +1,24 @@
 ﻿
 
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\CamaraViewport\CamaraViewport.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\DeviceList\DeviceList.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\FileBrowser\FileBrowser.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\FileSaver\SavingMenu.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\Graphs\AngleGraph\AngleGraph.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphWindow\GraphAccelerometer.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphWindow\GraphGyroscope.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphWindow\GraphMagnetometer.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\MainWindow.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\MenuBar\MenuBar.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\MenuBar\Version.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\TimeLine\TimeLine.xaml;;
-FC:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\UI\ToolBar\ToolBar.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\CamaraViewport\CamaraViewport.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\DeviceList\DeviceList.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\FileBrowser\FileBrowser.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\FileSaver\SavingMenu.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\AngleGraph.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\AngleGraphX.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\AngleGraphY.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\AngleGraphZ.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphAccelerometer.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphAngularAcceleration.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphAngularVelocity.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphGyroscope.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphLinAcc.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphMagnetometer.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Graphs\GraphQuaternion.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\MainWindow.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\MenuBar\MenuBar.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\MenuBar\Version.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\Subjects\Subjects.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\TimeLine\TimeLine.xaml;;
+FC:\Users\berna\source\repos\ibcdatacsharp\ibcdatacsharp\UI\ToolBar\ToolBar.xaml;;
 
