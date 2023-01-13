@@ -6,23 +6,49 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using ibcdatacsharp.UI.Common;
 using System.Windows.Media.Animation;
+using ibcdatacsharp.Common;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
     /// <summary>
     /// Lógica de interacción para ToolBar.xaml
     /// </summary>
-    public partial class ToolBar : Page
+    public partial class ToolBar : Page, INotifyPropertyChanged
     {
         private const int ANIMATION_MS = 100;
         private const int INITIAL_ICON_SIZE = 30;
         private const int PRESSED_ICON_SIZE = 25;
         private const int INITIAL_FONT_SIZE = 11;
         private const int PRESSED_FONT_SIZE = 9;
+        private MainWindow mainWindow;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public bool captureEnabled { 
+            get
+            {
+                return mainWindow.virtualToolBar.buttonsEnabled && mainWindow.virtualToolBar.recordState == RecordState.RecordStopped;
+            }
+            set
+            {
+
+            }
+        }
         public ToolBar()
         {
             InitializeComponent();
+            mainWindow = (MainWindow)Application.Current.MainWindow;
             deactivateButtons();
+            DataContext = this;
+            mainWindow.virtualToolBar.buttonsEnabledChanged += (s, e) =>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(captureEnabled)));
+            };
+            mainWindow.virtualToolBar.recordChanged += (s, e) =>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(captureEnabled)));
+            };
         }
         private void initButtonAnimations()
         {

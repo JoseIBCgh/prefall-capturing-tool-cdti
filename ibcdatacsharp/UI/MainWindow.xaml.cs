@@ -478,12 +478,10 @@ namespace ibcdatacsharp.UI
                         imus.Add(new IMUInfo(i, "ActiSense", GetMacAddress(scanDevices, i)));
                     }
                     // Añade imus falsos
-                    /*
                     imus.Add(new IMUInfo(0, "A", "CD"));
                     IMUInfo imu = new IMUInfo(1, "B", "DF");
                     imu.connected = true;
                     imus.Add(imu);
-                    */
                     //end añade imus falsos
 
                     deviceListClass.setIMUs(imus);

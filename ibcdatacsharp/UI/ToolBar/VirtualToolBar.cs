@@ -48,12 +48,13 @@ namespace ibcdatacsharp.UI.ToolBar
         // Se lanza cuando se configuran los ficheros de grabar
         public event EventHandler<SaveArgs> saveEvent;
 
+        public event EventHandler buttonsEnabledChanged;
         public event EventHandler recordChanged;
 
         public delegate void FileOpenHandler(object sender, string? csv, string? video);
         public event FileOpenHandler fileOpenEvent;
 
-        private bool buttonsEnabled = false;
+        public bool buttonsEnabled = false;
 
         string error = "";
 
@@ -144,6 +145,7 @@ namespace ibcdatacsharp.UI.ToolBar
                 toolBar.activateButtons();
                 menuBar.activateButtons();
                 buttonsEnabled = true;
+                buttonsEnabledChanged?.Invoke(this, EventArgs.Empty);
                 disablePause();
             }
         }

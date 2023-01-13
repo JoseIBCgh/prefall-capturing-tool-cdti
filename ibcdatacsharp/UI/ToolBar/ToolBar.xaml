@@ -93,6 +93,9 @@
             </StackPanel>
         </Button>
         <Button x:Name="capture" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="captureEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/capture-blue-icon.png"/>
                 <TextBlock>Capture</TextBlock>
