@@ -61,18 +61,27 @@
             </Style>
         </DockPanel.Resources>
         <Button x:Name="scan" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="scanEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/scan-blue-icon.png"/>
                 <TextBlock>Scan</TextBlock>
             </StackPanel>
         </Button>
         <Button x:Name="connect" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="connectEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/connect-blue-icon.png"/>
                 <TextBlock>Connect</TextBlock>
             </StackPanel>
         </Button>
         <Button x:Name="disconnect" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="disconnectEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/disconnect-blue-icon.png"/>
                 <TextBlock>Disconnect</TextBlock>
