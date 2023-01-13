@@ -15,6 +15,13 @@ namespace ibcdatacsharp.UI.FileSaver
             InitializeComponent();
             route.Text = Config.INITIAL_PATH;
             DataContext = ((MainWindow)Application.Current.MainWindow).virtualToolBar.properties;
+            video.IsEnabledChanged += (s, e) =>
+            {
+                if (!video.IsEnabled)
+                {
+                    video.IsChecked = false;
+                }
+            };
         }
         private void changeDirectory(object sender, RoutedEventArgs e)
         {

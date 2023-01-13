@@ -30,6 +30,8 @@ namespace ibcdatacsharp.UI.CamaraViewport
         private CancellationToken cancellationTokenDisplay;
         private Task displayTask;
 
+        public event EventHandler cameraChanged;
+
         private Mat _currentFrame;
         public Mat currentFrame
         {
@@ -118,6 +120,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
             cancellationTokenDisplay = cancellationTokenSourceDisplay.Token;
             videoCapture = new VideoCapture(index, VideoCaptureAPIs.DSHOW);
             displayTask = displayCameraCallback();
+            cameraChanged?.Invoke(this, EventArgs.Empty);
         }
         // Cierra la camara y la ventana
         private void onClose(object sender, RoutedEventArgs e)
@@ -146,6 +149,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                     {
                         imgViewport.Source = BitmapSourceConverter.ToBitmapSource(getBlackImage());
                     });
+                    cameraChanged?.Invoke(this, EventArgs.Empty);
                     return;
                 }
                 //Mat frame = new Mat();

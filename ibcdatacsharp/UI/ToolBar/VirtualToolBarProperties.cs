@@ -5,12 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
     public class VirtualToolBarProperties: INotifyPropertyChanged
     {
         private VirtualToolBar virtualToolBar;
+        private CamaraViewport.CamaraViewport camaraViewport;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public bool scanEnabled
@@ -75,7 +77,8 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             get
             {
-                return virtualToolBar.recordState == RecordState.RecordStopped;
+                return virtualToolBar.recordState == RecordState.RecordStopped &&
+                    camaraViewport.someCameraOpened();
             }
             set
             {
@@ -84,6 +87,13 @@ namespace ibcdatacsharp.UI.ToolBar
         }
         public VirtualToolBarProperties(VirtualToolBar virtualToolBar)
         {
+            void initCameraViewport()
+            {
+                camaraViewport.cameraChanged += (s, e) =>
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(videoCheckboxEnabled)));
+                };
+            }
             this.virtualToolBar = virtualToolBar;
             virtualToolBar.buttonsEnabledChanged += (s, e) =>
             {
@@ -107,6 +117,19 @@ namespace ibcdatacsharp.UI.ToolBar
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(connectEnabled)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(disconnectEnabled)));
             };
+            if(((MainWindow)Application.Current.MainWindow).camaraViewport.Content != null)
+            {
+                camaraViewport = ((MainWindow)Application.Current.MainWindow).camaraViewport.Content as CamaraViewport.CamaraViewport;
+                initCameraViewport();
+            }
+            else
+            {
+                ((MainWindow)Application.Current.MainWindow).camaraViewport.Navigated += (s, e) =>
+                {
+                    camaraViewport = ((MainWindow)Application.Current.MainWindow).camaraViewport.Content as CamaraViewport.CamaraViewport;
+                    initCameraViewport();
+                };
+            }
         }
     }
 }
