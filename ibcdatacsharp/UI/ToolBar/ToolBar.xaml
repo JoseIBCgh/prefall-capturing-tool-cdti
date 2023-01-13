@@ -87,6 +87,9 @@
         </Button>
         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" DockPanel.Dock="Left"/>
         <Button x:Name="record" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="recordEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image x:Name="recordImage" Source="pack://application:,,,/UI/ToolBar/Icons/Blue/record-stop-blue-icon.png"/>
                 <TextBlock x:Name="recordText">Record Stopped</TextBlock>

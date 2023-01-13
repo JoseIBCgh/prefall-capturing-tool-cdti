@@ -18,6 +18,7 @@ namespace ibcdatacsharp.UI.ToolBar
     // Mantiene el estado para la ToolBar y la MenuBar
     public class VirtualToolBar
     {
+        public VirtualToolBarProperties properties;
         public PauseState pauseState { get; set; }
         private RecordState _recordState;
         public RecordState recordState { 
@@ -30,7 +31,20 @@ namespace ibcdatacsharp.UI.ToolBar
                 _recordState = value;
                 recordChanged?.Invoke(this, EventArgs.Empty);
             }
+        }
+        public bool _capturing;
+        public bool capturing
+        {
+            get
+            {
+                return _capturing;
             }
+            set
+            {
+                _capturing = value;
+                captureChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         private ToolBar toolBar;
         private MenuBar.MenuBar menuBar;
@@ -50,6 +64,7 @@ namespace ibcdatacsharp.UI.ToolBar
 
         public event EventHandler buttonsEnabledChanged;
         public event EventHandler recordChanged;
+        public event EventHandler captureChanged;
 
         public delegate void FileOpenHandler(object sender, string? csv, string? video);
         public event FileOpenHandler fileOpenEvent;
@@ -62,6 +77,7 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             pauseState = PauseState.Play;
             _recordState = RecordState.RecordStopped;
+            properties = new VirtualToolBarProperties(this);
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.initialized += (sender, args) => finishInit();
         }
@@ -151,6 +167,7 @@ namespace ibcdatacsharp.UI.ToolBar
         }
         public void captureClick()
         {
+            capturing = true;
             enablePause();
         }
         // Se ejecuta al clicar el boton pause
@@ -260,6 +277,7 @@ namespace ibcdatacsharp.UI.ToolBar
         public void stopClick()
         {
             disablePause();
+            capturing = false;
             if(pauseState == PauseState.Pause)
             {
                 MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
