@@ -36,5 +36,10 @@ namespace ibcdatacsharp.Common
             }
             OnPropertyChanged(key);
         }
+
+        public void NotifyChange(string key)
+        {
+            OnPropertyChanged(key);
+        }
     }
 }

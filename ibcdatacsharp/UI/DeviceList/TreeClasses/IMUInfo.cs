@@ -52,6 +52,10 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
 
         public byte? handler { get; set; }
 
+        public void checkJAUpdate()
+        {
+            NotifyChange("connected");
+        }
         public IMUInfo() { }
         public IMUInfo(int id, string name, string address)
         {

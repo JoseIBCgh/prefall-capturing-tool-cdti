@@ -18,8 +18,19 @@ namespace ibcdatacsharp.UI.ToolBar
     // Mantiene el estado para la ToolBar y la MenuBar
     public class VirtualToolBar
     {
-        public PauseState pauseState { get; set; } 
-        public RecordState recordState { get; set; }
+        public PauseState pauseState { get; set; }
+        private RecordState _recordState;
+        public RecordState recordState { 
+            get
+            {
+                return _recordState;
+            } 
+            set 
+            { 
+                _recordState = value;
+                recordChanged?.Invoke(this, EventArgs.Empty);
+            }
+            }
 
         private ToolBar toolBar;
         private MenuBar.MenuBar menuBar;
@@ -37,6 +48,8 @@ namespace ibcdatacsharp.UI.ToolBar
         // Se lanza cuando se configuran los ficheros de grabar
         public event EventHandler<SaveArgs> saveEvent;
 
+        public event EventHandler recordChanged;
+
         public delegate void FileOpenHandler(object sender, string? csv, string? video);
         public event FileOpenHandler fileOpenEvent;
 
@@ -47,7 +60,7 @@ namespace ibcdatacsharp.UI.ToolBar
         public VirtualToolBar()
         {
             pauseState = PauseState.Play;
-            recordState = RecordState.RecordStopped;
+            _recordState = RecordState.RecordStopped;
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.initialized += (sender, args) => finishInit();
         }

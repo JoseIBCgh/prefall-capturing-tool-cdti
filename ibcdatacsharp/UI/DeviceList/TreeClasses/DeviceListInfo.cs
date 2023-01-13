@@ -21,6 +21,13 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<ObservableCollection<InsolesInfo>>("insoles"); }
             set { SetValue("insoles", value); }
         }
+        public void checkJAUpdate()
+        {
+            foreach (var item in IMUs)
+            {
+                item.checkJAUpdate();
+            }
+        }
         public DeviceListInfo()
         {
             IMUs = new ObservableCollection<IMUInfo>();

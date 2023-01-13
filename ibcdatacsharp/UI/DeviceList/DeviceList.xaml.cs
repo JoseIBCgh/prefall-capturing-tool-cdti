@@ -25,6 +25,10 @@ namespace ibcdatacsharp.UI.DeviceList
             InitializeComponent();
             mainWindow = Application.Current.MainWindow as MainWindow;
             baseItem.IsExpanded = true;
+            mainWindow.virtualToolBar.recordChanged += (s, e) =>
+            {
+                VM.checkJAUpdate();
+            };
             //selected = new List<TreeViewItem>();
             //this.KeyDown += new KeyEventHandler(onKeyDownHandler);
             //this.KeyUp += new KeyEventHandler(onKeyUpHandler);
@@ -310,10 +314,10 @@ namespace ibcdatacsharp.UI.DeviceList
         }
         private void onCheckIMU(object sender, RoutedEventArgs e)
         {
-            if(numIMUsUsed > MAX_IMU_USED)
+            if (numIMUsUsed > MAX_IMU_USED)
             {
-                MessageBox.Show("Solo puedes seleccionar dos IMUs", caption:null, 
-                    button:MessageBoxButton.OK, icon: MessageBoxImage.Warning);
+                MessageBox.Show("Solo puedes seleccionar dos IMUs", caption: null,
+                    button: MessageBoxButton.OK, icon: MessageBoxImage.Warning);
                 (sender as CheckBox).IsChecked = false;
             }
         }
