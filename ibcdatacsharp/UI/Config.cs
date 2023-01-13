@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.Intrinsics.X86;
 
 namespace ibcdatacsharp.UI
@@ -36,5 +37,9 @@ namespace ibcdatacsharp.UI
             ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL
         ITEM	0	0	x	x	x	x	x	x	x	x	x"
         + "\n";
+        public static Color colorX = Color.Red;
+        public static Color colorY = Color.Green;
+        public static Color colorZ = Color.Blue;
+        public static Color colorW = Color.Orange;
     }
 }

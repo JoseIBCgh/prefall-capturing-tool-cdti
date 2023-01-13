@@ -31,8 +31,9 @@ namespace ibcdatacsharp.UI.Graphs
         private Color dataColor = Color.Red;
         private HLine lineData;
         private const float horizontalLineWidth = 0.5f;
-        public Model1S(WpfPlot plot)
+        public Model1S(WpfPlot plot, Color color)
         {
+            dataColor = color;
             this.plot = plot;
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
             plot.Plot.SetAxisLimitsX(xMin: 0, xMax:MAX_POINTS);

@@ -22,7 +22,7 @@ namespace ibcdatacsharp.UI.Graphs
         public AngleGraphY()
         {
             InitializeComponent();
-            model = new Model1S(plot);
+            model = new Model1S(plot, Config.colorY);
             model.valueEvent += onUpdateAngle;
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;

@@ -33,10 +33,10 @@ namespace ibcdatacsharp.UI.Graphs
         private VLine lineFrame;
         private const float verticalLineWidth = 0.5f;
 
-        private Color wColor = Color.Blue;
-        private Color xColor = Color.Green;
-        private Color yColor = Color.Red;
-        private Color zColor = Color.Magenta;
+        private Color wColor = Config.colorW;
+        private Color xColor = Config.colorX;
+        private Color yColor = Config.colorY;
+        private Color zColor = Config.colorZ;
 
         public Model4S(WpfPlot plot, double minY, double maxY, string title = "", string units = "")
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Numerics;
 
 namespace ibcdatacsharp.UI.Graphs
@@ -73,6 +74,39 @@ namespace ibcdatacsharp.UI.Graphs
             float result = float.Parse(s_point, CultureInfo.InvariantCulture);
             return result;
         }
+        protected float getFloat(string[] values, int index)
+        {
+            if(index < values.Length)
+            {
+                return parseFloat(values[index]);
+            }
+            else
+            {
+                return 0f;
+            }
+        }
+        protected double getDouble(string[] values, int index)
+        {
+            if (index < values.Length)
+            {
+                return parseDouble(values[index]);
+            }
+            else
+            {
+                return 0.0;
+            }
+        }
+        protected int getInt(string[] values, int index)
+        {
+            if (index < values.Length)
+            {
+                return int.Parse(values[index]);
+            }
+            else
+            {
+                return 0;
+            }
+        }
         public abstract int numIMUs();
     }
     public class FrameData1IMU: FrameData
@@ -99,47 +133,26 @@ namespace ibcdatacsharp.UI.Graphs
         public FrameData1IMU(string csvLine)
         {
             string[] values = csvLine.Split(' ');
-            if(values.Length != 19 && values.Length != 15 && values.Length != 12)
-            {
-                throw new Exception("Deben haber 12, 15 o 19 valores por fila");
-            }
-            time = parseDouble(values[1]);
-            frame = int.Parse(values[2]);
-            accX = parseDouble(values[3]);
-            accY = parseDouble(values[4]);
-            accZ = parseDouble(values[5]);
-            gyrX = parseDouble(values[6]);
-            gyrY = parseDouble(values[7]);
-            gyrZ = parseDouble(values[8]);
-            magX = parseDouble(values[9]);
-            magY = parseDouble(values[10]);
-            magZ = parseDouble(values[11]);
-            if (values.Length > 12)
-            {
-                laccX = parseDouble(values[12]);
-                laccY = parseDouble(values[13]);
-                laccZ = parseDouble(values[14]);
-            }
-            else
-            {
-                laccX = 0;
-                laccY = 0;
-                laccZ = 0;
-            }
-            if(values.Length > 15)
-            {
-                quatX = parseDouble(values[15]);
-                quatY = parseDouble(values[16]);
-                quatZ = parseDouble(values[17]);
-                quatW = parseDouble(values[18]);
-            }
-            else
-            {
-                quatX = 0;
-                quatY = 0;
-                quatZ = 0;
-                quatW = 0;
-            }
+            time = getDouble(values, 1);
+            frame = getInt(values, 2);
+            accX = getDouble(values, 3);
+            accY = getDouble(values, 4);
+            accZ = getDouble(values, 5);
+            gyrX = getDouble(values, 6);
+            gyrY = getDouble(values, 7);
+            gyrZ = getDouble(values, 8);
+            magX = getDouble(values, 9);
+            magY = getDouble(values, 10);
+            magZ = getDouble(values, 11);
+
+            laccX = getDouble(values, 12);
+            laccY = getDouble(values, 13);
+            laccZ = getDouble(values, 14);
+
+            quatX = getDouble(values, 15);
+            quatY = getDouble(values, 16);
+            quatZ = getDouble(values, 17);
+            quatW = getDouble(values, 18);
         }
 
         public override int numIMUs()
@@ -157,19 +170,15 @@ namespace ibcdatacsharp.UI.Graphs
         public FrameData2IMUs(string csvLine)
         {
             string[] values = csvLine.Split(' ');
-            if (values.Length != 12) //default 12
-            {
-                throw new Exception("Deben haber 12 valores por fila");
-            }
-            time = parseDouble(values[1]);
-            frame = int.Parse(values[2]);
-            angleX = parseDouble(values[3]);
-            angleY = parseDouble(values[4]);
-            angleZ = parseDouble(values[5]);
-            angularVelocity = new Vector3(parseFloat(values[6]), parseFloat(values[7]),
-                parseFloat(values[8]));
-            angularAcceleration = new Vector3(parseFloat(values[9]), parseFloat(values[10]),
-                parseFloat(values[11]));
+            time = getDouble(values, 1);
+            frame = getInt(values, 2);
+            angleX = getDouble(values, 3);
+            angleY = getDouble(values, 4);
+            angleZ = getDouble(values, 5);
+            angularVelocity = new Vector3(getFloat(values, 6), getFloat(values, 7),
+                getFloat(values, 8));
+            angularAcceleration = new Vector3(getFloat(values, 9), getFloat(values, 10),
+                getFloat(values, 11));
         }
         public override int numIMUs()
         {

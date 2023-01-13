@@ -29,9 +29,9 @@ namespace ibcdatacsharp.UI.Graphs
         // Funcion para inicializar los graficos
         private void initModels()
         {
-            modelX = new Model1S(angleX);
-            modelY = new Model1S(angleY);
-            modelZ = new Model1S(angleZ);
+            modelX = new Model1S(angleX, Config.colorX);
+            modelY = new Model1S(angleY, Config.colorY);
+            modelZ = new Model1S(angleZ, Config.colorZ);
         }
         public void initCapture()
         {

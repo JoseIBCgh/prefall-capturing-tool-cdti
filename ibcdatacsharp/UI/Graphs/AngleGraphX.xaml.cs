@@ -24,7 +24,7 @@ namespace ibcdatacsharp.UI.Graphs
         public AngleGraphX()
         {
             InitializeComponent();
-            model = new Model1S(plot);
+            model = new Model1S(plot, Config.colorX);
             model.valueEvent += onUpdateAngle;
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;

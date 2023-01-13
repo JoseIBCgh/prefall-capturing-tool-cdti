@@ -22,7 +22,7 @@ namespace ibcdatacsharp.UI.Graphs
         public AngleGraphZ()
         {
             InitializeComponent();
-            model = new Model1S(plot);
+            model = new Model1S(plot, Config.colorZ);
             model.valueEvent += onUpdateAngle;
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
