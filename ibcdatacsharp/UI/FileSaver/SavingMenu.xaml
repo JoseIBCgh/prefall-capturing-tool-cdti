@@ -34,7 +34,11 @@
                     <TextBlock Padding="2 0 0 0" Text="Incluir CSV"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Column="1" Margin="10 5 10 5">
-                    <CheckBox x:Name="video" Padding="0 0 2 0" IsChecked="False"/>
+                    <CheckBox x:Name="video" Padding="0 0 2 0" IsChecked="False">
+                        <CheckBox.IsEnabled>
+                            <Binding Path="videoCheckboxEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                        </CheckBox.IsEnabled>
+                    </CheckBox>
                     <TextBlock Padding="2 0 0 0" Text="Incluir Video"/>
                 </StackPanel>
             </Grid>

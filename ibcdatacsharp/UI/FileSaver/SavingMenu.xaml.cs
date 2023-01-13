@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using Application = System.Windows.Application;
 
 namespace ibcdatacsharp.UI.FileSaver
 {
@@ -13,6 +14,7 @@ namespace ibcdatacsharp.UI.FileSaver
         {
             InitializeComponent();
             route.Text = Config.INITIAL_PATH;
+            DataContext = ((MainWindow)Application.Current.MainWindow).virtualToolBar.properties;
         }
         private void changeDirectory(object sender, RoutedEventArgs e)
         {

@@ -71,6 +71,17 @@ namespace ibcdatacsharp.UI.ToolBar
 
             }
         }
+        public bool videoCheckboxEnabled
+        {
+            get
+            {
+                return virtualToolBar.recordState == RecordState.RecordStopped;
+            }
+            set
+            {
+
+            }
+        }
         public VirtualToolBarProperties(VirtualToolBar virtualToolBar)
         {
             this.virtualToolBar = virtualToolBar;
@@ -87,6 +98,7 @@ namespace ibcdatacsharp.UI.ToolBar
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(scanEnabled)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(connectEnabled)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(disconnectEnabled)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(videoCheckboxEnabled)));
             };
             virtualToolBar.captureChanged += (s, e) =>
             {
