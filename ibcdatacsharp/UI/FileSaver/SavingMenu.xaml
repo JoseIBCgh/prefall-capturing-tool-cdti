@@ -30,7 +30,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Column="0" Margin="10 5 10 5">
-                    <CheckBox x:Name="csv" Padding="0 0 2 0" IsChecked="True"/>
+                    <CheckBox IsEnabled="False" x:Name="csv" Padding="0 0 2 0" IsChecked="True"/>
                     <TextBlock Padding="2 0 0 0" Text="Incluir CSV"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Column="1" Margin="10 5 10 5">
