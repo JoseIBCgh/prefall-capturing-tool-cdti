@@ -15,52 +15,79 @@
     
     <DockPanel>
         <Menu DockPanel.Dock="Top" Height="30" Foreground="Black">
-            <MenuItem Header="Connect" Height="30">
+            <MenuItem Header="Connect" x:Name="connectMenu" Height="30">
                 <MenuItem Header="Scan" x:Name="scan">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="scanEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/scan-blue-icon.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Connect" x:Name="connect">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="connectEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/connect-blue-icon.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Disconnect" x:Name="disconnect">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="disconnectEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/disconnect-blue-icon.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Exit" x:Name="exit"/>
             </MenuItem>
-            <MenuItem Header="Measurement" Height="30">
+            <MenuItem Header="Measurement" Name="measurementMenu" Height="30">
                 <MenuItem Header="Capture" x:Name="capture" Height="30">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="captureEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/capture-blue-icon.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Pause" x:Name="pause" Height="30">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="pauseEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/pause-blue-icon.png" x:Name="pauseImage"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Record Stopped" x:Name="record" Height="30">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="recordEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/record-stop-blue-icon.png" x:Name="recordImage"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Stop" x:Name="stop" Height="30">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="stopEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/stop-blue-icon.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Open Camera" x:Name="openCamera" Height="30">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="openCameraEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/openCamera-blue-icon.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Show Captured Files" x:Name="capturedFiles" Height="30">
+                    <MenuItem.IsEnabled>
+                        <Binding Path="capturedFilesEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MenuItem.IsEnabled>
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/capturedFiles-blue-icon.png"/>
                     </MenuItem.Icon>

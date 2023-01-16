@@ -1,6 +1,8 @@
 ﻿using ibcdatacsharp.UI.MenuBar.View;
+using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -13,12 +15,16 @@ namespace ibcdatacsharp.UI.MenuBar
     public partial class MenuBar : Page
     {
         private MainWindow mainWindow;
+        public VirtualToolBarProperties properties;
         public MenuBar()
         {
             InitializeComponent();
-            deactivateButtons();
             mainWindow = Application.Current.MainWindow as MainWindow;
             initWindows();
+            properties = ((MainWindow)Application.Current.MainWindow).virtualToolBar.properties;
+            connectMenu.DataContext = properties;
+            measurementMenu.DataContext = properties;
+            View.DataContext = ViewVM;
         }
         private void initWindows()
         {

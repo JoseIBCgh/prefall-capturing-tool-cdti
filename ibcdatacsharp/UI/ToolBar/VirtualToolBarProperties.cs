@@ -139,7 +139,7 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             get
             {
-                return virtualToolBar.buttonsEnabled && virtualToolBar.recordState == RecordState.RecordStopped;
+                return virtualToolBar.recordState == RecordState.RecordStopped;
             }
             set
             {
