@@ -158,17 +158,14 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             if (!buttonsEnabled)
             {
-                toolBar.activateButtons();
                 menuBar.activateButtons();
                 buttonsEnabled = true;
                 buttonsEnabledChanged?.Invoke(this, EventArgs.Empty);
-                disablePause();
             }
         }
         public void captureClick()
         {
             capturing = true;
-            enablePause();
         }
         // Se ejecuta al clicar el boton pause
         public void pauseClick()
@@ -187,7 +184,6 @@ namespace ibcdatacsharp.UI.ToolBar
                 pauseState = PauseState.Pause;
                 toolBar.changePauseState(PauseState.Play);
                 menuBar.changePauseState(PauseState.Play);
-                disableCapture();
                 if(pauseEvent != null)
                 {
                     pauseEvent?.Invoke(this, PauseState.Pause);
@@ -202,7 +198,6 @@ namespace ibcdatacsharp.UI.ToolBar
                 pauseState = PauseState.Play;
                 toolBar.changePauseState(PauseState.Pause);
                 menuBar.changePauseState(PauseState.Pause);
-                enableCapture();
                 if (pauseEvent != null)
                 {
                     pauseEvent?.Invoke(this, PauseState.Play);
@@ -259,9 +254,7 @@ namespace ibcdatacsharp.UI.ToolBar
             recordState = RecordState.Recording;
             toolBar.changeRecordState(RecordState.Recording);
             menuBar.changeRecordState(RecordState.Recording);
-            disableDisconnect();
             timeLine.startRecord();
-            enablePause();
         }
         private void disableDisconnect()
         {
@@ -276,7 +269,6 @@ namespace ibcdatacsharp.UI.ToolBar
         // Se ejecuta al clicar stop
         public void stopClick()
         {
-            disablePause();
             capturing = false;
             if(pauseState == PauseState.Pause)
             {
@@ -294,7 +286,6 @@ namespace ibcdatacsharp.UI.ToolBar
                 recordState = RecordState.RecordStopped;
                 toolBar.changeRecordState(RecordState.RecordStopped);
                 menuBar.changeRecordState(RecordState.RecordStopped);
-                enableDisconnect();
             }
             if(stopEvent != null)
             {

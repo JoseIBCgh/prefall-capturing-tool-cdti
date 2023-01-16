@@ -139,7 +139,7 @@ namespace ibcdatacsharp.UI
             api.deviceDisconnected += Api_onDisconnect;
 
             //End Wisewalk API
-            EKF.EKF.test();
+            //EKF.EKF.test();
             //Test linear acceleration
             //LinearAcceleration.test();
         }

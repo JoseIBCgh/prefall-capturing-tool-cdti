@@ -26,7 +26,6 @@ namespace ibcdatacsharp.UI.ToolBar
         public ToolBar()
         {
             InitializeComponent();
-            deactivateButtons();
             DataContext = ((MainWindow)Application.Current.MainWindow).virtualToolBar.properties;
         }
         private void initButtonAnimations()

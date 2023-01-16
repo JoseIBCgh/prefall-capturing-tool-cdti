@@ -89,6 +89,9 @@
         </Button>
         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" DockPanel.Dock="Left"/>
         <Button x:Name="openCamera" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="openCameraEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/openCamera-blue-icon.png"/>
                 <TextBlock>Open Camera</TextBlock>
@@ -114,12 +117,18 @@
             </StackPanel>
         </Button>
         <Button x:Name="pause" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="pauseEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/pause-blue-icon.png" x:Name="pauseImage"/>
                 <TextBlock x:Name="pauseText">Pause</TextBlock>
             </StackPanel>
         </Button>
         <Button Grid.Column="7" x:Name="stop" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="stopEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/stop-blue-icon.png"/>
                 <TextBlock>Stop</TextBlock>
@@ -127,6 +136,9 @@
         </Button>
         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" DockPanel.Dock="Left"/>
         <Button x:Name="capturedFiles" DockPanel.Dock="Left">
+            <Button.IsEnabled>
+                <Binding Path="capturedFilesEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </Button.IsEnabled>
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/Blue/capturedFiles-blue-icon.png"/>
                 <TextBlock>Show Captured Files</TextBlock>
