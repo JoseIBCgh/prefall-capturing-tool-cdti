@@ -6,9 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using ibcdatacsharp.UI.Common;
 using System.Windows.Media.Animation;
-using ibcdatacsharp.Common;
-using System.ComponentModel;
-using System.Diagnostics;
+using ibcdatacsharp.UI.Filters;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -23,10 +21,14 @@ namespace ibcdatacsharp.UI.ToolBar
         private const int INITIAL_FONT_SIZE = 11;
         private const int PRESSED_FONT_SIZE = 9;
 
+        public FilterManager filterManager = new FilterManager();
         public ToolBar()
         {
             InitializeComponent();
+            filterManager = new FilterManager();
             DataContext = ((MainWindow)Application.Current.MainWindow).virtualToolBar.properties;
+            filters.ItemsSource = filterManager.filters;
+            filters.SelectedIndex = 0;
         }
         private void initButtonAnimations()
         {

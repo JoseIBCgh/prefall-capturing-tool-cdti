@@ -15,6 +15,7 @@ namespace ibcdatacsharp.EKF
         private float? spectralNoise;
         private float var_acc;
         private float var_mag;
+        private Matrix<float> P;
         public Matrix<float> H { get; private set; }
         public MathNet.Numerics.LinearAlgebra.Vector<float> h { get; private set; }
 
@@ -22,6 +23,7 @@ namespace ibcdatacsharp.EKF
             float magnetic_dip_angle, bool NED = true, float var_acc = 0.5f * 0.5f, 
             float var_mag = 0.8f * 0.8f)
         {
+            P = Matrix<float>.Build.DenseIdentity(4);
             magnetic_dip_angle = Helpers.ToRadians(magnetic_dip_angle);
             this.var_acc = var_acc;
             this.var_mag = var_mag;
@@ -58,6 +60,7 @@ namespace ibcdatacsharp.EKF
         public EKF(float deltaT, float spectralNoise, float magnetic_dip_angle, bool NED = true, 
             float var_acc = 0.5f * 0.5f, float var_mag = 0.8f * 0.8f)
         {
+            P = Matrix<float>.Build.DenseIdentity(4);
             magnetic_dip_angle = Helpers.ToRadians(magnetic_dip_angle);
             this.deltaT = deltaT;
             this.var_acc = var_acc;
@@ -290,7 +293,7 @@ namespace ibcdatacsharp.EKF
                 );
             return result;
         }
-        public Quaternion update(Quaternion q, Matrix<float> P, MathNet.Numerics.LinearAlgebra.Vector<float> gyr,
+        public Quaternion update(Quaternion q, MathNet.Numerics.LinearAlgebra.Vector<float> gyr,
             MathNet.Numerics.LinearAlgebra.Vector<float> acc, MathNet.Numerics.LinearAlgebra.Vector<float> mag)
         {
             #region prediction
@@ -549,7 +552,7 @@ namespace ibcdatacsharp.EKF
                 Trace.WriteLine("start EKF test");
                 EKF ekf = new EKF(deltaT: 0.01f, spectralNoise: 0.3f * 0.3f, magnetic_dip_angle: 60f, NED:true);
                 Matrix<float> P = Matrix<float>.Build.DenseIdentity(4);
-                Quaternion q = ekf.update(q0, P, gyr, acc, mag);
+                Quaternion q = ekf.update(q0, gyr, acc, mag);
                 Trace.WriteLine("end EKF test");
                 Trace.WriteLine("calculated:");
                 Trace.WriteLine(q);

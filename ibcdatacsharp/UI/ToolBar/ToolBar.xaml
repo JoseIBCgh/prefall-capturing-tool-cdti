@@ -144,6 +144,16 @@
                 <TextBlock>Show Captured Files</TextBlock>
             </StackPanel>
         </Button>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Padding="5" FontSize="11">Filters</TextBlock>
+            <ComboBox VerticalAlignment="Center" x:Name="filters">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
         <Frame Visibility="Collapsed" Source="pack://application:,,,/UI/FileSaver/SavingMenu.xaml" x:Name="savingMenu" DockPanel.Dock="Right"/>
     </DockPanel>
 </Page>
