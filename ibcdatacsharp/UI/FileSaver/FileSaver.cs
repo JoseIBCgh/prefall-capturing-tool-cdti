@@ -162,7 +162,7 @@ namespace ibcdatacsharp.UI.FileSaver
                 //mainWindow.virtualToolBar.pauseEvent -= onPauseCsv;
                 saveCsvFile();
                 recordCSV = false;
-                message += "Csv grabado en " + csvFile + ". ";
+                message += "Csv grabado en " + csvFile + ".\n";
                 show = true;
                 files.Add(path + Path.DirectorySeparatorChar + csvFile);
             }
@@ -175,13 +175,13 @@ namespace ibcdatacsharp.UI.FileSaver
                 videoWriter = null;
 
                 recordVideo = false;
-                message += "Video grabado en " + videoFile + ". ";
+                message += "Video grabado en " + videoFile + ".\n";
                 show=true;
                 files.Add(path + Path.DirectorySeparatorChar + videoFile);
             }
             if (show)
             {
-                MessageBox.Show(message, caption: null, button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+                MessageBox.Show(message, caption: "Info", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
                 filesAdded?.Invoke(this, files);
             }
         }
