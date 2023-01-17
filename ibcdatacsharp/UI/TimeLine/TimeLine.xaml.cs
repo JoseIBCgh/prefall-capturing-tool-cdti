@@ -172,6 +172,8 @@ namespace ibcdatacsharp.UI.TimeLine
             if (active)
             {
                 active = false;
+                playing = false;
+                paused = false;
                 csv.Visibility = Visibility.Hidden;
                 video.Visibility = Visibility.Hidden;
                 timer.Elapsed -= tick;
@@ -183,9 +185,6 @@ namespace ibcdatacsharp.UI.TimeLine
                 end.Click -= moveToEnd;
                 pause.Click -= onPause;
                 stopwatch.Reset();
-                playing = false;
-                pauseImage.Source = new BitmapImage(new Uri("pack://application:,,,/UI/ToolBar/Icons/pause-icon.png"));
-                paused = false;
                 Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Render, () =>
                 {
                     model.moveToStart();

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.Filters
 {
@@ -20,8 +19,6 @@ namespace ibcdatacsharp.UI.Filters
         public void changeFilter(Filter newFilter)
         {
             index = filters.IndexOf(newFilter);
-            Trace.WriteLine("changeFilter");
-            Trace.WriteLine(index);
         }
     }
 }
