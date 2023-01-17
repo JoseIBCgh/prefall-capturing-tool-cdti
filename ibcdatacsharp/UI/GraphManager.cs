@@ -21,6 +21,7 @@ using System.Windows.Threading;
 using Quaternion = System.Numerics.Quaternion;
 using ibcdatacsharp.UI.Common;
 using ibcdatacsharp.DeviceList.TreeClasses;
+using ibcdatacsharp.UI.Filters;
 
 namespace ibcdatacsharp.UI
 {
@@ -44,6 +45,7 @@ namespace ibcdatacsharp.UI
         {
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             VirtualToolBar virtualToolBar = mainWindow.virtualToolBar;
+            FilterManager filterManager = mainWindow.filterManager;
             Device.Device device = mainWindow.device;
             graphs1IMU = new List<Frame>();
             graphs2IMU = new List<Frame>();
@@ -76,13 +78,13 @@ namespace ibcdatacsharp.UI
                 mainWindow.deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
                 {
                     DeviceList.DeviceList deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
-                    captureManager = new CaptureManager(graphs1IMU, graphs2IMU, virtualToolBar, device, deviceList);
+                    captureManager = new CaptureManager(graphs1IMU, graphs2IMU, virtualToolBar, device, deviceList, filterManager);
                 };
             }
             else
             {
                 DeviceList.DeviceList deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
-                captureManager = new CaptureManager(graphs1IMU, graphs2IMU, virtualToolBar, device, deviceList);
+                captureManager = new CaptureManager(graphs1IMU, graphs2IMU, virtualToolBar, device, deviceList, filterManager);
             }
         }
         public void initReplay(GraphData data)
@@ -128,6 +130,7 @@ namespace ibcdatacsharp.UI
         private Device.Device device;
         private DeviceList.DeviceList deviceList;
         private TimeLine.TimeLine timeLine;
+        private FilterManager filterManager;
 
         public GraphAccelerometer accelerometer;
         public GraphGyroscope gyroscope;
@@ -196,7 +199,7 @@ namespace ibcdatacsharp.UI
         public delegate void QuaternionEventHandler(object sender, byte handler, Quaternion q);
         public event QuaternionEventHandler quaternionEvent;
         //End Wise
-        public CaptureManager(List<Frame> graphs1IMU, List<Frame> graphs2IMU, VirtualToolBar virtualToolBar, Device.Device device, DeviceList.DeviceList deviceList)
+        public CaptureManager(List<Frame> graphs1IMU, List<Frame> graphs2IMU, VirtualToolBar virtualToolBar, Device.Device device, DeviceList.DeviceList deviceList, FilterManager filterManager)
         { 
             active = false;
             this.graphs1IMU = graphs1IMU;
@@ -204,6 +207,7 @@ namespace ibcdatacsharp.UI
             this.virtualToolBar = virtualToolBar;
             this.device = device;
             this.deviceList = deviceList;
+            this.filterManager = filterManager;
             saveGraphs();
             saveTimeLine();
 
@@ -653,6 +657,7 @@ namespace ibcdatacsharp.UI
         //Callback para recoger datas del IMU
         public void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
+            filterManager.filter(ref data);
             int index = 3;
             Quaternion q = new Quaternion((float)data.Quat[index].X, (float)data.Quat[index].Y, (float)data.Quat[index].Z, (float)data.Quat[index].W);
             quaternionEvent?.Invoke(this, deviceHandler, q);

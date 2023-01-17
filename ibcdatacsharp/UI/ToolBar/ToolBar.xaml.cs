@@ -21,13 +21,17 @@ namespace ibcdatacsharp.UI.ToolBar
         private const int INITIAL_FONT_SIZE = 11;
         private const int PRESSED_FONT_SIZE = 9;
 
-        public FilterManager filterManager = new FilterManager();
         public ToolBar()
         {
             InitializeComponent();
-            filterManager = new FilterManager();
             DataContext = ((MainWindow)Application.Current.MainWindow).virtualToolBar.properties;
+            FilterManager filterManager = ((MainWindow)Application.Current.MainWindow).filterManager;
             filters.ItemsSource = filterManager.filters;
+            filters.SelectionChanged += (object sender, SelectionChangedEventArgs e) =>
+            {
+                Filter selected = (sender as ComboBox).SelectedItem as Filter;
+                filterManager.changeFilter(selected);
+            };
             filters.SelectedIndex = 0;
         }
         private void initButtonAnimations()

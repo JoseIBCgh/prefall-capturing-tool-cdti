@@ -29,6 +29,7 @@ using static WisewalkSDK.Wisewalk;
 using ibcdatacsharp.EKF;
 using Microsoft.VisualBasic.ApplicationServices;
 using ibcdatacsharp.UI.Common;
+using ibcdatacsharp.UI.Filters;
 
 namespace ibcdatacsharp.UI
 {
@@ -108,6 +109,7 @@ namespace ibcdatacsharp.UI
 
         public IMUInfo imuInfo;
         public List<int> devHandlers;
+        public FilterManager filterManager;
 
         //end Wiseware API
         public MainWindow()
@@ -117,6 +119,7 @@ namespace ibcdatacsharp.UI
             device = new Device.Device();
             fileSaver = new FileSaver.FileSaver();
             graphManager = new GraphManager();
+            filterManager = new FilterManager();
             initIcon();
             initToolBarHandlers();
             initMenuHandlers();
