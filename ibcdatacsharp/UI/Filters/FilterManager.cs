@@ -5,7 +5,7 @@ namespace ibcdatacsharp.UI.Filters
     public class FilterManager
     {
         public List<Filter> filters;
-        private int index;
+        private int ind;
         public FilterManager()
         {
             filters = new List<Filter>();
@@ -14,11 +14,11 @@ namespace ibcdatacsharp.UI.Filters
         }
         public void filter(ref WisewalkSDK.WisewalkData data)
         {
-            filters[index].filter(ref data);
+            filters[ind].filter(ref data);
         }
         public void changeFilter(Filter newFilter)
         {
-            index = filters.IndexOf(newFilter);
+            ind = filters.IndexOf(newFilter);
         }
     }
 }

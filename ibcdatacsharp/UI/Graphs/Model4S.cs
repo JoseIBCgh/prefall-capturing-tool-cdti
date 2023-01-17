@@ -195,7 +195,7 @@ namespace ibcdatacsharp.UI.Graphs
             signalPlotX.Label = "X= " + data[data.Length - 1].X.ToString("0.##");
             signalPlotY.Label = "Y= " + data[data.Length - 1].Y.ToString("0.##");
             signalPlotZ.Label = "Z= " + data[data.Length - 1].Z.ToString("0.##");
-            nextIndex++;
+            nextIndex += data.Length;
             if (render)
             {
                 this.render();
