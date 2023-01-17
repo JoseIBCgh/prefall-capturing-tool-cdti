@@ -397,7 +397,7 @@ namespace ibcdatacsharp.UI.ToolBar
                             graphManager.initReplay(csvData);
                             camaraViewport.initReplay(videoPath);
                             fileOpenEvent?.Invoke(this, file2, file1);
-                            MessageBox.Show("Ficheros " + file1 + " " + file2 + "cargados.");
+                            MessageBox.Show("Ficheros " + file1 + " " + file2 + " cargados.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
                         {
@@ -415,7 +415,7 @@ namespace ibcdatacsharp.UI.ToolBar
                             graphManager.initReplay(csvData);
                             camaraViewport.initReplay(videoPath);
                             fileOpenEvent?.Invoke(this, file1, file2);
-                            MessageBox.Show("Ficheros " + file1 + " " + file2 + " cargados.");
+                            MessageBox.Show("Ficheros " + file1 + " " + file2 + " cargados.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
                         {
@@ -437,7 +437,7 @@ namespace ibcdatacsharp.UI.ToolBar
                         timeLine.model.updateLimits(0, getVideoDuration(videoPath));
                         camaraViewport.initReplay(videoPath);
                         fileOpenEvent?.Invoke(this, null, file);
-                        MessageBox.Show("Fichero " + file + " cargado.");
+                        MessageBox.Show("Fichero " + file + " cargado.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else if(extension == ".csv" || extension == ".txt")
                     {
@@ -445,7 +445,7 @@ namespace ibcdatacsharp.UI.ToolBar
                         timeLine.model.updateLimits(0, csvData.maxTime);
                         graphManager.initReplay(csvData);
                         fileOpenEvent?.Invoke(this, file, null);
-                        MessageBox.Show("Fichero " + file + " cargado.");
+                        MessageBox.Show("Fichero " + file + " cargado.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
