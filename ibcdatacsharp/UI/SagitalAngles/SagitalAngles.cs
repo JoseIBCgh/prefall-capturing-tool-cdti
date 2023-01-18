@@ -11,6 +11,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
     public class SagitalAngles
     {
         private MainWindow mainWindow;
+        private DeviceList.DeviceList deviceList;
 
         private int TOTAL_SENSORS = 4;
         private int TOTAL_JOINTS = 3;
@@ -39,12 +40,21 @@ namespace ibcdatacsharp.UI.SagitalAngles
         // Inicializa el indice que correspone a cada handler
         public void initIMUs(Dictionary<string, WisewalkSDK.Device> devices_list)
         {
-            indices = new Dictionary<byte, int>();
-            int index = 0;
-            foreach (KeyValuePair<string, WisewalkSDK.Device> entry in devices_list)
+            byte handlerFromMAC(string mac)
             {
-                indices[byte.Parse(entry.Key)] = index;
-                index++;
+                string handler = mainWindow.devices_list.Where(z => z.Value.Id == mac).FirstOrDefault().Key;
+                return byte.Parse(handler);
+            }
+            indices = new Dictionary<byte, int>();
+
+            List<IMUInfo> imus = deviceList.IMUsUsed;
+            if (imus.Count == TOTAL_SENSORS) //??
+            {
+                for(int i = 0; i < imus.Count; i++)
+                {
+                    byte handler = handlerFromMAC(imus[i].address);
+                    indices[handler] = i;
+                }
             }
         }
         // Convierte deviceHandler en indice. Es una funcion por si hay que cambiarlo mas adelante
