@@ -1,10 +1,17 @@
-﻿using System;
+﻿using ibcdatacsharp.DeviceList.TreeClasses;
+using ibcdatacsharp.UI.DeviceList;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Numerics;
 
 namespace ibcdatacsharp.UI.SagitalAngles
 {
     public class SagitalAngles
     {
+        private MainWindow mainWindow;
+
         private int TOTAL_SENSORS = 4;
         private int TOTAL_JOINTS = 3;
         private Quaternion[] mQ_sensors_raw;
@@ -20,8 +27,50 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private Quaternion[] mQ_joints;
 
         private Vector3 eulerAnglesZ;
+
+        private Quaternion[,] mQ_sensors_raw_list;
+        private bool[] updated_quats;
+
+        //Guarda un indice para cada deviceHandler.
+        //Podrias usar el handler directamente como indice pero como no esta muy claro que la
+        //api te garantize que sean 0, 1, ..., (n - 1) lo he dejado asi por si acaso
+        private Dictionary<byte, int> indices; 
+
+        // Inicializa el indice que correspone a cada handler
+        public void initIMUs(Dictionary<string, WisewalkSDK.Device> devices_list)
+        {
+            indices = new Dictionary<byte, int>();
+            int index = 0;
+            foreach (KeyValuePair<string, WisewalkSDK.Device> entry in devices_list)
+            {
+                indices[byte.Parse(entry.Key)] = index;
+                index++;
+            }
+        }
+        // Convierte deviceHandler en indice. Es una funcion por si hay que cambiarlo mas adelante
+        private int handlerToIndex(byte deviceHandler) 
+        {
+            return indices[deviceHandler];
+        }
+        public void processSerialData(byte deviceHandler, WisewalkSDK.WisewalkData data)
+        {
+            int index = handlerToIndex(deviceHandler);
+            for(int i = 0; i < TOTAL_SENSORS; i++)
+            {
+                mQ_sensors_raw_list[i, index] = new Quaternion((float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z, (float)data.Quat[i].W);
+            }
+            updated_quats[index] = true;
+            if(updated_quats.All(x => x)) // si todos son true
+            {
+                updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
+                // llamar aqui a update
+            }
+        }
         public void quaternionCalcsConnect()
         {
+            mQ_sensors_raw_list = new Quaternion[4,TOTAL_SENSORS];
+            updated_quats = new bool[TOTAL_SENSORS]; // default false
+
             mQ_sensors_raw = new Quaternion[TOTAL_SENSORS];
             mQ_segments = new Quaternion[TOTAL_SENSORS];
             mQ_sensors_ref = new Quaternion[TOTAL_SENSORS];
