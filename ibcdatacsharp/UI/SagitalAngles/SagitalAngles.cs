@@ -54,7 +54,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
             Vector3 world_X = new Vector3(1,0,0);
             Vector3 world_Z = new Vector3(0,0,1);
 
-            Vector3 vc_Z = Q_virtual_creator * world_Z;            // Apply rotation to Z axis of the sensor
+             
+            Vector3 vc_Z = Vector3.Transform(world_Z, Q_virtual_creator);       // Apply rotation to Z axis of the sensor
             Vector3 vc_Z_proy_XY = vc_Z - (Vector3.Dot(vc_Z, world_Z) * world_Z); // Projection: rotated Y axis on the XY plane
             Vector3 forward_line = Vector3.Normalize(vc_Z_proy_XY);              // Normalize projection to create a "forward line"
 
@@ -62,8 +63,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             double detx = Vector3.Dot(world_Z, Vector3.Cross(world_X, forward_line));
             double angle = Math.Atan2(detx, dotx);                           // Determine angle between w_X and the forward line
 
-            AngleAxisd xToForward(angle, world_Z );
-            Quaternion Qvirtual(xToForward );                              // Construct a quat with the needed rotation
+            Quaternion Qvirtual = new Quaternion((float)angle, 0, 0, 1 );   // Construct a quat with the needed rotation
                                                                             // result quaternion = (angle, 0, 0, 1)
 
             mQ_virtual = Quaternion.Normalize(Qvirtual);
