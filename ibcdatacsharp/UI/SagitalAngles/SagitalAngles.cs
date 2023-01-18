@@ -11,7 +11,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private Quaternion[] mQ_segments;
         private Quaternion[] mQ_sensors_ref;
         private Quaternion[] mQ_compensate;
-        private Quaternion idenQuat = new Quaternion(0, 0, 0, 1); // x = 1 o w = 1??
+        private Quaternion idenQuat = Quaternion.Identity;
 
         private Quaternion mQ_virtual;
         private Quaternion mQ_left;
@@ -74,7 +74,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             Quaternion Q_isb = new Quaternion(new Vector3(1, 0, 0), 90 * (float)Utils.M_PI / 180);
             Q_isb = Quaternion.Normalize(Q_isb);
 
-            Quaternion mQ_left = Quaternion.Conjugate(Q_isb) * Quaternion.Conjugate(mQ_virtual);
+            mQ_left = Quaternion.Conjugate(Q_isb) * Quaternion.Conjugate(mQ_virtual);
             mQ_left = Quaternion.Normalize(mQ_left);
 
             mQ_right = mQ_virtual * Q_isb;
