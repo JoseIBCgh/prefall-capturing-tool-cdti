@@ -111,6 +111,8 @@ namespace ibcdatacsharp.UI
         public List<int> devHandlers;
         public FilterManager filterManager;
 
+        private SagitalAngles.SagitalAngles sagitalAngles;
+
         //end Wiseware API
         public MainWindow()
         {
@@ -120,6 +122,7 @@ namespace ibcdatacsharp.UI
             fileSaver = new FileSaver.FileSaver();
             graphManager = new GraphManager();
             filterManager = new FilterManager();
+            sagitalAngles = new SagitalAngles.SagitalAngles();
             initIcon();
             initToolBarHandlers();
             initMenuHandlers();
@@ -366,6 +369,11 @@ namespace ibcdatacsharp.UI
                 toolBarClass.stop.Click += new RoutedEventHandler(onStop);
                 toolBarClass.record.Click += new RoutedEventHandler(onRecord);
                 toolBarClass.capturedFiles.Click += new RoutedEventHandler(onCapturedFiles);
+                #region SAGITAL ANGLES
+                toolBarClass.startSagitalAngles.Click += new RoutedEventHandler(onStartSagitalAngles);
+                toolBarClass.calculateMounting.Click += new RoutedEventHandler(onCalculateMounting);
+                toolBarClass.saveFrontalReference.Click += new RoutedEventHandler(onSaveFrontalReference);
+                #endregion SAGITAL ANGLES
             };
         }
         // Conecta los botones del Menu
@@ -715,6 +723,21 @@ namespace ibcdatacsharp.UI
         {
             virtualToolBar.openClick();
         }
+        #region SAGITAL ANGLES
+        private void onStartSagitalAngles(object sender, EventArgs e)
+        {
+            sagitalAngles.initIMUs();
+            api.dataReceived += sagitalAngles.processSerialData;
+        }
+        private void onCalculateMounting(object sender, EventArgs e)
+        {
+            sagitalAngles.calculateMounting();
+        }
+        private void onSaveFrontalReference(object sender, EventArgs e)
+        {
+            sagitalAngles.calculateVirtualOrientation();
+        }
+        #endregion
         // IMPORTANTE: La funcion eventHandler tiene que ser local
         public void readQuaternion(IMUInfo imu)
         {

@@ -153,6 +153,9 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <Button x:Name="startSagitalAngles">Sagital Angles</Button>
+            <Button x:Name="calculateMounting">Calculate mounting</Button>
+            <Button x:Name="saveFrontalReference">Save frontal reference</Button>
         </StackPanel>
         <Frame Visibility="Collapsed" Source="pack://application:,,,/UI/FileSaver/SavingMenu.xaml" x:Name="savingMenu" DockPanel.Dock="Right"/>
     </DockPanel>

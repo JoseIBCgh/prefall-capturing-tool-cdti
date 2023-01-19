@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
+using System.Windows;
 
 namespace ibcdatacsharp.UI.SagitalAngles
 {
@@ -35,10 +36,27 @@ namespace ibcdatacsharp.UI.SagitalAngles
         //Guarda un indice para cada deviceHandler.
         //Podrias usar el handler directamente como indice pero como no esta muy claro que la
         //api te garantize que sean 0, 1, ..., (n - 1) lo he dejado asi por si acaso
-        private Dictionary<byte, int> indices; 
+        private Dictionary<byte, int> indices;
 
+        private int NUM_PACK = 4;
+
+        public SagitalAngles()
+        {
+            mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow.deviceList.Content == null)
+            {
+                mainWindow.deviceList.Navigated += (sender, args) =>
+                {
+                    deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
+                };
+            }
+            else
+            {
+                deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
+            }
+        }
         // Inicializa el indice que correspone a cada handler
-        public void initIMUs(Dictionary<string, WisewalkSDK.Device> devices_list)
+        public void initIMUs()
         {
             byte handlerFromMAC(string mac)
             {
@@ -56,6 +74,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     indices[handler] = i;
                 }
             }
+            quaternionCalcsConnect();
         }
         // Convierte deviceHandler en indice. Es una funcion por si hay que cambiarlo mas adelante
         private int handlerToIndex(byte deviceHandler) 
@@ -65,7 +84,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
         public void processSerialData(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
             int index = handlerToIndex(deviceHandler);
-            for(int i = 0; i < TOTAL_SENSORS; i++)
+            for(int i = 0; i < NUM_PACK; i++)
             {
                 mQ_sensors_raw_list[i, index] = new Quaternion((float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z, (float)data.Quat[i].W);
             }
@@ -73,12 +92,20 @@ namespace ibcdatacsharp.UI.SagitalAngles
             if(updated_quats.All(x => x)) // si todos son true
             {
                 updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
-                // llamar aqui a update
+                for(int i = 0; i < NUM_PACK; i++)
+                {
+                    for(int s = 0; s < TOTAL_SENSORS; s++)
+                    {
+                        mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
+                    }
+                }
+                updateLeftAndRightQuats();
+                updateSegmentsAndJoints();
             }
         }
         public void quaternionCalcsConnect()
         {
-            mQ_sensors_raw_list = new Quaternion[4,TOTAL_SENSORS];
+            mQ_sensors_raw_list = new Quaternion[NUM_PACK,TOTAL_SENSORS];
             updated_quats = new bool[TOTAL_SENSORS]; // default false
 
             mQ_sensors_raw = new Quaternion[TOTAL_SENSORS];
