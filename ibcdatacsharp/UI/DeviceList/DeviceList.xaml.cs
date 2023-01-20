@@ -314,12 +314,14 @@ namespace ibcdatacsharp.UI.DeviceList
         }
         private void onCheckIMU(object sender, RoutedEventArgs e)
         {
+            /*
             if (numIMUsUsed > MAX_IMU_USED)
             {
                 MessageBox.Show("Solo puedes seleccionar dos IMUs", caption: null,
                     button: MessageBoxButton.OK, icon: MessageBoxImage.Warning);
                 (sender as CheckBox).IsChecked = false;
             }
+            */
         }
         public int numIMUsUsed
         {
