@@ -51,7 +51,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
         public SagitalAngles()
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
-            /*
             if (mainWindow.deviceList.Content == null)
             {
                 mainWindow.deviceList.Navigated += (sender, args) =>
@@ -63,7 +62,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
             }
-            */
+            /*
             Helpers.callWhenNavigated(mainWindow.deviceList, delegate 
             {
                 deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
@@ -80,6 +79,40 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 knee = mainWindow.knee.Content as GraphKnee;
             });
+            */
+            if (mainWindow.ankle.Content == null)
+            {
+                mainWindow.ankle.Navigated += (s, e) =>
+                {
+                    ankle = mainWindow.ankle.Content as GraphAnkle;
+                };
+            }
+            else
+            {
+                ankle = mainWindow.ankle.Content as GraphAnkle;
+            }
+            if (mainWindow.hip.Content == null)
+            {
+                mainWindow.hip.Navigated += (s, e) =>
+                {
+                    hip = mainWindow.hip.Content as GraphHip;
+                };
+            }
+            else
+            {
+                hip = mainWindow.hip.Content as GraphHip;
+            }
+            if (mainWindow.knee.Content == null)
+            {
+                mainWindow.knee.Navigated += (s, e) =>
+                {
+                    knee = mainWindow.knee.Content as GraphKnee;
+                };
+            }
+            else
+            {
+                knee = mainWindow.knee.Content as GraphKnee;
+            }
         }
         // Inicializa el indice que correspone a cada handler
         public void initIMUs()
