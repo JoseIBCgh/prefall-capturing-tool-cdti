@@ -730,6 +730,13 @@ namespace ibcdatacsharp.UI
             if (deviceListClass.IMUsUsed.Count == 4) // Comprobar si hay 4 IMUs ???
             {
                 sagitalAngles.initIMUs();
+                foreach (IMUInfo imu in deviceListClass.IMUsUsed)
+                {
+                    if (!api.StartStream(handler(imu), out error))
+                    {
+                        Trace.WriteLine("error: " + error);
+                    }
+                }
                 api.dataReceived += sagitalAngles.processSerialData;
             }
             else
