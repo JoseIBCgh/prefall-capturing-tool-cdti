@@ -1,4 +1,5 @@
 ﻿using ibcdatacsharp.DeviceList.TreeClasses;
+using ibcdatacsharp.UI.Common;
 using ibcdatacsharp.UI.DeviceList;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
         private Quaternion[] mQ_joints;
 
-        private Vector3 eulerAnglesZ;
+        private double[] eulerAnglesZ;
 
         private Quaternion[,] mQ_sensors_raw_list;
         private bool[] updated_quats;
@@ -40,9 +41,17 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
         private int NUM_PACK = 4;
 
+        private GraphAnkle ankle;
+        private GraphHip hip;
+        private GraphKnee knee;
+        private int ankleIndex = 0;
+        private int hipIndex = 1;
+        private int kneeIndex = 2;
+
         public SagitalAngles()
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
+            /*
             if (mainWindow.deviceList.Content == null)
             {
                 mainWindow.deviceList.Navigated += (sender, args) =>
@@ -54,6 +63,23 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
             }
+            */
+            Helpers.callWhenNavigated(mainWindow.deviceList, delegate 
+            {
+                deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
+            });
+            Helpers.callWhenNavigated(mainWindow.ankle, delegate
+            {
+                ankle = mainWindow.ankle.Content as GraphAnkle;
+            });
+            Helpers.callWhenNavigated(mainWindow.ankle, delegate
+            {
+                hip = mainWindow.hip.Content as GraphHip;
+            });
+            Helpers.callWhenNavigated(mainWindow.ankle, delegate
+            {
+                knee = mainWindow.knee.Content as GraphKnee;
+            });
         }
         // Inicializa el indice que correspone a cada handler
         public void initIMUs()
@@ -74,6 +100,9 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     indices[handler] = i;
                 }
             }
+            ankle.initCapture();
+            hip.initCapture();
+            knee.initCapture();
             quaternionCalcsConnect();
         }
         // Convierte deviceHandler en indice. Es una funcion por si hay que cambiarlo mas adelante
@@ -92,15 +121,24 @@ namespace ibcdatacsharp.UI.SagitalAngles
             if(updated_quats.All(x => x)) // si todos son true
             {
                 updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
-                for(int i = 0; i < NUM_PACK; i++)
+                float[] ankleData = new float[NUM_PACK];
+                float[] hipData = new float[NUM_PACK];
+                float[] kneeData = new float[NUM_PACK];
+                for (int i = 0; i < NUM_PACK; i++)
                 {
-                    for(int s = 0; s < TOTAL_SENSORS; s++)
+                    for (int s = 0; s < TOTAL_SENSORS; s++)
                     {
                         mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
                     }
+                    updateLeftAndRightQuats();
+                    updateSegmentsAndJoints();
+                    ankleData[i] = (float)eulerAnglesZ[ankleIndex];
+                    hipData[i] = (float)eulerAnglesZ[hipIndex];
+                    kneeData[i] = (float)eulerAnglesZ[kneeIndex];
                 }
-                updateLeftAndRightQuats();
-                updateSegmentsAndJoints();
+                ankle.drawData(ankleData);
+                hip.drawData(hipData);
+                knee.drawData(kneeData);
             }
         }
         public void quaternionCalcsConnect()
@@ -214,7 +252,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
             /// Quaternion to euler angles conversion.
 
-            double[] eulerAnglesZ = new double[] { 0, 0, 0 }; // 3 sagittal angles, init them with 0.0
+            eulerAnglesZ = new double[] { 0, 0, 0 }; // 3 sagittal angles, init them with 0.0
                                                          // esto sería un array con 6 ángulos correspondientes a las articulaciones e incializados a 0.0
 
             for (int iAngle = 0; iAngle <= (eulerAnglesZ.Length - 1); ++iAngle)
@@ -236,8 +274,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
                 eulerAnglesZ[iAngle] = sign * res[0] * 180 / Utils.M_PI; // otherlib
             }
-
-            this.eulerAnglesZ = new Vector3((float)eulerAnglesZ[0], (float)eulerAnglesZ[1], (float)eulerAnglesZ[2]);
             //Esto es lo que obtenemos: eulerAnglesZ , mQ_sensors_raw, mQ_segments, mQ_joints 
         }
     }

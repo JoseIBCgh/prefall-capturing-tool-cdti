@@ -74,6 +74,17 @@
                                         <Frame Source="pack://application:,,,/UI/Graphs/GraphQuaternion.xaml" x:Name="quaternions"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
+                                <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
+                                    <dock:LayoutAnchorable x:Name="ankleAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Right ankle">
+                                        <Frame Source="pack://application:,,,/UI/SagitalAngles/GraphAnkle.xaml" x:Name="ankle"/>
+                                    </dock:LayoutAnchorable>
+                                    <dock:LayoutAnchorable x:Name="hipAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Right hip">
+                                        <Frame Source="pack://application:,,,/UI/SagitalAngles/GraphHip.xaml" x:Name="hip"/>
+                                    </dock:LayoutAnchorable>
+                                    <dock:LayoutAnchorable x:Name="kneeAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Right knee">
+                                        <Frame Source="pack://application:,,,/UI/SagitalAngles/GraphKnee.xaml" x:Name="knee"/>
+                                    </dock:LayoutAnchorable>
+                                </dock:LayoutAnchorablePane>
                             </dock:LayoutAnchorablePaneGroup>
                         </dock:LayoutAnchorablePaneGroup>
                     </dock:LayoutAnchorablePaneGroup>

@@ -41,7 +41,9 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
             lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, LineStyle.Dash);
             lineZero = plot.Plot.AddHorizontalLine(0, color: zeroColor, width: zeroLineWidth, LineStyle.Dash);
-            
+
+            initCapture();
+
             plot.Plot.Style(Style.Seaborn);
             plot.Refresh();
         }

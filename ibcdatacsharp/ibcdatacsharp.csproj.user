@@ -52,6 +52,9 @@
     <Compile Update="UI\MenuBar\Version.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\SagitalAngles\GraphHip.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\Subjects\Subjects.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -115,6 +118,15 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\MenuBar\Version.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\SagitalAngles\GraphAnkle.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\SagitalAngles\GraphKnee.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\SagitalAngles\GraphHip.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Subjects\Subjects.xaml">

@@ -726,8 +726,16 @@ namespace ibcdatacsharp.UI
         #region SAGITAL ANGLES
         private void onStartSagitalAngles(object sender, EventArgs e)
         {
-            sagitalAngles.initIMUs();
-            api.dataReceived += sagitalAngles.processSerialData;
+            DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
+            if (deviceListClass.IMUsUsed.Count == 4) // Comprobar si hay 4 IMUs ???
+            {
+                sagitalAngles.initIMUs();
+                api.dataReceived += sagitalAngles.processSerialData;
+            }
+            else
+            {
+                MessageBox.Show("Hay " + deviceListClass.IMUsUsed.Count + " IMUs seleccionados. Tienes que seleccionar 4.", "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
+            }
         }
         private void onCalculateMounting(object sender, EventArgs e)
         {

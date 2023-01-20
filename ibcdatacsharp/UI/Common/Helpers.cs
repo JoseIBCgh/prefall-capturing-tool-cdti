@@ -4,6 +4,9 @@ using System.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Controls;
+using System.Runtime.CompilerServices;
+using System.Windows.Navigation;
 
 namespace ibcdatacsharp.UI.Common
 {
@@ -161,6 +164,20 @@ namespace ibcdatacsharp.UI.Common
             {
                 Trace.WriteLine("handler: " + entry.Key);
                 Trace.WriteLine(entry.Value.Id);
+            }
+        }
+        public static void callWhenNavigated(Frame frame, Action f)
+        {
+            if(frame.Content == null)
+            {
+                frame.Navigated += (sender, args) =>
+                {
+                    f();
+                };
+            }
+            else
+            {
+                f();
             }
         }
     }
