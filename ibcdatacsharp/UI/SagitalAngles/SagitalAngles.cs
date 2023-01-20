@@ -4,6 +4,7 @@ using ibcdatacsharp.UI.DeviceList;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Windows;
@@ -143,6 +144,32 @@ namespace ibcdatacsharp.UI.SagitalAngles
         {
             return indices[deviceHandler];
         }
+        public void changeQuaternionsRandom()
+        {
+            for (int i = 0; i < TOTAL_SENSORS; i++)
+            {
+                mQ_sensors_raw[i] = Helpers.random_quaternion();
+            }
+        }
+        public void test()
+        {
+            ankle.initCapture();
+            hip.initCapture();
+            knee.initCapture();
+            quaternionCalcsConnect();
+            changeQuaternionsRandom();
+            calculateMounting();
+            changeQuaternionsRandom();
+            calculateVirtualOrientation();
+            changeQuaternionsRandom();
+            updateLeftAndRightQuats();
+            updateSegmentsAndJoints();
+            Trace.WriteLine("result");
+            foreach(float a in eulerAnglesZ)
+            {
+                Trace.WriteLine(a);
+            }
+        }
         public void processSerialData(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
             int index = handlerToIndex(deviceHandler);
@@ -196,7 +223,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
         }
         public void calculateMounting()
         {
-            mQ_sensors_ref = mQ_sensors_raw;
+            Array.Copy(mQ_sensors_raw, mQ_sensors_ref, TOTAL_SENSORS);
             for (int iSen = 0; iSen <= 3; ++iSen)
             {
                 mQ_sensors_ref[iSen] = Quaternion.Normalize(mQ_sensors_ref[iSen]);
@@ -224,6 +251,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
                                                                             // result quaternion = (angle, 0, 0, 1)
 
             mQ_virtual = Quaternion.Normalize(Qvirtual);
+            //Trace.WriteLine("mQ_virtual");
+            //Trace.WriteLine(mQ_virtual.ToString());
         }
         public void updateLeftAndRightQuats()
         {
@@ -236,6 +265,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
             mQ_right = mQ_virtual * Q_isb;
             mQ_right = Quaternion.Normalize(mQ_right);
+            //Trace.WriteLine("mQ_right");
+            //Trace.WriteLine(mQ_right.ToString());
         }
         public void updateSegmentsAndJoints()
         {
@@ -243,6 +274,19 @@ namespace ibcdatacsharp.UI.SagitalAngles
             //this->compensateRawQuats(mQ_sensors_raw);
 
             Quaternion refLiveDifference, operateLeft;
+            /*
+            Trace.WriteLine("mQ_sensors_raw");
+            foreach (var sensor in mQ_sensors_raw)
+            {
+                Trace.WriteLine(sensor.ToString());
+            }
+
+            Trace.WriteLine("mQ_sensors_ref");
+            foreach (var sensor in mQ_sensors_ref)
+            {
+                Trace.WriteLine(sensor.ToString());
+            }
+            */
 
             // Store segments (ISB)
 
@@ -254,6 +298,9 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 refLiveDifference = Quaternion.Normalize(mQ_sensors_raw[iSensor]) * Quaternion.Conjugate(mQ_sensors_ref[iSensor]);
                 refLiveDifference = Quaternion.Normalize(refLiveDifference);
 
+                //Trace.WriteLine("mQ_left");
+                //Trace.WriteLine(mQ_left.ToString());
+
                 operateLeft = mQ_left * refLiveDifference;
                 operateLeft = Quaternion.Normalize(operateLeft);
 
@@ -261,6 +308,13 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 mQ_segments[iSensor] = Quaternion.Normalize(mQ_segments[iSensor]);
 
             }
+            /*
+            Trace.WriteLine("mQ_segments");
+            foreach(var sensor in mQ_segments)
+            {
+                Trace.WriteLine(sensor.ToString());
+            }
+            */
 
             // Store joints (ISB)
 
@@ -302,6 +356,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 {
                     sign = -1;
                 }
+                //Trace.WriteLine("eulerAnglesZ before change sign " + res[0]);
 
                 // LE QUITO EL SIGNO POR AHORA
 

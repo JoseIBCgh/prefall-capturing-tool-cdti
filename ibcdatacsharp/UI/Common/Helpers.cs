@@ -180,5 +180,20 @@ namespace ibcdatacsharp.UI.Common
                 f();
             }
         }
+        public static float randomFloat(float min, float max)
+        {
+            Random random = new Random();
+            float f = random.NextSingle();
+            f = f * (max - min);
+            return f + min;
+        }
+        public static Quaternion random_quaternion()
+        {
+            float x, y, z, u, v, w, s;
+            do { x = randomFloat(-1,1); y = randomFloat(-1, 1); z = x * x + y * y; } while (z > 1);
+            do { u = randomFloat(-1, 1); v = randomFloat(-1, 1); w = u * u + v * v; } while (w > 1);
+            s = (float)Math.Sqrt((1 - z) / w);
+            return new Quaternion(x, y, s * u, s * v);
+        }
     }
 }
