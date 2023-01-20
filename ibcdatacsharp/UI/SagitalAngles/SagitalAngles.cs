@@ -144,11 +144,21 @@ namespace ibcdatacsharp.UI.SagitalAngles
         {
             return indices[deviceHandler];
         }
-        public void changeQuaternionsRandom()
+        private void changeQuaternionsRandom()
         {
             for (int i = 0; i < TOTAL_SENSORS; i++)
             {
                 mQ_sensors_raw[i] = Helpers.random_quaternion();
+            }
+        }
+        private void changeQuaternionsListRandom()
+        {
+            for (int i = 0; i < NUM_PACK; i++)
+            {
+                for (int s = 0; s < TOTAL_SENSORS; s++)
+                {
+                    mQ_sensors_raw_list[i, s] = Helpers.random_quaternion();
+                }
             }
         }
         public void test()
@@ -169,6 +179,39 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 Trace.WriteLine(a);
             }
+        }
+        public void test2()
+        {
+            ankle.initCapture();
+            hip.initCapture();
+            knee.initCapture();
+            quaternionCalcsConnect();
+            changeQuaternionsListRandom();
+            float[] ankleData = new float[NUM_PACK];
+            float[] hipData = new float[NUM_PACK];
+            float[] kneeData = new float[NUM_PACK];
+            for (int i = 0; i < NUM_PACK; i++)
+            {
+                for (int s = 0; s < TOTAL_SENSORS; s++)
+                {
+                    mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
+                }
+                updateLeftAndRightQuats();
+                updateSegmentsAndJoints();
+                /*
+                Trace.WriteLine("eulerAngles");
+                foreach(float a in eulerAnglesZ)
+                {
+                    Trace.WriteLine(a);
+                }
+                */
+                ankleData[i] = (float)eulerAnglesZ[ankleIndex];
+                hipData[i] = (float)eulerAnglesZ[hipIndex];
+                kneeData[i] = (float)eulerAnglesZ[kneeIndex];
+            }
+            ankle.drawData(ankleData);
+            hip.drawData(hipData);
+            knee.drawData(kneeData);
         }
         public void processSerialData(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
@@ -223,6 +266,10 @@ namespace ibcdatacsharp.UI.SagitalAngles
         }
         public void calculateMounting()
         {
+            for(int i = 0; i < TOTAL_SENSORS; i++)
+            {
+                mQ_sensors_raw[i] = mQ_sensors_raw_list[0, i];
+            }
             Array.Copy(mQ_sensors_raw, mQ_sensors_ref, TOTAL_SENSORS);
             for (int iSen = 0; iSen <= 3; ++iSen)
             {
