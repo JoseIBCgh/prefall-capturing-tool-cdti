@@ -21,8 +21,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private int nextIndex = 0;
         private WpfPlot plot;
 
-        private const double MIN_Y = -360;
-        private const double MAX_Y = 360;
+        private const double MIN_Y = -180;
+        private const double MAX_Y = 180;
 
         private Color frameColor = Color.Black;
         private VLine lineFrame;

@@ -27,6 +27,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
         {
             InitializeComponent();
             model = new Model(plot);
+            model.valueEvent += onUpdateAngle;
             DataContext = this;
         }
         public void initCapture()
@@ -39,6 +40,10 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 model.updateData(data);
             });
+        }
+        private void onUpdateAngle(object sender, double value)
+        {
+            angle.Text = value.ToString("000.000");
         }
     }
 }

@@ -134,7 +134,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 for(int i = 0; i < imus.Count; i++)
                 {
                     byte handler = handlerFromMAC(imus[i].address);
-                    indices[handler] = imus[i].id;
+                    indices[handler] = imus[i].id; // Supone que los ids son (0, 1, 2, 3)
                 }
             }
             ankle.initCapture();
@@ -178,10 +178,9 @@ namespace ibcdatacsharp.UI.SagitalAngles
             updateLeftAndRightQuats();
             updateSegmentsAndJoints();
             Trace.WriteLine("result");
-            foreach(float a in eulerAnglesZ)
-            {
-                Trace.WriteLine(a);
-            }
+            ankle.drawData(new float[] { 0, 1, 90, 50 });
+            hip.drawData(new float[] { 0, 1, 90, 30 });
+            knee.drawData(new float[] { 0, 1, 90, 60 });
         }
         public void test2()
         {
