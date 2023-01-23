@@ -26,7 +26,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
         public GraphAnkle()
         {
             InitializeComponent();
-            model = new Model(plot);
+            model = new Model(plot, "Dorsiflexion", "Plantarflexion");
             model.valueEvent += onUpdateAngle;
             DataContext = this;
         }

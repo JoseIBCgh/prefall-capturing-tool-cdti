@@ -26,7 +26,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
         public GraphHip()
         {
             InitializeComponent();
-            model = new Model(plot);
+            model = new Model(plot, "Flexion", "Extension");
             model.valueEvent += onUpdateAngle;
             DataContext = this;
         }

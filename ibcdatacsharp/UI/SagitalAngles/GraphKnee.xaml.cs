@@ -26,7 +26,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
         public GraphKnee()
         {
             InitializeComponent();
-            model = new Model(plot);
+            model = new Model(plot, "Flexion", "Hyperextension");
             model.valueEvent += onUpdateAngle;
             DataContext = this;
         }

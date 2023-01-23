@@ -33,11 +33,22 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private const float zeroLineWidth = 0.5f;
 
         private Color dataColor = Color.Blue;
-        public Model(WpfPlot plot)
+        public Model(WpfPlot plot, string upper = "", string lower = "")
         {
             this.plot = plot;
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
             plot.Plot.SetAxisLimitsX(xMin: 0, xMax:MAX_POINTS);
+
+            Annotation upperAnnotation = plot.Plot.AddAnnotation(upper, -10, 10);
+            upperAnnotation.BackgroundColor = Color.Transparent;
+            upperAnnotation.BorderColor = Color.Transparent;
+            upperAnnotation.BorderWidth = 0;
+            upperAnnotation.Shadow = false;
+            Annotation lowerAnnotation = plot.Plot.AddAnnotation(lower, -10, -10);
+            lowerAnnotation.BackgroundColor = Color.Transparent;
+            lowerAnnotation.BorderColor = Color.Transparent;
+            lowerAnnotation.BorderWidth = 0;
+            lowerAnnotation.Shadow = false;
 
             lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, LineStyle.Dash);
             lineZero = plot.Plot.AddHorizontalLine(0, color: zeroColor, width: zeroLineWidth, LineStyle.Dash);
