@@ -286,6 +286,10 @@ namespace ibcdatacsharp.UI.SagitalAngles
         {
             if (mounted)
             {
+                for (int i = 0; i < TOTAL_SENSORS; i++)
+                {
+                    mQ_sensors_raw[i] = mQ_sensors_raw_list[0, i];
+                }
                 //Virtual axis
 
                 Quaternion Q_virtual_creator = mQ_sensors_raw[0];
