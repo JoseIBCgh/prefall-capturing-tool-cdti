@@ -153,10 +153,20 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button x:Name="startSagitalAngles">Sagital Angles</Button>
-            <Button x:Name="calculateMounting">Calculate mounting</Button>
-            <Button x:Name="saveFrontalReference">Save frontal reference</Button>
         </StackPanel>
+        <Button x:Name="startSagitalAngles" DockPanel.Dock="Left">
+            <StackPanel>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/sagitalAngles-icon.png"/>
+                <TextBlock>Sagital Angles</TextBlock>
+            </StackPanel>
+        </Button>
+        <Button x:Name="calculateMounting" DockPanel.Dock="Left">
+            <StackPanel>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/calculateMounting-icon.png"/>
+                <TextBlock>Calculate mounting</TextBlock>
+            </StackPanel>
+        </Button>
+        <Button x:Name="saveFrontalReference">Save frontal reference</Button>
         <Frame Visibility="Collapsed" Source="pack://application:,,,/UI/FileSaver/SavingMenu.xaml" x:Name="savingMenu" DockPanel.Dock="Right"/>
     </DockPanel>
 </Page>
