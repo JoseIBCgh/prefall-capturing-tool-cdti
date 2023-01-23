@@ -154,19 +154,24 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        <Button x:Name="startSagitalAngles" DockPanel.Dock="Left">
+        <Button x:Name="startSagitalAngles" DockPanel.Dock="Left" MaxWidth="70">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/sagitalAngles-icon.png"/>
-                <TextBlock>Sagital Angles</TextBlock>
+                <TextBlock FontSize="10" TextWrapping="Wrap">Sagital Angles</TextBlock>
             </StackPanel>
         </Button>
-        <Button x:Name="calculateMounting" DockPanel.Dock="Left">
+        <Button x:Name="calculateMounting" DockPanel.Dock="Left" MaxWidth="70">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/calculateMounting-icon.png"/>
-                <TextBlock>Calculate mounting</TextBlock>
+                <TextBlock FontSize="10" TextWrapping="Wrap">Calculate mounting</TextBlock>
             </StackPanel>
         </Button>
-        <Button x:Name="saveFrontalReference">Save frontal reference</Button>
+        <Button x:Name="saveFrontalReference" DockPanel.Dock="Left" MaxWidth="70">
+            <StackPanel>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/calculateMounting-icon.png"/>
+                <TextBlock FontSize="10" TextWrapping="Wrap">Save frontal reference</TextBlock>
+            </StackPanel>
+        </Button>
         <Frame Visibility="Collapsed" Source="pack://application:,,,/UI/FileSaver/SavingMenu.xaml" x:Name="savingMenu" DockPanel.Dock="Right"/>
     </DockPanel>
 </Page>

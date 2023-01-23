@@ -1,6 +1,8 @@
 ﻿using ibcdatacsharp.DeviceList.TreeClasses;
 using ibcdatacsharp.UI.Common;
 using ibcdatacsharp.UI.DeviceList;
+using ibcdatacsharp.UI.ToolBar;
+using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -8,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ibcdatacsharp.UI.SagitalAngles
 {
@@ -15,6 +18,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
     {
         private MainWindow mainWindow;
         private DeviceList.DeviceList deviceList;
+        private VirtualToolBar virtualToolBar;
 
         private int TOTAL_SENSORS = 4;
         private int TOTAL_JOINTS = 3;
@@ -49,12 +53,19 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private int hipIndex = 1;
         private int kneeIndex = 2;
 
+        private float fakets = 0f;
+        private int frame = 0;
+
         private bool mounted = false;
         private bool reference_saved = false;
 
         public SagitalAngles()
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
+            mainWindow.initialized += (sender, args) =>
+            {
+                virtualToolBar = mainWindow.virtualToolBar;
+            };
             if (mainWindow.deviceList.Content == null)
             {
                 mainWindow.deviceList.Navigated += (sender, args) =>
@@ -246,6 +257,18 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     ankle.drawData(ankleData);
                     hip.drawData(hipData);
                     knee.drawData(kneeData);
+                    if (virtualToolBar.recordState == RecordState.Recording)
+                    {
+                        string dataline = "";
+                        for (int i = 0; i < NUM_PACK; i++)
+                        {
+                            dataline += "1 " + (fakets + 0.01 * i).ToString("F2") + " " + (frame + i).ToString() + " " +
+                                ankleData[i].ToString("F2") + " " + hipData[i].ToString("F2") + " " +
+                                kneeData[i].ToString("F2");
+                        }
+                        frame += NUM_PACK;
+                        fakets += NUM_PACK * 0.01f;
+                    }
                 }
             }
         }
@@ -310,8 +333,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
                                                                                // result quaternion = (angle, 0, 0, 1)
 
                 mQ_virtual = Quaternion.Normalize(Qvirtual);
-                //Trace.WriteLine("mQ_virtual");
-                //Trace.WriteLine(mQ_virtual.ToString());
                 reference_saved = true;
             }
         }
@@ -326,8 +347,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
             mQ_right = mQ_virtual * Q_isb;
             mQ_right = Quaternion.Normalize(mQ_right);
-            //Trace.WriteLine("mQ_right");
-            //Trace.WriteLine(mQ_right.ToString());
         }
         public void updateSegmentsAndJoints()
         {
@@ -335,19 +354,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
             //this->compensateRawQuats(mQ_sensors_raw);
 
             Quaternion refLiveDifference, operateLeft;
-            /*
-            Trace.WriteLine("mQ_sensors_raw");
-            foreach (var sensor in mQ_sensors_raw)
-            {
-                Trace.WriteLine(sensor.ToString());
-            }
-
-            Trace.WriteLine("mQ_sensors_ref");
-            foreach (var sensor in mQ_sensors_ref)
-            {
-                Trace.WriteLine(sensor.ToString());
-            }
-            */
 
             // Store segments (ISB)
 
@@ -359,9 +365,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 refLiveDifference = Quaternion.Normalize(mQ_sensors_raw[iSensor]) * Quaternion.Conjugate(mQ_sensors_ref[iSensor]);
                 refLiveDifference = Quaternion.Normalize(refLiveDifference);
 
-                //Trace.WriteLine("mQ_left");
-                //Trace.WriteLine(mQ_left.ToString());
-
                 operateLeft = mQ_left * refLiveDifference;
                 operateLeft = Quaternion.Normalize(operateLeft);
 
@@ -369,13 +372,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 mQ_segments[iSensor] = Quaternion.Normalize(mQ_segments[iSensor]);
 
             }
-            /*
-            Trace.WriteLine("mQ_segments");
-            foreach(var sensor in mQ_segments)
-            {
-                Trace.WriteLine(sensor.ToString());
-            }
-            */
 
             // Store joints (ISB)
 
@@ -417,7 +413,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 {
                     sign = -1;
                 }
-                //Trace.WriteLine("eulerAnglesZ before change sign " + res[0]);
 
                 // LE QUITO EL SIGNO POR AHORA
 

@@ -77,6 +77,8 @@ namespace ibcdatacsharp.UI.ToolBar
         {
             get
             {
+                // Temporal para sagital angles
+                return virtualToolBar.buttonsEnabled && virtualToolBar.recordState == RecordState.RecordStopped;
                 return virtualToolBar.buttonsEnabled && virtualToolBar.capturing &&
                     virtualToolBar.recordState == RecordState.RecordStopped;
             }

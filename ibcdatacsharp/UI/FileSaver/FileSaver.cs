@@ -206,17 +206,19 @@ namespace ibcdatacsharp.UI.FileSaver
             {
                 csvFile = baseFilename + ".txt";
                 csvData = new StringBuilder();
-                if(deviceList.numIMUsUsed == 1)
+                switch (deviceList.numIMUsUsed)
                 {
-                    csvData.Append(Config.csvHeader1IMU);
-                }
-                else if(deviceList.numIMUsUsed == 2)
-                {
-                    csvData.Append(Config.csvHeader2IMUs);
-                }
-                else
-                {
-                    throw new Exception("try to record with " + deviceList.numIMUsUsed.ToString() + " IMUs");
+                    case 1:
+                        csvData.Append(Config.csvHeader1IMU);
+                        break;
+                    case 2:
+                        csvData.Append(Config.csvHeader2IMUs);
+                        break;
+                    case 4:
+                        csvData.Append(Config.csvHeaderSagital);
+                        break;
+                    default:
+                        throw new Exception("try to record with " + deviceList.numIMUsUsed.ToString() + " IMUs");
                 }
                 //initRecordCsv();
             }

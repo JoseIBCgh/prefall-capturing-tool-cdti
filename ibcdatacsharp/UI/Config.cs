@@ -37,6 +37,12 @@ namespace ibcdatacsharp.UI
             ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL
         ITEM	0	0	x	x	x	x	x	x	x	x	x"
         + "\n";
+        public const string csvHeaderSagital = @"DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT	DEFAULT
+            TIME	TIME	RIGHT_ANKLE	RIGHT_HIP	RIGHT_KNEE
+            FRAME_NUMBERS	ANALOG	ANALOG	ANALOG	ANALOG
+            ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL	ORIGINAL
+        ITEM	0	0	x	x	x"
+        + "\n";
         public static Color colorX = Color.Red;
         public static Color colorY = Color.Green;
         public static Color colorZ = Color.Blue;
