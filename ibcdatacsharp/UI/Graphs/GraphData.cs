@@ -1,9 +1,12 @@
-﻿using System;
+﻿using OpenCvSharp.XImgProc.Segmentation;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace ibcdatacsharp.UI.Graphs
 {
@@ -54,12 +57,123 @@ namespace ibcdatacsharp.UI.Graphs
         {
             get
             {
-                return frames[0].numIMUs();
+                return frames[0].numIMUs;
             }
         }
     }
+    #region Factories
+    public class FrameDataMetaFactory
+    {
+        public List<FrameDataFactory> factories;
+        private FrameDataFactory current;
+        public FrameDataMetaFactory()
+        {
+            factories = new List<FrameDataFactory>();
+            factories.Add(new FrameDataFactory1IMU());
+            factories.Add(new FrameDataFactory2IMUs());
+            factories.Add(new FrameDataFactorySagital());
+        }
+        public void changeHeader(string header)
+        {
+            int minSimilarity = int.MaxValue;
+            foreach(FrameDataFactory factory in factories)
+            {
+                int similarity = factory.compareSimilarity(header);
+                if(similarity < minSimilarity)
+                {
+                    minSimilarity = similarity;
+                    current = factory;
+                }
+            }
+            //current = factories.Aggregate((curMin, x) => curMin == null || (x.similarity ?? int.MaxValue) < x.similarity ? x : curMin);
+        }
+        public void addLine(string header)
+        {
+            current.addLine(header);
+        }
+        public GraphData getData()
+        {
+            return current.getData();
+        }
+    }
+    public abstract class FrameDataFactory
+    {
+        protected virtual string header { get; }
+        public abstract void addLine(string line);
+        public abstract GraphData getData();
+        public int compareSimilarity(string header)
+        {
+            int value1 = 0;
+            foreach (char c in this.header)
+            {
+                int tmp = c;
+                value1 += c;
+            }
+            int value2 = 0;
+            foreach (char c in header)
+            {
+                int tmp = c;
+                value2 += c;
+            }
+            int similarity = Math.Abs(value1 - value2);
+            return similarity;
+        }
+    }
+    public class FrameDataFactory1IMU : FrameDataFactory
+    {
+        protected override string header { get { return Config.csvHeader1IMU; } }
+        private List<FrameData1IMU> data;
+        public FrameDataFactory1IMU()
+        {
+            data = new List<FrameData1IMU>();
+        }
+        public override void addLine(string line)
+        {
+            data.Add(new FrameData1IMU(line));
+        }
+        public override GraphData getData()
+        {
+            return new GraphData(data.ToArray());
+        }
+    }
+    public class FrameDataFactory2IMUs : FrameDataFactory
+    {
+        protected override string header { get { return Config.csvHeader2IMUs; } }
+        private List<FrameData2IMUs> data;
+        public FrameDataFactory2IMUs()
+        {
+            data = new List<FrameData2IMUs>();
+        }
+        public override void addLine(string line)
+        {
+            data.Add(new FrameData2IMUs(line));
+        }
+        public override GraphData getData()
+        {
+            return new GraphData(data.ToArray());
+        }
+    }
+    public class FrameDataFactorySagital : FrameDataFactory
+    {
+        protected override string header { get { return Config.csvHeaderSagital; } }
+        private List<FrameDataSagital> data;
+        public FrameDataFactorySagital()
+        {
+            data = new List<FrameDataSagital>();
+        }
+        public override void addLine(string line)
+        {
+            data.Add(new FrameDataSagital(line));
+        }
+        public override GraphData getData()
+        {
+            return new GraphData(data.ToArray());
+        }
+    }
+    #endregion Factories
     public abstract class FrameData
     {
+        public virtual int numIMUs { get; }
         public double time { get; set; }
         public int frame { get; set; }
         protected double parseDouble(string s)
@@ -107,10 +221,10 @@ namespace ibcdatacsharp.UI.Graphs
                 return 0;
             }
         }
-        public abstract int numIMUs();
     }
     public class FrameData1IMU: FrameData
     {
+        public override int numIMUs { get { return 1; } }
         public double accX { get; set; }
         public double accY { get; set; }
         public double accZ { get; set; }
@@ -154,14 +268,10 @@ namespace ibcdatacsharp.UI.Graphs
             quatZ = getDouble(values, 17);
             quatW = getDouble(values, 18);
         }
-
-        public override int numIMUs()
-        {
-            return 1;
-        }
     }
     public class FrameData2IMUs : FrameData
     {
+        public override int numIMUs { get { return 2; } }
         public double angleX { get; set; }
         public double angleY { get; set; }
         public double angleZ { get; set; }
@@ -180,9 +290,22 @@ namespace ibcdatacsharp.UI.Graphs
             angularAcceleration = new Vector3(getFloat(values, 9), getFloat(values, 10),
                 getFloat(values, 11));
         }
-        public override int numIMUs()
+    }
+
+    public class FrameDataSagital : FrameData
+    {
+        public override int numIMUs { get { return 4; } }
+        public double rightAnkle { get; set; }
+        public double rightHip { get; set; }
+        public double rightKnee { get; set; }
+        public FrameDataSagital(string csvLine)
         {
-            return 2;
+            string[] values = csvLine.Split(' ');
+            time = getDouble(values, 1);
+            frame = getInt(values, 2);
+            rightAnkle = getDouble(values, 3);
+            rightHip = getDouble(values, 4);
+            rightKnee = getDouble(values, 5);
         }
     }
 }

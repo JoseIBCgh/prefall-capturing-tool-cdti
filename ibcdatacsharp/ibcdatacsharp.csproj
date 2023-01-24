@@ -203,34 +203,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="UI\Graphs\AngleGraphZ.xaml.cs">
+    <Compile Update="UI\Graphs\TwoIMU\AngleGraphZ.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\Graphs\AngleGraphY.xaml.cs">
+    <Compile Update="UI\Graphs\TwoIMU\AngleGraphY.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\SagitalAngles\GraphAnkle.xaml.cs">
+    <Compile Update="UI\Graphs\Sagital\GraphAnkle.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UI\SagitalAngles\GraphKnee.xaml.cs">
+    <Compile Update="UI\Graphs\Sagital\GraphKnee.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="UI\Graphs\AngleGraphZ.xaml">
+    <Page Update="UI\Graphs\TwoIMU\AngleGraphZ.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UI\Graphs\AngleGraphY.xaml">
+    <Page Update="UI\Graphs\TwoIMU\AngleGraphY.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UI\SagitalAngles\GraphAnkle.xaml">
+    <Page Update="UI\Graphs\Sagital\GraphAnkle.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UI\SagitalAngles\GraphKnee.xaml">
+    <Page Update="UI\Graphs\Sagital\GraphKnee.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

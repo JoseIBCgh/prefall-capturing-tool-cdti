@@ -35,19 +35,19 @@
                             <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
                                 <dock:LayoutAnchorablePane DockHeight="*" DockWidth="1.8*">
                                     <dock:LayoutAnchorable x:Name="angleXAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle X">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/AngleGraphX.xaml" x:Name="angleX"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/TwoIMU/AngleGraphX.xaml" x:Name="angleX"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="angleYAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle Y">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/AngleGraphY.xaml" x:Name="angleY"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/TwoIMU/AngleGraphY.xaml" x:Name="angleY"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="angleZAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Joint Angle Z">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/AngleGraphZ.xaml" x:Name="angleZ"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/TwoIMU/AngleGraphZ.xaml" x:Name="angleZ"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="angularVelocityAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Angular Velocity">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphAngularVelocity.xaml" x:Name="angularVelocity"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/TwoIMU/GraphAngularVelocity.xaml" x:Name="angularVelocity"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="angularAccelerationAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Angular Acceleration">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphAngularAcceleration.xaml" x:Name="angularAcceleration"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/TwoIMU/GraphAngularAcceleration.xaml" x:Name="angularAcceleration"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
                                 <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
@@ -59,30 +59,30 @@
                             <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="*" DockWidth="*">
                                 <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
                                     <dock:LayoutAnchorable x:Name="accelerometerAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Accelerometer">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphAccelerometer.xaml" x:Name="accelerometer"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/OneIMU/GraphAccelerometer.xaml" x:Name="accelerometer"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="gyroscopeAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Gyroscope">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphGyroscope.xaml" x:Name="gyroscope"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/OneIMU/GraphGyroscope.xaml" x:Name="gyroscope"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="magnetometerAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Magnetometer">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphMagnetometer.xaml" x:Name="magnetometer"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/OneIMU/GraphMagnetometer.xaml" x:Name="magnetometer"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="linAccAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Linear Acceleration">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphLinAcc.xaml" x:Name="linAcc"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/OneIMU/GraphLinAcc.xaml" x:Name="linAcc"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="quaternionAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Quaternions">
-                                        <Frame Source="pack://application:,,,/UI/Graphs/GraphQuaternion.xaml" x:Name="quaternions"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/OneIMU/GraphQuaternion.xaml" x:Name="quaternions"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
                                 <dock:LayoutAnchorablePane DockHeight="*" DockWidth="*">
                                     <dock:LayoutAnchorable x:Name="ankleAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Right ankle">
-                                        <Frame Source="pack://application:,,,/UI/SagitalAngles/GraphAnkle.xaml" x:Name="ankle"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/Sagital/GraphAnkle.xaml" x:Name="ankle"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="hipAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Right hip">
-                                        <Frame Source="pack://application:,,,/UI/SagitalAngles/GraphHip.xaml" x:Name="hip"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/Sagital/GraphHip.xaml" x:Name="hip"/>
                                     </dock:LayoutAnchorable>
                                     <dock:LayoutAnchorable x:Name="kneeAnchorable" CanClose="False" CanFloat="True" CanHide="True" CanAutoHide="False" Title="Right knee">
-                                        <Frame Source="pack://application:,,,/UI/SagitalAngles/GraphKnee.xaml" x:Name="knee"/>
+                                        <Frame Source="pack://application:,,,/UI/Graphs/Sagital/GraphKnee.xaml" x:Name="knee"/>
                                     </dock:LayoutAnchorable>
                                 </dock:LayoutAnchorablePane>
                             </dock:LayoutAnchorablePaneGroup>

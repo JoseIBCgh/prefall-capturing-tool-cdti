@@ -1,0 +1,33 @@
+﻿<Page x:Class="ibcdatacsharp.UI.Graphs.TwoIMU.AngleGraphY"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ibcdatacsharp.UI.Graphs"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AngleGraphX">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <WpfPlot Grid.Row="1"  x:Name="plot"/>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Border Padding="10 0 10 0" BorderThickness="1" BorderBrush="Red">
+                <TextBlock FontSize="36" VerticalAlignment="Center" x:Name="angle" Foreground="Red">000.000</TextBlock>
+            </Border>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="16" VerticalAlignment="Center">Offset</TextBlock>
+                    <Border Margin="2 0 0 0" BorderThickness="1" BorderBrush="Blue">
+                        <TextBox FontSize="24" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Center" x:Name="offset">0.0</TextBox>
+                    </Border>
+                </StackPanel>
+                <Button VerticalAlignment="Center" FontSize="12" Click="onSetOffset">Set Offset</Button>
+                <Button VerticalAlignment="Center" FontSize="12" Click="onClearOffset">Clear</Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

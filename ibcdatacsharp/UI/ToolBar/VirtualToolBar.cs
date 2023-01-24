@@ -12,6 +12,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using System.Linq;
 using static System.Net.WebRequestMethods;
+using System.Windows.Markup;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -307,58 +308,80 @@ namespace ibcdatacsharp.UI.ToolBar
             } 
             GraphData extractCSV(string filename)
             {
-                // Deberia dar un valor proporcional a como de diferentes son 2 strings
-                int diference(string s1, string s2)
-                {
-                    int value1 = 0;
-                    foreach (char c in s1)
-                    {
-                        int tmp = c;
-                        value1 += c;
-                    }
-                    int value2 = 0;
-                    foreach (char c in s2)
-                    {
-                        int tmp = c;
-                        value2 += c;
-                    }
-                    return Math.Abs(value1 - value2);
-                }
                 using (var reader = new StreamReader(filename))
                 {
                     int headerLines = Config.csvHeader1IMU.Split('\n').Length - 1; //Hay un salto de linea al final del header
                     string header = "";
-                    for(int _ = 0; _ < headerLines; _++)
+                    for (int _ = 0; _ < headerLines; _++)
                     {
                         header += reader.ReadLine() + "\n";
                     }
-                    Trace.WriteLine(header);
-                    int diference1IMU = diference(header, Config.csvHeader1IMU);
-                    int diference2IMUs = diference(header, Config.csvHeader2IMUs);
-                    Trace.WriteLine("diference 1 IMU " + diference1IMU);
-                    Trace.WriteLine("diference 2 IMUs " + diference2IMUs);
-                    if(diference1IMU < diference2IMUs)
+                    FrameDataMetaFactory factory = new FrameDataMetaFactory();
+                    factory.changeHeader(header);
+                    while (!reader.EndOfStream)
                     {
-                        List<FrameData1IMU> data = new List<FrameData1IMU>();
-                        while (!reader.EndOfStream)
-                        {
-                            string line = reader.ReadLine();
-                            data.Add(new FrameData1IMU(line));
-                        }
-                        return new GraphData(data.ToArray());
+                        string line = reader.ReadLine();
+                        factory.addLine(line);
                     }
-                    else
-                    {
-                        List<FrameData2IMUs> data = new List<FrameData2IMUs>();
-                        while (!reader.EndOfStream)
-                        {
-                            string line = reader.ReadLine();
-                            data.Add(new FrameData2IMUs(line));
-                        }
-                        return new GraphData(data.ToArray());
-                    }
+                    return factory.getData();
                 }
-            }
+                    /*
+                    // Deberia dar un valor proporcional a como de diferentes son 2 strings
+                    int diference(string s1, string s2)
+                    {
+                        int value1 = 0;
+                        foreach (char c in s1)
+                        {
+                            int tmp = c;
+                            value1 += c;
+                        }
+                        int value2 = 0;
+                        foreach (char c in s2)
+                        {
+                            int tmp = c;
+                            value2 += c;
+                        }
+                        return Math.Abs(value1 - value2);
+                    }
+                    using (var reader = new StreamReader(filename))
+                    {
+                        int headerLines = Config.csvHeader1IMU.Split('\n').Length - 1; //Hay un salto de linea al final del header
+                        string header = "";
+                        for(int _ = 0; _ < headerLines; _++)
+                        {
+                            header += reader.ReadLine() + "\n";
+                        }
+                        FrameDataMetaFactory factory = new FrameDataMetaFactory();
+                        factory.changeHeader(header);
+
+                        Trace.WriteLine(header);
+                        int diference1IMU = diference(header, Config.csvHeader1IMU);
+                        int diference2IMUs = diference(header, Config.csvHeader2IMUs);
+                        Trace.WriteLine("diference 1 IMU " + diference1IMU);
+                        Trace.WriteLine("diference 2 IMUs " + diference2IMUs);
+                        if(diference1IMU < diference2IMUs)
+                        {
+                            List<FrameData1IMU> data = new List<FrameData1IMU>();
+                            while (!reader.EndOfStream)
+                            {
+                                string line = reader.ReadLine();
+                                data.Add(new FrameData1IMU(line));
+                            }
+                            return new GraphData(data.ToArray());
+                        }
+                        else
+                        {
+                            List<FrameData2IMUs> data = new List<FrameData2IMUs>();
+                            while (!reader.EndOfStream)
+                            {
+                                string line = reader.ReadLine();
+                                data.Add(new FrameData2IMUs(line));
+                            }
+                            return new GraphData(data.ToArray());
+                        }
+                    }
+                    */
+                }
             void setTimeLineLimits(GraphData csvData, string videoPath)
             {
                 // Funcion para obtener la longitud del timeLine (se puede cambiar)

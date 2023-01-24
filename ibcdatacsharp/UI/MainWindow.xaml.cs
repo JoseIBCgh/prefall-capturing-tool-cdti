@@ -30,6 +30,7 @@ using ibcdatacsharp.EKF;
 using Microsoft.VisualBasic.ApplicationServices;
 using ibcdatacsharp.UI.Common;
 using ibcdatacsharp.UI.Filters;
+using ibcdatacsharp.UI.Graphs;
 
 namespace ibcdatacsharp.UI
 {
@@ -148,6 +149,7 @@ namespace ibcdatacsharp.UI
             //EKF.EKF.test();
             //Test linear acceleration
             //LinearAcceleration.test();
+            fileSaver.saveFakeFileSagital(Config.INITIAL_PATH, "test.txt");
         }
 
         /** 

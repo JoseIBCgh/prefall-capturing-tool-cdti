@@ -1,6 +1,7 @@
 ﻿using ibcdatacsharp.DeviceList.TreeClasses;
 using ibcdatacsharp.UI.Common;
 using ibcdatacsharp.UI.DeviceList;
+using ibcdatacsharp.UI.Graphs.Sagital;
 using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
@@ -268,6 +269,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                         }
                         frame += NUM_PACK;
                         fakets += NUM_PACK * 0.01f;
+                        mainWindow.fileSaver.appendCSVManual(dataline);
                     }
                 }
             }

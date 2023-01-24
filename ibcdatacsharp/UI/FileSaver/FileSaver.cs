@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Navigation;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
@@ -185,22 +186,22 @@ namespace ibcdatacsharp.UI.FileSaver
                 filesAdded?.Invoke(this, files);
             }
         }
+        private string fileName()
+        {
+            DateTime now = DateTime.Now;
+            string year = now.Year.ToString();
+            string month = now.Month.ToString().PadLeft(2, '0');
+            string day = now.Day.ToString().PadLeft(2, '0');
+            string hour = now.Hour.ToString().PadLeft(2, '0');
+            string minute = now.Minute.ToString().PadLeft(2, '0');
+            string second = now.Second.ToString().PadLeft(2, '0');
+            string milisecond = now.Millisecond.ToString().PadLeft(3, '0');
+            string filename = year + month + day + '-' + hour + '-' + minute + '-' + second + '-' + milisecond;
+            return filename;
+        }
         // inicializa los ficheros para guardar csv y video
         private void initFiles()
         {
-            string fileName()
-            {
-                DateTime now = DateTime.Now;
-                string year = now.Year.ToString();
-                string month = now.Month.ToString().PadLeft(2, '0');
-                string day = now.Day.ToString().PadLeft(2, '0');
-                string hour = now.Hour.ToString().PadLeft(2, '0');
-                string minute = now.Minute.ToString().PadLeft(2, '0');
-                string second = now.Second.ToString().PadLeft(2, '0');
-                string milisecond = now.Millisecond.ToString().PadLeft(3, '0');
-                string filename = year + month + day + '-' + hour + '-' + minute + '-' + second + '-' + milisecond;
-                return filename;
-            }
             string baseFilename = fileName();
             if (recordCSV)
             {
@@ -301,6 +302,27 @@ namespace ibcdatacsharp.UI.FileSaver
                 videoWriter.Dispose();
                 videoWriter = null;
             }
+        }
+        public void saveFakeFileSagital(string path, string filename)
+        {
+            float randomAngle()
+            {
+                Random random = new Random();
+                float n = random.NextSingle();
+                return n * 360 - 180;
+            }
+            csvData = new StringBuilder();
+            csvData.Append(Config.csvHeaderSagital);
+            int numFrames = 1000;
+            for(int i = 0; i < numFrames; i++)
+            {
+                string line = "1 " + (0.01 * i).ToString("F2") + " " + (i).ToString() + " " +
+                                randomAngle().ToString("F2") + " " + randomAngle().ToString("F2") + " " +
+                                randomAngle().ToString("F2") + "\n";
+                csvData.Append(line);
+            }
+            string filePath = path + Path.DirectorySeparatorChar + filename;
+            File.WriteAllTextAsync(filePath, csvData.ToString());
         }
     }
 }
