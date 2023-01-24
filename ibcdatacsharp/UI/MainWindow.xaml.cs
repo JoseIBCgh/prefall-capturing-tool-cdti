@@ -372,7 +372,6 @@ namespace ibcdatacsharp.UI
                 toolBarClass.record.Click += new RoutedEventHandler(onRecord);
                 toolBarClass.capturedFiles.Click += new RoutedEventHandler(onCapturedFiles);
                 #region SAGITAL ANGLES
-                toolBarClass.startSagitalAngles.Click += new RoutedEventHandler(onStartSagitalAngles);
                 toolBarClass.calculateMounting.Click += new RoutedEventHandler(onCalculateMounting);
                 toolBarClass.saveFrontalReference.Click += new RoutedEventHandler(onSaveFrontalReference);
                 #endregion SAGITAL ANGLES
@@ -726,26 +725,6 @@ namespace ibcdatacsharp.UI
             virtualToolBar.openClick();
         }
         #region SAGITAL ANGLES
-        private void onStartSagitalAngles(object sender, EventArgs e)
-        {
-            DeviceList.DeviceList deviceListClass = deviceList.Content as DeviceList.DeviceList;
-            if (deviceListClass.IMUsUsed.Count == 4) // Comprobar si hay 4 IMUs ???
-            {
-                sagitalAngles.initIMUs();
-                foreach (IMUInfo imu in deviceListClass.IMUsUsed)
-                {
-                    if (!api.StartStream(handler(imu), out error))
-                    {
-                        Trace.WriteLine("error: " + error);
-                    }
-                }
-                api.dataReceived += sagitalAngles.processSerialData;
-            }
-            else
-            {
-                MessageBox.Show("Hay " + deviceListClass.IMUsUsed.Count + " IMUs seleccionados. Tienes que seleccionar 4.", "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.Yes);
-            }
-        }
         private void onCalculateMounting(object sender, EventArgs e)
         {
             sagitalAngles.calculateMounting();

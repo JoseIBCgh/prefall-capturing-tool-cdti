@@ -13,6 +13,8 @@ using ibcdatacsharp.DeviceList.TreeClasses;
 using ibcdatacsharp.UI.Filters;
 using ibcdatacsharp.UI.Graphs.OneIMU;
 using ibcdatacsharp.UI.Graphs.TwoIMU;
+using ibcdatacsharp.UI.Graphs.Sagital;
+using ibcdatacsharp.UI.SagitalAngles;
 
 namespace ibcdatacsharp.UI.Graphs
 {
@@ -74,13 +76,15 @@ namespace ibcdatacsharp.UI.Graphs
                 mainWindow.deviceList.Navigated += delegate (object sender, NavigationEventArgs e)
                 {
                     DeviceList.DeviceList deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
-                    captureManager = new CaptureManager(graphs1IMU, graphs2IMU, virtualToolBar, device, deviceList, filterManager);
+                    captureManager = new CaptureManager(graphs1IMU, graphs2IMU, graphsSagital,
+                        virtualToolBar, device, deviceList, filterManager);
                 };
             }
             else
             {
                 DeviceList.DeviceList deviceList = mainWindow.deviceList.Content as DeviceList.DeviceList;
-                captureManager = new CaptureManager(graphs1IMU, graphs2IMU, virtualToolBar, device, deviceList, filterManager);
+                captureManager = new CaptureManager(graphs1IMU, graphs2IMU, graphsSagital,
+                    virtualToolBar, device, deviceList, filterManager);
             }
         }
         public void initReplay(GraphData data)
@@ -122,6 +126,7 @@ namespace ibcdatacsharp.UI.Graphs
         //private System.Timers.Timer timerRender;
         private List<Frame> graphs1IMU;
         private List<Frame> graphs2IMU;
+        private List<Frame> graphsSagital;
         private VirtualToolBar virtualToolBar;
         private Device.Device device;
         private DeviceList.DeviceList deviceList;
@@ -140,7 +145,13 @@ namespace ibcdatacsharp.UI.Graphs
         public GraphAngularVelocity angleVel;
         public GraphAngularAcceleration angleAcc;
 
+        public GraphAnkle ankle;
+        public GraphHip hip;
+        public GraphKnee knee;
+
         private int numIMUs;
+
+        private SagitalAngles.SagitalAngles sagitalAngles;
 
         MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
@@ -195,11 +206,14 @@ namespace ibcdatacsharp.UI.Graphs
         public delegate void QuaternionEventHandler(object sender, byte handler, Quaternion q);
         public event QuaternionEventHandler quaternionEvent;
         //End Wise
-        public CaptureManager(List<Frame> graphs1IMU, List<Frame> graphs2IMU, VirtualToolBar virtualToolBar, Device.Device device, DeviceList.DeviceList deviceList, FilterManager filterManager)
+        public CaptureManager(List<Frame> graphs1IMU, List<Frame> graphs2IMU, List<Frame> graphsSagital,
+            VirtualToolBar virtualToolBar, Device.Device device, DeviceList.DeviceList deviceList, 
+            FilterManager filterManager)
         {
             active = false;
             this.graphs1IMU = graphs1IMU;
             this.graphs2IMU = graphs2IMU;
+            this.graphsSagital = graphsSagital;
             this.virtualToolBar = virtualToolBar;
             this.device = device;
             this.deviceList = deviceList;
@@ -213,6 +227,8 @@ namespace ibcdatacsharp.UI.Graphs
             refq.X = -0.189621f;
             refq.Y = 0.693031f;
             refq.Z = -0.672846f;
+
+            sagitalAngles = new SagitalAngles.SagitalAngles();
         }
         public void setReference(Quaternion q)
         {
@@ -404,6 +420,39 @@ namespace ibcdatacsharp.UI.Graphs
             {
                 quaternions = mainWindow.quaternions.Content as GraphQuaternion;
             }
+            if (mainWindow.ankle.Content == null)
+            {
+                mainWindow.ankle.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    ankle = mainWindow.ankle.Content as GraphAnkle;
+                };
+            }
+            else
+            {
+                ankle = mainWindow.ankle.Content as GraphAnkle;
+            }
+            if (mainWindow.hip.Content == null)
+            {
+                mainWindow.hip.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    hip = mainWindow.hip.Content as GraphHip;
+                };
+            }
+            else
+            {
+                hip = mainWindow.hip.Content as GraphHip;
+            }
+            if (mainWindow.knee.Content == null)
+            {
+                mainWindow.knee.Navigated += delegate (object sender, NavigationEventArgs e)
+                {
+                    knee = mainWindow.knee.Content as GraphKnee;
+                };
+            }
+            else
+            {
+                knee = mainWindow.knee.Content as GraphKnee;
+            }
         }
 
 
@@ -427,6 +476,43 @@ namespace ibcdatacsharp.UI.Graphs
                 {
                     numIMUs = (mainWindow.deviceList.Content as DeviceList.DeviceList).numIMUsUsed;
                     Trace.WriteLine(numIMUs);
+                    List<Frame>? graphs = null;
+                    switch (numIMUs)
+                    {
+                        case 1:
+                            graphs = graphs1IMU;
+                            break;
+                        case 2:
+                            graphs = graphs2IMU;
+                            break;
+                        case 4:
+                            graphs = graphsSagital;
+                            break;
+                    }
+                    if (graphs != null)
+                    {
+                        foreach (Frame frame in graphs)
+                        {
+                            if (frame.Content == null)
+                            {
+                                frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                                {
+                                    // Todos los grafos deberian implementar esta interface
+                                    GraphInterface graph = frame.Content as GraphInterface;
+
+                                    graph.initCapture();
+                                };
+                            }
+                            else
+                            {
+                                GraphInterface graph = frame.Content as GraphInterface;
+                                graph.initCapture();
+                            }
+                        }
+                        virtualToolBar.stopEvent += onStop;
+                    }
+
+                    /*
                     if (numIMUs == 1)
                     {
                         foreach (Frame frame in graphs1IMU)
@@ -496,6 +582,7 @@ namespace ibcdatacsharp.UI.Graphs
                                                         //{
                                                         //timerRender.Start();
                                                         //}
+                    */
 
                 });
             }
@@ -511,10 +598,61 @@ namespace ibcdatacsharp.UI.Graphs
         }
         public void deactivate()
         {
+            void deactivateGraphs(List<Frame> graphs)
+            {
+                foreach (Frame frame in graphs)
+                {
+                    if (frame.Content == null)
+                    {
+                        frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                        {
+                            // Todos los grafos deberian implementar esta interface
+                            GraphInterface graph = frame.Content as GraphInterface;
+                            graph.clearData();
+                            graph.initCapture();
+                        };
+                    }
+                    else
+                    {
+                        GraphInterface graph = frame.Content as GraphInterface;
+                        graph.clearData();
+                        graph.initCapture();
+                    }
+                }
+            }
             if (active)
             {
                 active = false;
-                //timerRender.Stop();
+                //Opcion 1 desactivar todos los graficos
+                deactivateGraphs(graphs1IMU);
+                deactivateGraphs(graphs2IMU);
+                deactivateGraphs(graphsSagital);
+                virtualToolBar.stopEvent -= onStop; //funcion local
+                mainWindow.api.StopStream(out error);
+                //Opcion 2 desactivar solo los graficos que toquen no se si funciona
+                /*
+                List<Frame>? graphs = null;
+                switch (numIMUs)
+                {
+                    case 1:
+                        graphs = graphs1IMU;
+                        break;
+                    case 2:
+                        graphs = graphs2IMU;
+                        break;
+                    case 4:
+                        graphs = graphsSagital;
+                        break;
+                }
+                if(graphs != null)
+                {
+                    deactivateGraphs(graphs);
+                    virtualToolBar.stopEvent -= onStop; //funcion local
+                    mainWindow.api.StopStream(out error);
+                }
+                */
+
+                /*
                 foreach (Frame frame in graphs1IMU)
                 {
                     if (frame.Content == null)
@@ -562,6 +700,7 @@ namespace ibcdatacsharp.UI.Graphs
                 //timerRender.Dispose();
 
                 mainWindow.api.StopStream(out error);
+                */
             }
         }
         public void reset()
@@ -572,6 +711,47 @@ namespace ibcdatacsharp.UI.Graphs
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     numIMUs = (mainWindow.deviceList.Content as DeviceList.DeviceList).numIMUsUsed;
+                    List<Frame>? graphs = null;
+                    switch (numIMUs)
+                    {
+                        case 1:
+                            graphs = graphs1IMU;
+                            break;
+                        case 2:
+                            graphs = graphs2IMU;
+                            break;
+                        case 4:
+                            graphs = graphsSagital;
+                            break;
+                    }
+                    if(graphs != null)
+                    {
+                        foreach (Frame frame in graphs)
+                        {
+                            if (frame.Content == null)
+                            {
+                                frame.Navigated += delegate (object sender, NavigationEventArgs e)
+                                {
+                                    // Todos los grafos deberian implementar esta interface
+                                    GraphInterface graph = frame.Content as GraphInterface;
+                                    graph.clearData();
+                                    graph.initCapture();
+                                };
+                            }
+                            else
+                            {
+                                GraphInterface graph = frame.Content as GraphInterface;
+                                graph.clearData();
+                                graph.initCapture();
+                            }
+                        }
+                        mainWindow.api.StopStream(out error);
+                        if (virtualToolBar.pauseState == PauseState.Play)
+                        {
+                            mainWindow.startActiveDevices();
+                        }
+                    }
+                    /*
                     if (numIMUs == 1)
                     {
                         foreach (Frame frame in graphs1IMU)
@@ -621,6 +801,7 @@ namespace ibcdatacsharp.UI.Graphs
                     {
                         mainWindow.startActiveDevices();
                     }
+                    */
                 });
             }
         }
@@ -862,6 +1043,9 @@ namespace ibcdatacsharp.UI.Graphs
                         frame += 4;
                         fakets += 0.04f;
                     }
+                    break;
+                case 4:
+                    sagitalAngles.processSerialData(deviceHandler, data);
                     break;
             }
             /*
