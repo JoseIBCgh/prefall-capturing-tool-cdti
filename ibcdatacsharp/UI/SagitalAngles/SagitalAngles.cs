@@ -233,6 +233,10 @@ namespace ibcdatacsharp.UI.SagitalAngles
         }
         public void processSerialData(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
+            if(indices == null)
+            {
+                return;
+            }
             int index = handlerToIndex(deviceHandler);
             for(int i = 0; i < NUM_PACK; i++)
             {
@@ -313,6 +317,10 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 }
                 mounted = true;
                 MessageBox.Show("Sensor Mounting Done", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
+            }
+            else
+            {
+                MessageBox.Show("Para calcular el mounting es necesario estar stremeando con 4 IMUs", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
             }
         }
         public void calculateVirtualOrientation()
