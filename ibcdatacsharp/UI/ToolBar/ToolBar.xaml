@@ -162,7 +162,7 @@
         </Button>
         <Button x:Name="saveFrontalReference" DockPanel.Dock="Left" MaxWidth="70">
             <StackPanel>
-                <Image Source="pack://application:,,,/UI/ToolBar/Icons/calculateMounting-icon.png"/>
+                <Image Source="pack://application:,,,/UI/ToolBar/Icons/saveFrontalReference-icon.png"/>
                 <TextBlock FontSize="10" TextWrapping="Wrap">Save frontal reference</TextBlock>
             </StackPanel>
         </Button>

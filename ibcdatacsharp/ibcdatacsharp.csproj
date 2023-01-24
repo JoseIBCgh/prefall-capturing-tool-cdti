@@ -41,11 +41,13 @@
     <None Remove="UI\ToolBar\Icons\connect-icon.png" />
     <None Remove="UI\ToolBar\Icons\disconnect-icon.png" />
     <None Remove="UI\ToolBar\Icons\openCamera-icon.png" />
+    <None Remove="UI\ToolBar\Icons\OriginalcalculateMounting-icon.png" />
     <None Remove="UI\ToolBar\Icons\pause-icon.png" />
     <None Remove="UI\ToolBar\Icons\play-pause-icon.png" />
     <None Remove="UI\ToolBar\Icons\record-recording-icon.png" />
     <None Remove="UI\ToolBar\Icons\record-stop-icon.png" />
     <None Remove="UI\ToolBar\Icons\sagitalAngles-icon.png" />
+    <None Remove="UI\ToolBar\Icons\saveFrontalReference-icon.png" />
     <None Remove="UI\ToolBar\Icons\scan-icon.png" />
     <None Remove="UI\ToolBar\Icons\stop-icon.png" />
   </ItemGroup>
@@ -164,6 +166,9 @@
     <Resource Include="UI\ToolBar\Icons\calculateMounting-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="UI\ToolBar\Icons\OriginalcalculateMounting-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="UI\ToolBar\Icons\capture-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -192,6 +197,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\sagitalAngles-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\saveFrontalReference-icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="UI\ToolBar\Icons\scan-icon.png">
