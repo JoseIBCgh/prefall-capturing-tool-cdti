@@ -112,7 +112,7 @@ namespace ibcdatacsharp.UI
         public List<int> devHandlers;
         public FilterManager filterManager;
 
-        private SagitalAngles.SagitalAngles sagitalAngles;
+        public SagitalAngles.SagitalAngles sagitalAngles;
 
         //end Wiseware API
         public MainWindow()
@@ -149,7 +149,6 @@ namespace ibcdatacsharp.UI
             //EKF.EKF.test();
             //Test linear acceleration
             //LinearAcceleration.test();
-            fileSaver.saveFakeFileSagital(Config.INITIAL_PATH, "test.txt");
         }
 
         /** 

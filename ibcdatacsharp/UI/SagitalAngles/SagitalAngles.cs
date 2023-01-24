@@ -4,14 +4,18 @@ using ibcdatacsharp.UI.DeviceList;
 using ibcdatacsharp.UI.Graphs.Sagital;
 using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
+using MS.WindowsAPICodePack.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace ibcdatacsharp.UI.SagitalAngles
 {
@@ -296,16 +300,20 @@ namespace ibcdatacsharp.UI.SagitalAngles
         }
         public void calculateMounting()
         {
-            for(int i = 0; i < TOTAL_SENSORS; i++)
+            if (mQ_sensors_raw != null)
             {
-                mQ_sensors_raw[i] = mQ_sensors_raw_list[0, i];
+                for (int i = 0; i < TOTAL_SENSORS; i++)
+                {
+                    mQ_sensors_raw[i] = mQ_sensors_raw_list[0, i];
+                }
+                Array.Copy(mQ_sensors_raw, mQ_sensors_ref, TOTAL_SENSORS);
+                for (int iSen = 0; iSen <= 3; ++iSen)
+                {
+                    mQ_sensors_ref[iSen] = Quaternion.Normalize(mQ_sensors_ref[iSen]);
+                }
+                mounted = true;
+                MessageBox.Show("Sensor Mounting Done", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
             }
-            Array.Copy(mQ_sensors_raw, mQ_sensors_ref, TOTAL_SENSORS);
-            for (int iSen = 0; iSen <= 3; ++iSen)
-            {
-                mQ_sensors_ref[iSen] = Quaternion.Normalize(mQ_sensors_ref[iSen]);
-            }
-            mounted = true;
         }
         public void calculateVirtualOrientation()
         {
@@ -336,6 +344,10 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
                 mQ_virtual = Quaternion.Normalize(Qvirtual);
                 reference_saved = true;
+                string message = "Frontal Reference Done\n" + "Q_virtual_creator: " +
+                    mQ_virtual.X.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.Y.ToString("0.#", CultureInfo.InvariantCulture) + ", " +
+                    mQ_virtual.Z.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.W.ToString("0.#", CultureInfo.InvariantCulture);
+                MessageBox.Show(message, "Info" , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
             }
         }
         public void updateLeftAndRightQuats()
