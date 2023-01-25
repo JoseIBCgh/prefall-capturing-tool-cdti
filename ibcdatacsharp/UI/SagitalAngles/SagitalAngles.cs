@@ -61,9 +61,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private float fakets = 0f;
         private int frame = 0;
 
-        private bool mounted = false;
-        private bool reference_saved = false;
-
         public SagitalAngles()
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
@@ -133,6 +130,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 knee = mainWindow.knee.Content as GraphKnee;
             }
+            quaternionCalcsConnect();
         }
         // Inicializa el indice que correspone a cada handler
         public void initIMUs()
@@ -216,13 +214,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 }
                 updateLeftAndRightQuats();
                 updateSegmentsAndJoints();
-                /*
-                Trace.WriteLine("eulerAngles");
-                foreach(float a in eulerAnglesZ)
-                {
-                    Trace.WriteLine(a);
-                }
-                */
                 ankleData[i] = (float)eulerAnglesZ[ankleIndex];
                 hipData[i] = (float)eulerAnglesZ[hipIndex];
                 kneeData[i] = (float)eulerAnglesZ[kneeIndex];
@@ -242,43 +233,40 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 mQ_sensors_raw_list[i, index] = new Quaternion((float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z, (float)data.Quat[i].W);
             }
-            if (mounted && reference_saved)
+            updated_quats[index] = true;
+            if (updated_quats.All(x => x)) // si todos son true
             {
-                updated_quats[index] = true;
-                if (updated_quats.All(x => x)) // si todos son true
+                updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
+                float[] ankleData = new float[NUM_PACK];
+                float[] hipData = new float[NUM_PACK];
+                float[] kneeData = new float[NUM_PACK];
+                for (int i = 0; i < NUM_PACK; i++)
                 {
-                    updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
-                    float[] ankleData = new float[NUM_PACK];
-                    float[] hipData = new float[NUM_PACK];
-                    float[] kneeData = new float[NUM_PACK];
+                    for (int s = 0; s < TOTAL_SENSORS; s++)
+                    {
+                        mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
+                    }
+                    updateLeftAndRightQuats();
+                    updateSegmentsAndJoints();
+                    ankleData[i] = (float)eulerAnglesZ[ankleIndex];
+                    hipData[i] = (float)eulerAnglesZ[hipIndex];
+                    kneeData[i] = (float)eulerAnglesZ[kneeIndex];
+                }
+                ankle.drawData(ankleData);
+                hip.drawData(hipData);
+                knee.drawData(kneeData);
+                if (virtualToolBar.recordState == RecordState.Recording)
+                {
+                    string dataline = "";
                     for (int i = 0; i < NUM_PACK; i++)
                     {
-                        for (int s = 0; s < TOTAL_SENSORS; s++)
-                        {
-                            mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
-                        }
-                        updateLeftAndRightQuats();
-                        updateSegmentsAndJoints();
-                        ankleData[i] = (float)eulerAnglesZ[ankleIndex];
-                        hipData[i] = (float)eulerAnglesZ[hipIndex];
-                        kneeData[i] = (float)eulerAnglesZ[kneeIndex];
+                        dataline += "1 " + (fakets + 0.01 * i).ToString("F2") + " " + (frame + i).ToString() + " " +
+                            ankleData[i].ToString("F2") + " " + hipData[i].ToString("F2") + " " +
+                            kneeData[i].ToString("F2");
                     }
-                    ankle.drawData(ankleData);
-                    hip.drawData(hipData);
-                    knee.drawData(kneeData);
-                    if (virtualToolBar.recordState == RecordState.Recording)
-                    {
-                        string dataline = "";
-                        for (int i = 0; i < NUM_PACK; i++)
-                        {
-                            dataline += "1 " + (fakets + 0.01 * i).ToString("F2") + " " + (frame + i).ToString() + " " +
-                                ankleData[i].ToString("F2") + " " + hipData[i].ToString("F2") + " " +
-                                kneeData[i].ToString("F2");
-                        }
-                        frame += NUM_PACK;
-                        fakets += NUM_PACK * 0.01f;
-                        mainWindow.fileSaver.appendCSVManual(dataline);
-                    }
+                    frame += NUM_PACK;
+                    fakets += NUM_PACK * 0.01f;
+                    mainWindow.fileSaver.appendCSVManual(dataline);
                 }
             }
         }
@@ -296,67 +284,60 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
             for (int i = 0; i < TOTAL_SENSORS; i++)
             {
+                for(int j = 0; j < NUM_PACK; j++)
+                {
+                    mQ_sensors_raw_list[j, i] = idenQuat;
+                }
                 mQ_sensors_raw[i] = idenQuat;
                 mQ_segments[i] = idenQuat;
                 mQ_sensors_ref[i] = idenQuat;
                 mQ_compensate[i] = idenQuat;
             }
+
+            mQ_virtual = Quaternion.Identity;
         }
         public void calculateMounting()
         {
-            if (mQ_sensors_raw != null)
+            Array.Copy(mQ_sensors_raw, mQ_sensors_ref, TOTAL_SENSORS);
+            for (int iSen = 0; iSen <= 3; ++iSen)
             {
-                for (int i = 0; i < TOTAL_SENSORS; i++)
-                {
-                    mQ_sensors_raw[i] = mQ_sensors_raw_list[0, i];
-                }
-                Array.Copy(mQ_sensors_raw, mQ_sensors_ref, TOTAL_SENSORS);
-                for (int iSen = 0; iSen <= 3; ++iSen)
-                {
-                    mQ_sensors_ref[iSen] = Quaternion.Normalize(mQ_sensors_ref[iSen]);
-                }
-                mounted = true;
-                MessageBox.Show("Sensor Mounting Done", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
+                mQ_sensors_ref[iSen] = Quaternion.Normalize(mQ_sensors_ref[iSen]);
             }
-            else
-            {
-                MessageBox.Show("Para calcular el mounting es necesario estar stremeando con 4 IMUs", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-            }
+            MessageBox.Show("Sensor Mounting Done", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
         }
         public void calculateVirtualOrientation()
         {
-            if (mounted)
+            //Virtual axis
+
+            Quaternion Q_virtual_creator = mQ_sensors_raw[0];
+
+            Vector3 world_X = new Vector3(1, 0, 0);
+            Vector3 world_Z = new Vector3(0, 0, 1);
+
+
+            Vector3 vc_Z = Vector3.Transform(world_Z, Q_virtual_creator);       // Apply rotation to Z axis of the sensor
+            Vector3 vc_Z_proy_XY = vc_Z - (Vector3.Dot(vc_Z, world_Z) * world_Z); // Projection: rotated Y axis on the XY plane
+            Vector3 forward_line;
+            if (vc_Z_proy_XY.Equals(Vector3.Zero)) //No se puede normalizar el Vector (0,0,0)
             {
-                for (int i = 0; i < TOTAL_SENSORS; i++)
-                {
-                    mQ_sensors_raw[i] = mQ_sensors_raw_list[0, i];
-                }
-                //Virtual axis
-
-                Quaternion Q_virtual_creator = mQ_sensors_raw[0];
-
-                Vector3 world_X = new Vector3(1, 0, 0);
-                Vector3 world_Z = new Vector3(0, 0, 1);
-
-
-                Vector3 vc_Z = Vector3.Transform(world_Z, Q_virtual_creator);       // Apply rotation to Z axis of the sensor
-                Vector3 vc_Z_proy_XY = vc_Z - (Vector3.Dot(vc_Z, world_Z) * world_Z); // Projection: rotated Y axis on the XY plane
-                Vector3 forward_line = Vector3.Normalize(vc_Z_proy_XY);              // Normalize projection to create a "forward line"
-
-                double dotx = Vector3.Dot(world_X, forward_line);
-                double detx = Vector3.Dot(world_Z, Vector3.Cross(world_X, forward_line));
-                double angle = Math.Atan2(detx, dotx);                           // Determine angle between w_X and the forward line
-
-                Quaternion Qvirtual = new Quaternion((float)angle, 0, 0, 1);   // Construct a quat with the needed rotation
-                                                                               // result quaternion = (angle, 0, 0, 1)
-
-                mQ_virtual = Quaternion.Normalize(Qvirtual);
-                reference_saved = true;
-                string message = "Frontal Reference Done\n" + "Q_virtual_creator: " +
-                    mQ_virtual.X.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.Y.ToString("0.#", CultureInfo.InvariantCulture) + ", " +
-                    mQ_virtual.Z.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.W.ToString("0.#", CultureInfo.InvariantCulture);
-                MessageBox.Show(message, "Info" , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
+                forward_line = vc_Z_proy_XY;
             }
+            else
+            {
+                forward_line = Vector3.Normalize(vc_Z_proy_XY);              // Normalize projection to create a "forward line"
+            }
+
+            double dotx = Vector3.Dot(world_X, forward_line);
+            double detx = Vector3.Dot(world_Z, Vector3.Cross(world_X, forward_line));
+            double angle = Math.Atan2(detx, dotx);                           // Determine angle between w_X and the forward line
+
+            Quaternion Qvirtual = new Quaternion((float)angle, 0, 0, 1);   // Construct a quat with the needed rotation
+                                                                           // result quaternion = (angle, 0, 0, 1)
+            mQ_virtual = Quaternion.Normalize(Qvirtual);
+            string message = "Frontal Reference Done\n" + "Q_virtual_creator: " +
+                mQ_virtual.X.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.Y.ToString("0.#", CultureInfo.InvariantCulture) + ", " +
+                mQ_virtual.Z.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.W.ToString("0.#", CultureInfo.InvariantCulture) + "\n";
+            MessageBox.Show(message, "Info" , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
         }
         public void updateLeftAndRightQuats()
         {

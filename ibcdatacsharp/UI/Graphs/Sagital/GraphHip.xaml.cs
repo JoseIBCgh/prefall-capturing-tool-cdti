@@ -2,6 +2,7 @@
 using ibcdatacsharp.UI.Graphs.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -26,6 +27,7 @@ namespace ibcdatacsharp.UI.Graphs.Sagital
     {
         private const DispatcherPriority UPDATE_PRIORITY = DispatcherPriority.Render;
         public ModelSagital model { get; private set; }
+        private const string INITIAL_OFFSET = "0.0";
         public GraphHip()
         {
             InitializeComponent();
@@ -76,6 +78,16 @@ namespace ibcdatacsharp.UI.Graphs.Sagital
             {
                 model.clear();
             });
+        }
+        private void onSetOffset(object sender, RoutedEventArgs e)
+        {
+            string offset_point = offset.Text.Replace(",", ".");
+            model.offset = float.Parse(offset_point, CultureInfo.InvariantCulture);
+        }
+        private void onClearOffset(object sender, RoutedEventArgs e)
+        {
+            model.offset = 0;
+            offset.Text = INITIAL_OFFSET;
         }
     }
 }
