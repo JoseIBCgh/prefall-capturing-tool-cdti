@@ -82,14 +82,6 @@ namespace ibcdatacsharp.UI.DeviceList
                 {
                     VM.IMUs.Add(imu);
                 }
-                else // Cambiar el id del IMU si es diferente
-                {
-                    int index = VM.IMUs.ToList().FindIndex(imuOld => imuOld.address == imu.address);
-                    if (VM.IMUs[index].id != imu.id)
-                    {
-                        VM.IMUs[index].id = imu.id;
-                    }
-                }
             }
         }
         public void addIMU(IMUInfo imu)

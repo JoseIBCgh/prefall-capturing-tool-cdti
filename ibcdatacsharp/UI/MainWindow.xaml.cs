@@ -486,7 +486,7 @@ namespace ibcdatacsharp.UI
                     List<IMUInfo> imus = new List<IMUInfo>();
                     for (int i = 0; i < scanDevices.Count; i++)
                     {
-                        imus.Add(new IMUInfo(i, "ActiSense", GetMacAddress(scanDevices, i)));
+                        imus.Add(new IMUInfo("ActiSense", GetMacAddress(scanDevices, i)));
                     }
                     // Añade imus falsos
                     /*
