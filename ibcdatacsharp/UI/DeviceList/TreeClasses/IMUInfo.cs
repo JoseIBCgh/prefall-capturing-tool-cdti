@@ -1,5 +1,6 @@
 ﻿using ibcdatacsharp.Common;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Documents;
 
 namespace ibcdatacsharp.DeviceList.TreeClasses
@@ -8,7 +9,7 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
     public class IMUInfo : BaseObject
     {
         private static List<int> idsUsed = new List<int>();
-        public int id
+        public int? id
         {
             get { return GetValue<int>("id"); }
             set { SetValue("id", value); }
@@ -62,7 +63,6 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
         public IMUInfo() { }
         public IMUInfo(string name, string address)
         {
-            this.id = getNextID();
             this.name = name;
             this.address = address;
             this.battery = null;
@@ -70,9 +70,15 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             this.used = false;
             this.fw = null;
         }
+        public void setID()
+        {
+            id = getNextID();
+        }
         private static int getNextID()
         {
-            for(int i = 0; i < idsUsed.Count; i++)
+            Trace.WriteLine("getNextID");
+            Trace.WriteLine(idsUsed.Count);
+            for (int i = 0; i < idsUsed.Count; i++)
             {
                 if (!idsUsed.Contains(i))
                 {
@@ -80,8 +86,15 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
                     return i;
                 }
             }
-            idsUsed.Add(idsUsed.Count);
-            return idsUsed.Count;
+            int id = idsUsed.Count;
+            idsUsed.Add(id);
+            return id;
+        }
+        public static void removeIMU(IMUInfo imu)
+        {
+            Trace.WriteLine("removeIMU");
+            Trace.WriteLine(imu.id);
+            idsUsed.Remove((int)imu.id);
         }
     }
 }

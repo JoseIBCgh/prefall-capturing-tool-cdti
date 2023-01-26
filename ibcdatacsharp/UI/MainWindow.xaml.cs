@@ -553,8 +553,8 @@ namespace ibcdatacsharp.UI
                 // Operación atómica de conexión
                 foreach (IMUInfo imu in connectedIMUs)
                 {
-                    conn_list_dev.Add(scanDevices[imu.id]);
-                    devHandlers.Remove(imu.id);
+                    conn_list_dev.Add(scanDevices[(int)imu.id]);
+                    devHandlers.Remove((int)imu.id);
                 }
                 if(!api.Connect(conn_list_dev, out error))
                 {
@@ -586,9 +586,9 @@ namespace ibcdatacsharp.UI
                 //Borrar si existe
                 foreach (IMUInfo imu in connectedIMUs)
                 {
-                    if (devHandlers.Contains(imuInfo.id))
+                    if (devHandlers.Contains((int)imuInfo.id))
                     {
-                        devHandlers.Remove(imuInfo.id);
+                        devHandlers.Remove((int)imuInfo.id);
 
                     }
                 }
@@ -638,7 +638,7 @@ namespace ibcdatacsharp.UI
                         IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
 
                         devHandlers.Add(handler(imuInfo));
-                        conn_list_dev.Remove(scanDevices[imuInfo.id]);
+                        conn_list_dev.Remove(scanDevices[(int)imuInfo.id]);
                         //devices_list.Remove(imuInfo.handler.ToString());
                         imuInfo.handler = null;
                         IMUsToDisconnect.Add(imuInfo.address);

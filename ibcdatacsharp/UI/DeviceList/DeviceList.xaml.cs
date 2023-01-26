@@ -75,15 +75,30 @@ namespace ibcdatacsharp.UI.DeviceList
         {
             // Quitar los IMUs que no se han escaneado 
             // Los que estaban conectados no los escanea de alli => imu.connected ||
-            VM.IMUs = new ObservableCollection<IMUInfo>(VM.IMUs.Where(imu => imu.connected || IMUs.Any(newImu => newImu.address == imu.address)));
+            List<IMUInfo> IMUsToRemove = new List<IMUInfo>();
+            foreach(IMUInfo imu in VM.IMUs)
+            {
+                if (!IMUs.Any(imuOld => imuOld.address == imu.address))
+                {
+                    IMUsToRemove.Add(imu);
+                }
+            }
+            foreach(IMUInfo imu in IMUsToRemove)
+            {
+                IMUInfo.removeIMU(imu);
+                VM.IMUs.Remove(imu);
+            }
+            //VM.IMUs = new ObservableCollection<IMUInfo>(VM.IMUs.Where(imu => imu.connected || IMUs.Any(newImu => newImu.address == imu.address)));
             foreach (IMUInfo imu in IMUs)
             {
                 if (!VM.IMUs.Any(imuOld => imuOld.address == imu.address))
                 {
+                    imu.setID();
                     VM.IMUs.Add(imu);
                 }
             }
         }
+        /*
         public void addIMU(IMUInfo imu)
         {
             if (VM.IMUs.Any(imuOld => imuOld.address == imu.address))
@@ -106,6 +121,7 @@ namespace ibcdatacsharp.UI.DeviceList
                 VM.IMUs.Add(imu);
             }
         }
+        */
         #endregion
         #region Cameras
         public ObservableCollection<CameraInfo> getCameras()

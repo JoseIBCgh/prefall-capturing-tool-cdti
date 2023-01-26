@@ -148,7 +148,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 for(int i = 0; i < imus.Count; i++)
                 {
                     byte handler = handlerFromMAC(imus[i].address);
-                    indices[handler] = imus[i].id; // Supone que los ids son (0, 1, 2, 3)
+                    indices[handler] = (int)imus[i].id; // Supone que los ids son (0, 1, 2, 3)
                 }
             }
             ankle.initCapture();

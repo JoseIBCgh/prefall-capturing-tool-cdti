@@ -917,8 +917,8 @@ namespace ibcdatacsharp.UI.Graphs
                     break;
                 case 2:
                     List<IMUInfo> imus = deviceList.IMUsUsed;
-                    int id_lower = imus[0].id;
-                    int id_upper = imus[1].id;
+                    int id_lower = (int)imus[0].id;
+                    int id_upper = (int)imus[1].id;
                     if (deviceHandler == id_lower)
                     {
                         for (int i = 0; i < 4; i++)
