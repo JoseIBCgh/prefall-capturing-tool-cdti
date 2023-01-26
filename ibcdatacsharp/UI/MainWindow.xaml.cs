@@ -649,7 +649,7 @@ namespace ibcdatacsharp.UI
                         IMUInfo imuInfo = treeViewItem.DataContext as IMUInfo;
 
                         devHandlers.Add(handler(imuInfo));
-                        conn_list_dev.Remove(scanDevices[(int)imuInfo.id]);
+                        conn_list_dev.Remove(findIMU(imuInfo));
                         //devices_list.Remove(imuInfo.handler.ToString());
                         imuInfo.handler = null;
                         IMUsToDisconnect.Add(imuInfo.address);
