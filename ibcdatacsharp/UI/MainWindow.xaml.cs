@@ -261,6 +261,15 @@ namespace ibcdatacsharp.UI
 
             return mac;
         }
+        private string GetMacAddress(Wisewalk.Dev device)
+        {
+            string mac = "";
+
+            mac = device.mac[5].ToString("X2") + ":" + device.mac[4].ToString("X2") + ":" + device.mac[3].ToString("X2") + ":" +
+                                    device.mac[2].ToString("X2") + ":" + device.mac[1].ToString("X2") + ":" + device.mac[0].ToString("X2");
+
+            return mac;
+        }
 
         private void ShowScanList(List<Wisewalk.Dev> devices)
         {
@@ -514,6 +523,10 @@ namespace ibcdatacsharp.UI
             deviceListLoadedCheck(onScanFunction);
             virtualToolBar.onScanClick();
         }
+        private Dev findIMU(IMUInfo imuInfo)
+        {
+            return scanDevices.FirstOrDefault(de => GetMacAddress(de) == imuInfo.address);
+        }
         // Conecta el boton connect
         private void onConnect(object sender, EventArgs e)
         {
@@ -551,7 +564,7 @@ namespace ibcdatacsharp.UI
                 // Operación atómica de conexión
                 foreach (IMUInfo imu in connectedIMUs)
                 {
-                    conn_list_dev.Add(scanDevices[(int)imu.id]);
+                    conn_list_dev.Add(findIMU(imu));
                     devHandlers.Remove((int)imu.id);
                 }
                 if(!api.Connect(conn_list_dev, out error))
