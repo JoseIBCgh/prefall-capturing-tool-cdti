@@ -76,11 +76,11 @@ namespace ibcdatacsharp.UI.DeviceList
             // Quitar los IMUs que no se han escaneado 
             // Los que estaban conectados no los escanea de alli => imu.connected ||
             List<IMUInfo> IMUsToRemove = new List<IMUInfo>();
-            foreach(IMUInfo imu in VM.IMUs)
+            foreach(IMUInfo imuOld in VM.IMUs)
             {
-                if (!IMUs.Any(imuOld => imuOld.address == imu.address))
+                if (!IMUs.Any(imuNew => imuNew.address == imuOld.address) && !imuOld.connected)
                 {
-                    IMUsToRemove.Add(imu);
+                    IMUsToRemove.Add(imuOld);
                 }
             }
             foreach(IMUInfo imu in IMUsToRemove)
