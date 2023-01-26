@@ -1,11 +1,13 @@
 ﻿using ibcdatacsharp.Common;
+using System.Collections.Generic;
+using System.Windows.Documents;
 
 namespace ibcdatacsharp.DeviceList.TreeClasses
 {
     // Guarda la información de un IMU
     public class IMUInfo : BaseObject
     {
-        private static int nextID = 0;
+        private static List<int> idsUsed = new List<int>();
         public int id
         {
             get { return GetValue<int>("id"); }
@@ -60,14 +62,26 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
         public IMUInfo() { }
         public IMUInfo(string name, string address)
         {
-            this.id = nextID;
+            this.id = getNextID();
             this.name = name;
             this.address = address;
             this.battery = null;
             this.connected = false;
             this.used = false;
             this.fw = null;
-            nextID++;
+        }
+        private static int getNextID()
+        {
+            for(int i = 0; i < idsUsed.Count; i++)
+            {
+                if (!idsUsed.Contains(i))
+                {
+                    idsUsed.Add(i);
+                    return i;
+                }
+            }
+            idsUsed.Add(idsUsed.Count);
+            return idsUsed.Count;
         }
     }
 }
