@@ -8,7 +8,7 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
     // Guarda la información de un IMU
     public class IMUInfo : BaseObject
     {
-        private static List<int> idsUsed = new List<int>();
+        private static HashSet<int> idsUsed = new HashSet<int>();
         public int? id
         {
             get { return GetValue<int>("id"); }
@@ -76,8 +76,8 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
         }
         private static int getNextID()
         {
-            Trace.WriteLine("getNextID");
-            Trace.WriteLine(idsUsed.Count);
+            //Trace.WriteLine("getNextID");
+            //Trace.WriteLine(idsUsed.Count);
             for (int i = 0; i < idsUsed.Count; i++)
             {
                 if (!idsUsed.Contains(i))
@@ -92,8 +92,8 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
         }
         public static void removeIMU(IMUInfo imu)
         {
-            Trace.WriteLine("removeIMU");
-            Trace.WriteLine(imu.id);
+            //Trace.WriteLine("removeIMU");
+            //Trace.WriteLine(imu.id);
             idsUsed.Remove((int)imu.id);
         }
     }

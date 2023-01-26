@@ -488,14 +488,12 @@ namespace ibcdatacsharp.UI
                     {
                         imus.Add(new IMUInfo("ActiSense", GetMacAddress(scanDevices, i)));
                     }
-                    // Añade imus falsos
-                    /*
-                    imus.Add(new IMUInfo(0, "A", "CD"));
-                    IMUInfo imu = new IMUInfo(1, "B", "DF");
-                    imu.connected = true;
-                    imus.Add(imu);
+                    /* 
+                    //IMUS falsos
+                    Random random = new Random();
+                    imus.Add(new IMUInfo("ActiSense", random.NextSingle().ToString()));
+                    imus.Add(new IMUInfo("ActiSense2", random.NextSingle().ToString()));
                     */
-                    //end añade imus falsos
 
                     deviceListClass.setIMUs(imus);
                     MessageBox.Show(scanDevices.Count + " IMUs encontrados", "Scan Devices", MessageBoxButton.OK, MessageBoxImage.Information);
