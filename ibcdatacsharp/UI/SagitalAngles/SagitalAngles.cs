@@ -262,7 +262,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     {
                         dataline += "1 " + (fakets + 0.01 * i).ToString("F2") + " " + (frame + i).ToString() + " " +
                             ankleData[i].ToString("F2") + " " + hipData[i].ToString("F2") + " " +
-                            kneeData[i].ToString("F2");
+                            kneeData[i].ToString("F2") + "\n";
                     }
                     frame += NUM_PACK;
                     fakets += NUM_PACK * 0.01f;
