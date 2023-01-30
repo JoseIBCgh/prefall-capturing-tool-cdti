@@ -61,6 +61,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private float fakets = 0f;
         private int frame = 0;
 
+        private int IMUsReceived = 0;
+
         public SagitalAngles()
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
@@ -233,10 +235,12 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 mQ_sensors_raw_list[i, index] = new Quaternion((float)data.Quat[i].X, (float)data.Quat[i].Y, (float)data.Quat[i].Z, (float)data.Quat[i].W);
             }
-            updated_quats[index] = true;
-            if (updated_quats.All(x => x)) // si todos son true
+            IMUsReceived++;
+            //updated_quats[index] = true;
+            //if (updated_quats.All(x => x)) // si todos son true
+            if(IMUsReceived % 4 == 0)
             {
-                updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
+                //updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
                 float[] ankleData = new float[NUM_PACK];
                 float[] hipData = new float[NUM_PACK];
                 float[] kneeData = new float[NUM_PACK];
