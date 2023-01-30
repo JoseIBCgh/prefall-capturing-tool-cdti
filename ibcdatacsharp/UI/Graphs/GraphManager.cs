@@ -829,6 +829,7 @@ namespace ibcdatacsharp.UI.Graphs
         {
             fakets = 0;
             frame = 0;
+            sagitalAngles.initRecord();
         }
 
         //Begin Wise

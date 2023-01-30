@@ -134,6 +134,11 @@ namespace ibcdatacsharp.UI.SagitalAngles
             }
             quaternionCalcsConnect();
         }
+        public void initRecord()
+        {
+            frame = 0;
+            fakets = 0;
+        }
         // Inicializa el indice que correspone a cada handler
         public void initIMUs()
         {
