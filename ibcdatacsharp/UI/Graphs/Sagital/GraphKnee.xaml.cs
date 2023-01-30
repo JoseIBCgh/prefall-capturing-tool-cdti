@@ -26,6 +26,14 @@ namespace ibcdatacsharp.UI.Graphs.Sagital
         {
             model.initCapture();
         }
+        public async void redrawData(float[] data)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                model.clear(render: false);
+                model.updateData(data);
+            });
+        }
         public async void drawData(float[] data)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>

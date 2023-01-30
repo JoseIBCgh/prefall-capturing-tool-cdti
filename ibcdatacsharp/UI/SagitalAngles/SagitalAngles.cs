@@ -63,6 +63,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
         private int IMUsReceived = 0;
 
+        private List<Quaternion[,]> quat_history = new List<Quaternion[,]>();
+
         public SagitalAngles()
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
@@ -245,6 +247,9 @@ namespace ibcdatacsharp.UI.SagitalAngles
             //if (updated_quats.All(x => x)) // si todos son true
             if(IMUsReceived % 4 == 0)
             {
+                // No se si hace falta esto
+                Quaternion[,] mQ_sensors_raw_list_clone = mQ_sensors_raw_list.Clone() as Quaternion[,];
+                quat_history.Add(mQ_sensors_raw_list_clone);
                 //updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
                 float[] ankleData = new float[NUM_PACK];
                 float[] hipData = new float[NUM_PACK];
@@ -278,6 +283,33 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     mainWindow.fileSaver.appendCSVManual(dataline);
                 }
             }
+        }
+        private void recalculate()
+        {
+            int size = NUM_PACK * quat_history.Count;
+            float[] ankleData = new float[size];
+            float[] hipData = new float[size];
+            float[] kneeData = new float[size];
+            for (int h = 0; h < quat_history.Count; h++)
+            {
+                Quaternion[,] mQ_sensors_raw_list = quat_history[h];
+                for (int i = 0; i < NUM_PACK; i++)
+                {
+                    for (int s = 0; s < TOTAL_SENSORS; s++)
+                    {
+                        mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
+                    }
+                    updateLeftAndRightQuats();
+                    updateSegmentsAndJoints();
+                    int index = h * NUM_PACK + i;
+                    ankleData[index] = (float)eulerAnglesZ[ankleIndex];
+                    hipData[index] = (float)eulerAnglesZ[hipIndex];
+                    kneeData[index] = (float)eulerAnglesZ[kneeIndex];
+                }
+            }
+            ankle.redrawData(ankleData);
+            hip.redrawData(hipData);
+            knee.redrawData(kneeData);
         }
         public void quaternionCalcsConnect()
         {
@@ -313,6 +345,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 mQ_sensors_ref[iSen] = Quaternion.Normalize(mQ_sensors_ref[iSen]);
             }
             MessageBox.Show("Sensor Mounting Done", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
+            recalculate();
         }
         public void calculateVirtualOrientation()
         {
@@ -342,6 +375,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 mQ_virtual.X.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.Y.ToString("0.#", CultureInfo.InvariantCulture) + ", " +
                 mQ_virtual.Z.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.W.ToString("0.#", CultureInfo.InvariantCulture) + "\n";
             MessageBox.Show(message, "Info" , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
+            recalculate();
         }
         public void updateLeftAndRightQuats()
         {

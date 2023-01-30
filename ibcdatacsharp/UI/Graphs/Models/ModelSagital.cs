@@ -139,11 +139,14 @@ namespace ibcdatacsharp.UI.Graphs.Models
             plot.Render();
         }
         // Borra todos los puntos
-        public void clear()
+        public void clear(bool render = true)
         {
             nextIndex = 0;
             maxRenderIndex = nextIndex;
-            plot.Render();
+            if (render)
+            {
+                plot.Render();
+            }
         }
         // Usar esto para actualizar la line tambien
         private int maxRenderIndex
