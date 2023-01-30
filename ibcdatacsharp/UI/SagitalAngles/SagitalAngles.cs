@@ -263,7 +263,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     updateLeftAndRightQuats();
                     updateSegmentsAndJoints();
                     ankleData[i] = (float)eulerAnglesZ[ankleIndex];
-                    hipData[i] = (float)eulerAnglesZ[hipIndex];
+                    hipData[i] = 180f - (float)eulerAnglesZ[hipIndex];
                     kneeData[i] = (float)eulerAnglesZ[kneeIndex];
                 }
                 ankle.drawData(ankleData);
