@@ -54,8 +54,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private GraphAnkle ankle;
         private GraphHip hip;
         private GraphKnee knee;
-        private int ankleIndex = 0;
-        private int hipIndex = 1;
+        private int ankleIndex = 1;
+        private int hipIndex = 0;
         private int kneeIndex = 2;
 
         private float fakets = 0f;
@@ -263,7 +263,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     updateLeftAndRightQuats();
                     updateSegmentsAndJoints();
                     ankleData[i] = (float)eulerAnglesZ[ankleIndex];
-                    hipData[i] = 180f - (float)eulerAnglesZ[hipIndex];
+                    hipData[i] = (float)eulerAnglesZ[hipIndex];
                     kneeData[i] = (float)eulerAnglesZ[kneeIndex];
                 }
                 ankle.drawData(ankleData);
