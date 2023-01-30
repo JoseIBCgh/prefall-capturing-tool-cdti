@@ -65,6 +65,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
 
         private List<Quaternion[,]> quat_history = new List<Quaternion[,]>();
 
+        private bool recalculating = false;
+
         public SagitalAngles()
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
@@ -246,7 +248,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             IMUsReceived++;
             //updated_quats[index] = true;
             //if (updated_quats.All(x => x)) // si todos son true
-            if(IMUsReceived % 4 == 0)
+            if(IMUsReceived % 4 == 0 && !recalculating)
             {
                 // No se si hace falta esto
                 Quaternion[,] mQ_sensors_raw_list_clone = mQ_sensors_raw_list.Clone() as Quaternion[,];
@@ -287,6 +289,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
         }
         private void recalculate()
         {
+            recalculating = true;
             int size = NUM_PACK * quat_history.Count;
             float[] ankleData = new float[size];
             float[] hipData = new float[size];
@@ -311,6 +314,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             ankle.redrawData(ankleData);
             hip.redrawData(hipData);
             knee.redrawData(kneeData);
+            recalculating = false;
         }
         public void quaternionCalcsConnect()
         {
