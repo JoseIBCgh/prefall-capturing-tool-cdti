@@ -54,9 +54,9 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private GraphAnkle ankle;
         private GraphHip hip;
         private GraphKnee knee;
-        private int ankleIndex = 0;
-        private int hipIndex = 1;
-        private int kneeIndex = 2;
+        private int ankleIndex = 2;  // anteriormente a ankleIndex = 0
+        private int hipIndex = 0; // anteriormente a hipIndex = 1
+        private int kneeIndex = 1; // kneeIndex = 2
 
         private float fakets = 0f;
         private int frame = 0;
