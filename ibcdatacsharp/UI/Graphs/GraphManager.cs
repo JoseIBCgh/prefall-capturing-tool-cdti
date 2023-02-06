@@ -15,6 +15,8 @@ using ibcdatacsharp.UI.Graphs.OneIMU;
 using ibcdatacsharp.UI.Graphs.TwoIMU;
 using ibcdatacsharp.UI.Graphs.Sagital;
 using ibcdatacsharp.UI.SagitalAngles;
+using System.Linq;
+using System.Net;
 
 namespace ibcdatacsharp.UI.Graphs
 {
@@ -198,6 +200,9 @@ namespace ibcdatacsharp.UI.Graphs
         GraphAccelerometer acc;
         GraphGyroscope gyr;
         GraphMagnetometer mag;
+
+        private byte handler_lower;
+        private byte handler_upper;
 
 
         Vector3 v0, v1, v2, v3;
@@ -455,7 +460,21 @@ namespace ibcdatacsharp.UI.Graphs
             }
         }
 
-
+        // issue #100
+        private void saveHandlers()
+        {
+            byte handlerFromMAC(string mac)
+            {
+                string handler = mainWindow.devices_list.Where(z => z.Value.Id == mac).FirstOrDefault().Key;
+                return byte.Parse(handler);
+            }
+            List<IMUInfo> imus = deviceList.IMUsUsed;
+            if (imus.Count == 2)
+            {
+                handler_lower = handlerFromMAC(imus[0].address);
+                handler_upper = handlerFromMAC(imus[1].address);
+            }
+        }
         public void activate()
         {
 
@@ -483,6 +502,7 @@ namespace ibcdatacsharp.UI.Graphs
                             graphs = graphs1IMU;
                             break;
                         case 2:
+                            saveHandlers();
                             graphs = graphs2IMU;
                             break;
                         case 4:
@@ -719,6 +739,7 @@ namespace ibcdatacsharp.UI.Graphs
                             graphs = graphs1IMU;
                             break;
                         case 2:
+                            saveHandlers();
                             graphs = graphs2IMU;
                             break;
                         case 4:
@@ -917,10 +938,7 @@ namespace ibcdatacsharp.UI.Graphs
                     fakets += 0.04f;
                     break;
                 case 2:
-                    List<IMUInfo> imus = deviceList.IMUsUsed;
-                    int id_lower = (int)imus[0].id;
-                    int id_upper = (int)imus[1].id;
-                    if (deviceHandler == id_lower)
+                    if (deviceHandler == handler_lower)
                     {
                         for (int i = 0; i < 4; i++)
                         {
@@ -933,7 +951,7 @@ namespace ibcdatacsharp.UI.Graphs
                         anglequat++;
 
                     }
-                    else if (deviceHandler == id_upper)
+                    else if (deviceHandler == handler_upper)
                     {
                         for (int i = 0; i < 4; i++)
                         {
