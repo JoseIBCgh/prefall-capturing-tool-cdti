@@ -350,7 +350,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 mQ_sensors_ref[iSen] = Quaternion.Normalize(mQ_sensors_ref[iSen]);
             }
             MessageBox.Show("Sensor Mounting Done", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-            recalculate();
+            //recalculate();
         }
         public void calculateVirtualOrientation()
         {
@@ -380,7 +380,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 mQ_virtual.X.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.Y.ToString("0.#", CultureInfo.InvariantCulture) + ", " +
                 mQ_virtual.Z.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.W.ToString("0.#", CultureInfo.InvariantCulture) + "\n";
             MessageBox.Show(message, "Info" , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-            recalculate();
+            //recalculate();
         }
         public void updateLeftAndRightQuats()
         {
