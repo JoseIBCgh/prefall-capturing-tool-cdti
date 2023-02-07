@@ -165,6 +165,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 }
             }
             */
+            indices = new Dictionary<byte, int>();
             List<IMUInfo> imus = deviceList.IMUsUsed;
             for (int i = 0; i < 4; i++)
             {
@@ -172,6 +173,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 IMUInfo imu = imus.Where(imu => imu.A == i_str).First();
                 byte handler = handlerFromMAC(imu.address);
                 indices[handler] = i;
+                Trace.WriteLine(handler + " " + i + " " + imu.address);
             }
             ankle.initCapture();
             hip.initCapture();
