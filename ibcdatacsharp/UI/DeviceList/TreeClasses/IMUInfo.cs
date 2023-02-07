@@ -54,6 +54,12 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             set { SetValue("fw", value); }
         }
 
+        public string A
+        {
+            get { return GetValue<string>("A"); }
+            set { SetValue("A", value); }
+        }
+
         public byte? handler { get; set; }
 
         public void checkJAUpdate()
@@ -69,6 +75,7 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             this.connected = false;
             this.used = false;
             this.fw = null;
+            this.A = "";
         }
         public void setID()
         {

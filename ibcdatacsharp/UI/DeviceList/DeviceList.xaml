@@ -39,10 +39,11 @@
                     </Style>
                 </controls:MultiSelectTreeViewItem.ItemContainerStyle>
                 <controls:MultiSelectTreeViewItem.Header>
-                    <Grid Width="380">
+                    <Grid Width="420">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="0.5*"/>
                             <ColumnDefinition Width="0.5*"/>
                             <ColumnDefinition Width="1.5*"/>
@@ -52,17 +53,18 @@
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/imu-blue-icon-small.png" Height="20" Width="20"/>
                         <TextBlock Text="JA" Grid.Column="1" TextAlignment="Center"/>
-                        <TextBlock Text="Con" Grid.Column="2" TextAlignment="Center"/>
-                        <TextBlock Text="Id" Grid.Column="3" TextAlignment="Center"/>
-                        <TextBlock Text="IMU" Grid.Column="4" TextAlignment="Center"/>
-                        <TextBlock Text="Address" Grid.Column="5" TextAlignment="Center"/>
-                        <TextBlock Text="Battery" Grid.Column="6" TextAlignment="Center"/>
-                        <TextBlock Text="FW" Grid.Column="7" TextAlignment="Center"/>
+                        <TextBlock Text="A" Grid.Column="2" TextAlignment="Center"/>
+                        <TextBlock Text="Con" Grid.Column="3" TextAlignment="Center"/>
+                        <TextBlock Text="Id" Grid.Column="4" TextAlignment="Center"/>
+                        <TextBlock Text="IMU" Grid.Column="5" TextAlignment="Center"/>
+                        <TextBlock Text="Address" Grid.Column="6" TextAlignment="Center"/>
+                        <TextBlock Text="Battery" Grid.Column="7" TextAlignment="Center"/>
+                        <TextBlock Text="FW" Grid.Column="8" TextAlignment="Center"/>
                     </Grid>
                 </controls:MultiSelectTreeViewItem.Header>
                 <controls:MultiSelectTreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:IMUInfo}">
-                        <Grid Margin="-19,0,0,0" Width="380">
+                        <Grid Margin="-19,0,0,0" Width="420">
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem IsEnabled="{Binding Path=used}" Header="Set as Reference" Click="setIMUasReference" />
@@ -72,6 +74,7 @@
                                 <ColumnDefinition Width="15"/>
                                 <ColumnDefinition Width="15"/>
                                 <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="0.5*"/>
                                 <ColumnDefinition Width="0.5*"/>
                                 <ColumnDefinition Width="1.5*"/>
@@ -81,12 +84,18 @@
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="1" Height="15" Width="15" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
                             <CheckBox IsEnabled="{Binding Path=connected, Converter={StaticResource jaEnabledConverted}}" Grid.Column="2" Height="15" Width="15" IsChecked="{Binding Path=used}" Checked="onCheckIMU"/>
-                            <Image Grid.Column="3" Height="15" Width="15" Source="{Binding Path=connected, Converter={StaticResource connectedConverter}}"/>
-                            <TextBlock Text="{Binding Path=id}" Grid.Column="4" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=name}" Grid.Column="5" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=address}" Grid.Column="6" TextAlignment="Center" />
-                            <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="7" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=fw}" Grid.Column="8" TextAlignment="Center" />
+                            <ComboBox Grid.Column="3" Text="{Binding Path=A}">
+                                <ComboBoxItem>0</ComboBoxItem>
+                                <ComboBoxItem>1</ComboBoxItem>
+                                <ComboBoxItem>2</ComboBoxItem>
+                                <ComboBoxItem>3</ComboBoxItem>
+                            </ComboBox>
+                            <Image Grid.Column="4" Height="15" Width="15" Source="{Binding Path=connected, Converter={StaticResource connectedConverter}}"/>
+                            <TextBlock Text="{Binding Path=id}" Grid.Column="5" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=name}" Grid.Column="6" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=address}" Grid.Column="7" TextAlignment="Center" />
+                            <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="8" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=fw}" Grid.Column="9" TextAlignment="Center" />
                         </Grid>
                     </DataTemplate>
                 </controls:MultiSelectTreeViewItem.ItemTemplate>

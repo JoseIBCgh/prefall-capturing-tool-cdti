@@ -146,11 +146,13 @@ namespace ibcdatacsharp.UI.SagitalAngles
         // Inicializa el indice que correspone a cada handler
         public void initIMUs()
         {
+            
             byte handlerFromMAC(string mac)
             {
                 string handler = mainWindow.devices_list.Where(z => z.Value.Id == mac).FirstOrDefault().Key;
                 return byte.Parse(handler);
             }
+            /*
             indices = new Dictionary<byte, int>();
 
             List<IMUInfo> imus = deviceList.IMUsUsed;
@@ -161,6 +163,15 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     byte handler = handlerFromMAC(imus[i].address);
                     indices[handler] = (int)imus[i].id; // Supone que los ids son (0, 1, 2, 3)
                 }
+            }
+            */
+            List<IMUInfo> imus = deviceList.IMUsUsed;
+            for (int i = 0; i < 4; i++)
+            {
+                string i_str = i.ToString();
+                IMUInfo imu = imus.Where(imu => imu.A == i_str).First();
+                byte handler = handlerFromMAC(imu.address);
+                indices[handler] = i;
             }
             ankle.initCapture();
             hip.initCapture();
