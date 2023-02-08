@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Runtime.CompilerServices;
 using System.Windows.Navigation;
-using static OpenCvSharp.Stitcher;
 
 namespace ibcdatacsharp.UI.Common
 {
@@ -61,7 +60,10 @@ namespace ibcdatacsharp.UI.Common
 
             return angles;
         }
-
+        public static float ToGs(float ms2)
+        {
+            return ms2 / 9.8f;
+        }
         public static float ToDegrees(float radians)
         {
             float degrees = (180 / (float)Math.PI) * radians;
@@ -83,7 +85,6 @@ namespace ibcdatacsharp.UI.Common
             {
                 angle += 360;
             }
-            return angle;
             */
             return angle % 360;
         }
@@ -198,6 +199,14 @@ namespace ibcdatacsharp.UI.Common
             do { u = randomFloat(-1, 1); v = randomFloat(-1, 1); w = u * u + v * v; } while (w > 1);
             s = (float)Math.Sqrt((1 - z) / w);
             return new Quaternion(x, y, s * u, s * v);
+        }
+        public static void print(List<WisewalkSDK.QuatSensor> quats)
+        {
+            for(int i = 0; i < quats.Count; i++)
+            {
+                Trace.WriteLine(quats[i].W + " " + quats[i].X + " " + quats[i].Y + " " +
+                    quats[i].Z);
+            }
         }
     }
 }
