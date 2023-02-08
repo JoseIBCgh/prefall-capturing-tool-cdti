@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Runtime.CompilerServices;
 using System.Windows.Navigation;
+using static OpenCvSharp.Stitcher;
 
 namespace ibcdatacsharp.UI.Common
 {
@@ -73,6 +74,7 @@ namespace ibcdatacsharp.UI.Common
         }
         public static float NormalizeAngle(float angle)
         {
+            /*
             while(angle > 360)
             {
                 angle -= 360;
@@ -82,6 +84,8 @@ namespace ibcdatacsharp.UI.Common
                 angle += 360;
             }
             return angle;
+            */
+            return angle % 360;
         }
         public static Vector3 AngularVelocityFromQuaternions(Quaternion q1, Quaternion q2, double dt)
         {
