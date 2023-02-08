@@ -166,7 +166,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             }
             */
             indices = new Dictionary<byte, int>();
-            List<IMUInfo> imus = deviceList.VM.IMUs.ToList();
+            List<IMUInfo> imus = deviceList.IMUsUsed;
             for (int i = 0; i < 4; i++)
             {
                 string i_str = i.ToString();

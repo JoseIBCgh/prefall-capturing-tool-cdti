@@ -57,7 +57,13 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
         public string A
         {
             get { return GetValue<string>("A"); }
-            set { SetValue("A", value); }
+            set { 
+                if(value != "" && !used)
+                {
+                    used = true;
+                }
+                SetValue("A", value); 
+            }
         }
 
         public byte? handler { get; set; }
