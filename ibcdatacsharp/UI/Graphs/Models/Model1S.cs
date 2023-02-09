@@ -1,9 +1,11 @@
 ﻿using OpenCvSharp.Flann;
 using ScottPlot;
+using ScottPlot.Drawing.Colormaps;
 using ScottPlot.Plottable;
 using System;
 using System.Drawing;
 using System.Windows.Markup;
+using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace ibcdatacsharp.UI.Graphs.Models
 {
@@ -12,55 +14,33 @@ namespace ibcdatacsharp.UI.Graphs.Models
     {
         public delegate void ValueEventHandler(object sender, double value);
         public event ValueEventHandler valueEvent;
+        public event ValueEventHandler offsetEvent;
         private const int RIGHT_SEPARATION = 20;
-        private const int MAX_POINTS = 100;
-        private int CAPACITY = 100000; //Usar un valor sufientemente grande para que en la mayoria de los casos no haya que cambiar el tamaño de los arrays
-        private const int GROW_FACTOR = 2;
-        double[] values;
-        SignalPlot signalPlot;
-        private int nextIndex = 0;
-        private WpfPlot plot;
+        public WpfPlot plot { get; private set; }
 
         private const double MIN_Y = -360;
         private const double MAX_Y = 360;
 
         private Color frameColor = Color.Black;
-        private VLine lineFrame;
+        public VLine lineFrame { get; private set; }
         private const float verticalLineWidth = 0.5f;
 
-        private Color dataColor = Color.Red;
-        private HLine lineData;
-        private const float horizontalLineWidth = 0.5f;
+        public Color dataColor = Color.Red;
+
+        private CaptureModel captureModel;
+        private ReplayModel replayModel;
         public Model1S(WpfPlot plot, Color color)
         {
+            captureModel = new CaptureModel(this);
+            replayModel = new ReplayModel(this);
             dataColor = color;
             this.plot = plot;
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
-            plot.Plot.SetAxisLimitsX(xMin: 0, xMax: MAX_POINTS);
             paintAreas();
 
             lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, LineStyle.Dash);
-            /*
-            lineFrame.PositionLabel = true;
-            lineFrame.PositionLabelBackground = frameColor;
-            lineFrame.PositionFormatter = customFormatter;
-
-            lineData = plot.Plot.AddHorizontalLine(0, color: dataColor, width: horizontalLineWidth, style: LineStyle.Dash);
-            lineData.PositionLabel = true;
-            lineData.PositionLabelBackground = dataColor;
-            lineData.PositionFormatter = customFormatter;
-            */
             plot.Plot.Style(Style.Seaborn);
             plot.Refresh();
-        }
-        static string customFormatter(double position)
-        {
-            if (position == 0)
-                return "zero";
-            else if (position > 0)
-                return $"+{position:F2}";
-            else
-                return $"({Math.Abs(position):F2})";
         }
         // Pinta el fondo
         private void paintAreas()
@@ -83,113 +63,53 @@ namespace ibcdatacsharp.UI.Graphs.Models
         }
         public void initCapture()
         {
-            values = new double[CAPACITY];
-            plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
-            plot.Plot.XAxis2.SetSizeLimit(max: 5);
-            plot.Plot.Remove(signalPlot);
-            signalPlot = plot.Plot.AddSignal(values, color: dataColor);
-            signalPlot.OffsetY = _offset;
-            nextIndex = 0;
-            maxRenderIndex = nextIndex;
+            clear();
+            captureModel.initCapture();
         }
-        #region Replay
-        // Añade todos los datos de golpe (solo para replay)
         public void updateData(double[] data)
         {
-            values = data;
-            plot.Plot.Remove(signalPlot);
-            signalPlot = plot.Plot.AddSignal(values, color: dataColor);
-            signalPlot.OffsetY = offset;
-
-            maxRenderIndex = 0;
-            //plot.Plot.SetAxisLimitsX(xMin: 0, xMax: Math.Min(MAX_POINTS, values.Length));
-            plot.Plot.SetAxisLimitsX(xMin: 0, xMax: values.Length);
-            plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
-            plot.Render();
+            clear();
+            replayModel.updateData(data);
         }
         // Cambia los datos a mostrar
         public void updateIndex(int index)
         {
-            index = Math.Min(index, values.Length); //Por si acaso
-            maxRenderIndex = index;
-            //plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS),
-            //    xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
-            plot.Render();
-            valueEvent?.Invoke(this, values[index] + offset);
+            replayModel.updateIndex(index);
         }
-        #endregion Replay
-
         // Añade un punto
         public void updateData(double data)
         {
-            if (nextIndex >= CAPACITY) // No deberia pasar
-            {
-                CAPACITY = CAPACITY * GROW_FACTOR;
-                Array.Resize(ref values, CAPACITY);
-                plot.Plot.Remove(signalPlot);
-                signalPlot = plot.Plot.AddSignal(values, color: dataColor);
-                signalPlot.OffsetY = offset;
-            }
-            values[nextIndex] = data;
-            nextIndex++;
-            valueEvent?.Invoke(this, data + offset);
+            captureModel.updateData(data);
         }
         public void updateData(float[] data, bool render = true)
         {
-            if (nextIndex + data.Length >= CAPACITY) // No deberia pasar
-            {
-                CAPACITY = CAPACITY * GROW_FACTOR;
-                Array.Resize(ref values, CAPACITY);
-                plot.Plot.Remove(signalPlot);
-                signalPlot = plot.Plot.AddSignal(values, color: dataColor);
-                signalPlot.OffsetY = offset;
-            }
-            for (int i = 0; i < data.Length; i++)
-            {
-                values[nextIndex + i] = data[i];
-            }
-            nextIndex += data.Length;
-            valueEvent?.Invoke(this, data[data.Length - 1] + offset);
-            if (render)
-            {
-                this.render();
-            }
+            captureModel.updateData(data, render);
         }
         // Actualiza el renderizado
         public void render()
         {
+            plot.Render();
+            /*
             int index = nextIndex - 1;
             if (index < 0)
             {
                 index = 0;
             }
+            else if(index > CAPACITY - 1)
+            {
+                index = CAPACITY - 1;
+            }
             maxRenderIndex = index;
-            plot.Plot.SetAxisLimits(xMin: Math.Max(0, index - MAX_POINTS),
-                xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
             plot.Render();
+            */
         }
         // Borra todos los puntos
         public void clear()
         {
-            nextIndex = 0;
-            maxRenderIndex = nextIndex;
+            plot.Plot.Clear(typeof(SignalPlot));
             plot.Render();
         }
-        // Usar esto para actualizar la line tambien
-        private int maxRenderIndex
-        {
-            set
-            {
-                signalPlot.MaxRenderIndex = value;
-                lineFrame.X = value;
-                //lineData.Y = values[value];
-            }
-            get
-            {
-                return signalPlot.MaxRenderIndex;
-            }
-        }
-        private double _offset = 0;
+        public double _offset { get; private set; }
         public double offset
         {
             get
@@ -199,14 +119,120 @@ namespace ibcdatacsharp.UI.Graphs.Models
             set
             {
                 _offset = value;
-                if (signalPlot != null)
+                offsetEvent?.Invoke(this, value);
+            }
+        }
+        public void invokeValue(double value)
+        {
+            valueEvent?.Invoke(this, value);
+        }
+        class CaptureModel
+        {
+            Model1S model;
+            private const int CAPACITY = 200;
+            double[] values;
+            SignalPlot signalPlot;
+            private int nextIndex = 0;
+
+            public CaptureModel(Model1S model)
+            {
+                this.model = model;
+                model.offsetEvent += (sender, value) =>
                 {
-                    signalPlot.OffsetY = value;
-                    plot.Render();
-                    int index = Math.Max(0, maxRenderIndex - 1);
-                    valueEvent?.Invoke(this, values[index] + offset);
+                    if (signalPlot != null)
+                    {
+                        signalPlot.OffsetY = value;
+                        model.plot.Render();
+                        int index = nextIndex % CAPACITY;
+                        model.invokeValue(values[index] + model.offset);
+                    }
+                };
+            }
+            public void initCapture()
+            {
+                values = new double[CAPACITY];
+                signalPlot = model.plot.Plot.AddSignal(values, color: model.dataColor);
+                signalPlot.OffsetY = model._offset;
+                nextIndex = 0;
+                model.plot.Plot.SetAxisLimitsX(xMin: 0, xMax: CAPACITY);
+            }
+            public void updateData(float[] data, bool render = true)
+            {
+                for (int i = 0; i < data.Length; i++)
+                {
+                    int index = (nextIndex + i) % CAPACITY;
+                    values[index] = data[i];
+                }
+                nextIndex += data.Length;
+                model.lineFrame.X = nextIndex % CAPACITY;
+                model.invokeValue(data[data.Length - 1] + model.offset);
+                if (render)
+                {
+                    model.plot.Render();
+                }
+            }
+            public void updateData(double data)
+            {
+                int index = nextIndex % CAPACITY;
+                values[index] = data;
+                nextIndex++;
+                model.lineFrame.X = nextIndex % CAPACITY;
+                model.invokeValue(data + model.offset);
+                model.plot.Render();
+            }
+        }
+        class ReplayModel
+        {
+            Model1S model;
+            double[] values;
+            SignalPlot signalPlot;
+            public ReplayModel(Model1S model)
+            {
+                this.model = model;
+                model.offsetEvent += (sender, value) =>
+                {
+                    if (signalPlot != null)
+                    {
+                        signalPlot.OffsetY = value;
+                        model.plot.Render();
+                        int index = Math.Max(0, maxRenderIndex - 1);
+                        model.invokeValue(values[index] + model.offset);
+                    }
+                };
+            }
+            public void updateData(double[] data)
+            {
+                values = data;
+                signalPlot = model.plot.Plot.AddSignal(values, color: model.dataColor);
+                signalPlot.OffsetY = model.offset;
+
+                maxRenderIndex = 0;
+                model.plot.Plot.SetAxisLimitsX(xMin: 0, xMax: values.Length);
+                model.plot.Render();
+            }
+            // Cambia los datos a mostrar
+            public void updateIndex(int index)
+            {
+                index = Math.Min(index, values.Length); //Por si acaso
+                maxRenderIndex = index;
+                //plot.Plot.SetAxisLimitsX(xMin: Math.Max(0, index - MAX_POINTS),
+                //    xMax: Math.Max(index + RIGHT_SEPARATION, Math.Min(MAX_POINTS, values.Length)));
+                model.plot.Render();
+                model.invokeValue(values[index] + model.offset);
+            }
+            private int maxRenderIndex
+            {
+                set
+                {
+                    signalPlot.MaxRenderIndex = value;
+                    model.lineFrame.X = value;
+                    //lineData.Y = values[value];
+                }
+                get
+                {
+                    return signalPlot.MaxRenderIndex;
                 }
             }
         }
-    }
+    }  
 }
