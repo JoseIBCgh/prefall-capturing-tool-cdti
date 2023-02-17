@@ -146,6 +146,7 @@ namespace ibcdatacsharp.UI
             api.deviceDisconnected += Api_onDisconnect;
             api.updateDeviceRTC += Api_updateDeviceRTC;
             api.updateDeviceConfiguration += Api_updateDeviceConfiguration;
+            api.updateDeviceInfo += Api_updateDeviceInfo;
 
             //End Wisewalk API
             //EKF.EKF.test();
@@ -169,6 +170,7 @@ namespace ibcdatacsharp.UI
         {
             if (deviceHandler != 0xFF)
             {
+                
                 SetLogText(devices_list[deviceHandler.ToString()].Id, error);
             }
             else
@@ -289,6 +291,7 @@ namespace ibcdatacsharp.UI
 
         private async void Api_deviceConnected(byte handler, WisewalkSDK.Device dev)
         {
+            
             //if (!devices_list.ContainsKey(handler.ToString())) { 
             // Add new device to list
             //WisewalkSDK.Device device = new WisewalkSDK.Device();
@@ -316,7 +319,11 @@ namespace ibcdatacsharp.UI
                 connectIMU(dev.Id, handler)
             );
 
-            api.SetDeviceConfiguration(handler, 100, 3, out error);
+            ushort sampleRate = 100;
+            byte packetType = (byte)3;
+
+            api.SetDeviceConfiguration(handler, sampleRate, packetType, out error);
+
             api.SetRTCDevice(handler, GetDateTime(), out error);
 
             counter.Add(0);
@@ -333,6 +340,17 @@ namespace ibcdatacsharp.UI
 
             //ShowDevices(devices_list);
             */
+        }
+
+        private void Api_updateDeviceInfo(byte deviceHandler, WisewalkSDK.Device dev)
+        {
+            //devices_list[deviceHandler.ToString()].HeaderInfo = dev.HeaderInfo;
+            //devices_list[deviceHandler.ToString()].sampleRate = dev.sampleRate;
+            //devices_list[deviceHandler.ToString()].offsetTime = dev.offsetTime;
+
+            SetLogText(devices_list[deviceHandler.ToString()].Id, "Receive header info from " + dev.HeaderInfo.macAddress);
+
+            //ShowDevices(devices_list);
         }
 
         void Api_updateDeviceConfiguration(byte deviceHandler, byte sampleRate, byte packetType)
@@ -564,7 +582,9 @@ namespace ibcdatacsharp.UI
                     conn_list_dev.Add(findIMU(imu));
                     devHandlers.Remove((int)imu.id);
                 }
-                if(!api.Connect(conn_list_dev, out error))
+             
+                
+                if (!api.Connect(conn_list_dev, out error))
                 {
                     Trace.WriteLine("Connect error " + error);
                 }
