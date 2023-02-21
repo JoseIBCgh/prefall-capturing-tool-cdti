@@ -144,6 +144,8 @@ namespace ibcdatacsharp.UI
             api.deviceConnected += Api_deviceConnected;
             api.onError += Api_onError;
             api.deviceDisconnected += Api_onDisconnect;
+            api.updateDeviceRTC += Api_updateDeviceRTC;
+            api.updateDeviceConfiguration += Api_updateDeviceConfiguration;
 
             //End Wisewalk API
             //EKF.EKF.test();
@@ -287,53 +289,39 @@ namespace ibcdatacsharp.UI
 
         private async void Api_deviceConnected(byte handler, WisewalkSDK.Device dev)
         {
-            // Esta funcion tiene que ser LOCAL
-            void setRTCDevice(byte deviceHandler, byte sampleRate, byte packetType)
-            {
-                if(deviceHandler == handler)
-                {
-                    api.SetRTCDevice(deviceHandler, GetDateTime(), out error);
-                    Dispatcher.BeginInvoke(
-                    () => (deviceList.Content as DeviceList.DeviceList).
-                    updateHeaderInfo(dev.Id, handler)
-                );
-                    api.updateDeviceConfiguration -= setRTCDevice;
-                }
-            }
             //if (!devices_list.ContainsKey(handler.ToString())) { 
-                // Add new device to list
-                //WisewalkSDK.Device device = new WisewalkSDK.Device();
+            // Add new device to list
+            //WisewalkSDK.Device device = new WisewalkSDK.Device();
 
-                //Trace.WriteLine("DevList: " + dev.Id + " handler: " + handler.ToString());
+            //Trace.WriteLine("DevList: " + dev.Id + " handler: " + handler.ToString());
 
-                //devices_list.Add(handler.ToString(), device);
+            //devices_list.Add(handler.ToString(), device);
 
-                // Update values
-                /*
-                devices_list[handler.ToString()].Id = dev.Id;
-                devices_list[handler.ToString()].Name = dev.Name;
-                devices_list[handler.ToString()].Connected = dev.Connected;
-                devices_list[handler.ToString()].HeaderInfo = dev.HeaderInfo;
-                devices_list[handler.ToString()].NPackets = 0;
-                devices_list[handler.ToString()].sampleRate = dev.sampleRate;
-                devices_list[handler.ToString()].offsetTime = dev.offsetTime;
-                devices_list[handler.ToString()].Rtc = dev.Rtc;
-                devices_list[handler.ToString()].Stream = false;
-                devices_list[handler.ToString()].Record = false;
-                */
-                
-                await Dispatcher.BeginInvoke(
-                    () => (deviceList.Content as DeviceList.DeviceList).
-                    connectIMU(dev.Id, handler)
-                );
-                
-                api.SetDeviceConfiguration(handler, 100, 3, out error);
-                api.updateDeviceConfiguration += setRTCDevice;
-                
-                
-                counter.Add(0);
+            // Update values
+            /*
+            devices_list[handler.ToString()].Id = dev.Id;
+            devices_list[handler.ToString()].Name = dev.Name;
+            devices_list[handler.ToString()].Connected = dev.Connected;
+            devices_list[handler.ToString()].HeaderInfo = dev.HeaderInfo;
+            devices_list[handler.ToString()].NPackets = 0;
+            devices_list[handler.ToString()].sampleRate = dev.sampleRate;
+            devices_list[handler.ToString()].offsetTime = dev.offsetTime;
+            devices_list[handler.ToString()].Rtc = dev.Rtc;
+            devices_list[handler.ToString()].Stream = false;
+            devices_list[handler.ToString()].Record = false;
+            */
 
-                Trace.WriteLine("DevList: " + devices_list[handler.ToString()].Id + " handler: " + handler.ToString());
+            await Dispatcher.BeginInvoke(
+                () => (deviceList.Content as DeviceList.DeviceList).
+                connectIMU(dev.Id, handler)
+            );
+
+            api.SetDeviceConfiguration(handler, 100, 3, out error);
+            api.SetRTCDevice(handler, GetDateTime(), out error);
+
+            counter.Add(0);
+
+            Trace.WriteLine("DevList: " + devices_list[handler.ToString()].Id + " handler: " + handler.ToString());
 
             /*
             }
@@ -347,15 +335,24 @@ namespace ibcdatacsharp.UI
             */
         }
 
-        
+        void Api_updateDeviceConfiguration(byte deviceHandler, byte sampleRate, byte packetType)
+        {
+            Trace.WriteLine($"Configured {deviceHandler} {sampleRate} {packetType}");
+        }
+
+        void Api_updateDeviceRTC(byte deviceHandler, DateTime dateTime)
+        {
+            Trace.WriteLine(dateTime.ToString());
+        }
+
 
         //Cálculo de Fecha y hora
         public DateTime GetDateTime()
         {
-            DateTime dateTime = new DateTime(2022, 11, 8, 13, 0, 0, 0);
+            return DateTime.Now;
+            DateTime dateTime = new DateTime(2023, 2, 17, 10, 10, 10, 100);
             return dateTime;
         }
-
         //End métodos de WiseWare
 
         // Cambia el icono de la ventana
