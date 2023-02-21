@@ -11,6 +11,8 @@ namespace ibcdatacsharp.UI.Filters
             filters = new List<Filter>();
             filters.Add(new None());
             filters.Add(new EKF());
+            filters.Add(new Mahoney());
+            filters.Add(new Madgwick());
         }
         public void filter(ref WisewalkSDK.WisewalkData data)
         {
