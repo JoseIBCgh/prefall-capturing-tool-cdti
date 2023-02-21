@@ -152,21 +152,15 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 string handler = mainWindow.devices_list.Where(z => z.Value.Id == mac).FirstOrDefault().Key;
                 return byte.Parse(handler);
             }
-            /*
-            indices = new Dictionary<byte, int>();
 
-            List<IMUInfo> imus = deviceList.IMUsUsed;
-            if (imus.Count == TOTAL_SENSORS) //??
-            {
-                for(int i = 0; i < imus.Count; i++)
-                {
-                    byte handler = handlerFromMAC(imus[i].address);
-                    indices[handler] = (int)imus[i].id; // Supone que los ids son (0, 1, 2, 3)
-                }
-            }
-            */
             indices = new Dictionary<byte, int>();
             List<IMUInfo> imus = deviceList.IMUsUsed;
+            Trace.WriteLine("Lista UI");
+            foreach (IMUInfo imu in imus)
+            {
+                Trace.WriteLine("A = " + imu.A + ", MAC = " + imu.address);
+            }
+            Trace.WriteLine("Funcion de sagital angles");
             for (int i = 0; i < 4; i++)
             {
                 string i_str = i.ToString();
@@ -175,7 +169,11 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 {
                     byte handler = handlerFromMAC(imu.address);
                     indices[handler] = i;
-                    //Trace.WriteLine(handler + " " + i + " " + imu.address);
+                    Trace.WriteLine("A = " + i + " MAC = " + imu.address + " , handler = " + handler);
+                }
+                else
+                {
+                    Trace.WriteLine("A = " + i + " no encontrado");
                 }
             }
             ankle.initCapture();
