@@ -2,6 +2,7 @@
 using ScottPlot;
 using ScottPlot.Plottable;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -84,6 +85,10 @@ namespace ibcdatacsharp.UI.Graphs.Models
         {
             captureModel.updateData(data, render);
         }
+        public void redrawData(float[] data)
+        {
+            captureModel.redrawData(data);
+        }
         // Actualiza el renderizado
         public void render()
         {
@@ -129,10 +134,17 @@ namespace ibcdatacsharp.UI.Graphs.Models
         {
             valueEvent?.Invoke(this, value);
         }
+        public static int captureCapacity
+        {
+            get
+            {
+                return CaptureModel.CAPACITY;
+            }
+        }
         class CaptureModel
         {
             ModelSagital model;
-            private const int CAPACITY = 200;
+            public const int CAPACITY = 200;
             double[] values;
             SignalPlot signalPlot;
             private int nextIndex = 0;
@@ -173,6 +185,23 @@ namespace ibcdatacsharp.UI.Graphs.Models
                 {
                     model.plot.Render();
                 }
+            }
+            public void redrawData(float[] data)
+            {
+                int init_index = nextIndex % CAPACITY - data.Length;
+                Trace.WriteLine("init index = "+ init_index);
+                if(init_index < 0)
+                {
+                    init_index += CAPACITY;
+                }
+                Trace.WriteLine("init index definitive = " + init_index);
+                for (int i = 0; i < data.Length; i++)
+                {
+                    int index =  (init_index + i) % CAPACITY;
+                    values[index] = data[i];
+                }
+                model.invokeValue(data[data.Length - 1] + model.offset);
+                model.plot.Render();
             }
             public void updateData(double data)
             {
