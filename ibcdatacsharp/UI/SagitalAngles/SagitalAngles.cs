@@ -189,6 +189,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 }
             }
         }
+        /*
         public void test()
         {
             ankle.initCapture();
@@ -207,6 +208,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
             hip.drawData(new float[] { 0, 1, 90, 30 });
             knee.drawData(new float[] { 0, 1, 90, 60 });
         }
+        */
+        
         public void test2()
         {
             ankle.initCapture();
@@ -223,17 +226,43 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 {
                     mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
                 }
-                updateLeftAndRightQuats();
-                updateSegmentsAndJoints();
+                Quaternion mQ_left = new Quaternion();
+                Quaternion mQ_right = new Quaternion();
+                updateLeftAndRightQuats(mQ_virtual, ref mQ_left, ref mQ_right);
+                Quaternion[] mQ_joints = new Quaternion[TOTAL_JOINTS];
+                Quaternion[] mQ_segments = new Quaternion[TOTAL_SENSORS];
+                double[] eulerAnglesZ = new double[3];
+                updateSegmentsAndJoints(mQ_sensors_raw, mQ_left, mQ_right, ref mQ_joints, ref mQ_segments, ref eulerAnglesZ);
                 ankleData[i] = (float)eulerAnglesZ[ankleIndex];
                 hipData[i] = (float)eulerAnglesZ[hipIndex];
                 kneeData[i] = (float)eulerAnglesZ[kneeIndex];
             }
-            kneeData = new float[] {-0.7f,  -0.6f, -0.69f, -0.71f};
+            Trace.WriteLine("ankleData");
+            Trace.WriteLine("[");
+            foreach(double d in ankleData)
+            {
+                Trace.WriteLine(d);
+            }
+            Trace.WriteLine("]");
+            Trace.WriteLine("hipData");
+            Trace.WriteLine("[");
+            foreach (double d in hipData)
+            {
+                Trace.WriteLine(d);
+            }
+            Trace.WriteLine("]");
+            Trace.WriteLine("kneeData");
+            Trace.WriteLine("[");
+            foreach (double d in kneeData)
+            {
+                Trace.WriteLine(d);
+            }
+            Trace.WriteLine("]");
             ankle.drawData(ankleData);
             hip.drawData(hipData);
             knee.drawData(kneeData);
         }
+        
         public void processSerialData(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
             if(indices == null)
@@ -263,8 +292,13 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     {
                         mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
                     }
-                    updateLeftAndRightQuats();
-                    updateSegmentsAndJoints();
+                    Quaternion mQ_left = new Quaternion();
+                    Quaternion mQ_right = new Quaternion();
+                    updateLeftAndRightQuats(mQ_virtual, ref mQ_left, ref mQ_right);
+                    Quaternion[] mQ_joints = new Quaternion[TOTAL_JOINTS];
+                    Quaternion[] mQ_segments = new Quaternion[TOTAL_SENSORS];
+                    double[] eulerAnglesZ = new double[3];
+                    updateSegmentsAndJoints(mQ_sensors_raw, mQ_left, mQ_right, ref mQ_joints, ref mQ_segments, ref eulerAnglesZ);
                     ankleData[i] = (float)eulerAnglesZ[ankleIndex];
                     hipData[i] = (float)eulerAnglesZ[hipIndex];
                     kneeData[i] = (float)eulerAnglesZ[kneeIndex];
@@ -303,8 +337,13 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     {
                         mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
                     }
-                    updateLeftAndRightQuats();
-                    updateSegmentsAndJoints();
+                    Quaternion mQ_left = new Quaternion();
+                    Quaternion mQ_right = new Quaternion();
+                    updateLeftAndRightQuats(mQ_virtual, ref mQ_left, ref mQ_right);
+                    Quaternion[] mQ_joints = new Quaternion[TOTAL_JOINTS];
+                    Quaternion[] mQ_segments = new Quaternion[TOTAL_SENSORS];
+                    double[] eulerAnglesZ = new double[3];
+                    updateSegmentsAndJoints(mQ_sensors_raw, mQ_left, mQ_right, ref mQ_joints, ref mQ_segments, ref eulerAnglesZ);
                     int index = h * NUM_PACK + i;
                     ankleData[index] = (float)eulerAnglesZ[ankleIndex];
                     hipData[index] = (float)eulerAnglesZ[hipIndex];
@@ -382,7 +421,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             MessageBox.Show(message, "Info" , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
             //recalculate();
         }
-        public void updateLeftAndRightQuats()
+        public void updateLeftAndRightQuats(Quaternion mQ_virtual, ref Quaternion mQ_left, ref Quaternion mQ_right)
         {
 
             Quaternion Q_isb = new Quaternion(new Vector3(1, 0, 0), 90 * (float)Utils.M_PI / 180);
@@ -394,7 +433,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
             mQ_right = mQ_virtual * Q_isb;
             mQ_right = Quaternion.Normalize(mQ_right);
         }
-        public void updateSegmentsAndJoints()
+        public void updateSegmentsAndJoints(Quaternion[] mQ_sensors_raw, Quaternion mQ_left, Quaternion mQ_right,
+            ref Quaternion[] mQ_joints, ref Quaternion[] mQ_segments, ref double[] eulerAnglesZ)
         {
 
             //this->compensateRawQuats(mQ_sensors_raw);
