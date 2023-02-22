@@ -754,8 +754,7 @@ namespace ibcdatacsharp.UI
         #region SAGITAL ANGLES
         private void onCalculateMounting(object sender, EventArgs e)
         {
-            sagitalAngles.test2();
-            //sagitalAngles.calculateMounting();
+            sagitalAngles.calculateMounting();
         }
         private void onSaveFrontalReference(object sender, EventArgs e)
         {

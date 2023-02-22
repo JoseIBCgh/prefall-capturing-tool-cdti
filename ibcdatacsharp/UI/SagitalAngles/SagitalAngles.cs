@@ -1,6 +1,7 @@
 ﻿using ibcdatacsharp.DeviceList.TreeClasses;
 using ibcdatacsharp.UI.Common;
 using ibcdatacsharp.UI.DeviceList;
+using ibcdatacsharp.UI.Graphs.Models;
 using ibcdatacsharp.UI.Graphs.Sagital;
 using ibcdatacsharp.UI.ToolBar;
 using ibcdatacsharp.UI.ToolBar.Enums;
@@ -13,6 +14,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
@@ -66,6 +69,8 @@ namespace ibcdatacsharp.UI.SagitalAngles
         private List<Quaternion[,]> quat_history = new List<Quaternion[,]>();
 
         private bool recalculating = false;
+
+        System.Timers.Timer fakeTimer; // Datos falsos
 
         public SagitalAngles()
         {
@@ -189,6 +194,17 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 }
             }
         }
+        private void changeQuaternionsListDeterministic()
+        {
+            Vector3 axis = new Vector3(2, 3, 1);
+            for (int i = 0; i < NUM_PACK; i++)
+            {
+                for (int s = 0; s < TOTAL_SENSORS; s++)
+                {
+                    mQ_sensors_raw_list[i, s] = Quaternion.CreateFromAxisAngle(axis, i * s);
+                }
+            }
+        }
         /*
         public void test()
         {
@@ -209,14 +225,63 @@ namespace ibcdatacsharp.UI.SagitalAngles
             knee.drawData(new float[] { 0, 1, 90, 60 });
         }
         */
-        
+        // Datos falsos
+        public void fakeData()
+        {
+            ankle.initCapture();
+            hip.initCapture();
+            knee.initCapture();
+            quaternionCalcsConnect();
+            fakeTimer = new System.Timers.Timer();
+            fakeTimer.Interval = 40;
+            fakeTimer.Elapsed += (sender, eventArgs) =>
+            {
+                changeQuaternionsListRandom();
+                Quaternion[,] mQ_sensors_raw_list_clone = mQ_sensors_raw_list.Clone() as Quaternion[,];
+                quat_history.Add(mQ_sensors_raw_list_clone);
+                //updated_quats = new bool[TOTAL_SENSORS]; // Reinicializa a false
+                float[] ankleData = new float[NUM_PACK];
+                float[] hipData = new float[NUM_PACK];
+                float[] kneeData = new float[NUM_PACK];
+                for (int i = 0; i < NUM_PACK; i++)
+                {
+                    for (int s = 0; s < TOTAL_SENSORS; s++)
+                    {
+                        mQ_sensors_raw[s] = mQ_sensors_raw_list[i, s];
+                    }
+                    Quaternion mQ_left = new Quaternion();
+                    Quaternion mQ_right = new Quaternion();
+                    updateLeftAndRightQuats(mQ_virtual, ref mQ_left, ref mQ_right);
+                    Quaternion[] mQ_joints = new Quaternion[TOTAL_JOINTS];
+                    Quaternion[] mQ_segments = new Quaternion[TOTAL_SENSORS];
+                    double[] eulerAnglesZ = new double[3];
+                    updateSegmentsAndJoints(mQ_sensors_raw, mQ_left, mQ_right, ref mQ_joints, ref mQ_segments, ref eulerAnglesZ);
+                    ankleData[i] = (float)eulerAnglesZ[ankleIndex];
+                    hipData[i] = (float)eulerAnglesZ[hipIndex];
+                    kneeData[i] = (float)eulerAnglesZ[kneeIndex];
+                }
+                ankle.drawData(ankleData);
+                hip.drawData(hipData);
+                knee.drawData(kneeData);
+            };
+            fakeTimer.Start();
+        }
+        // Datos falsos
+        public async void fakeRecalculate()
+        {
+            changeQuaternionsListRandom();
+            calculateMounting();
+            calculateVirtualOrientation();
+            recalculate();
+        }
+
         public void test2()
         {
             ankle.initCapture();
             hip.initCapture();
             knee.initCapture();
             quaternionCalcsConnect();
-            changeQuaternionsListRandom();
+            changeQuaternionsListDeterministic();
             float[] ankleData = new float[NUM_PACK];
             float[] hipData = new float[NUM_PACK];
             float[] kneeData = new float[NUM_PACK];
@@ -277,7 +342,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
             IMUsReceived++;
             //updated_quats[index] = true;
             //if (updated_quats.All(x => x)) // si todos son true
-            if(IMUsReceived % 4 == 0 && !recalculating)
+            if(IMUsReceived % 4 == 0)
             {
                 // No se si hace falta esto
                 Quaternion[,] mQ_sensors_raw_list_clone = mQ_sensors_raw_list.Clone() as Quaternion[,];
@@ -323,12 +388,14 @@ namespace ibcdatacsharp.UI.SagitalAngles
         }
         private void recalculate()
         {
-            recalculating = true;
-            int size = NUM_PACK * quat_history.Count;
+            int size = Math.Min(NUM_PACK * quat_history.Count, ModelSagital.captureCapacity);
+            Trace.WriteLine("size = " + size);
             float[] ankleData = new float[size];
             float[] hipData = new float[size];
             float[] kneeData = new float[size];
-            for (int h = 0; h < quat_history.Count; h++)
+            int last_index = quat_history.Count - 1; // quat_history.Count puede cambiar en medio del bucle
+            int start_index = Math.Max(quat_history.Count - (ModelSagital.captureCapacity / NUM_PACK), 0);
+            for (int h = start_index; h < last_index; h++)
             {
                 Quaternion[,] mQ_sensors_raw_list = quat_history[h];
                 for (int i = 0; i < NUM_PACK; i++)
@@ -344,7 +411,7 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     Quaternion[] mQ_segments = new Quaternion[TOTAL_SENSORS];
                     double[] eulerAnglesZ = new double[3];
                     updateSegmentsAndJoints(mQ_sensors_raw, mQ_left, mQ_right, ref mQ_joints, ref mQ_segments, ref eulerAnglesZ);
-                    int index = h * NUM_PACK + i;
+                    int index = (h - start_index) * NUM_PACK + i;
                     ankleData[index] = (float)eulerAnglesZ[ankleIndex];
                     hipData[index] = (float)eulerAnglesZ[hipIndex];
                     kneeData[index] = (float)eulerAnglesZ[kneeIndex];
@@ -353,7 +420,6 @@ namespace ibcdatacsharp.UI.SagitalAngles
             ankle.redrawData(ankleData);
             hip.redrawData(hipData);
             knee.redrawData(kneeData);
-            recalculating = false;
         }
         public void quaternionCalcsConnect()
         {
@@ -388,8 +454,11 @@ namespace ibcdatacsharp.UI.SagitalAngles
             {
                 mQ_sensors_ref[iSen] = Quaternion.Normalize(mQ_sensors_ref[iSen]);
             }
-            MessageBox.Show("Sensor Mounting Done", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-            //recalculate();
+            Task.Run(() =>
+            {
+                MessageBox.Show("Sensor Mounting Done", "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
+            });
+            recalculate();
         }
         public void calculateVirtualOrientation()
         {
@@ -418,8 +487,11 @@ namespace ibcdatacsharp.UI.SagitalAngles
             string message = "Frontal Reference Done\n" + "Q_virtual_creator: " +
                 mQ_virtual.X.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.Y.ToString("0.#", CultureInfo.InvariantCulture) + ", " +
                 mQ_virtual.Z.ToString("0.#", CultureInfo.InvariantCulture) + ", " + mQ_virtual.W.ToString("0.#", CultureInfo.InvariantCulture) + "\n";
-            MessageBox.Show(message, "Info" , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
-            //recalculate();
+            Task.Run(() =>
+            {
+                MessageBox.Show(message, "Info", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.Yes);
+            });
+            recalculate();
         }
         public void updateLeftAndRightQuats(Quaternion mQ_virtual, ref Quaternion mQ_left, ref Quaternion mQ_right)
         {
