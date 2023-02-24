@@ -39,7 +39,12 @@
                     </Style>
                 </controls:MultiSelectTreeViewItem.ItemContainerStyle>
                 <controls:MultiSelectTreeViewItem.Header>
-                    <Grid Width="420">
+                    <Grid Width="380">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontSize" Value="11" />
+                            </Style>
+                        </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="0.5*"/>
@@ -47,7 +52,7 @@
                             <ColumnDefinition Width="0.5*"/>
                             <ColumnDefinition Width="0.5*"/>
                             <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2.25*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
@@ -64,7 +69,24 @@
                 </controls:MultiSelectTreeViewItem.Header>
                 <controls:MultiSelectTreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:IMUInfo}">
-                        <Grid Margin="-19,0,0,0" Width="420">
+                        <Grid Margin="-19,0,0,0" Width="380">
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="FontSize" Value="11" />
+                                </Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Width" Value="15" />
+                                    <Setter Property="Height" Value="15"/>
+                                </Style>
+                                <Style TargetType="{x:Type CheckBox}">
+                                    <Setter Property="Width" Value="15" />
+                                    <Setter Property="Height" Value="15"/>
+                                </Style>
+                                <Style TargetType="{x:Type ComboBox}">
+                                    <Setter Property="Height" Value="20"/>
+                                    <Setter Property="FontSize" Value="10" />
+                                </Style>
+                            </Grid.Resources>
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem IsEnabled="{Binding Path=used}" Header="Set as Reference" Click="setIMUasReference" />
@@ -78,19 +100,19 @@
                                 <ColumnDefinition Width="0.5*"/>
                                 <ColumnDefinition Width="0.5*"/>
                                 <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2.25*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Image Grid.Column="1" Height="15" Width="15" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
-                            <CheckBox IsEnabled="{Binding Path=connected, Converter={StaticResource jaEnabledConverted}}" Grid.Column="2" Height="15" Width="15" IsChecked="{Binding Path=used}" Checked="onCheckIMU"/>
+                            <Image Grid.Column="1" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
+                            <CheckBox IsEnabled="{Binding Path=connected, Converter={StaticResource jaEnabledConverted}}" Grid.Column="2" IsChecked="{Binding Path=used}" Checked="onCheckIMU"/>
                             <ComboBox Grid.Column="3" Text="{Binding Path=A}">
                                 <ComboBoxItem>0</ComboBoxItem>
                                 <ComboBoxItem>1</ComboBoxItem>
                                 <ComboBoxItem>2</ComboBoxItem>
                                 <ComboBoxItem>3</ComboBoxItem>
                             </ComboBox>
-                            <Image Grid.Column="4" Height="15" Width="15" Source="{Binding Path=connected, Converter={StaticResource connectedConverter}}"/>
+                            <Image Grid.Column="4" Source="{Binding Path=connected, Converter={StaticResource connectedConverter}}"/>
                             <TextBlock Text="{Binding Path=id}" Grid.Column="5" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="6" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=address}" Grid.Column="7" TextAlignment="Center" />
@@ -107,10 +129,15 @@
                     </Style>
                 </controls:MultiSelectTreeViewItem.ItemContainerStyle>
                 <controls:MultiSelectTreeViewItem.Header>
-                    <Grid Width="280">
+                    <Grid Width="260">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontSize" Value="11" />
+                            </Style>
+                        </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.75*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -124,16 +151,25 @@
                 </controls:MultiSelectTreeViewItem.Header>
                 <controls:MultiSelectTreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:CameraInfo}">
-                        <Grid Margin="-19,0,0,0" Width="280">
+                        <Grid Margin="-19,0,0,0" Width="260">
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="FontSize" Value="11" />
+                                </Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Width" Value="15" />
+                                    <Setter Property="Height" Value="15"/>
+                                </Style>
+                            </Grid.Resources>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="15"/>
                                 <ColumnDefinition Width="15"/>
-                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.75*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Image Grid.Column="1" Height="15" Width="15" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
+                            <Image Grid.Column="1" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="2" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=number}" Grid.Column="3" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=fps}" Grid.Column="4" TextAlignment="Center"/>
@@ -144,6 +180,11 @@
             <controls:MultiSelectTreeViewItem ItemsSource="{Binding insoles}" Visibility="Collapsed" x:Name="insoles" Padding="0 10 0 2.5">
                 <controls:MultiSelectTreeViewItem.Header>
                     <Grid Width="280">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontSize" Value="11" />
+                            </Style>
+                        </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="1.5*"/>
@@ -161,6 +202,15 @@
                 <controls:MultiSelectTreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:InsolesInfo}">
                         <Grid Margin="-19,0,0,0" Width="280">
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="FontSize" Value="11" />
+                                </Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Width" Value="15" />
+                                    <Setter Property="Height" Value="15"/>
+                                </Style>
+                            </Grid.Resources>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="15"/>
                                 <ColumnDefinition Width="15"/>

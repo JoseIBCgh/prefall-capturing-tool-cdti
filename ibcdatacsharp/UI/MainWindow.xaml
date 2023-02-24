@@ -19,7 +19,7 @@
             <dock:LayoutRoot>
                 <dock:LayoutPanel Orientation="Vertical" DockHeight="*" DockWidth="*">
                     <dock:LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="1.5*" DockWidth="*">
-                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.75*">
+                        <dock:LayoutAnchorablePane DockHeight="*" DockWidth="0.5*">
                             <dock:LayoutAnchorable x:Name="leftPanelAnchorable" CanFloat="True" CanClose="False" CanHide="True" CanAutoHide="False">
                                 <TabControl Grid.Column="0" TabStripPlacement="Top">
                                     <TabItem Header="Devices">
