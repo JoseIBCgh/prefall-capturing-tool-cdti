@@ -390,9 +390,9 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     string dataline = "";
                     for (int i = 0; i < NUM_PACK; i++)
                     {
-                        dataline += "1 " + (fakets + 0.01 * i).ToString("F2") + " " + (frame + i).ToString() + " " +
-                            ankleData[i].ToString("F2") + " " + hipData[i].ToString("F2") + " " +
-                            kneeData[i].ToString("F2") + "\n";
+                        dataline += "1 " + (fakets + 0.01 * i).ToString("F2", CultureInfo.InvariantCulture) + " " + (frame + i).ToString() + " " +
+                            ankleData[i].ToString("F2", CultureInfo.InvariantCulture) + " " + hipData[i].ToString("F2", CultureInfo.InvariantCulture) + " " +
+                            kneeData[i].ToString("F2", CultureInfo.InvariantCulture) + "\n";
                     }
                     frame += NUM_PACK;
                     fakets += NUM_PACK * 0.01f;
