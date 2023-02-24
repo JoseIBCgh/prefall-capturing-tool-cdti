@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ibcdatacsharp.UI.ToolBar"
       mc:Ignorable="d" 
-      d:DesignHeight="60" d:DesignWidth="1000"
+      d:DesignHeight="30" d:DesignWidth="1000"
       Title="ToolBar">
 
     <DockPanel Background="LightGray">
@@ -49,12 +49,12 @@
                 </Style.Triggers>
             </Style>
             <Style TargetType="{x:Type Image}">
-                <Setter Property="Width" Value="30"/>
-                <Setter Property="Height" Value="30"/>
+                <Setter Property="Width" Value="15"/>
+                <Setter Property="Height" Value="15"/>
             </Style>
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="TextAlignment" Value="Center"/>
-                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="FontSize" Value="8"/>
             </Style>
             <Style TargetType="{x:Type StackPanel}">
                 <Setter Property="Margin" Value="5 0 5 0"/>
@@ -145,25 +145,25 @@
             </StackPanel>
         </Button>
         <StackPanel Orientation="Horizontal">
-            <TextBlock VerticalAlignment="Center" Padding="5" FontSize="11">Filters</TextBlock>
+            <TextBlock VerticalAlignment="Center" Padding="5">Filters</TextBlock>
             <ComboBox VerticalAlignment="Center" x:Name="filters">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding name}"/>
+                        <TextBlock FontSize="8" Text="{Binding name}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        <Button x:Name="calculateMounting" DockPanel.Dock="Left" MaxWidth="70">
+        <Button x:Name="calculateMounting" DockPanel.Dock="Left" MaxWidth="75">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/calculateMounting-icon.png"/>
-                <TextBlock FontSize="10" TextWrapping="Wrap">Calculate mounting</TextBlock>
+                <TextBlock FontSize="7">Calculate mounting</TextBlock>
             </StackPanel>
         </Button>
-        <Button x:Name="saveFrontalReference" DockPanel.Dock="Left" MaxWidth="70">
+        <Button x:Name="saveFrontalReference" DockPanel.Dock="Left" MaxWidth="80">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/saveFrontalReference-icon.png"/>
-                <TextBlock FontSize="10" TextWrapping="Wrap">Save frontal reference</TextBlock>
+                <TextBlock FontSize="7">Save frontal reference</TextBlock>
             </StackPanel>
         </Button>
         <Frame Visibility="Collapsed" Source="pack://application:,,,/UI/FileSaver/SavingMenu.xaml" x:Name="savingMenu" DockPanel.Dock="Right"/>
