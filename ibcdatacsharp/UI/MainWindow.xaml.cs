@@ -347,6 +347,10 @@ namespace ibcdatacsharp.UI
             //devices_list[deviceHandler.ToString()].HeaderInfo = dev.HeaderInfo;
             //devices_list[deviceHandler.ToString()].sampleRate = dev.sampleRate;
             //devices_list[deviceHandler.ToString()].offsetTime = dev.offsetTime;
+            Dispatcher.BeginInvoke(
+                () => (deviceList.Content as DeviceList.DeviceList).
+                updateHeaderInfo(dev.Id, deviceHandler)
+            );
 
             SetLogText(devices_list[deviceHandler.ToString()].Id, "Receive header info from " + dev.HeaderInfo.macAddress);
 
