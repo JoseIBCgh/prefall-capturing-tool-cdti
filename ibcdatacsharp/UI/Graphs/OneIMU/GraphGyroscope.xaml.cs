@@ -21,7 +21,7 @@ namespace ibcdatacsharp.UI.Graphs.OneIMU
         public GraphGyroscope()
         {
             InitializeComponent();
-            model = new Model3S(plot, -50, 50, title: "Gyroscope", units: "g/s^2");
+            model = new Model3S(plot, -1000, 1000, title: "Gyroscope", units: "g/s^2");
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
             device = mainWindow.device;
             DataContext = this;
