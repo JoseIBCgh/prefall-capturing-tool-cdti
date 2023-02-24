@@ -43,15 +43,20 @@ namespace ibcdatacsharp.UI.Graphs.Sagital
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                model.clear(render: false);
-                model.updateData(data);
+                lock (model)
+                {
+                    model.redrawData(data);
+                }
             });
         }
         public async void drawData(float[] data)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                model.updateData(data);
+                lock (model)
+                {
+                    model.updateData(data);
+                }
             });
         }
         private void onUpdateAngle(object sender, double value)

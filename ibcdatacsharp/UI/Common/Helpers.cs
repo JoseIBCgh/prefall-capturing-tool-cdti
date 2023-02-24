@@ -76,6 +76,7 @@ namespace ibcdatacsharp.UI.Common
         }
         public static float NormalizeAngle(float angle)
         {
+            /*
             while(angle > 360)
             {
                 angle -= 360;
@@ -84,7 +85,8 @@ namespace ibcdatacsharp.UI.Common
             {
                 angle += 360;
             }
-            return angle;
+            */
+            return angle % 360;
         }
         public static Vector3 AngularVelocityFromQuaternions(Quaternion q1, Quaternion q2, double dt)
         {
