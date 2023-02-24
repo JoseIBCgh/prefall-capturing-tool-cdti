@@ -984,6 +984,7 @@ namespace ibcdatacsharp.UI.Graphs
                         angle_ref = Helpers.ToEulerAngles(refq);
                         for (int i = 0; i < 4; i++)
                         {
+                            /*
                             Quaternion q_rot = q_upper[i] * Quaternion.Inverse(q_lower[i]);
                             Vector3 angle = Helpers.ToEulerAngles(q_rot);
                             a1 = angle.X;
@@ -998,7 +999,8 @@ namespace ibcdatacsharp.UI.Graphs
                             angleX[i] = a1;
                             angleY[i] = a2;
                             angleZ[i] = a3;
-                            /*
+                            */
+                            
                             Vector3 angle_low = new();
                             Vector3 angle_up = new();
                             angle_low = Helpers.ToEulerAngles(q_lower[i]);
@@ -1015,7 +1017,7 @@ namespace ibcdatacsharp.UI.Graphs
                             angleX[i] = a1;
                             angleY[i] = a2;
                             angleZ[i] = a3;
-                            */
+                            
 
                             // trace.writeline(":::::: angle joint: " + a1.tostring() + " " + a2.tostring() + " " + a3.tostring());
 
