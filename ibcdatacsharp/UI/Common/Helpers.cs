@@ -1,4 +1,6 @@
-﻿using System.Windows.Media;
+﻿//#define NORMALIZE_ANGLE_STATS
+
+using System.Windows.Media;
 using System.Windows;
 using System.Numerics;
 using System;
@@ -87,6 +89,114 @@ namespace ibcdatacsharp.UI.Common
             }
             */
             return angle % 360;
+        }
+        // El angulo siempre esta en el rango -360 360
+        public static float NormalizeAngle(float angle, float closeAngle)
+        {
+            angle = angle % 360;
+            float dif = Math.Abs(angle - closeAngle);
+            if (angle < 0)
+            {
+                float angleTest = angle + 360;
+                float difTest = Math.Abs(angleTest - closeAngle);
+                if (difTest < dif)
+                {
+                    return angleTest;
+                }
+                return angle;
+            }
+            if(angle > 0)
+            {
+                float angleTest = angle - 360;
+                float difTest = Math.Abs(angleTest - closeAngle);
+                if (difTest < dif)
+                {
+                    return angleTest;
+                }
+                return angle;
+            }
+            // Si llega aqui angle == 0
+            if(closeAngle < -180)
+            {
+                return -360;
+            }
+            if(closeAngle > 180)
+            {
+                return 360;
+            }
+            return 0;
+        }
+#if NORMALIZE_ANGLE_STATS
+        private static int NormalizeAngleWhileIter = 0;
+        private static int NormalizeAngleCalls = 0;
+#endif
+        // Forma general. El angulo se puede salir del rango -360 360
+        public static float NormalizeAngleLoop(float angle, float closeAngle)
+        {
+#if NORMALIZE_ANGLE_STATS
+            NormalizeAngleCalls++;
+#endif
+            float dif = Math.Abs(angle - closeAngle);
+            float angleRes = angle;
+            float difRes = dif;
+            float angleTest = angle;
+            while(angleTest <= 0)
+            {
+#if NORMALIZE_ANGLE_STATS
+                NormalizeAngleWhileIter++;
+#endif
+                angleTest += 360;
+                float difTest = Math.Abs(angleTest - closeAngle);
+                if(difTest < difRes)
+                {
+                    angleRes = angleTest;
+                    difRes = difTest;
+                }
+                else if(difTest > dif)
+                {
+                    break;
+                }
+            }
+            angleTest = angle;
+            while (angleTest >= 0)
+            {
+#if NORMALIZE_ANGLE_STATS
+                NormalizeAngleWhileIter++;
+#endif
+                angleTest -= 360;
+                float difTest = Math.Abs(angleTest - closeAngle);
+                if (difTest < difRes)
+                {
+                    angleRes = angleTest;
+                    difRes = difTest;
+                }
+                else if (difTest > dif)
+                {
+                    break;
+                }
+            }
+#if NORMALIZE_ANGLE_STATS
+            if(NormalizeAngleCalls % 1000 == 0)
+            {
+                Trace.WriteLine("average while iterations per call: " + (float)NormalizeAngleWhileIter / NormalizeAngleCalls);
+            }
+#endif
+            return angleRes;
+        }
+        public static void NormalizeAngleTest()
+        {
+            float[] angles = new float[] {10, -180, 320, -250};
+            float[] prevs = new float[] {20, 0, 280, 0};
+            float[] res = new float[] { 10, -180, 320, 110 };
+            Trace.WriteLine("Normalize Angle Test");
+            for(int i = 0; i < angles.Length; i++)
+            {
+                float a = NormalizeAngle(angles[i], prevs[i]);
+                if(a != res[i])
+                {
+                    Trace.WriteLine("res = " + a + ", angle = " + angles[i] + ", prev = " + prevs[i]);
+                }
+            }
         }
         public static Vector3 AngularVelocityFromQuaternions(Quaternion q1, Quaternion q2, double dt)
         {

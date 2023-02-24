@@ -205,6 +205,10 @@ namespace ibcdatacsharp.UI.Graphs
         private byte handler_lower;
         private byte handler_upper;
 
+        float angleXprev = 0;
+        float angleYprev = 0;
+        float angleZprev = 0;
+
 
         Vector3 v0, v1, v2, v3;
 
@@ -533,6 +537,9 @@ namespace ibcdatacsharp.UI.Graphs
                         }
                         virtualToolBar.stopEvent += onStop;
                     }
+                    angleXprev = 0;
+                    angleYprev = 0;
+                    angleZprev = 0;
 
                     /*
                     if (numIMUs == 1)
@@ -774,6 +781,9 @@ namespace ibcdatacsharp.UI.Graphs
                             mainWindow.startActiveDevices();
                         }
                     }
+                    angleXprev = 0;
+                    angleYprev = 0;
+                    angleZprev = 0;
                     /*
                     if (numIMUs == 1)
                     {
@@ -1011,9 +1021,12 @@ namespace ibcdatacsharp.UI.Graphs
                             a1 = Helpers.ToDegrees(a1);
                             a2 = Helpers.ToDegrees(a2);
                             a3 = Helpers.ToDegrees(a3);
-                            a1 = Helpers.NormalizeAngle(a1);
-                            a2 = Helpers.NormalizeAngle(a2);
-                            a3 = Helpers.NormalizeAngle(a3);
+                            a1 = Helpers.NormalizeAngle(a1, angleXprev);
+                            angleXprev = a1;
+                            a2 = Helpers.NormalizeAngle(a2, angleYprev);
+                            angleYprev = a2;
+                            a3 = Helpers.NormalizeAngle(a3, angleZprev);
+                            angleZprev = a3;
                             angleX[i] = a1;
                             angleY[i] = a2;
                             angleZ[i] = a3;
