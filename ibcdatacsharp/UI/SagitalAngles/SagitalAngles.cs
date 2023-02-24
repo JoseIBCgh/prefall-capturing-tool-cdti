@@ -387,12 +387,15 @@ namespace ibcdatacsharp.UI.SagitalAngles
                 knee.drawData(kneeData);
                 if (virtualToolBar.recordState == RecordState.Recording)
                 {
+                    float offsetAnkle = (float)ankle.model.offset;
+                    float offsetHip = (float)hip.model.offset;
+                    float offsetKnee = (float)knee.model.offset;
                     string dataline = "";
                     for (int i = 0; i < NUM_PACK; i++)
                     {
                         dataline += "1 " + (fakets + 0.01 * i).ToString("F2", CultureInfo.InvariantCulture) + " " + (frame + i).ToString() + " " +
-                            ankleData[i].ToString("F2", CultureInfo.InvariantCulture) + " " + hipData[i].ToString("F2", CultureInfo.InvariantCulture) + " " +
-                            kneeData[i].ToString("F2", CultureInfo.InvariantCulture) + "\n";
+                            (ankleData[i] + offsetAnkle).ToString("F2", CultureInfo.InvariantCulture) + " " + (hipData[i] + offsetHip).ToString("F2", CultureInfo.InvariantCulture) + " " +
+                            (kneeData[i] + offsetKnee).ToString("F2", CultureInfo.InvariantCulture) + "\n";
                     }
                     frame += NUM_PACK;
                     fakets += NUM_PACK * 0.01f;
