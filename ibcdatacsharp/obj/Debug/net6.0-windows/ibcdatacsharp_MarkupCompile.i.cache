@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\Deva\wsibc\ibcdatacsharp\ibcdatacsharp\App.xaml
 23-1873570785
 
-96-731656991
+1001787177548
 222-1679697847
 UI\CamaraViewport\CamaraViewport.xaml;UI\DeviceList\DeviceList.xaml;UI\FileBrowser\FileBrowser.xaml;UI\FileSaver\SavingMenu.xaml;UI\Graphs\OneIMU\GraphAccelerometer.xaml;UI\Graphs\OneIMU\GraphGyroscope.xaml;UI\Graphs\OneIMU\GraphLinAcc.xaml;UI\Graphs\OneIMU\GraphMagnetometer.xaml;UI\Graphs\OneIMU\GraphQuaternion.xaml;UI\Graphs\Sagital\GraphAnkle.xaml;UI\Graphs\Sagital\GraphHip.xaml;UI\Graphs\Sagital\GraphKnee.xaml;UI\Graphs\TwoIMU\AngleGraphX.xaml;UI\Graphs\TwoIMU\AngleGraphY.xaml;UI\Graphs\TwoIMU\AngleGraphZ.xaml;UI\Graphs\TwoIMU\GraphAngularAcceleration.xaml;UI\Graphs\TwoIMU\GraphAngularVelocity.xaml;UI\MainWindow.xaml;UI\MenuBar\MenuBar.xaml;UI\MenuBar\Version.xaml;UI\Subjects\Subjects.xaml;UI\TimeLine\TimeLine.xaml;UI\ToolBar\ToolBar.xaml;
 
-False
+True
 

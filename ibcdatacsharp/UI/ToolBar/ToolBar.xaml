@@ -54,7 +54,7 @@
             </Style>
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="TextAlignment" Value="Center"/>
-                <Setter Property="FontSize" Value="8"/>
+                <Setter Property="FontSize" Value="11"/>
             </Style>
             <Style TargetType="{x:Type StackPanel}">
                 <Setter Property="Margin" Value="5 0 5 0"/>
@@ -149,21 +149,21 @@
             <ComboBox VerticalAlignment="Center" x:Name="filters">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock FontSize="8" Text="{Binding name}"/>
+                        <TextBlock FontSize="10" Text="{Binding name}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        <Button x:Name="calculateMounting" DockPanel.Dock="Left" MaxWidth="75">
+        <Button x:Name="calculateMounting" DockPanel.Dock="Left" MaxWidth="80">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/calculateMounting-icon.png"/>
-                <TextBlock FontSize="7">Calculate mounting</TextBlock>
+                <TextBlock>Set mounting</TextBlock>
             </StackPanel>
         </Button>
-        <Button x:Name="saveFrontalReference" DockPanel.Dock="Left" MaxWidth="80">
+        <Button x:Name="saveFrontalReference" DockPanel.Dock="Left" MaxWidth="120">
             <StackPanel>
                 <Image Source="pack://application:,,,/UI/ToolBar/Icons/saveFrontalReference-icon.png"/>
-                <TextBlock FontSize="7">Save frontal reference</TextBlock>
+                <TextBlock >Set Frontal Reference</TextBlock>
             </StackPanel>
         </Button>
         <Frame Visibility="Collapsed" Source="pack://application:,,,/UI/FileSaver/SavingMenu.xaml" x:Name="savingMenu" DockPanel.Dock="Right"/>

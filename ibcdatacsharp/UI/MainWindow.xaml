@@ -6,7 +6,7 @@
         xmlns:dock="https://github.com/Dirkster99/AvalonDock"
         xmlns:local="clr-namespace:ibcdatacsharp.UI"
         mc:Ignorable="d"
-        Title="Data Acquisition Tool[(c) Copyright 2022 IBC Biomechanics build 1.0.0]" Height="900" Width="1400">
+        Title="Data Acquisition Tool[(c) Copyright 2023 IBC Biomechanics build 1.0.2]" Height="900" Width="1400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

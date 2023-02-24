@@ -28,11 +28,11 @@
                 </StackPanel.Resources>
                 <TextBlock>
                     <Hyperlink NavigateUri="https://ibc.bio" RequestNavigate="hiperlinkRequestNavigate">
-                        (c) 2022 IBC Biomechanics
+                        (c) 2023 IBC Biomechanics
                     </Hyperlink>
                 </TextBlock>
                 <TextBlock FontWeight="Black">
-                    IMU Data Adquisition Tool v1.0.0
+                    IMU Data Adquisition Tool v1.0.1
                 </TextBlock>
                 <TextBlock>
                     http://ibc.bio
