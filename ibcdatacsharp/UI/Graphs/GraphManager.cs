@@ -17,6 +17,7 @@ using ibcdatacsharp.UI.Graphs.Sagital;
 using ibcdatacsharp.UI.SagitalAngles;
 using System.Linq;
 using System.Net;
+using System.Globalization;
 
 namespace ibcdatacsharp.UI.Graphs
 {
@@ -852,7 +853,16 @@ namespace ibcdatacsharp.UI.Graphs
             frame = 0;
             sagitalAngles.initRecord();
         }
-
+        private void gyroDegrees(ref WisewalkSDK.WisewalkData data)
+        {
+            const float D = 57.296f;
+            for (int i = 0; i < data.Imu.Count; i++)
+            {
+                data.Imu[i].gyro_x *= D;
+                data.Imu[i].gyro_y *= D;
+                data.Imu[i].gyro_z *= D;
+            }
+        }
         //Begin Wise
         //Callback para recoger datas del IMU
         public void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
@@ -864,6 +874,7 @@ namespace ibcdatacsharp.UI.Graphs
             switch (numIMUs)
             {
                 case 1:
+                    gyroDegrees(ref data);
                     Vector3[] v = new Vector3[4];
                     for (int i = 0; i < 4; i++)
                     {
@@ -879,15 +890,15 @@ namespace ibcdatacsharp.UI.Graphs
                         string dataline = "";
                         for (int i = 0; i < 4; i++)
                         {
-                            dataline += "1 " + (fakets + 0.01 * i).ToString("F2") + " " + (frame + i).ToString() + " " +
-                                data.Imu[i].acc_x.ToString("F3") + " " + data.Imu[i].acc_y.ToString("F3") + " " +
-                                data.Imu[i].acc_z.ToString("F3") + " " + data.Imu[i].gyro_x.ToString("F3") + " " +
-                                data.Imu[i].gyro_y.ToString("F3") + " " + data.Imu[i].gyro_z.ToString("F3") + " " +
-                                data.Imu[i].mag_x.ToString("F3") + " " + data.Imu[i].mag_y.ToString("F3") + " " +
-                                data.Imu[i].mag_z.ToString("F3") + " " + v[i].X.ToString("F3") + " " +
-                                v[i].Y.ToString("F3") + " " + v[i].Z.ToString("F3") + " " +
-                                data.Quat[i].X.ToString("0.##") + " " + data.Quat[i].Y.ToString("0.##") + " " +
-                                data.Quat[i].Z.ToString("0.##") + " " + data.Quat[i].W.ToString("0.##") + "\n";
+                            dataline += "1 " + (fakets + 0.01 * i).ToString("F2",CultureInfo.InvariantCulture) + " " + (frame + i).ToString(CultureInfo.InvariantCulture) + " " +
+                                data.Imu[i].acc_x.ToString("F3",CultureInfo.InvariantCulture) + " " + data.Imu[i].acc_y.ToString("F3",CultureInfo.InvariantCulture) + " " +
+                                data.Imu[i].acc_z.ToString("F3",CultureInfo.InvariantCulture) + " " + data.Imu[i].gyro_x.ToString("F3",CultureInfo.InvariantCulture) + " " +
+                                data.Imu[i].gyro_y.ToString("F3",CultureInfo.InvariantCulture) + " " + data.Imu[i].gyro_z.ToString("F3",CultureInfo.InvariantCulture) + " " +
+                                data.Imu[i].mag_x.ToString("F3",CultureInfo.InvariantCulture) + " " + data.Imu[i].mag_y.ToString("F3",CultureInfo.InvariantCulture) + " " +
+                                data.Imu[i].mag_z.ToString("F3",CultureInfo.InvariantCulture) + " " + v[i].X.ToString("F3",CultureInfo.InvariantCulture) + " " +
+                                v[i].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + v[i].Z.ToString("F3",CultureInfo.InvariantCulture) + " " +
+                                data.Quat[i].X.ToString("0.##",CultureInfo.InvariantCulture) + " " + data.Quat[i].Y.ToString("0.##",CultureInfo.InvariantCulture) + " " +
+                                data.Quat[i].Z.ToString("0.##",CultureInfo.InvariantCulture) + " " + data.Quat[i].W.ToString("0.##",CultureInfo.InvariantCulture) + "\n";
                         }
 
                         mainWindow.fileSaver.appendCSVManual(dataline);
@@ -973,6 +984,21 @@ namespace ibcdatacsharp.UI.Graphs
                         angle_ref = Helpers.ToEulerAngles(refq);
                         for (int i = 0; i < 4; i++)
                         {
+                            Quaternion q_rot = q_upper[i] * Quaternion.Inverse(q_lower[i]);
+                            Vector3 angle = Helpers.ToEulerAngles(q_rot);
+                            a1 = angle.X;
+                            a2 = angle.Y;
+                            a3 = angle.Z;
+                            a1 = Helpers.ToDegrees(a1);
+                            a2 = Helpers.ToDegrees(a2);
+                            a3 = Helpers.ToDegrees(a3);
+                            a1 = Helpers.NormalizeAngle(a1);
+                            a2 = Helpers.NormalizeAngle(a2);
+                            a3 = Helpers.NormalizeAngle(a3);
+                            angleX[i] = a1;
+                            angleY[i] = a2;
+                            angleZ[i] = a3;
+                            /*
                             Vector3 angle_low = new();
                             Vector3 angle_up = new();
                             angle_low = Helpers.ToEulerAngles(q_lower[i]);
@@ -989,6 +1015,7 @@ namespace ibcdatacsharp.UI.Graphs
                             angleX[i] = a1;
                             angleY[i] = a2;
                             angleZ[i] = a3;
+                            */
 
                             // trace.writeline(":::::: angle joint: " + a1.tostring() + " " + a2.tostring() + " " + a3.tostring());
 
@@ -1031,10 +1058,10 @@ namespace ibcdatacsharp.UI.Graphs
 
                         if (virtualToolBar.recordState == RecordState.Recording)
                         {
-                            dataline = "1 " + fakets.ToString("F2") + " " + frame.ToString() + " " + angleX[0].ToString("F3") + " " + angleY[0].ToString("F3") + " " + angleZ[0].ToString("F3") + " " + angularVelocity[0].X.ToString("F3") + " " + angularVelocity[0].Y.ToString("F3") + " " + angularVelocity[0].Z.ToString("F3") + " " + angularAcceleration[0].X.ToString("F3") + " " + angularAcceleration[0].Y.ToString("F3") + " " + angularAcceleration[0].Z.ToString("F3") + "\n" +
-                            "1 " + (fakets + 0.01).ToString("F2") + " " + (frame + 1).ToString() + " " + angleX[1].ToString("F3") + " " + angleY[1].ToString("F3") + " " + angleZ[1].ToString("F3") + " " + angularVelocity[1].X.ToString("F3") + " " + angularVelocity[1].Y.ToString("F3") + " " + angularVelocity[1].Z.ToString("F3") + " " + angularAcceleration[1].X.ToString("F3") + " " + angularAcceleration[1].Y.ToString("F3") + " " + angularAcceleration[1].Z.ToString("F3") + "\n" +
-                            "1 " + (fakets + 0.02).ToString("F2") + " " + (frame + 2).ToString() + " " + angleX[2].ToString("F3") + " " + angleY[2].ToString("F3") + " " + angleZ[2].ToString("F3") + " " + angularVelocity[2].X.ToString("F3") + " " + angularVelocity[2].Y.ToString("F3") + " " + angularVelocity[2].Z.ToString("F3") + " " + angularAcceleration[2].X.ToString("F3") + " " + angularAcceleration[2].Y.ToString("F3") + " " + angularAcceleration[2].Z.ToString("F3") + "\n" +
-                            "1 " + (fakets + 0.03).ToString("F2") + " " + (frame + 3).ToString() + " " + angleX[3].ToString("F3") + " " + angleY[3].ToString("F3") + " " + angleZ[3].ToString("F3") + " " + angularVelocity[3].X.ToString("F3") + " " + angularVelocity[3].Y.ToString("F3") + " " + angularVelocity[3].Z.ToString("F3") + " " + angularAcceleration[3].X.ToString("F3") + " " + angularAcceleration[3].Y.ToString("F3") + " " + angularAcceleration[3].Z.ToString("F3") + "\n";
+                            dataline = "1 " + fakets.ToString("F2",CultureInfo.InvariantCulture) + " " + frame.ToString() + " " + angleX[0].ToString("F3",CultureInfo.InvariantCulture) + " " + angleY[0].ToString("F3",CultureInfo.InvariantCulture) + " " + angleZ[0].ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[0].X.ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[0].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[0].Z.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[0].X.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[0].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[0].Z.ToString("F3",CultureInfo.InvariantCulture) + "\n" +
+                            "1 " + (fakets + 0.01).ToString("F2",CultureInfo.InvariantCulture) + " " + (frame + 1).ToString() + " " + angleX[1].ToString("F3",CultureInfo.InvariantCulture) + " " + angleY[1].ToString("F3",CultureInfo.InvariantCulture) + " " + angleZ[1].ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[1].X.ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[1].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[1].Z.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[1].X.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[1].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[1].Z.ToString("F3",CultureInfo.InvariantCulture) + "\n" +
+                            "1 " + (fakets + 0.02).ToString("F2",CultureInfo.InvariantCulture) + " " + (frame + 2).ToString() + " " + angleX[2].ToString("F3",CultureInfo.InvariantCulture) + " " + angleY[2].ToString("F3",CultureInfo.InvariantCulture) + " " + angleZ[2].ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[2].X.ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[2].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[2].Z.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[2].X.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[2].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[2].Z.ToString("F3",CultureInfo.InvariantCulture) + "\n" +
+                            "1 " + (fakets + 0.03).ToString("F2",CultureInfo.InvariantCulture) + " " + (frame + 3).ToString() + " " + angleX[3].ToString("F3",CultureInfo.InvariantCulture) + " " + angleY[3].ToString("F3",CultureInfo.InvariantCulture) + " " + angleZ[3].ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[3].X.ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[3].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + angularVelocity[3].Z.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[3].X.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[3].Y.ToString("F3",CultureInfo.InvariantCulture) + " " + angularAcceleration[3].Z.ToString("F3",CultureInfo.InvariantCulture) + "\n";
 
                             mainWindow.fileSaver.appendCSVManual(dataline);
                         }
