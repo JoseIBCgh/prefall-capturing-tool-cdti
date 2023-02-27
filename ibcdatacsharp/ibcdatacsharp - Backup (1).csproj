@@ -1,0 +1,248 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="UI\DeviceList\Icons\arrow-icon.png" />
+    <None Remove="UI\DeviceList\Icons\camera-blue-icon-small.png" />
+    <None Remove="UI\DeviceList\Icons\camera-blue-icon.png" />
+    <None Remove="UI\DeviceList\Icons\camera-icon.png" />
+    <None Remove="UI\DeviceList\Icons\green-circle-icon.png" />
+    <None Remove="UI\DeviceList\Icons\imu-blue-icon-small.png" />
+    <None Remove="UI\DeviceList\Icons\imu-blue-icon.png" />
+    <None Remove="UI\DeviceList\Icons\imu-icon.png" />
+    <None Remove="UI\DeviceList\Icons\insole-blue-icon-small.png" />
+    <None Remove="UI\DeviceList\Icons\insole-blue-icon.png" />
+    <None Remove="UI\DeviceList\Icons\insole-icon.png" />
+    <None Remove="UI\DeviceList\Icons\red-circle-icon.png" />
+    <None Remove="UI\MenuBar\Icons\ibc-logo.png" />
+    <None Remove="UI\TimeLine\Icons\fast-backward-icon.png" />
+    <None Remove="UI\TimeLine\Icons\fast-forward-icon.png" />
+    <None Remove="UI\TimeLine\Icons\play-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\capture-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\capturedFiles-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\connect-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\disconnect-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\openCamera-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\pause-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\play-pause-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\record-stop-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\scan-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\Blue\stop-blue-icon.png" />
+    <None Remove="UI\ToolBar\Icons\calculateMounting-icon.png" />
+    <None Remove="UI\ToolBar\Icons\capture-icon.png" />
+    <None Remove="UI\ToolBar\Icons\capturedFiles-icon.png" />
+    <None Remove="UI\ToolBar\Icons\connect-icon.png" />
+    <None Remove="UI\ToolBar\Icons\disconnect-icon.png" />
+    <None Remove="UI\ToolBar\Icons\openCamera-icon.png" />
+    <None Remove="UI\ToolBar\Icons\OriginalcalculateMounting-icon.png" />
+    <None Remove="UI\ToolBar\Icons\pause-icon.png" />
+    <None Remove="UI\ToolBar\Icons\play-pause-icon.png" />
+    <None Remove="UI\ToolBar\Icons\record-recording-icon.png" />
+    <None Remove="UI\ToolBar\Icons\record-stop-icon.png" />
+    <None Remove="UI\ToolBar\Icons\sagitalAngles-icon.png" />
+    <None Remove="UI\ToolBar\Icons\saveFrontalReference-icon.png" />
+    <None Remove="UI\ToolBar\Icons\scan-icon.png" />
+    <None Remove="UI\ToolBar\Icons\stop-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DirectShowLib" Version="1.0.0" />
+    <PackageReference Include="DirectShowLib.Standard" Version="2.1.0" />
+    <PackageReference Include="Dirkster.AvalonDock" Version="4.70.2" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Include="MultiSelectTreeView" Version="1.0.9" />
+    <PackageReference Include="OpenCvSharp4" Version="4.6.0.20220608" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.6.0.20220608" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.6.0.20220608" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.6.0.20220608" />
+    <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
+    <PackageReference Include="RealTimeGraphX" Version="1.0.17" />
+    <PackageReference Include="RealTimeGraphX.WPF" Version="1.0.17" />
+    <PackageReference Include="ScottPlot.WPF" Version="4.1.58" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="7.0.0" />
+    <PackageReference Include="System.Management" Version="7.0.0" />
+    <PackageReference Include="System.Management.dll" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WisewalkSDK">
+      <HintPath>..\..\wisewalkapi\WisewalkSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="UI\DeviceList\Icons\arrow-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\camera-blue-icon-small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\camera-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\camera-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\green-circle-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\imu-blue-icon-small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\imu-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\imu-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\insole-blue-icon-small.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\insole-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\insole-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\DeviceList\Icons\red-circle-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\MenuBar\Icons\ibc-logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\TimeLine\Icons\fast-backward-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\TimeLine\Icons\fast-forward-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\TimeLine\Icons\play-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\capture-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\capturedFiles-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\connect-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\disconnect-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\openCamera-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\pause-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\play-pause-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\record-stop-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\scan-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\Blue\stop-blue-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\calculateMounting-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\OriginalcalculateMounting-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\capture-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\capturedFiles-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\connect-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\disconnect-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\openCamera-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\pause-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\play-pause-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\record-recording-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\record-stop-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\sagitalAngles-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\saveFrontalReference-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\scan-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\ToolBar\Icons\stop-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="UI\Graphs\TwoIMU\AngleGraphZ.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Graphs\TwoIMU\AngleGraphY.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Graphs\Sagital\GraphAnkle.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Graphs\Sagital\GraphKnee.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UI\Graphs\TwoIMU\AngleGraphZ.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\TwoIMU\AngleGraphY.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\Sagital\GraphAnkle.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Graphs\Sagital\GraphKnee.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>
