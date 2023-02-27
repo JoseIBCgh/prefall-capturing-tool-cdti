@@ -38,6 +38,8 @@ namespace ibcdatacsharp.UI.Graphs.TwoIMU
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("degrees/s\xB2");
+            this.plot.Plot.Style(ScottPlot.Style.Burgundy);
+
         }
         public void initCapture()
         {

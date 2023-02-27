@@ -1,6 +1,8 @@
 ﻿using ibcdatacsharp.UI.Device;
 using ibcdatacsharp.UI.Graphs.Models;
+using ScottPlot;
 using System;
+using System.Drawing;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,6 +35,8 @@ namespace ibcdatacsharp.UI.Graphs.TwoIMU
 
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("degrees");
+            this.plot.Plot.Style(ScottPlot.Style.Burgundy);  //Modificar estilos.
+           
         }
         private void onUpdateAngle(object sender, double value)
         {

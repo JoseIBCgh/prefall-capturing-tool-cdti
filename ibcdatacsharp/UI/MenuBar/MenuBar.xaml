@@ -12,10 +12,10 @@
         <view:ViewInfo x:Name="ViewVM"/>
     </Page.DataContext>
     <!--Algunos color del menuItem no se pueden cambiar directamente-->
-    
-    <DockPanel>
-        <Menu DockPanel.Dock="Top" Height="30" Foreground="Black">
-            <MenuItem Header="Connect" x:Name="connectMenu" Height="30">
+
+    <DockPanel Margin="0,-15,0,0">
+        <Menu DockPanel.Dock="Top" Height="30" Foreground="Black" >
+            <MenuItem Header="Connect" x:Name="connectMenu" Height="30" >
                 <MenuItem Header="Scan" x:Name="scan">
                     <MenuItem.IsEnabled>
                         <Binding Path="scanEnabled" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>

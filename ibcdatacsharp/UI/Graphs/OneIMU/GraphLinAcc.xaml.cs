@@ -37,7 +37,8 @@ namespace ibcdatacsharp.UI.Graphs.OneIMU
             device = mainWindow.device;
             DataContext = this;
             this.plot.Plot.XLabel("Frames");
-            this.plot.Plot.YLabel("m/s\xB2"); ;
+            this.plot.Plot.YLabel("m/s\xB2");
+            this.plot.Plot.Style(ScottPlot.Style.Burgundy);
         }
         public void initCapture()
         {
