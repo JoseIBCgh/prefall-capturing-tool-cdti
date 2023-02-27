@@ -31,6 +31,8 @@ namespace ibcdatacsharp.UI.Graphs.TwoIMU
 
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("degrees");
+            this.plot.Plot.Style(ScottPlot.Style.Burgundy);
+
         }
         private void onUpdateAngle(object sender, double value)
         {

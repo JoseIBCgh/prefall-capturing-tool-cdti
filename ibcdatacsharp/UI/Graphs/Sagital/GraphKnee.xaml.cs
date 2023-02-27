@@ -21,6 +21,7 @@ namespace ibcdatacsharp.UI.Graphs.Sagital
             model = new ModelSagital(plot, "Flexion", "Hyperextension");
             model.valueEvent += onUpdateAngle;
             DataContext = this;
+            this.plot.Plot.Style(ScottPlot.Style.Burgundy);
         }
         public void initCapture()
         {

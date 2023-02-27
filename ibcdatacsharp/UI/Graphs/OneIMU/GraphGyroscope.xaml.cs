@@ -28,6 +28,7 @@ namespace ibcdatacsharp.UI.Graphs.OneIMU
 
             this.plot.Plot.XLabel("Frames");
             this.plot.Plot.YLabel("degrees/s");
+            this.plot.Plot.Style(ScottPlot.Style.Burgundy);
         }
         public void initCapture()
         {
