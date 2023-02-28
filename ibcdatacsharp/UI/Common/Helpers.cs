@@ -140,7 +140,7 @@ namespace ibcdatacsharp.UI.Common
             float angleRes = angle;
             float difRes = dif;
             float angleTest = angle;
-            while(angleTest <= 0)
+            while(angleTest <= closeAngle)
             {
 #if NORMALIZE_ANGLE_STATS
                 NormalizeAngleWhileIter++;
@@ -158,7 +158,7 @@ namespace ibcdatacsharp.UI.Common
                 }
             }
             angleTest = angle;
-            while (angleTest >= 0)
+            while (angleTest >= closeAngle)
             {
 #if NORMALIZE_ANGLE_STATS
                 NormalizeAngleWhileIter++;
@@ -210,6 +210,7 @@ namespace ibcdatacsharp.UI.Common
             return v;
 
         }
+        private static float maxDiference = 0;
         public static float AngularVelocityFromDegrees(float angle1, float angle0, float dt)
         {
             float angle1Rad = ToRadians(angle1);

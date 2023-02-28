@@ -1051,15 +1051,28 @@ namespace ibcdatacsharp.UI.Graphs
 
                             }
                         }
+                        float[] angleX_v_a = new float[4];
+                        float[] angleY_v_a = new float[4];
+                        float[] angleZ_v_a = new float[4];
+                        angleX_v_a[0] = Helpers.ClosestAngle(angleX[0], prev_angle.X);
+                        angleY_v_a[0] = Helpers.ClosestAngle(angleY[0], prev_angle.Y);
+                        angleZ_v_a[0] = Helpers.ClosestAngle(angleZ[0], prev_angle.Z);
+                        for(int i = 1; i < 4; i++)
+                        {
+                            angleX_v_a[i] = Helpers.ClosestAngle(angleX[i], angleX_v_a[i - 1]);
+                            angleY_v_a[i] = Helpers.ClosestAngle(angleY[i], angleY_v_a[i - 1]);
+                            angleZ_v_a[i] = Helpers.ClosestAngle(angleZ[i], angleZ_v_a[i - 1]);
+                        }
+
                         Vector3[] angularVelocity = new Vector3[4];
-                        angularVelocity[0].X = Helpers.AngularVelocityFromDegrees(angleX[0], prev_angle.X, dt);
-                        angularVelocity[0].Y = Helpers.AngularVelocityFromDegrees(angleY[0], prev_angle.Y, dt);
-                        angularVelocity[0].Z = Helpers.AngularVelocityFromDegrees(angleZ[0], prev_angle.Z, dt);
+                        angularVelocity[0].X = Helpers.AngularVelocityFromDegrees(angleX_v_a[0], prev_angle.X, dt);
+                        angularVelocity[0].Y = Helpers.AngularVelocityFromDegrees(angleY_v_a[0], prev_angle.Y, dt);
+                        angularVelocity[0].Z = Helpers.AngularVelocityFromDegrees(angleZ_v_a[0], prev_angle.Z, dt);
                         for (int i = 1; i < 4; i++)
                         {
-                            angularVelocity[i].X = Helpers.AngularVelocityFromDegrees(angleX[i], angleX[i - 1], dt);
-                            angularVelocity[i].Y = Helpers.AngularVelocityFromDegrees(angleY[i], angleY[i - 1], dt);
-                            angularVelocity[i].Z = Helpers.AngularVelocityFromDegrees(angleZ[i], angleZ[i - 1], dt);
+                            angularVelocity[i].X = Helpers.AngularVelocityFromDegrees(angleX_v_a[i], angleX_v_a[i - 1], dt);
+                            angularVelocity[i].Y = Helpers.AngularVelocityFromDegrees(angleY_v_a[i], angleY_v_a[i - 1], dt);
+                            angularVelocity[i].Z = Helpers.AngularVelocityFromDegrees(angleZ_v_a[i], angleZ_v_a[i - 1], dt);
                         }
                         prev_angle = new Vector3(angleX[3], angleY[3], angleZ[3]);
 
