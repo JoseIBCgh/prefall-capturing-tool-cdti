@@ -91,7 +91,7 @@ namespace ibcdatacsharp.UI.Common
             return angle % 360;
         }
         // El angulo siempre esta en el rango -360 360
-        public static float NormalizeAngle(float angle, float closeAngle)
+        public static float ClosestAngle360(float angle, float closeAngle)
         {
             angle = angle % 360;
             float dif = Math.Abs(angle - closeAngle);
@@ -131,7 +131,7 @@ namespace ibcdatacsharp.UI.Common
         private static int NormalizeAngleCalls = 0;
 #endif
         // Forma general. El angulo se puede salir del rango -360 360
-        public static float NormalizeAngleLoop(float angle, float closeAngle)
+        public static float ClosestAngle(float angle, float closeAngle)
         {
 #if NORMALIZE_ANGLE_STATS
             NormalizeAngleCalls++;
@@ -183,7 +183,7 @@ namespace ibcdatacsharp.UI.Common
 #endif
             return angleRes;
         }
-        public static void NormalizeAngleTest()
+        public static void ClosestAngleTest()
         {
             float[] angles = new float[] {10, -180, 320, -250};
             float[] prevs = new float[] {20, 0, 280, 0};
@@ -191,7 +191,7 @@ namespace ibcdatacsharp.UI.Common
             Trace.WriteLine("Normalize Angle Test");
             for(int i = 0; i < angles.Length; i++)
             {
-                float a = NormalizeAngle(angles[i], prevs[i]);
+                float a = ClosestAngle(angles[i], prevs[i]);
                 if(a != res[i])
                 {
                     Trace.WriteLine("res = " + a + ", angle = " + angles[i] + ", prev = " + prevs[i]);

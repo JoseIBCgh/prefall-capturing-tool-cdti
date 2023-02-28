@@ -1021,11 +1021,11 @@ namespace ibcdatacsharp.UI.Graphs
                             a1 = Helpers.ToDegrees(a1);
                             a2 = Helpers.ToDegrees(a2);
                             a3 = Helpers.ToDegrees(a3);
-                            a1 = Helpers.NormalizeAngle(a1, angleXprev);
+                            a1 = Helpers.ClosestAngle360(a1, angleXprev);
                             angleXprev = a1;
-                            a2 = Helpers.NormalizeAngle(a2, angleYprev);
+                            a2 = Helpers.ClosestAngle360(a2, angleYprev);
                             angleYprev = a2;
-                            a3 = Helpers.NormalizeAngle(a3, angleZprev);
+                            a3 = Helpers.ClosestAngle360(a3, angleZprev);
                             angleZprev = a3;
                             angleX[i] = a1;
                             angleY[i] = a2;
