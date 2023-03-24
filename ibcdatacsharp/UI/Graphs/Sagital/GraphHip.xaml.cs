@@ -34,7 +34,7 @@ namespace ibcdatacsharp.UI.Graphs.Sagital
             model = new ModelSagital(plot, "Flexion", "Extension");
             model.valueEvent += onUpdateAngle;
             DataContext = this;
-            this.plot.Plot.Style(ScottPlot.Style.Burgundy);
+            //this.plot.Plot.Style(ScottPlot.Style.Burgundy); //El estilo hay que cambiarlo en ModelSagital porque hay que quitar el XAxis2 para tener mas espacio
         }
         public void initCapture()
         {

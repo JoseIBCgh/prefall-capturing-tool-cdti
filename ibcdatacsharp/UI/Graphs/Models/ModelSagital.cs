@@ -45,6 +45,7 @@ namespace ibcdatacsharp.UI.Graphs.Models
             replayModel = new ReplayModel(this);
             this.plot = plot;
             plot.Plot.SetAxisLimitsY(yMin: MIN_Y, yMax: MAX_Y);
+            plot.Plot.XAxis2.SetSizeLimit(min: 0, max: 0, pad: 2.5f);
 
             Annotation upperAnnotation = plot.Plot.AddAnnotation(upper, -10, 10);
             upperAnnotation.BackgroundColor = Color.Transparent;
@@ -60,7 +61,8 @@ namespace ibcdatacsharp.UI.Graphs.Models
             lineFrame = plot.Plot.AddVerticalLine(0, color: frameColor, width: verticalLineWidth, LineStyle.Dash);
             lineZero = plot.Plot.AddHorizontalLine(0, color: zeroColor, width: zeroLineWidth, LineStyle.Dash);
 
-            plot.Plot.Style(Style.Seaborn);
+            //plot.Plot.Style(Style.Burgundy); //Cambiar estilo aqui mejor, se cambia a todos
+
             plot.Refresh();
         }
         public void initCapture()
