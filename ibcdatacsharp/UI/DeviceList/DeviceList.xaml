@@ -172,7 +172,7 @@
                             <Image Grid.Column="1" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="2" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=number}" Grid.Column="3" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding Path=fps}" Grid.Column="4" TextAlignment="Center"/>
+                            <ComboBox ItemsSource="{Binding Path=fps}" Grid.Column="4" HorizontalContentAlignment="Center"/>
                         </Grid>
                     </DataTemplate>
                 </controls:MultiSelectTreeViewItem.ItemTemplate>

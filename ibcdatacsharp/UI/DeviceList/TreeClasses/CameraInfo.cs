@@ -1,5 +1,6 @@
 ﻿using ibcdatacsharp.Common;
-
+using System.Collections.Generic;
+using System.Windows.Documents;
 
 namespace ibcdatacsharp.DeviceList.TreeClasses
 {
@@ -16,16 +17,16 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<int>("number"); }
             set { SetValue("number", value); }
         }
-        public int? fps
+        public List<double> fps
         {
-            get { return GetValue<int?>("fps"); }
+            get { return GetValue<List<double>>("fps"); }
             set { SetValue("fps", value); }
         }
-        public CameraInfo(int number, string name)
+        public CameraInfo(int number, string name, List<double> fps)
         {
             this.number = number;
             this.name = name;
-            this.fps = null;
+            this.fps = fps;
         }
     }
 }

@@ -31,6 +31,8 @@ using Microsoft.VisualBasic.ApplicationServices;
 using ibcdatacsharp.UI.Common;
 using ibcdatacsharp.UI.Filters;
 using ibcdatacsharp.UI.Graphs;
+using System.Runtime.InteropServices;
+using MathNet.Numerics.LinearAlgebra.Solvers;
 
 namespace ibcdatacsharp.UI
 {
@@ -490,13 +492,31 @@ namespace ibcdatacsharp.UI
                                 indices.Add(index);
                                 capture.Release();
                             }
+                            
                         }
                         return indices;
                     }
+                    List<double> fpsValues(int index)
+                    {
+                        const int ITERATIONS = 100;
+                        using (var capture = new VideoCapture(index))
+                        {
+                            List<double> fpsValues = new List<double>();
+                            for (int i = 0; i < ITERATIONS; i++)
+                            {
+                                capture.Set(VideoCaptureProperties.Fps, i);
+                                var fps = capture.Get(VideoCaptureProperties.Fps);
+                                if (!fpsValues.Contains(fps))
+                                {
+                                    fpsValues.Add(fps);
+                                }
+                            }
+                            return fpsValues;
+                        }
+                    }
                     List<string> names = await Task.Run(() => cameraNames());
-                    //names.ForEach(n => Trace.WriteLine(n));
                     List<int> indices = await Task.Run(() => cameraIndices(names.Count));
-                    //indices.ForEach(i => Trace.WriteLine(i));
+
                     await Task.Run(() => getIMUs()); //necesario para escanear IMUs
 
                     List<CameraInfo> cameras = new List<CameraInfo>();
@@ -504,7 +524,8 @@ namespace ibcdatacsharp.UI
                     {
                         if (indices.Contains(i))
                         {
-                            cameras.Add(new CameraInfo(i, names[i]));
+                            List<double> fps = fpsValues(i);
+                            cameras.Add(new CameraInfo(i, names[i], fps));
                         }
                     }
                     deviceListClass.setCameras(cameras);
