@@ -524,7 +524,7 @@ namespace ibcdatacsharp.UI
                     {
                         if (indices.Contains(i))
                         {
-                            List<double> fps = fpsValues(i);
+                            List<double> fps = await Task.Run(() => fpsValues(i));
                             cameras.Add(new CameraInfo(i, names[i], fps));
                         }
                     }
