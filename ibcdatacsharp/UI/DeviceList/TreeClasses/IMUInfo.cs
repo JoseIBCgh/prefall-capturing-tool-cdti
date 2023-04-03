@@ -97,8 +97,8 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
                         imuReplaced.replaceJoint();
                     }
                     jointsUsed[value.Value] = this;
-                    SetValue("side", value);
                 }
+                SetValue("joint", value);
             }
         }
         public void replaceJoint()

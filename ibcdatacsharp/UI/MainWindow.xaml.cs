@@ -521,7 +521,7 @@ namespace ibcdatacsharp.UI
                     Random random = new Random();
                     imus.Add(new IMUInfo("ActiSense", random.NextSingle().ToString()));
                     imus.Add(new IMUInfo("ActiSense2", random.NextSingle().ToString()));
-                    
+                    imus.Add(new IMUInfo("ActiSense3", random.NextSingle().ToString()));
 
                     deviceListClass.setIMUs(imus);
                     MessageBox.Show(scanDevices.Count + " IMUs encontrados", "Scan Devices", MessageBoxButton.OK, MessageBoxImage.Information);

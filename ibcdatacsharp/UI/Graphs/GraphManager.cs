@@ -205,10 +205,14 @@ namespace ibcdatacsharp.UI.Graphs
         private byte handler_lower;
         private byte handler_upper;
 
+        private byte handler_base;
+        private byte handler_mob;
+
         float angleXprev = 0;
         float angleYprev = 0;
         float angleZprev = 0;
 
+        Utils.RotSeq? rotSeq = null;
 
         Vector3 v0, v1, v2, v3;
 
@@ -234,6 +238,24 @@ namespace ibcdatacsharp.UI.Graphs
             saveTimeLine();
 
             mainWindow.virtualToolBar.saveEvent += onInitRecord;
+            
+            if(mainWindow.toolBar.Content == null)
+            {
+                mainWindow.toolBar.Navigated += (s, e) =>
+                {
+                    ((ToolBar.ToolBar)mainWindow.toolBar.Content).rotationSequenceEvent += (s, rotSeq) =>
+                    {
+                        this.rotSeq = rotSeq;
+                    };
+                };
+            }
+            else
+            {
+                ((ToolBar.ToolBar)mainWindow.toolBar.Content).rotationSequenceEvent += (s, rotSeq) =>
+                {
+                    this.rotSeq = rotSeq;
+                };
+            }
 
             refq.W = 0.176144f;
             refq.X = -0.189621f;
@@ -478,6 +500,11 @@ namespace ibcdatacsharp.UI.Graphs
             {
                 handler_lower = handlerFromMAC(imus[0].address);
                 handler_upper = handlerFromMAC(imus[1].address);
+                if(rotSeq != null)
+                {
+                    handler_base = handlerFromMAC(imus.First(imu => imu.joint == DeviceList.Enums.Joint.qbase).address);
+                    handler_mob = handlerFromMAC(imus.First(imu => imu.joint == DeviceList.Enums.Joint.qmob).address);
+                }
             }
         }
         public void activate()
@@ -970,7 +997,6 @@ namespace ibcdatacsharp.UI.Graphs
                             q_lower[i] = new Quaternion(X, Y, Z, W);
                         }
                         anglequat++;
-
                     }
                     else if (deviceHandler == handler_upper)
                     {
@@ -994,6 +1020,7 @@ namespace ibcdatacsharp.UI.Graphs
                         angle_ref = Helpers.ToEulerAngles(refq);
                         for (int i = 0; i < 4; i++)
                         {
+
                             /*
                             Quaternion q_rot = q_upper[i] * Quaternion.Inverse(q_lower[i]);
                             Vector3 angle = Helpers.ToEulerAngles(q_rot);
@@ -1010,26 +1037,55 @@ namespace ibcdatacsharp.UI.Graphs
                             angleY[i] = a2;
                             angleZ[i] = a3;
                             */
-                            
-                            Vector3 angle_low = new();
-                            Vector3 angle_up = new();
-                            angle_low = Helpers.ToEulerAngles(q_lower[i]);
-                            angle_up = Helpers.ToEulerAngles(q_upper[i]);
-                            a1 = angle_low.X - angle_up.X + angle_ref.X;
-                            a2 = angle_low.Y - angle_up.Y + angle_ref.Y;
-                            a3 = angle_low.Z - angle_up.Z + angle_ref.Z;
-                            a1 = Helpers.ToDegrees(a1);
-                            a2 = Helpers.ToDegrees(a2);
-                            a3 = Helpers.ToDegrees(a3);
-                            a1 = Helpers.ClosestAngle360(a1, angleXprev);
-                            angleXprev = a1;
-                            a2 = Helpers.ClosestAngle360(a2, angleYprev);
-                            angleYprev = a2;
-                            a3 = Helpers.ClosestAngle360(a3, angleZprev);
-                            angleZprev = a3;
-                            angleX[i] = a1;
-                            angleY[i] = a2;
-                            angleZ[i] = a3;
+                            if (rotSeq == null)
+                            {
+                                Vector3 angle_low = new();
+                                Vector3 angle_up = new();
+                                angle_low = Helpers.ToEulerAngles(q_lower[i]);
+                                angle_up = Helpers.ToEulerAngles(q_upper[i]);
+                                a1 = angle_low.X - angle_up.X + angle_ref.X;
+                                a2 = angle_low.Y - angle_up.Y + angle_ref.Y;
+                                a3 = angle_low.Z - angle_up.Z + angle_ref.Z;
+                                a1 = Helpers.ToDegrees(a1);
+                                a2 = Helpers.ToDegrees(a2);
+                                a3 = Helpers.ToDegrees(a3);
+                                a1 = Helpers.ClosestAngle360(a1, angleXprev);
+                                angleXprev = a1;
+                                a2 = Helpers.ClosestAngle360(a2, angleYprev);
+                                angleYprev = a2;
+                                a3 = Helpers.ClosestAngle360(a3, angleZprev);
+                                angleZprev = a3;
+                                angleX[i] = a1;
+                                angleY[i] = a2;
+                                angleZ[i] = a3;
+                            }
+                            else
+                            {
+                                Quaternion qmob;
+                                Quaternion qbase;
+                                if (handler_lower == handler_mob)
+                                {
+                                    qmob = q_lower[i];
+                                    qbase = q_upper[i];
+                                }
+                                else
+                                {
+                                    qmob = q_upper[i];
+                                    qbase = q_lower[i];
+                                }
+                                Quaternion qr = qbase * Quaternion.Conjugate(qmob);
+                                double[] res = new double[3];
+                                Utils.quaternion2euler(qr, ref res, rotSeq.Value);
+                                angleX[i] = (float)res[0];
+                                angleY[i] = (float)res[1];
+                                angleZ[i] = (float)res[2];
+                                if(i == 3)
+                                {
+                                    angleXprev = angleX[i];
+                                    angleYprev = angleY[i];
+                                    angleZprev = angleZ[i];
+                                }
+                            }
                             
 
                             // trace.writeline(":::::: angle joint: " + a1.tostring() + " " + a2.tostring() + " " + a3.tostring());
@@ -1054,14 +1110,23 @@ namespace ibcdatacsharp.UI.Graphs
                         float[] angleX_v_a = new float[4];
                         float[] angleY_v_a = new float[4];
                         float[] angleZ_v_a = new float[4];
-                        angleX_v_a[0] = Helpers.ClosestAngle(angleX[0], prev_angle.X);
-                        angleY_v_a[0] = Helpers.ClosestAngle(angleY[0], prev_angle.Y);
-                        angleZ_v_a[0] = Helpers.ClosestAngle(angleZ[0], prev_angle.Z);
-                        for(int i = 1; i < 4; i++)
+                        if (rotSeq == null)
                         {
-                            angleX_v_a[i] = Helpers.ClosestAngle(angleX[i], angleX_v_a[i - 1]);
-                            angleY_v_a[i] = Helpers.ClosestAngle(angleY[i], angleY_v_a[i - 1]);
-                            angleZ_v_a[i] = Helpers.ClosestAngle(angleZ[i], angleZ_v_a[i - 1]);
+                            angleX_v_a[0] = Helpers.ClosestAngle(angleX[0], prev_angle.X);
+                            angleY_v_a[0] = Helpers.ClosestAngle(angleY[0], prev_angle.Y);
+                            angleZ_v_a[0] = Helpers.ClosestAngle(angleZ[0], prev_angle.Z);
+                            for (int i = 1; i < 4; i++)
+                            {
+                                angleX_v_a[i] = Helpers.ClosestAngle(angleX[i], angleX_v_a[i - 1]);
+                                angleY_v_a[i] = Helpers.ClosestAngle(angleY[i], angleY_v_a[i - 1]);
+                                angleZ_v_a[i] = Helpers.ClosestAngle(angleZ[i], angleZ_v_a[i - 1]);
+                            }
+                        }
+                        else
+                        {
+                            angleX_v_a = angleX;
+                            angleY_v_a = angleY;
+                            angleZ_v_a = angleZ;
                         }
 
                         Vector3[] angularVelocity = new Vector3[4];

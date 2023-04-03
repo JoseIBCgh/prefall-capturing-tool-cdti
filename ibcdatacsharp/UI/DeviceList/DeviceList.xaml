@@ -126,7 +126,7 @@
                             <Image Grid.Column="4" Source="{Binding Path=connected, Converter={StaticResource connectedConverter}}"/>
                             <TextBlock Text="{Binding Path=id}" Grid.Column="5" TextAlignment="Center"/>
                             <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
-                                      SelectedItem="{Binding Path=side}" Grid.Column="6"/>
+                                      SelectedItem="{Binding Path=joint}" Grid.Column="6"/>
                             <TextBlock Text="{Binding Path=name}" Grid.Column="7" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=address}" Grid.Column="8" TextAlignment="Center" />
                             <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="9" TextAlignment="Center"/>
