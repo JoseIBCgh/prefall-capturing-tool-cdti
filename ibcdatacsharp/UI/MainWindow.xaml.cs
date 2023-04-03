@@ -498,16 +498,23 @@ namespace ibcdatacsharp.UI
                     }
                     List<double> fpsValues(int index)
                     {
+                        Trace.WriteLine("List<double> fpsValues(int index)");
                         const int ITERATIONS = 100;
                         using (var capture = new VideoCapture(index))
                         {
+                            Trace.WriteLine("using (var capture = new VideoCapture(index)) index = " + index);
                             List<double> fpsValues = new List<double>();
+                            Trace.WriteLine("for (int i = 0; i < ITERATIONS; i++)");
                             for (int i = 0; i < ITERATIONS; i++)
                             {
+                                Trace.WriteLine("i = " + i);
                                 capture.Set(VideoCaptureProperties.Fps, i);
+                                Trace.WriteLine("capture.Set(VideoCaptureProperties.Fps, i);");
                                 var fps = capture.Get(VideoCaptureProperties.Fps);
+                                Trace.WriteLine("capture.Get(VideoCaptureProperties.Fps); fps = " + fps);
                                 if (!fpsValues.Contains(fps))
                                 {
+                                    Trace.WriteLine("!fpsValues.Contains(fps) fps = " + fps);
                                     fpsValues.Add(fps);
                                 }
                             }
@@ -520,11 +527,15 @@ namespace ibcdatacsharp.UI
                     await Task.Run(() => getIMUs()); //necesario para escanear IMUs
 
                     List<CameraInfo> cameras = new List<CameraInfo>();
+                    Trace.WriteLine("for (int i = 0; i < names.Count; i++)");
                     for (int i = 0; i < names.Count; i++)
                     {
+                        Trace.WriteLine("i = " + i);
                         if (indices.Contains(i))
                         {
+                            Trace.WriteLine("indices.Contains " + i);
                             List<double> fps = await Task.Run(() => fpsValues(i));
+                            Trace.WriteLine("List<double> fps = await Task.Run(() => fpsValues(i)); i = " + i);
                             cameras.Add(new CameraInfo(i, names[i], fps));
                         }
                     }
