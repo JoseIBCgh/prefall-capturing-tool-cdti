@@ -3,10 +3,21 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:System="clr-namespace:System;assembly=mscorlib"
+      xmlns:sagital="clr-namespace:ibcdatacsharp.UI.SagitalAngles"
       xmlns:local="clr-namespace:ibcdatacsharp.UI.ToolBar"
       mc:Ignorable="d" 
-      d:DesignHeight="30" d:DesignWidth="1000"
+      d:DesignHeight="30" d:DesignWidth="1100"
       Title="ToolBar">
+
+    <Page.Resources>
+        <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="sagital:Utils+RotSeq"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Page.Resources>
 
     <DockPanel Background="LightGray" Margin="0,-15,0,0">
         <DockPanel.Resources>
@@ -166,6 +177,26 @@
                 <TextBlock >Set Frontal Reference</TextBlock>
             </StackPanel>
         </Button>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Margin" Value="2.5,0,2.5,0"/>
+                </Style>
+                <Style TargetType="{x:Type CheckBox}">
+                    <Setter Property="Margin" Value="2.5,0,2.5,0"/>
+                </Style>
+                <Style TargetType="{x:Type ComboBox}">
+                    <Setter Property="Margin" Value="2.5,0,2.5,0"/>
+                </Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="2.5,0,2.5,0"/>
+                </Style>
+            </StackPanel.Resources>
+            <CheckBox x:Name="rotationEnabled" VerticalAlignment="Center"></CheckBox>
+            <TextBlock VerticalAlignment="Center">Rotation</TextBlock>
+            <ComboBox x:Name="rotationSeq" MinWidth="50" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource dataFromEnum}}"/>
+            <Button IsEnabled="{Binding ElementName=rotationEnabled, Path=IsChecked}" VerticalAlignment="Center" Click="rotationAccept">Aplicar</Button>
+        </StackPanel>
         <Frame Visibility="Collapsed" Source="pack://application:,,,/UI/FileSaver/SavingMenu.xaml" x:Name="savingMenu" DockPanel.Dock="Right"/>
     </DockPanel>
 </Page>

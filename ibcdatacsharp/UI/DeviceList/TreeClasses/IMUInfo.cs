@@ -1,7 +1,10 @@
 ﻿using ibcdatacsharp.Common;
+using ibcdatacsharp.UI.DeviceList.Enums;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Documents;
+using static WisewalkSDK.Protocol_v3;
 
 namespace ibcdatacsharp.DeviceList.TreeClasses
 {
@@ -9,6 +12,18 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
     public class IMUInfo : BaseObject
     {
         private static HashSet<int> idsUsed = new HashSet<int>();
+        private static Dictionary<Joint, IMUInfo> jointsUsed = new Dictionary<Joint, IMUInfo>();
+        public static bool allRotationJointsUsed()
+        {
+            foreach (Joint joint in Enum.GetValues(typeof(Joint)))
+            {
+                if (!jointsUsed.ContainsKey(joint))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         public int? id
         {
             get { return GetValue<int>("id"); }
@@ -65,7 +80,45 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
                 SetValue("A", value); 
             }
         }
-
+        public Joint? joint
+        {
+            get { return GetValue<Joint?>("joint"); }
+            set
+            {
+                if (joint != null) // Libera la que estaba usando
+                {
+                    jointsUsed.Remove(joint.Value);
+                }
+                if (value != null)
+                {
+                    if (jointsUsed.ContainsKey(value.Value)) // Estaba usado ese side?
+                    {
+                        IMUInfo imuReplaced = jointsUsed[value.Value]; // Insole que usaba ese side
+                        imuReplaced.replaceJoint();
+                    }
+                    jointsUsed[value.Value] = this;
+                    SetValue("side", value);
+                }
+            }
+        }
+        public void replaceJoint()
+        {
+            Joint? oldJoint = this.joint;
+            Joint? unusedJoint = getUnusedJoint();
+            jointsUsed.Remove(oldJoint.Value);
+            joint = unusedJoint;
+        }
+        private static Joint? getUnusedJoint()
+        {
+            foreach (Joint joint in Enum.GetValues(typeof(Joint)))
+            {
+                if (!jointsUsed.ContainsKey(joint))
+                {
+                    return joint;
+                }
+            }
+            return null;
+        }
         public byte? handler { get; set; }
 
         public void checkJAUpdate()
