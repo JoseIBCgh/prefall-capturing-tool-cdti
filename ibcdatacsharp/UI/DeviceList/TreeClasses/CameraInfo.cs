@@ -17,12 +17,12 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<int>("number"); }
             set { SetValue("number", value); }
         }
-        public List<double> fps
+        public List<int> fps
         {
-            get { return GetValue<List<double>>("fps"); }
+            get { return GetValue<List<int>>("fps"); }
             set { SetValue("fps", value); }
         }
-        public CameraInfo(int number, string name, List<double> fps)
+        public CameraInfo(int number, string name, List<int> fps)
         {
             this.number = number;
             this.name = name;

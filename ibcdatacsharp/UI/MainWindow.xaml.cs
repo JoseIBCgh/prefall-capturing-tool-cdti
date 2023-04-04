@@ -34,6 +34,9 @@ using ibcdatacsharp.UI.Graphs;
 using System.Runtime.InteropServices;
 using MathNet.Numerics.LinearAlgebra.Solvers;
 
+using AForge.Video.DirectShow;
+using FilterCategory = DirectShowLib.FilterCategory;
+
 namespace ibcdatacsharp.UI
 {
     /// <summary>
@@ -468,10 +471,54 @@ namespace ibcdatacsharp.UI
                 // Añade las camaras al TreeView
                 async void addCameras(DeviceList.DeviceList deviceListClass)
                 {
+                    List<int>[] cameraFps()
+                    {
+                        Stopwatch stopwatch = Stopwatch.StartNew();
+                        var devices = new FilterInfoCollection(AForge.Video.DirectShow.FilterCategory.VideoInputDevice);
+                        List<int>[] cameraFps = new List<int>[devices.Count];
+                        for (int i = 0; i < devices.Count; i++)
+                        {
+
+                            cameraFps[i] = new List<int>();
+                            var captureDevice = new VideoCaptureDevice(devices[i].MonikerString);
+                            foreach (var capability in captureDevice.VideoCapabilities)
+                            {
+                                if (!cameraFps[i].Contains(capability.AverageFrameRate))
+                                {
+                                    cameraFps[i].Add(capability.AverageFrameRate);
+                                }
+                            }
+                        }
+                        Trace.WriteLine(stopwatch.Elapsed.TotalSeconds);
+                        return cameraFps;
+                    }
+                    Dictionary<int, int> DirectshowAforgeMap()
+                    {
+                        var aforgeDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+
+                        var directshowDevices = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+
+                        var deviceMap = new Dictionary<int, int>();
+
+                        for (int ai = 0; ai < aforgeDevices.Count; ai++)
+                        {
+                            for (int dsi = 0; dsi < directshowDevices.Count(); dsi++)
+                            {
+                                string monikerDs;
+                                directshowDevices[dsi].Mon.GetDisplayName(null, null, out monikerDs);
+                                if (aforgeDevices[ai].MonikerString == monikerDs)
+                                {
+                                    deviceMap.Add(dsi, ai);
+                                    break;
+                                }
+                            }
+                        }
+                        return deviceMap;
+                    }
                     // Devuelve el nombre de todas las camaras conectadas
                     List<string> cameraNames()
                     {
-                        List<DsDevice> devices = new List<DsDevice>(DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice));
+                        List<DsDevice> devices = new List<DsDevice>(DsDevice.GetDevicesOfCat(DirectShowLib.FilterCategory.VideoInputDevice));
                         List<string> cameraNames = new List<string>();
                         foreach (DsDevice device in devices)
                         {
@@ -480,7 +527,7 @@ namespace ibcdatacsharp.UI
                         return cameraNames;
                     }
                     // Devuelve una lista de indice OpenCV de las camaras disponibles
-                     List<int> cameraIndices(int maxIndex = 10)
+                    List<int> cameraIndices(int maxIndex = 10)
                     {
                         List<int> indices = new List<int>();
                         VideoCapture capture = new VideoCapture();
@@ -502,6 +549,7 @@ namespace ibcdatacsharp.UI
                         const int ITERATIONS = 100;
                         using (var capture = new VideoCapture(index))
                         {
+                            Stopwatch stopwatch = Stopwatch.StartNew();
                             Trace.WriteLine("using (var capture = new VideoCapture(index)) index = " + index);
                             List<double> fpsValues = new List<double>();
                             Trace.WriteLine("for (int i = 0; i < ITERATIONS; i++)");
@@ -518,10 +566,13 @@ namespace ibcdatacsharp.UI
                                     fpsValues.Add(fps);
                                 }
                             }
+                            Trace.WriteLine(stopwatch.Elapsed.TotalSeconds);
                             return fpsValues;
                         }
                     }
                     List<string> names = await Task.Run(() => cameraNames());
+                    List<int>[] fps = await Task.Run(() => cameraFps());
+                    Dictionary<int, int> directshowToAforge = await Task.Run(() => DirectshowAforgeMap());
                     List<int> indices = await Task.Run(() => cameraIndices(names.Count));
 
                     await Task.Run(() => getIMUs()); //necesario para escanear IMUs
@@ -534,13 +585,14 @@ namespace ibcdatacsharp.UI
                         if (indices.Contains(i))
                         {
                             Trace.WriteLine("indices.Contains " + i);
-                            List<double> fps = await Task.Run(() => fpsValues(i));
+                            List<int> camFps = fps[directshowToAforge[i]];
                             Trace.WriteLine("List<double> fps = await Task.Run(() => fpsValues(i)); i = " + i);
-                            cameras.Add(new CameraInfo(i, names[i], fps));
+                            cameras.Add(new CameraInfo(i, names[i], camFps));
                         }
                     }
                     deviceListClass.setCameras(cameras);
 
+                    
                     await Task.Delay(4000);
 
                     List<IMUInfo> imus = new List<IMUInfo>();
@@ -548,6 +600,7 @@ namespace ibcdatacsharp.UI
                     {
                         imus.Add(new IMUInfo("ActiSense", GetMacAddress(scanDevices, i)));
                     }
+                    
                     /* 
                     //IMUS falsos
                     Random random = new Random();
@@ -564,12 +617,13 @@ namespace ibcdatacsharp.UI
                 //deviceListClass.clearAll();
                 addCameras(deviceListClass);
                 deviceListClass.showCameras();
+                
                 // Añade datos inventados quitar
                 deviceListClass.showIMUs();
                 deviceListClass.showInsoles();
                 
                 deviceListClass.addInsole(new InsolesInfo("Insole", "Left"));
-                
+              
             }
             deviceListLoadedCheck(onScanFunction);
             virtualToolBar.onScanClick();
