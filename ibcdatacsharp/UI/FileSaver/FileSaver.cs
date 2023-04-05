@@ -139,7 +139,7 @@ namespace ibcdatacsharp.UI.FileSaver
         private void initRecordVideo()
         {
             timerVideo = new System.Timers.Timer();
-            timerVideo.Interval = RECORD_VIDEO_MS;
+            timerVideo.Interval = 1000 / camaraViewport.fps;
             timerVideo.Elapsed += (sender, e) => appendVideo();
 
             virtualToolBar.pauseEvent += onPauseVideo;
@@ -209,6 +209,9 @@ namespace ibcdatacsharp.UI.FileSaver
                 csvData = new StringBuilder();
                 switch (deviceList.numIMUsUsed)
                 {
+                    case 0:
+                        MessageBox.Show("You didn't select any IMU. This is for debug porpuses only", "Debug Mode", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        break;
                     case 1:
                         csvData.Append(Config.csvHeader1IMU);
                         break;
@@ -227,7 +230,7 @@ namespace ibcdatacsharp.UI.FileSaver
             {
                 videoFile = baseFilename + ".avi";
                 string pathVideoFile = path + Path.DirectorySeparatorChar + videoFile;
-                videoWriter = new VideoWriter(pathVideoFile, FourCC.DIVX, Config.VIDEO_FPS_SAVE, new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
+                videoWriter = new VideoWriter(pathVideoFile, FourCC.DIVX, camaraViewport.fps, new OpenCvSharp.Size(Config.FRAME_WIDTH, Config.FRAME_HEIGHT));
                 initRecordVideo();
             }
         }

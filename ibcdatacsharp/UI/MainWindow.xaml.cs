@@ -802,11 +802,12 @@ namespace ibcdatacsharp.UI
                         MultiSelectTreeViewItem treeViewItem = (MultiSelectTreeViewItem)deviceListClass.cameras.ItemContainerGenerator.ContainerFromItem(selected);
                         CameraInfo cameraInfo = treeViewItem.DataContext as CameraInfo;
                         int id = cameraInfo.number; //Id de la camara
+                        int fps = cameraInfo.fps;
                         CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;
                         if (!camaraViewportClass.someCameraOpened())
                         {
                             camaraViewportClass.Title = cameraInfo.name + " CAM " + id;
-                            camaraViewportClass.initializeCamara(id);
+                            camaraViewportClass.initializeCamara(id, fps);
                         }
                         break;
                     }

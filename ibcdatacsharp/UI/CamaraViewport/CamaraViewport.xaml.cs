@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows.Navigation;
+using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.CamaraViewport
 {
@@ -33,6 +34,8 @@ namespace ibcdatacsharp.UI.CamaraViewport
         public event EventHandler cameraChanged;
 
         private Mat _currentFrame;
+
+        public int fps { get; private set; }
         public Mat currentFrame
         {
             get
@@ -108,8 +111,10 @@ namespace ibcdatacsharp.UI.CamaraViewport
             return frame;
         }
         // Empieza a grabar la camara
-        public void initializeCamara(int index)
+        public void initializeCamara(int index, int fps)
         {
+            this.fps = fps;
+            Trace.WriteLine("fps selected = " + fps);
             // Quitar la imagen de la grabacion anterior
             currentFrame = getBlackImage();
             imgViewport.Source = BitmapSourceConverter.ToBitmapSource(currentFrame);
@@ -119,6 +124,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
             cancellationTokenSourceDisplay = new CancellationTokenSource();
             cancellationTokenDisplay = cancellationTokenSourceDisplay.Token;
             videoCapture = new VideoCapture(index, VideoCaptureAPIs.DSHOW);
+            videoCapture.Set(VideoCaptureProperties.Fps, this.fps);
             displayTask = displayCameraCallback();
             cameraChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -163,7 +169,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                     }
                     );
                 }
-                await Task.Delay(1000 / Config.VIDEO_FPS);
+                await Task.Delay(1000 / fps);
             }
         }
         // Cierra la camara y el video writer al cerrar la aplicacion

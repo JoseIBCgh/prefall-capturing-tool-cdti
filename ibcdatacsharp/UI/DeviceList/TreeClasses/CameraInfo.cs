@@ -17,16 +17,21 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
             get { return GetValue<int>("number"); }
             set { SetValue("number", value); }
         }
-        public List<int> fps
+        public List<int> fpsAvailable
         {
-            get { return GetValue<List<int>>("fps"); }
+            get { return GetValue<List<int>>("fpsAvailable"); }
+            set { SetValue("fpsAvailable", value); }
+        }
+        public int fps
+        {
+            get { return GetValue<int>("fps"); }
             set { SetValue("fps", value); }
         }
-        public CameraInfo(int number, string name, List<int> fps)
+        public CameraInfo(int number, string name, List<int> fpsAvailable)
         {
             this.number = number;
             this.name = name;
-            this.fps = fps;
+            this.fpsAvailable = fpsAvailable;
         }
     }
 }
