@@ -1076,9 +1076,9 @@ namespace ibcdatacsharp.UI.Graphs
                                 Quaternion qr = qbase * Quaternion.Conjugate(qmob);
                                 double[] res = new double[3];
                                 Utils.quaternion2euler(qr, ref res, rotSeq.Value);
-                                angleX[i] = (float)res[0];
-                                angleY[i] = (float)res[1];
-                                angleZ[i] = (float)res[2];
+                                angleX[i] = (float)Utils.rad2deg(res[0]);
+                                angleY[i] = (float)Utils.rad2deg(res[1]);
+                                angleZ[i] = (float)Utils.rad2deg(res[2]);
                                 if(i == 3)
                                 {
                                     angleXprev = angleX[i];
