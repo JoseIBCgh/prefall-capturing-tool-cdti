@@ -111,7 +111,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
             return frame;
         }
         // Empieza a grabar la camara
-        public void initializeCamara(int index, int fps)
+        public async void initializeCamara(int index, int fps)
         {
             this.fps = fps;
             Trace.WriteLine("fps selected = " + fps);
@@ -125,8 +125,8 @@ namespace ibcdatacsharp.UI.CamaraViewport
             cancellationTokenDisplay = cancellationTokenSourceDisplay.Token;
             videoCapture = new VideoCapture(index, VideoCaptureAPIs.DSHOW);
             videoCapture.Set(VideoCaptureProperties.Fps, this.fps);
-            displayTask = displayCameraCallback();
             cameraChanged?.Invoke(this, EventArgs.Empty);
+            await Task.Run(() => displayCameraCallback());
         }
         // Cierra la camara y la ventana
         private void onClose(object sender, RoutedEventArgs e)
@@ -169,7 +169,7 @@ namespace ibcdatacsharp.UI.CamaraViewport
                     }
                     );
                 }
-                await Task.Delay(1000 / fps);
+                //await Task.Delay(1000 / fps);
             }
         }
         // Cierra la camara y el video writer al cerrar la aplicacion
