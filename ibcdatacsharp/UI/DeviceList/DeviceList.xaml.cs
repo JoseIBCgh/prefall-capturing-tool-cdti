@@ -284,16 +284,6 @@ namespace ibcdatacsharp.UI.DeviceList
                 }
             }
         }
-        // Funcion que se llama al conectar una camara (doble click o boton connect) para cambiar el TreeView
-        public void connectCamera(MultiSelectTreeViewItem treeViewItem)
-        {
-            int calculateFps(int number)
-            {
-                return 120;
-            }
-            CameraInfo cameraInfo = treeViewItem.DataContext as CameraInfo;
-            cameraInfo.fps = calculateFps(cameraInfo.number);
-        }
         public void disconnectIMU(byte handler)
         {
             IMUInfo imuInfo = VM.IMUs.Where((imu) => imu.handler == handler).First();
