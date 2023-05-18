@@ -353,5 +353,11 @@ namespace ibcdatacsharp.UI.DeviceList
             IMUInfo imu = (IMUInfo)menuItem.DataContext;
             mainWindow.readQuaternion(imu);
         }
+        private void calibDevice(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = (MenuItem)sender;
+            IMUInfo imu = (IMUInfo)menuItem.DataContext;
+            mainWindow.calibDevice(imu);
+        }
     }
 }

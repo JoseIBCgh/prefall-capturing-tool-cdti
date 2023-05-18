@@ -100,6 +100,7 @@
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem IsEnabled="{Binding Path=used}" Header="Set as Reference" Click="setIMUasReference" />
+                                    <MenuItem Header="Calib Device" Click="calibDevice" />
                                 </ContextMenu>
                             </Grid.ContextMenu>
                             <Grid.ColumnDefinitions>

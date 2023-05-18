@@ -884,6 +884,13 @@ namespace ibcdatacsharp.UI
                 }
             });
         }
+        public void calibDevice(IMUInfo imu)
+        {
+            Trace.WriteLine("public void calibDevice(IMUInfo imu)");
+            Trace.WriteLine(imu.address.ToString());
+            byte h = handler(imu);
+            api.CalibDevice(h, out error);
+        }
         // Funcion que se ejecuta al clicar el menú Exit
         private void onExit(object sender, EventArgs e)
         {
