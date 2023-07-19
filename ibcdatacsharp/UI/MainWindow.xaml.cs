@@ -326,6 +326,15 @@ namespace ibcdatacsharp.UI
 
             ushort sampleRate = 100;
             byte packetType = (byte)3;
+            await Dispatcher.BeginInvoke(
+                () =>
+                {
+                    if ((deviceList.Content as DeviceList.DeviceList).IsDISMAG(dev.Id))
+                    {
+                        packetType = (byte)10;
+                    }
+                });
+            Trace.WriteLine(dev.Id + " " + packetType);
 
             api.SetDeviceConfiguration(handler, sampleRate, packetType, out error);
 

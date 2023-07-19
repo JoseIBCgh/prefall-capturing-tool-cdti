@@ -47,7 +47,7 @@
                     </Style>
                 </controls:MultiSelectTreeViewItem.ItemContainerStyle>
                 <controls:MultiSelectTreeViewItem.Header>
-                    <Grid Width="480">
+                    <Grid Width="520">
                         <Grid.Resources>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="FontSize" Value="11" />
@@ -64,6 +64,7 @@
                             <ColumnDefinition Width="2.25*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="pack://application:,,,/UI/DeviceList/Icons/imu-blue-icon-small.png" Height="20" Width="20"/>
                         <TextBlock Text="JA" Grid.Column="1" TextAlignment="Center"/>
@@ -75,11 +76,12 @@
                         <TextBlock Text="Address" Grid.Column="7" TextAlignment="Center"/>
                         <TextBlock Text="Battery" Grid.Column="8" TextAlignment="Center"/>
                         <TextBlock Text="FW" Grid.Column="9" TextAlignment="Center"/>
+                        <TextBlock Text="DISMAG" Grid.Column="10" TextAlignment="Center"/>
                     </Grid>
                 </controls:MultiSelectTreeViewItem.Header>
                 <controls:MultiSelectTreeViewItem.ItemTemplate>
                     <DataTemplate DataType="{x:Type class:IMUInfo}">
-                        <Grid Margin="-19,0,0,0" Width="480">
+                        <Grid Margin="-19,0,0,0" Width="520">
                             <Grid.Resources>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="FontSize" Value="11" />
@@ -115,6 +117,7 @@
                                 <ColumnDefinition Width="2.25*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="1" Source="pack://application:,,,/UI/DeviceList/Icons/arrow-icon.png"/>
                             <CheckBox IsEnabled="{Binding Path=connected, Converter={StaticResource jaEnabledConverted}}" Grid.Column="2" IsChecked="{Binding Path=used}" Checked="onCheckIMU"/>
@@ -132,6 +135,7 @@
                             <TextBlock Text="{Binding Path=address}" Grid.Column="8" TextAlignment="Center" />
                             <TextBlock Text="{Binding Path=battery, Converter={StaticResource batteryConverter}}" Grid.Column="9" TextAlignment="Center"/>
                             <TextBlock Text="{Binding Path=fw}" Grid.Column="10" TextAlignment="Center" />
+                            <CheckBox Grid.Column="11" IsChecked="{Binding DISMAG}"/>
                         </Grid>
                     </DataTemplate>
                 </controls:MultiSelectTreeViewItem.ItemTemplate>

@@ -125,6 +125,11 @@ namespace ibcdatacsharp.DeviceList.TreeClasses
         {
             NotifyChange("connected");
         }
+        public bool DISMAG
+        {
+            get { return GetValue<bool>("DISMAG"); }
+            set { SetValue("DISMAG", value); }
+        }
         public IMUInfo() { }
         public IMUInfo(string name, string address)
         {

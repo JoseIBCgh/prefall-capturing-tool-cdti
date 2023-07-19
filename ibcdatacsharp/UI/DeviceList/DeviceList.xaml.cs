@@ -359,5 +359,9 @@ namespace ibcdatacsharp.UI.DeviceList
             IMUInfo imu = (IMUInfo)menuItem.DataContext;
             mainWindow.calibDevice(imu);
         }
+        public bool IsDISMAG(string MAC)
+        {
+            return VM.IMUs.First(i => i.address == MAC).DISMAG;
+        }
     }
 }
