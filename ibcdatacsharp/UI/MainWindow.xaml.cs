@@ -119,6 +119,11 @@ namespace ibcdatacsharp.UI
 
         public SagitalAngles.SagitalAngles sagitalAngles;
 
+        private List<float> latencies = new();
+        private const int N_LATENCIES_AVG = 100;
+        public float latency = 0.0f;
+        public Stopwatch stopwatch = new();
+
         //end Wiseware API
         public MainWindow()
         {
@@ -152,6 +157,7 @@ namespace ibcdatacsharp.UI
             api.updateDeviceRTC += Api_updateDeviceRTC;
             api.updateDeviceConfiguration += Api_updateDeviceConfiguration;
             api.updateDeviceInfo += Api_updateDeviceInfo;
+            api.dataReceived += Api_dataReceived;
 
             //End Wisewalk API
             //EKF.EKF.test();
@@ -162,6 +168,27 @@ namespace ibcdatacsharp.UI
         /** 
          * Métodos de Wiseware
          */
+        private void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
+        {
+            if (stopwatch.IsRunning)
+            {
+                // Después de 100 paquetes que se tienen que capturar 2 segundos.
+
+
+                latencies.Add((float)stopwatch.Elapsed.TotalSeconds);
+                if (latencies.Count >= N_LATENCIES_AVG)
+                {
+                    for (int i = 0; i < latencies.Count; i++)
+                    {
+                        latency += latencies[i] - 0.04f * (i / 2); // Cada grupo paquete de cuatro datos recibidos son 0.04s e i/2 por las plantillas L y R
+                    }
+                    latency /= latencies.Count;  // Calculas la media.
+
+                    Trace.WriteLine("latency = " + latency);
+                    stopwatch.Reset();
+                }
+            }
+        }
         private void Api_onDisconnect(byte deviceHandler)
         {
             Trace.WriteLine("Api_onDisconnect");

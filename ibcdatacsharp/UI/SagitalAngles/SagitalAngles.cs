@@ -391,11 +391,19 @@ namespace ibcdatacsharp.UI.SagitalAngles
                     float offsetHip = (float)hip.model.offset;
                     float offsetKnee = (float)knee.model.offset;
                     string dataline = "";
+                    float syncFakets = 0;
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        syncFakets = fakets - 0.01f * 3 - ((MainWindow)Application.Current.MainWindow).latency;
+                    });
                     for (int i = 0; i < NUM_PACK; i++)
                     {
-                        dataline += "1 " + (fakets + 0.01 * i).ToString("F2", CultureInfo.InvariantCulture) + " " + (frame + i).ToString() + " " +
-                            (ankleData[i] + offsetAnkle).ToString("F2", CultureInfo.InvariantCulture) + " " + (hipData[i] + offsetHip).ToString("F2", CultureInfo.InvariantCulture) + " " +
-                            (kneeData[i] + offsetKnee).ToString("F2", CultureInfo.InvariantCulture) + "\n";
+                        if (syncFakets > 0)
+                        {
+                            dataline += "1 " + (fakets + 0.01 * i).ToString("F2", CultureInfo.InvariantCulture) + " " + (frame + i).ToString() + " " +
+                                (ankleData[i] + offsetAnkle).ToString("F2", CultureInfo.InvariantCulture) + " " + (hipData[i] + offsetHip).ToString("F2", CultureInfo.InvariantCulture) + " " +
+                                (kneeData[i] + offsetKnee).ToString("F2", CultureInfo.InvariantCulture) + "\n";
+                        }
                     }
                     frame += NUM_PACK;
                     fakets += NUM_PACK * 0.01f;

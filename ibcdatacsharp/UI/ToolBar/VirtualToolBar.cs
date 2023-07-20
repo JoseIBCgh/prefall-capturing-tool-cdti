@@ -167,6 +167,8 @@ namespace ibcdatacsharp.UI.ToolBar
         public void captureClick()
         {
             capturing = true;
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.stopwatch.Restart();
         }
         // Se ejecuta al clicar el boton pause
         public void pauseClick()
