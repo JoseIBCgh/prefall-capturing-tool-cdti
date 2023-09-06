@@ -1,0 +1,72 @@
+﻿<Window x:Class="sign_in_dotnet_wpf.Dashboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:sign_in_dotnet_wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="200"
+             Height="450"
+             Width="380"
+        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Border CornerRadius="5" Grid.RowSpan="4" 
+                Background="#808080"/>
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Top">
+           
+            <Button Content="X"
+                 
+                    Width="23"
+                    Height="21"
+                    Foreground="AliceBlue"
+                    Background="#808080"
+                    Click="Button_Click_1"
+                    />
+
+        </StackPanel>
+        <StackPanel Grid.Row="1" 
+                    HorizontalAlignment="Center">
+            <Label  Content="LOGIN" 
+                     FontWeight="UltraBold"
+                     Foreground="AliceBlue"
+                     FontSize="15"  />
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Label Content="User:" Foreground="AliceBlue" Width="76"></Label>
+                    <TextBox Width="85" 
+                             x:Name="user"
+                             RenderTransformOrigin="1.232,0.686" />
+                </StackPanel>
+
+            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
+                <Label Content="Password:" 
+                       Foreground="AliceBlue" Width="82"></Label>
+                <PasswordBox                        
+                    x:Name="pass"
+                    Width="85"
+                    ToolTip="Password"
+                    PasswordChar="*" />
+            </StackPanel>
+           
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Connect" Width="77" Click="Button_Click_2"/>
+                <Button Content="Open" Width="77" Click="Button_Click"/>
+            </StackPanel>
+        </StackPanel>
+        
+
+
+
+    </Grid>
+</Window>
