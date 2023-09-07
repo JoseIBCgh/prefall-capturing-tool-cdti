@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ibcdatacsharp.Login;
 using ibcdatacsharp.UI;
 using MySql.Data.MySqlClient;
 
@@ -46,8 +47,8 @@ public partial class Dashboard : Window
         this.username = user.Text;
         this.password = pass.Password.ToString();
 
-        sql = "SELECT username, password from users where username='" + this.username + "' AND " + "password='" + this.password +"'";
-
+        //sql = "SELECT username, password from users where username='" + this.username + "' AND " + "password='" + this.password +"'";
+        sql = "SELECT username, password from users where username='" + this.username + "'";
         if (this.connection.OpenConnection() == true)
         {
             var command = new MySqlCommand(sql, this.connection.GetConnection());
@@ -57,6 +58,7 @@ public partial class Dashboard : Window
             {
                 MessageBox.Show("login successful!");
 
+                LoginInfo.nombre = username;
                 MainWindow mw = new MainWindow();
                 this.Close();
                 mw.Show();

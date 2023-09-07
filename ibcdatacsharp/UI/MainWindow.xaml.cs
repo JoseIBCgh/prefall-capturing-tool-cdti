@@ -127,6 +127,7 @@ namespace ibcdatacsharp.UI
         //end Wiseware API
         public MainWindow()
         {
+            Application.Current.MainWindow = this;
             InitializeComponent();
             virtualToolBar = new VirtualToolBar();
             device = new Device.Device();

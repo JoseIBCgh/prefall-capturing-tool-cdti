@@ -54,6 +54,9 @@
     <Compile Update="UI\Graphs\Sagital\GraphHip.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UI\Pacientes\Pacientes.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UI\Subjects\Subjects.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -123,6 +126,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Graphs\Sagital\GraphHip.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Pacientes\Pacientes.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Subjects\Subjects.xaml">

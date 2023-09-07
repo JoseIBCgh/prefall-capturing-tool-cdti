@@ -8,6 +8,7 @@ using MySql.Data.EntityFramework;
 using MySql.Data.MySqlClient;
 using System.Windows;
 using System.Diagnostics.Eventing.Reader;
+using System.Data.Entity;
 
 namespace sign_in_dotnet_wpf;
 public class Connection
@@ -40,6 +41,7 @@ public class Connection
         _connectionStringBuilder.Database = db;
         _connectionStringBuilder.UserID = user;
         _connectionStringBuilder.Password = pass;
+        
 
         _connection = new MySqlConnection(_connectionStringBuilder.ToString());
 
