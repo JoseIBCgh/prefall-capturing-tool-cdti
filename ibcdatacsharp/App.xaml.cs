@@ -13,5 +13,10 @@ namespace ibcdatacsharp
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjUzMjQ4M0AzMjMyMmUzMDJlMzBHNWlFdmkxZ0ZsTHIrZGZ2cDhnbDNWL2pJbzd5VWdlejFjdXEzbFZCMzRZPQ==\r\n");
+
+        }
     }
 }

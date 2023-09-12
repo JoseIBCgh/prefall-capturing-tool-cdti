@@ -1,26 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\ibcdatacsharp.csproj": {}
+    "C:\\Users\\Deva\\wsibc\\prefall-capturing-tool-cdti\\ibcdatacsharp\\ibcdatacsharp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\ibcdatacsharp.csproj": {
+    "C:\\Users\\Deva\\wsibc\\prefall-capturing-tool-cdti\\ibcdatacsharp\\ibcdatacsharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\ibcdatacsharp.csproj",
+        "projectUniqueName": "C:\\Users\\Deva\\wsibc\\prefall-capturing-tool-cdti\\ibcdatacsharp\\ibcdatacsharp.csproj",
         "projectName": "ibcdatacsharp",
-        "projectPath": "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\ibcdatacsharp.csproj",
+        "projectPath": "C:\\Users\\Deva\\wsibc\\prefall-capturing-tool-cdti\\ibcdatacsharp\\ibcdatacsharp.csproj",
         "packagesPath": "C:\\Users\\Deva\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Deva\\wsibc\\ibcdatacsharp\\ibcdatacsharp\\obj\\",
+        "outputPath": "C:\\Users\\Deva\\wsibc\\prefall-capturing-tool-cdti\\ibcdatacsharp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Syncfusion\\Essential Studio\\WPF\\21.1.35\\ToolboxNuGetPackages",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
           "C:\\Users\\Deva\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Syncfusion Toolbox for WPF.config"
         ],
         "originalTargetFrameworks": [
           "net6.0-windows"
@@ -45,6 +47,10 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "dependencies": {
+            "AForge.Video.DirectShow": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
             "DirectShowLib": {
               "target": "Package",
               "version": "[1.0.0, )"
@@ -69,9 +75,37 @@
               "target": "Package",
               "version": "[1.1.4, )"
             },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[7.0.4, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Identity.Client": {
+              "target": "Package",
+              "version": "[4.55.0, )"
+            },
+            "Microsoft.Identity.Client.Broker": {
+              "target": "Package",
+              "version": "[4.55.0, )"
+            },
             "MultiSelectTreeView": {
               "target": "Package",
               "version": "[1.0.9, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            },
+            "MySql.Data.EntityFramework": {
+              "target": "Package",
+              "version": "[8.1.0, )"
             },
             "OpenCvSharp4": {
               "target": "Package",
@@ -104,6 +138,22 @@
             "ScottPlot.WPF": {
               "target": "Package",
               "version": "[4.1.58, )"
+            },
+            "Syncfusion.Licensing": {
+              "target": "Package",
+              "version": "[22.1.36, )"
+            },
+            "Syncfusion.SfBusyIndicator.WPF": {
+              "target": "Package",
+              "version": "[22.1.36, )"
+            },
+            "Syncfusion.SfTreeView.WPF": {
+              "target": "Package",
+              "version": "[22.1.36, )"
+            },
+            "Syncfusion.Shared.WPF": {
+              "target": "Package",
+              "version": "[22.1.36, )"
             },
             "System.Drawing.Common": {
               "target": "Package",
@@ -141,7 +191,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }
