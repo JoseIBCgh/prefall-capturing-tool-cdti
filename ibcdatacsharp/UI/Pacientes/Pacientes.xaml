@@ -12,7 +12,12 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Pacientes">
     <Page.Resources>
-        <DataTemplate x:Key="UserTemplate">
+        <DataTemplate x:Key="AuxiliarTemplate">
+            <TextBlock Text="{Binding Nombre}">
+            </TextBlock>
+        </DataTemplate>
+
+        <DataTemplate x:Key="MedicoTemplate">
             <TextBlock Text="{Binding Nombre}">
             </TextBlock>
         </DataTemplate>
@@ -22,29 +27,60 @@
             </TextBlock>
         </DataTemplate>
 
+        <DataTemplate x:Key="CentroRootTemplate">
+            <TextBlock Text="{Binding Nombre}">
+            </TextBlock>
+        </DataTemplate>
+
         <DataTemplate x:Key="PacienteTemplate">
             <TextBlock Text="{Binding Nombre}">
             </TextBlock>
         </DataTemplate>
 
-        <local:PacientesDataTemplateSelector x:Key="PacientesDataTemplateSelector"
-                                             UserTemplate="{StaticResource UserTemplate}"
-                                             CentroTemplate="{StaticResource CentroTemplate}"
+        <local:AuxiliarDataTemplateSelector x:Key="AuxiliarDataTemplateSelector"
+                                             AuxiliarTemplate="{StaticResource AuxiliarTemplate}"
+                                             CentroTemplate="{StaticResource CentroRootTemplate}"
                                              PacienteTemplate="{StaticResource PacienteTemplate}"
                                              />
+
+        <local:MedicoDataTemplateSelector x:Key="MedicoDataTemplateSelector"
+                                     MedicoTemplate="{StaticResource MedicoTemplate}"
+                                     CentroTemplate="{StaticResource CentroTemplate}"
+                                     PacienteTemplate="{StaticResource PacienteTemplate}"
+                                     />
     </Page.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <syncfusion:SfTreeView
-            ItemTemplateSelector="{StaticResource PacientesDataTemplateSelector}"
+            x:Name="treeMedico"
+            Grid.Row="0"
+            ItemTemplateSelector="{StaticResource MedicoDataTemplateSelector}"
             ShowLines="True"
             ShowRootLines="True"
-            ItemsSource="{Binding user}">
+            ItemsSource="{Binding medico}">
             <syncfusion:SfTreeView.HierarchyPropertyDescriptors>
-                <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:User}" 
+                <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:Medico}" 
                                                             ChildPropertyName="Centros"/>
                 <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:Centro}" 
                                                             ChildPropertyName="Pacientes"/>
+            </syncfusion:SfTreeView.HierarchyPropertyDescriptors>
+        </syncfusion:SfTreeView>
+        <syncfusion:SfTreeView
+            x:Name="treeAuxiliar"
+            Grid.Row="1"
+            ItemTemplateSelector="{StaticResource AuxiliarDataTemplateSelector}"
+            ShowLines="True"
+            ShowRootLines="True"
+            ItemsSource="{Binding centro}"> 
+            <syncfusion:SfTreeView.HierarchyPropertyDescriptors>
+                <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:CentroRoot}" 
+                                                    ChildPropertyName="Auxiliar"/>
+                <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:Auxiliar}" 
+                                                    ChildPropertyName="Pacientes"/>
             </syncfusion:SfTreeView.HierarchyPropertyDescriptors>
         </syncfusion:SfTreeView>
     </Grid>

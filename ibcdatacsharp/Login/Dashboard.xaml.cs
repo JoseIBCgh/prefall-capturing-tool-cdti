@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,13 +57,27 @@ public partial class Dashboard : Window
 
             if (a != null)
             {
-                MessageBox.Show("login successful!");
+                sql = "SELECT roles.name " +
+                    "FROM roles " +
+                    "INNER JOIN roles_users ON roles.id = roles_users.role_id " +
+                    "INNER JOIN users ON roles_users.user_id = users.id " +
+                    "WHERE users.username = '" + username + "';";
+                command = new MySqlCommand(sql, this.connection.GetConnection());
+                a = command.ExecuteScalar();
+                Trace.WriteLine((string)a);
+                if ((string)a == "paciente")
+                {
+                    MessageBox.Show("Pacientes no pueden ingresar");
+                }
+                else
+                {
+                    MessageBox.Show("login successful!");
 
-                LoginInfo.nombre = username;
-                MainWindow mw = new MainWindow();
-                this.Close();
-                mw.Show();
-
+                    LoginInfo.nombre = username;
+                    MainWindow mw = new MainWindow();
+                    this.Close();
+                    mw.Show();
+                }
             }
             else
             {

@@ -29,7 +29,12 @@ namespace ibcdatacsharp.UI.Pacientes
     public partial class Pacientes : Page
     {
         private Connection connection;
-        public ObservableCollection<User> user
+        public ObservableCollection<Medico> medico
+        {
+            get;
+            set;
+        }
+        public ObservableCollection<CentroRoot> centro
         {
             get;
             set;
@@ -39,8 +44,8 @@ namespace ibcdatacsharp.UI.Pacientes
             InitializeComponent();
             connection = new Connection();
             DataContext = this;
-            this.user = new ObservableCollection<User>();
-            User user = new User(LoginInfo.nombre);
+            this.medico = new ObservableCollection<Medico>();
+            this.centro = new ObservableCollection<CentroRoot>();
             string sql = "SELECT roles.name " +
                 "FROM roles " +
                 "INNER JOIN roles_users ON roles.id = roles_users.role_id " +
@@ -52,6 +57,7 @@ namespace ibcdatacsharp.UI.Pacientes
                 object a = command.ExecuteScalar();
                 if((string)a == "medico")
                 {
+                    Medico medico = new Medico(LoginInfo.nombre);
                     sql = "SELECT c.nombreFiscal, GROUP_CONCAT(u_paciente.username) AS pacientes " +
     "FROM centros c " +
     "LEFT JOIN users u_paciente ON c.id = u_paciente.id_centro " +
@@ -73,23 +79,28 @@ namespace ibcdatacsharp.UI.Pacientes
                             string[] pacientesArray = pacientes.Split(',');
                             foreach (string p in pacientesArray)
                             {
+                                Trace.WriteLine(p);
                                 Paciente paciente = new Paciente(p.Trim());
                                 centro.Pacientes.Add(paciente);
                             }
-                            user.Centros.Add(centro);
+                            medico.Centros.Add(centro);
                         }
                     }
                     reader.Close();
+                    this.medico.Add(medico);
+                    treeMedico.Visibility = Visibility.Visible;
+                    treeAuxiliar.Visibility = Visibility.Collapsed;
                 }
                 else if((string)a == "auxiliar")
                 {
+                    Auxiliar auxiliar = new Auxiliar(LoginInfo.nombre);
                     sql = "SELECT centros.nombreFiscal " +
                         "FROM centros " +
                         "INNER JOIN users ON centros.id = users.id_centro " +
                         "WHERE users.username = '" + LoginInfo.nombre + "';";
                     command = new MySqlCommand(sql, this.connection.GetConnection());
                     a = command.ExecuteScalar();
-                    Centro centro = new Centro((string)a);
+                    CentroRoot centro = new CentroRoot((string)a);
                     sql = "SELECT users.username " +
                         "FROM users " +
                         "INNER JOIN centros ON users.id_centro = centros.id " +
@@ -106,14 +117,16 @@ namespace ibcdatacsharp.UI.Pacientes
                         if (!reader.IsDBNull(0))
                         {
                             Paciente paciente = new Paciente(reader.GetString(0));
-                            centro.Pacientes.Add(paciente);
+                            auxiliar.Pacientes.Add(paciente);
                         }
                     }
                     reader.Close();
-                    user.Centros.Add(centro);
+                    centro.Auxiliar.Add(auxiliar);
+                    this.centro.Add(centro);
+                    treeAuxiliar.Visibility = Visibility.Visible;
+                    treeMedico.Visibility = Visibility.Collapsed;
                 }
             }
-            this.user.Add(user);
         }
     }
 }

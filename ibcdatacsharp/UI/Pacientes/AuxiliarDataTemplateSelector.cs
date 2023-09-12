@@ -1,13 +1,19 @@
-﻿using Syncfusion.UI.Xaml.TreeView.Engine;
-using System.Windows.Controls;
+﻿using ibcdatacsharp.UI.Pacientes.Models;
+using Microsoft.VisualBasic.ApplicationServices;
+using Syncfusion.UI.Xaml.TreeView.Engine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
-using ibcdatacsharp.UI.Pacientes.Models;
+using System.Windows.Controls;
 
 namespace ibcdatacsharp.UI.Pacientes
 {
-    public class PacientesDataTemplateSelector : DataTemplateSelector
+    public class AuxiliarDataTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate UserTemplate { get; set; }
+        public DataTemplate AuxiliarTemplate { get; set; }
         public DataTemplate CentroTemplate { get; set; }
         public DataTemplate PacienteTemplate { get; set; }
 
@@ -16,11 +22,11 @@ namespace ibcdatacsharp.UI.Pacientes
             if (item is TreeViewNode)
             {
                 var node = (TreeViewNode)item;
-                if (node.Content is User)
+                if (node.Content is Auxiliar)
                 {
-                    return UserTemplate;
+                    return AuxiliarTemplate;
                 }
-                else if (node.Content is Centro)
+                else if (node.Content is CentroRoot)
                 {
                     return CentroTemplate;
                 }

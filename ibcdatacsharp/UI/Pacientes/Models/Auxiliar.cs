@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ibcdatacsharp.UI.Pacientes.Models
 {
-    public class User
+    public class Auxiliar
     {
         public string Nombre { get; set; }
-        public ICollection<Centro> Centros { get; set; }
-        public User(string Nombre)
+        public ICollection<Paciente> Pacientes { get; set; }
+        public Auxiliar(string Nombre)
         {
             this.Nombre = Nombre;
-            this.Centros = new List<Centro>();
+            this.Pacientes = new List<Paciente>();
         }
     }
 }
