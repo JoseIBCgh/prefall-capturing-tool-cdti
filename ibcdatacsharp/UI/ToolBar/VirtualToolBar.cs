@@ -13,6 +13,7 @@ using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using System.Linq;
 using static System.Net.WebRequestMethods;
 using System.Windows.Markup;
+using ibcdatacsharp.Login;
 
 namespace ibcdatacsharp.UI.ToolBar
 {
@@ -289,6 +290,7 @@ namespace ibcdatacsharp.UI.ToolBar
                 recordState = RecordState.RecordStopped;
                 toolBar.changeRecordState(RecordState.RecordStopped);
                 menuBar.changeRecordState(RecordState.RecordStopped);
+                LoginInfo.selectedPacienteId = null;
             }
             if(stopEvent != null)
             {

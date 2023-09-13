@@ -33,8 +33,17 @@
         </DataTemplate>
 
         <DataTemplate x:Key="PacienteTemplate">
-            <TextBlock Text="{Binding Nombre}">
-            </TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Nombre}">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Nuevo test" Command="{Binding seleccionarPacienteCommand}" CommandParameter="{Binding}"/>
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
+                <TextBlock Text=" "></TextBlock>
+                <TextBlock Text="{Binding Id}"></TextBlock>
+            </StackPanel>
         </DataTemplate>
 
         <local:AuxiliarDataTemplateSelector x:Key="AuxiliarDataTemplateSelector"
@@ -64,9 +73,11 @@
             ItemsSource="{Binding medico}">
             <syncfusion:SfTreeView.HierarchyPropertyDescriptors>
                 <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:Medico}" 
-                                                            ChildPropertyName="Centros"/>
+                                                            ChildPropertyName="Centros"
+                                                            IsSelectedPropertyName="IsSelected"/>
                 <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:Centro}" 
-                                                            ChildPropertyName="Pacientes"/>
+                                                            ChildPropertyName="Pacientes"
+                                                            IsSelectedPropertyName="IsSelected"/>
             </syncfusion:SfTreeView.HierarchyPropertyDescriptors>
         </syncfusion:SfTreeView>
         <syncfusion:SfTreeView
@@ -78,9 +89,11 @@
             ItemsSource="{Binding centro}"> 
             <syncfusion:SfTreeView.HierarchyPropertyDescriptors>
                 <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:CentroRoot}" 
-                                                    ChildPropertyName="Auxiliar"/>
+                                                            ChildPropertyName="Auxiliar"
+                                                            IsSelectedPropertyName="IsSelected"/>
                 <treeViewEngine:HierarchyPropertyDescriptor TargetType="{x:Type model:Auxiliar}" 
-                                                    ChildPropertyName="Pacientes"/>
+                                                            ChildPropertyName="Pacientes"
+                                                            IsSelectedPropertyName="IsSelected"/>
             </syncfusion:SfTreeView.HierarchyPropertyDescriptors>
         </syncfusion:SfTreeView>
     </Grid>

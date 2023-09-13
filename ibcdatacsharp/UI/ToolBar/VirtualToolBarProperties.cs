@@ -1,4 +1,5 @@
-﻿using ibcdatacsharp.UI.ToolBar.Enums;
+﻿using ibcdatacsharp.Login;
+using ibcdatacsharp.UI.ToolBar.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -72,13 +73,13 @@ namespace ibcdatacsharp.UI.ToolBar
 
             }
         }
-        public string recordEnabledString = "return virtualToolBar.buttonsEnabled && virtualToolBar.capturing && virtualToolBar.recordState == RecordState.RecordStopped;";
+        public string recordEnabledString = "return virtualToolBar.buttonsEnabled && virtualToolBar.capturing && virtualToolBar.recordState == RecordState.RecordStopped && LoginInfo.selectedPacienteId != null;";
         public bool recordEnabled
         {
             get
             {
                 return virtualToolBar.buttonsEnabled && virtualToolBar.capturing &&
-                    virtualToolBar.recordState == RecordState.RecordStopped;
+                    virtualToolBar.recordState == RecordState.RecordStopped && LoginInfo.selectedPacienteId != null;
             }
             set
             {
@@ -201,6 +202,10 @@ namespace ibcdatacsharp.UI.ToolBar
                     initCameraViewport();
                 };
             }
+            LoginInfo.selectedPacienteIdChanged += (s, e) =>
+            {
+                addPropertiesChanged("LoginInfo.selectedPacienteId");
+            };
         }
     }
 }

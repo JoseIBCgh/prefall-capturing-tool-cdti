@@ -58,7 +58,7 @@ namespace ibcdatacsharp.UI.Pacientes
                 if((string)a == "medico")
                 {
                     Medico medico = new Medico(LoginInfo.nombre);
-                    sql = "SELECT c.nombreFiscal, GROUP_CONCAT(u_paciente.username) AS pacientes " +
+                    sql = "SELECT c.nombreFiscal, GROUP_CONCAT(u_paciente.username) AS pacientes, GROUP_CONCAT(u_paciente.id) AS ids " +
     "FROM centros c " +
     "LEFT JOIN users u_paciente ON c.id = u_paciente.id_centro " +
     "LEFT JOIN pacientes_asociados pa ON u_paciente.id = pa.id_paciente " +
@@ -75,12 +75,15 @@ namespace ibcdatacsharp.UI.Pacientes
                         {
                             string nombreFiscal = reader.GetString("nombreFiscal");
                             string pacientes = reader.GetString("pacientes");
+                            string ids = reader.GetString("ids");
                             Centro centro = new Centro(nombreFiscal);
                             string[] pacientesArray = pacientes.Split(',');
-                            foreach (string p in pacientesArray)
+                            string[] idsArray = ids.Split(',');
+                            for (int i = 0; i < pacientesArray.Count(); i++)
                             {
-                                Trace.WriteLine(p);
-                                Paciente paciente = new Paciente(p.Trim());
+                                string p = pacientesArray[i];
+                                string id = idsArray[i];
+                                Paciente paciente = new Paciente(p.Trim(), int.Parse(id.Trim()));
                                 centro.Pacientes.Add(paciente);
                             }
                             medico.Centros.Add(centro);
@@ -101,7 +104,7 @@ namespace ibcdatacsharp.UI.Pacientes
                     command = new MySqlCommand(sql, this.connection.GetConnection());
                     a = command.ExecuteScalar();
                     CentroRoot centro = new CentroRoot((string)a);
-                    sql = "SELECT users.username " +
+                    sql = "SELECT users.username, users.id " +
                         "FROM users " +
                         "INNER JOIN centros ON users.id_centro = centros.id " +
                         "INNER JOIN roles_users ON users.id = roles_users.user_id " +
@@ -114,9 +117,9 @@ namespace ibcdatacsharp.UI.Pacientes
                     MySqlDataReader reader = command.ExecuteReader();
                     while(reader.Read())
                     {
-                        if (!reader.IsDBNull(0))
+                        if (!reader.IsDBNull(0) && !reader.IsDBNull(1))
                         {
-                            Paciente paciente = new Paciente(reader.GetString(0));
+                            Paciente paciente = new Paciente(reader.GetString(0), reader.GetInt32(1));
                             auxiliar.Pacientes.Add(paciente);
                         }
                     }
