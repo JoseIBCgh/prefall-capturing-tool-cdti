@@ -130,6 +130,54 @@ namespace ibcdatacsharp.UI.Pacientes
                     treeMedico.Visibility = Visibility.Collapsed;
                 }
             }
+            ((MainWindow)Application.Current.MainWindow).fileSaver.filesAdded += (s, id, files) =>
+            {
+                Paciente? paciente = Find(id);
+                if(paciente != null)
+                {
+                    foreach (var file in files)
+                    {
+                        Test test = new Test(file);
+                        paciente.Tests.Add(test);
+                    }
+                    MessageRecorded message = new MessageRecorded(paciente.Nombre, id, files);
+                    message.Show();
+                }
+                else
+                {
+                    MessageBox.Show("No se ha encontrado al paciente");
+                }
+            };
+        }
+        private Paciente? Find(int id)
+        {
+            if (this.medico.Count > 0)
+            {
+                Medico medico = this.medico[0];
+                foreach (Centro centro in medico.Centros)
+                {
+                    foreach (Paciente paciente in centro.Pacientes)
+                    {
+                        if(paciente.Id == id)
+                        {
+                            return paciente;
+                        }
+                    }
+                }
+            }
+            if(this.centro.Count > 0)
+            {
+                CentroRoot centroRoot = this.centro[0];
+                Auxiliar auxiliar = centroRoot.Auxiliar[0];
+                foreach(Paciente paciente in auxiliar.Pacientes)
+                {
+                    if(paciente.Id == id)
+                    {
+                        return paciente;
+                    }
+                }
+            }
+            return null;
         }
     }
 }

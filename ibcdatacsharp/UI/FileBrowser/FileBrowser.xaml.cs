@@ -286,7 +286,7 @@ namespace ibcdatacsharp.UI.FileBrowser
             }
             Trace.WriteLine($"Changed: {e.FullPath}");
         }
-        private void OnFilesAdded(object sender, List<string> files)
+        private void OnFilesAdded(object sender, int id, List<string> files)
         {
             Trace.WriteLine("OnFilesAdded");
             foreach(var file in files)

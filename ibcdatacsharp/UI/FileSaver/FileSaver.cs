@@ -12,6 +12,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ibcdatacsharp.Login;
 
 namespace ibcdatacsharp.UI.FileSaver
 {
@@ -37,8 +40,9 @@ namespace ibcdatacsharp.UI.FileSaver
         private bool recordCSV;
         private bool recordVideo;
         private StringBuilder? csvData = new StringBuilder();
+        private int? id = null;
 
-        public delegate void filesAddedEvent(object sender, List<string> files);
+        public delegate void filesAddedEvent(object sender, int id, List<string> files);
         public event filesAddedEvent filesAdded;
         public FileSaver()
         {
@@ -183,7 +187,7 @@ namespace ibcdatacsharp.UI.FileSaver
             if (show)
             {
                 MessageBox.Show(message, caption: "Info", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
-                filesAdded?.Invoke(this, files);
+                filesAdded?.Invoke(this, id.Value, files);
             }
         }
         private string fileName()
@@ -207,6 +211,13 @@ namespace ibcdatacsharp.UI.FileSaver
             {
                 csvFile = baseFilename + ".txt";
                 csvData = new StringBuilder();
+                id = LoginInfo.selectedPacienteId;
+                var jsonObject = new
+                {
+                    id = LoginInfo.selectedPacienteId
+                };
+                string jsonString = JsonConvert.SerializeObject(jsonObject);
+                csvData.Append(jsonString);
                 switch (deviceList.numIMUsUsed)
                 {
                     case 0:

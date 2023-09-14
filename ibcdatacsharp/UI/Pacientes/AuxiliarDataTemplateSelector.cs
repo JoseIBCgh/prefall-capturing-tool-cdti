@@ -16,6 +16,7 @@ namespace ibcdatacsharp.UI.Pacientes
         public DataTemplate AuxiliarTemplate { get; set; }
         public DataTemplate CentroTemplate { get; set; }
         public DataTemplate PacienteTemplate { get; set; }
+        public DataTemplate TestTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -33,6 +34,10 @@ namespace ibcdatacsharp.UI.Pacientes
                 else if (node.Content is Paciente)
                 {
                     return PacienteTemplate;
+                }
+                else if (node.Content is Test)
+                {
+                    return TestTemplate;
                 }
             }
 
