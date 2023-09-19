@@ -217,7 +217,7 @@ namespace ibcdatacsharp.UI.FileSaver
                     id = LoginInfo.selectedPacienteId
                 };
                 string jsonString = JsonConvert.SerializeObject(jsonObject);
-                csvData.Append(jsonString);
+                csvData.AppendLine(jsonString);
                 switch (deviceList.numIMUsUsed)
                 {
                     case 0:

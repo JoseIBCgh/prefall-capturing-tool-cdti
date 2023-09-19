@@ -69,10 +69,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        <Button Grid.Row="0" Click="Button_Click" Content="Subir Test" Width="60"/>
         <syncfusion:SfTreeView
             x:Name="treeMedico"
-            Grid.Row="0"
+            Grid.Row="1"
             ItemTemplateSelector="{StaticResource MedicoDataTemplateSelector}"
             ShowLines="True"
             ShowRootLines="True"
@@ -91,7 +93,7 @@
         </syncfusion:SfTreeView>
         <syncfusion:SfTreeView
             x:Name="treeAuxiliar"
-            Grid.Row="1"
+            Grid.Row="2"
             ItemTemplateSelector="{StaticResource AuxiliarDataTemplateSelector}"
             ShowLines="True"
             ShowRootLines="True"

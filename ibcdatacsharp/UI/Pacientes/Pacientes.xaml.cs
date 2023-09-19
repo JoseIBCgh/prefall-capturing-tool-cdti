@@ -20,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace ibcdatacsharp.UI.Pacientes
 {
@@ -178,6 +179,24 @@ namespace ibcdatacsharp.UI.Pacientes
                 }
             }
             return null;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.InitialDirectory = Config.INITIAL_PATH;
+
+            openFileDialog.Filter = "Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
+
+            bool? result = openFileDialog.ShowDialog();
+
+            if (result == true)
+            {
+                string selectedFilePath = openFileDialog.FileName;
+                RemoteTransactions.SubirTest(selectedFilePath);
+            }
+
         }
     }
 }
