@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,6 +17,9 @@ using System.Windows.Shapes;
 using ibcdatacsharp.Login;
 using ibcdatacsharp.UI;
 using MySql.Data.MySqlClient;
+using System.Security.Cryptography;
+using System.Text;
+using BCrypt.Net;
 
 namespace sign_in_dotnet_wpf;
 /// <summary>
@@ -49,7 +53,7 @@ public partial class Dashboard : Window
         this.password = pass.Password.ToString();
 
         //sql = "SELECT username, password from users where username='" + this.username + "' AND " + "password='" + this.password +"'";
-        sql = "SELECT username, password from users where username='" + this.username + "'";
+        sql = "SELECT password from users where username='" + this.username + "'";
         if (this.connection.OpenConnection() == true)
         {
             var command = new MySqlCommand(sql, this.connection.GetConnection());
@@ -57,26 +61,34 @@ public partial class Dashboard : Window
 
             if (a != null)
             {
-                sql = "SELECT roles.name " +
-                    "FROM roles " +
-                    "INNER JOIN roles_users ON roles.id = roles_users.role_id " +
-                    "INNER JOIN users ON roles_users.user_id = users.id " +
-                    "WHERE users.username = '" + username + "';";
-                command = new MySqlCommand(sql, this.connection.GetConnection());
-                a = command.ExecuteScalar();
-                Trace.WriteLine((string)a);
-                if ((string)a == "paciente")
+                string password = a.ToString();
+                if (CheckPassword(this.password, password))
                 {
-                    MessageBox.Show("Pacientes no pueden ingresar");
+                    sql = "SELECT roles.name " +
+                        "FROM roles " +
+                        "INNER JOIN roles_users ON roles.id = roles_users.role_id " +
+                        "INNER JOIN users ON roles_users.user_id = users.id " +
+                        "WHERE users.username = '" + username + "';";
+                    command = new MySqlCommand(sql, this.connection.GetConnection());
+                    a = command.ExecuteScalar();
+                    Trace.WriteLine((string)a);
+                    if ((string)a == "paciente")
+                    {
+                        MessageBox.Show("Pacientes no pueden ingresar");
+                    }
+                    else
+                    {
+                        MessageBox.Show("login successful!");
+
+                        LoginInfo.nombre = username;
+                        MainWindow mw = new MainWindow();
+                        this.Close();
+                        mw.Show();
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("login successful!");
-
-                    LoginInfo.nombre = username;
-                    MainWindow mw = new MainWindow();
-                    this.Close();
-                    mw.Show();
+                    MessageBox.Show("incorrect password");
                 }
             }
             else
@@ -87,5 +99,19 @@ public partial class Dashboard : Window
         }
 
 
+    }
+    static bool CheckPassword(string password, string hashPassword)
+    {
+        string salt = "146585145368132386173505678016728509634";
+        byte[] saltBytes = Encoding.UTF8.GetBytes(salt);
+        byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+
+        using (HMACSHA512 hmac = new HMACSHA512(saltBytes))
+        {
+            byte[] hashBytes = hmac.ComputeHash(passwordBytes);
+            string hashedPassword = Convert.ToBase64String(hashBytes);
+
+            return BCrypt.Net.BCrypt.Verify(hashedPassword, hashPassword);
+        }
     }
 }
