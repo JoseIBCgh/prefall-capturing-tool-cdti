@@ -195,6 +195,7 @@ namespace ibcdatacsharp.UI.Pacientes
             {
                 string selectedFilePath = openFileDialog.FileName;
                 RemoteTransactions.SubirTest(selectedFilePath);
+                MessageBox.Show("Test subido");
             }
 
         }
