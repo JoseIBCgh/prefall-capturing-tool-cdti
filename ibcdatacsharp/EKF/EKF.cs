@@ -6,6 +6,9 @@ using System.Numerics;
 
 namespace ibcdatacsharp.EKF
 {
+    /// <summary>
+    /// Implementacion del filtro EKF
+    /// </summary>
     public class EKF
     {
         private MathNet.Numerics.LinearAlgebra.Vector<float> g;
@@ -18,7 +21,9 @@ namespace ibcdatacsharp.EKF
         private Matrix<float> P;
         public Matrix<float> H { get; private set; }
         public MathNet.Numerics.LinearAlgebra.Vector<float> h { get; private set; }
-
+        /// <summary>
+        /// Constructor. Usando spectralDensity (vector3D)
+        /// </summary>
         public EKF(float deltaT, MathNet.Numerics.LinearAlgebra.Vector<float> spectralDensity, 
             float magnetic_dip_angle, bool NED = true, float var_acc = 0.5f * 0.5f, 
             float var_mag = 0.8f * 0.8f)
@@ -57,6 +62,9 @@ namespace ibcdatacsharp.EKF
                 (float)Math.Sqrt(Math.Pow((float)Math.Cos(magnetic_dip_angle), 2) + Math.Pow((float)Math.Sin(magnetic_dip_angle), 2));
             }
         }
+        /// <summary>
+        /// Constructor usando spectralNoise en vez de spectralDensity. Un float en vez de un vector
+        /// </summary>
         public EKF(float deltaT, float spectralNoise, float magnetic_dip_angle, bool NED = true, 
             float var_acc = 0.5f * 0.5f, float var_mag = 0.8f * 0.8f)
         {
@@ -293,6 +301,14 @@ namespace ibcdatacsharp.EKF
                 );
             return result;
         }
+        /// <summary>
+        /// Filtra un quaternion
+        /// </summary>
+        /// <param name="q">Quaternion sin filtrar</param>
+        /// <param name="gyr">Medicion del gyroscopio</param>
+        /// <param name="acc">Medicion del acelerometro</param>
+        /// <param name="mag">Medicion del magnetometro</param>
+        /// <returns>Quaternion filtrado</returns>
         public Quaternion update(Quaternion q, MathNet.Numerics.LinearAlgebra.Vector<float> gyr,
             MathNet.Numerics.LinearAlgebra.Vector<float> acc, MathNet.Numerics.LinearAlgebra.Vector<float> mag)
         {

@@ -9,6 +9,9 @@ using System.Windows.Input;
 
 namespace ibcdatacsharp.UI.Commands
 {
+    /// <summary>
+    /// Commando para seleccionar un paciente
+    /// </summary>
     public class SeleccionarPacienteCommand : ICommand
     {
         public event EventHandler CanExecuteChanged
@@ -16,12 +19,19 @@ namespace ibcdatacsharp.UI.Commands
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-
+        /// <summary>
+        /// Funcion que determina cuando puede ejecutarse el comando
+        /// </summary>
+        /// <param name="parameter">parametro pasado al comando</param>
+        /// <returns>true</returns>
         public bool CanExecute(object? parameter)
         {
             return true;
         }
-
+        /// <summary>
+        /// Cambia el paciente seleccionado en LoginInfo
+        /// </summary>
+        /// <param name="parameter">parametro pasado al comando</param>
         public void Execute(object? parameter)
         {
             Paciente paciente = (Paciente)parameter;

@@ -11,6 +11,9 @@ using System.Diagnostics.Eventing.Reader;
 using System.Data.Entity;
 
 namespace sign_in_dotnet_wpf;
+/// <summary>
+/// Wrapper de la conexion con la base de datos
+/// </summary>
 public class Connection
 {
     private MySqlConnection _connection;
@@ -26,7 +29,9 @@ public class Connection
     {
         Initialize();
     }
-
+    /// <summary>
+    /// Inicializa la canexion con la base de datos (los parametros estan dentro de la funcion)
+    /// </summary>
     public void Initialize()
     {
         server = "srv.ibc.bio";
@@ -48,7 +53,10 @@ public class Connection
        
 
     }
-
+    /// <summary>
+    /// Abre la conexion.
+    /// </summary>
+    /// <returns>true si se ha abierto, falso si no</returns>
     public bool OpenConnection()
     {
         try
@@ -72,12 +80,17 @@ public class Connection
             return false;
         }
     }
-
+    /// <summary>
+    /// Cierra la conexion.
+    /// </summary>
     public void CloseConnection()
     {
         this._connection.Close();
     }
-
+    /// <summary>
+    /// Devuelve la conexion
+    /// </summary>
+    /// <returns>La conexion</returns>
     public MySqlConnection GetConnection()
     {
         return this._connection;

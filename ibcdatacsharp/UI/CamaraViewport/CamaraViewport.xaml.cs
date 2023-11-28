@@ -16,12 +16,13 @@ using System.Diagnostics;
 
 namespace ibcdatacsharp.UI.CamaraViewport
 {
-    /// <summary>
-    /// Lógica de interacción para CamaraViewport.xaml
-    /// </summary>
-// Task version
+
+    // Task version
 
 #if TASK
+    /// <summary>
+    /// Vista de la camara. Tiene 3 versiones con tareas, threads y timers. La version con tareas funciona mejor.
+    /// </summary>
     public partial class CamaraViewport : Page
     {
         private TimeLine.TimeLine timeLine;
@@ -31,11 +32,19 @@ namespace ibcdatacsharp.UI.CamaraViewport
         private CancellationToken cancellationTokenDisplay;
         private Task displayTask;
 
+        /// <summary>
+        /// Evento que se tiene que llamar cuando se cambia la camara abierta
+        /// </summary>
         public event EventHandler cameraChanged;
 
         private Mat _currentFrame;
-
+        /// <summary>
+        /// fps de la camara abierta
+        /// </summary>
         public int fps { get; private set; }
+        /// <summary>
+        /// Frame que se muestra en el viewport
+        /// </summary>
         public Mat currentFrame
         {
             get
@@ -53,7 +62,6 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 }
             }
         }
-
         public CamaraViewport()
         {
             InitializeComponent();
@@ -72,6 +80,10 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 timeLine = mainWindow.timeLine.Content as TimeLine.TimeLine;
             }
         }
+        /// <summary>
+        /// Inicia la reproduccion de un video
+        /// </summary>
+        /// <param name="path">path de fichero de video</param>
         public void initReplay(string path)
         {
             endCameraTask(); // Dejar de usar la camara
@@ -83,7 +95,9 @@ namespace ibcdatacsharp.UI.CamaraViewport
             timeLine.model.timeEvent -= onUpdateTimeLine;
             timeLine.model.timeEvent += onUpdateTimeLine;
         }
-        // Deshace el replay
+        /// <summary>
+        /// Termina la reproduccion de un fichero. Limpia las variables
+        /// </summary>
         private void clearReplay()
         {
             if (videoViewport.Source != null)
@@ -94,11 +108,18 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 timeLine.model.timeEvent -= onUpdateTimeLine;
             }
         }
+        /// <summary>
+        /// Handler que se llama cuando se actualiza el timeline. Actualiza la posicion del video.
+        /// </summary>
+        /// <param name="sender">Objeto que ha enviado el evento</param>
+        /// <param name="time">instanse de tiempo a actualizar</param>
         public void onUpdateTimeLine(object sender, double time)
         {
             videoViewport.Position = TimeSpan.FromSeconds(time);
         }
-        // Comprueba si se esta grabano alguna camara
+        /// <summary>
+        /// Comprueba si hay alguna camara grabando
+        /// </summary>
         public bool someCameraOpened()
         {
             return videoCapture != null;
@@ -110,7 +131,11 @@ namespace ibcdatacsharp.UI.CamaraViewport
             Mat frame = new Mat(Config.FRAME_HEIGHT, Config.FRAME_WIDTH, matType);
             return frame;
         }
-        // Empieza a grabar la camara
+        /// <summary>
+        /// inicia el streaming de una camara.
+        /// </summary>
+        /// <param name="index">Indice OpenCV de la API DSHOW de la camara</param>
+        /// <param name="fps">fps a stremear</param>
         public async void initializeCamara(int index, int fps)
         {
             this.fps = fps;
@@ -172,7 +197,9 @@ namespace ibcdatacsharp.UI.CamaraViewport
                 //await Task.Delay(1000 / fps);
             }
         }
-        // Cierra la camara y el video writer al cerrar la aplicacion
+        /// <summary>
+        /// Funcion que se tiene que llamar cuando se va a cerrar la aplicacion. Libera la camara que este stremeando.
+        /// </summary>
         public void onCloseApplication()
         {
             if(videoCapture != null)

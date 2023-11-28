@@ -72,6 +72,9 @@ namespace ibcdatacsharp.UI
         private bool isConnected = false;
         private bool startStream = false;
         private bool startRecord = false;
+        /// <summary>
+        /// Gets the devices connected
+        /// </summary>
         public Dictionary<string, WisewalkSDK.Device> devices_list
         {
             get
@@ -125,6 +128,9 @@ namespace ibcdatacsharp.UI
         public Stopwatch stopwatch = new();
 
         //end Wiseware API
+        /// <summary>
+        /// Constructor. Inicializa todas la vistas.
+        /// </summary>
         public MainWindow()
         {
             Application.Current.MainWindow = this;
@@ -169,6 +175,9 @@ namespace ibcdatacsharp.UI
         /** 
          * Métodos de Wiseware
          */
+        /// <summary>
+        /// Api dataReceived callback. Calcula la latencia haciendo una media de lo que tardan los 100 primeros paquetes.
+        /// </summary>
         private void Api_dataReceived(byte deviceHandler, WisewalkSDK.WisewalkData data)
         {
             if (stopwatch.IsRunning)
@@ -190,6 +199,9 @@ namespace ibcdatacsharp.UI
                 }
             }
         }
+        /// <summary>
+        /// Api onDisconnect callback. Llama a disconnectIMU de DeviceList para mostrarlo visualmente
+        /// </summary>
         private void Api_onDisconnect(byte deviceHandler)
         {
             Trace.WriteLine("Api_onDisconnect");
@@ -199,6 +211,9 @@ namespace ibcdatacsharp.UI
                 );
             //devices_list.Remove(deviceHandler.ToString());
         }
+        /// <summary>
+        /// Api onError callback.
+        /// </summary>
         private void Api_onError(byte deviceHandler, string error)
         {
             if (deviceHandler != 0xFF)
@@ -211,6 +226,15 @@ namespace ibcdatacsharp.UI
                 SetLogText("", error);
             }
         }
+        /// <summary>
+        /// Muestra un mensaje en Trace.
+        /// </summary>
+        /// <param name="device">
+        /// Identificador del dispositivo
+        /// </param>
+        /// <param name="text">
+        /// Mensaje a mostrar
+        /// </param>
         private void SetLogText(string device, string text)
         {
 
@@ -234,7 +258,10 @@ namespace ibcdatacsharp.UI
 
         }
         //Callback de Escaneo
-
+        /// <summary>
+        /// Obtiene la lista de puertos COM
+        /// </summary>
+        /// <returns>Lista de puertos COM</returns>
         private List<ComPort> GetSerialPorts()
         {
             using (var searcher = new ManagementObjectSearcher
@@ -264,6 +291,9 @@ namespace ibcdatacsharp.UI
 
         // Selección de puerto sin tener que ponerlo manualmente
         // En pruebas.
+        /// <summary>
+        /// Muestra los puertos COM en el Trace
+        /// </summary>
         private void ShowPorts()
         {
 
@@ -281,14 +311,21 @@ namespace ibcdatacsharp.UI
             }
         }
 
-
+        /// <summary>
+        /// Callback del metodo scanFinished de la API
+        /// </summary>
         private void Api_scanFinished(List<Wisewalk.Dev> devices)
         {
             scanDevices = devices;
             Trace.WriteLine("# of devices: " + devices.Count);
             ShowScanList(scanDevices);
         }
-
+        /// <summary>
+        /// Devuelve la MAC address de un dispositivo en una lista
+        /// </summary>
+        /// <param name="devices">Lista de dispositivos</param>
+        /// <param name="idx">Indice del dispositivo</param>
+        /// <returns>Devuelve la MAC address del dispositivo</returns>
         private string GetMacAddress(List<Wisewalk.Dev> devices, int idx)
         {
             string mac = "";
@@ -298,6 +335,11 @@ namespace ibcdatacsharp.UI
 
             return mac;
         }
+        /// <summary>
+        /// Devuelve la MAC address de un dispositivo
+        /// </summary>
+        /// <param name="device">Dispositivo</param>
+        /// <returns>Devuelve la MAC address del dispositivo</returns>
         private string GetMacAddress(Wisewalk.Dev device)
         {
             string mac = "";
@@ -307,7 +349,10 @@ namespace ibcdatacsharp.UI
 
             return mac;
         }
-
+        /// <summary>
+        /// Muestra las MAC address de una lista de dispositivos
+        /// </summary>
+        /// <param name="devices">Lista de dispositivos</param>
         private void ShowScanList(List<Wisewalk.Dev> devices)
         {
 
@@ -321,7 +366,11 @@ namespace ibcdatacsharp.UI
             }
 
         }
-
+        /// <summary>
+        /// Callback de deviceConnected de la api. LLama a connectIMU de la deviceList para mostrarlo visualmente. Cambia la configuración y el RTC.
+        /// </summary>
+        /// <param name="handler">Handler del dispositivo (asignado por la api)</param>
+        /// <param name="dev">Dispositivo</param>
         private async void Api_deviceConnected(byte handler, WisewalkSDK.Device dev)
         {
             
@@ -383,7 +432,11 @@ namespace ibcdatacsharp.UI
             //ShowDevices(devices_list);
             */
         }
-
+        /// <summary>
+        /// Callback de updateDeviceInfo de la API. Llama a updateHeaderInfo de DeviceList para actualizar el handler.
+        /// </summary>
+        /// <param name="deviceHandler">Handler del dispositivo (asignado por la API)</param>
+        /// <param name="dev">Dispositivo</param>
         private void Api_updateDeviceInfo(byte deviceHandler, WisewalkSDK.Device dev)
         {
             //devices_list[deviceHandler.ToString()].HeaderInfo = dev.HeaderInfo;
@@ -398,12 +451,16 @@ namespace ibcdatacsharp.UI
 
             //ShowDevices(devices_list);
         }
-
+        /// <summary>
+        /// Callback de updateDeviceConfiguration de la API. Imprime los valores que devuelve por Trace
+        /// </summary>
         void Api_updateDeviceConfiguration(byte deviceHandler, byte sampleRate, byte packetType)
         {
             Trace.WriteLine($"Configured {deviceHandler} {sampleRate} {packetType}");
         }
-
+        /// <summary>
+        /// Callback de updateDeviceRTC de la API. Lo imprime por Trace.
+        /// </summary>
         void Api_updateDeviceRTC(byte deviceHandler, DateTime dateTime)
         {
             Trace.WriteLine(dateTime.ToString());
@@ -411,6 +468,10 @@ namespace ibcdatacsharp.UI
 
 
         //Cálculo de Fecha y hora
+        /// <summary>
+        /// Devuelve la fecha y hora actuales
+        /// </summary>
+        /// <returns>Fecha y hora actual</returns>
         public DateTime GetDateTime()
         {
             return DateTime.Now;
@@ -420,12 +481,18 @@ namespace ibcdatacsharp.UI
         //End métodos de WiseWare
 
         // Cambia el icono de la ventana
+        /// <summary>
+        /// Cambia el icono de la ventana
+        /// </summary>
         private void initIcon()
         {
             Uri iconUri = new Uri("pack://application:,,,/UI/MenuBar/Icons/ibc-logo.png", UriKind.RelativeOrAbsolute);
             Icon = BitmapFrame.Create(iconUri);
         }
         // Conecta los botones de la ToolBar
+        /// <summary>
+        /// Conecta los botones de la tool bar
+        /// </summary>
         private void initToolBarHandlers()
         {
             toolBar.Navigated += delegate (object sender, NavigationEventArgs e)
@@ -447,6 +514,9 @@ namespace ibcdatacsharp.UI
             };
         }
         // Conecta los botones del Menu
+        /// <summary>
+        /// Conecta los botones del menu
+        /// </summary>
         private void initMenuHandlers()
         {
             menuBar.Navigated += delegate (object sender, NavigationEventArgs e)
@@ -464,7 +534,10 @@ namespace ibcdatacsharp.UI
                 menuBarClass.exit.Click += new RoutedEventHandler(onExit);
             };
         }
-        // Funcion que llaman todos los handlers del ToolBar. Por si acaso el device list no se ha cargado.
+        /// <summary>
+        /// Llama a una funcion cuando el deviceList se ha cargado
+        /// </summary>
+        /// <param name="func">Funcion a la que se llama</param>
         private void deviceListLoadedCheck(Action func)
         {
             if (deviceList.Content == null)
@@ -479,11 +552,12 @@ namespace ibcdatacsharp.UI
                 func();
             }
         }
-        // Conecta el boton scan
+        /// <summary>
+        /// Callback que se llama cuando se clica al boton scan
+        /// </summary>
         private void onScan(object sender, EventArgs e)
         {
             //Escaneo en el puerto com6
-
             void getIMUs()
             {
                 
@@ -665,11 +739,18 @@ namespace ibcdatacsharp.UI
             deviceListLoadedCheck(onScanFunction);
             virtualToolBar.onScanClick();
         }
+        /// <summary>
+        /// Devuelve un Dispositivo (WisewalkSDK) a partir de un IMUInfo
+        /// </summary>
+        /// <param name="imuInfo">IMUInfo a buscar</param>
         private Dev findIMU(IMUInfo imuInfo)
         {
             return scanDevices.FirstOrDefault(de => GetMacAddress(de) == imuInfo.address);
         }
         // Conecta el boton connect
+        /// <summary>
+        /// Callback que se llama cuando se clica al boton connect
+        /// </summary>
         private void onConnect(object sender, EventArgs e)
         {
             // Funcion que se ejecuta al clicar el boton connect
@@ -750,11 +831,18 @@ namespace ibcdatacsharp.UI
             }
             deviceListLoadedCheck(onConnectFunction);
         }
+        /// <summary>
+        /// Busca el handler a partir de un IMUInfo
+        /// </summary>
+        /// <param name="imu">IMUInfo a buscar</param>
         private byte handler(IMUInfo imu)
         {
             string handler = devices_list.Where(d => d.Value.Id == imu.address).FirstOrDefault().Key;
             return byte.Parse(handler);
         }
+        /// <summary>
+        /// Empieza a stremear los IMUs usados (IMUsUsed en DeviceList)
+        /// </summary>
         public void startActiveDevices()
         {
             Trace.WriteLine("startActiveDevices");
@@ -773,6 +861,9 @@ namespace ibcdatacsharp.UI
             }
         }
         // Conecta el boton disconnect
+        /// <summary>
+        /// Callback que se llama cuando se clica al boton disconnect
+        /// </summary>
         private void onDisconnect(object sender, EventArgs e)
         {
             // Funcion que se ejecuta al clicar el boton disconnect
@@ -825,6 +916,9 @@ namespace ibcdatacsharp.UI
             deviceListLoadedCheck(onDisconnectFunction);
         }
         // Conecta el boton Open Camera
+        /// <summary>
+        /// Callback que se llama cuando se clica al open camera
+        /// </summary>
         private void onOpenCamera(object sender, EventArgs e)
         {
             // Funcion que se ejecuta al clicar el boton Open Camera
@@ -853,12 +947,18 @@ namespace ibcdatacsharp.UI
             deviceListLoadedCheck(onOpenCameraFunction);
         }
         // Funcion que se ejecuta al clicar el boton Capture
+        /// <summary>
+        /// Callback que se llama cuando se clica al boton capture
+        /// </summary>
         private void onCapture(object sender, EventArgs e)
         {
             virtualToolBar.captureClick();
             graphManager.initCapture(); 
         }
         // Funcion que se ejecuta al clicar el boton Pause
+        /// <summary>
+        /// Callback que se llama cuando se clica al boton pause
+        /// </summary>
         private void onPause(object sender, EventArgs e)
         {
             virtualToolBar.pauseClick();
@@ -869,12 +969,18 @@ namespace ibcdatacsharp.UI
             virtualToolBar.stopClick();
         }
         // Funcion que se ejecuta al clicar el boton Record
+        /// <summary>
+        /// Callback que se llama cuando se clica al boton record
+        /// </summary>
         private void onRecord(object sender, EventArgs e)
         {
             
             virtualToolBar.recordClick();
         }
         // Funcion que se ejecuta al clicar el boton Show Captured Files
+        /// <summary>
+        /// Callback que se llama cuando se clica al boton captured files
+        /// </summary>
         private void onCapturedFiles(object sender, EventArgs e)
         {
             virtualToolBar.openClick();
@@ -890,6 +996,10 @@ namespace ibcdatacsharp.UI
         }
         #endregion
         // IMPORTANTE: La funcion eventHandler tiene que ser local
+        /// <summary>
+        /// Lee el proximo quaternion que recive un IMU y lo usa como referencia
+        /// </summary>
+        /// <param name="imu">IMU a usar</param>
         public void readQuaternion(IMUInfo imu)
         {
             // usar imu para acceder a la informacion del imu
@@ -921,6 +1031,10 @@ namespace ibcdatacsharp.UI
                 }
             });
         }
+        /// <summary>
+        /// Calibra un dispositivo
+        /// </summary>
+        /// <param name="imu">dispositivo a calibrar (como IMUInfo)</param>
         public void calibDevice(IMUInfo imu)
         {
             Trace.WriteLine("public void calibDevice(IMUInfo imu)");
@@ -929,11 +1043,17 @@ namespace ibcdatacsharp.UI
             api.CalibDevice(h, out error);
         }
         // Funcion que se ejecuta al clicar el menú Exit
+        /// <summary>
+        /// Callback que se llama cuando se clica al boton exit
+        /// </summary>
         private void onExit(object sender, EventArgs e)
         {
             Application.Current.Shutdown();
         }
         // Funcion que se ejecuta al cerrar la ventana
+        /// <summary>
+        /// Callback que se llama cuando se esta saliendo del programa. Cierra la camara y el guardado de ficheros.
+        /// </summary>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             CamaraViewport.CamaraViewport camaraViewportClass = camaraViewport.Content as CamaraViewport.CamaraViewport;

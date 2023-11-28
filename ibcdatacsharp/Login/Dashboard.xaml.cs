@@ -23,7 +23,7 @@ using BCrypt.Net;
 
 namespace sign_in_dotnet_wpf;
 /// <summary>
-/// Interaction logic for Dashboard.xaml
+/// Pantalla de login
 /// </summary>
 public partial class Dashboard : Window
 {
@@ -35,18 +35,24 @@ public partial class Dashboard : Window
         InitializeComponent();
         connection = new Connection();
     }
-
+    /// <summary>
+    /// Handler que abre la conexion
+    /// </summary>
     private void Button_Click(object sender, RoutedEventArgs e)
     {
        
         connection.OpenConnection();
     }
-
+    /// <summary>
+    /// Handler que cierra la conexion
+    /// </summary>
     private void Button_Click_1(object sender, RoutedEventArgs e)
     {
         connection.CloseConnection();
     }
-
+    /// <summary>
+    /// Comprueba si el usuario y contraseña introducidos son correctos (segun la base de datos). Si lo son abre una MainWindow.
+    /// </summary>
     private void Button_Click_2(object sender, RoutedEventArgs e)
     {
         this.username = user.Text;
@@ -100,6 +106,12 @@ public partial class Dashboard : Window
 
 
     }
+    /// <summary>
+    /// Comprueba si una contraseña concuerda con un hash. Funciona para el algoritmo y hash de la webapp.
+    /// </summary>
+    /// <param name="password">contrasena</param>
+    /// <param name="hashPassword">hash de la contraseña correcta</param>
+    /// <returns>true si concuerdan. False si no</returns>
     static bool CheckPassword(string password, string hashPassword)
     {
         string salt = "146585145368132386173505678016728509634";
