@@ -4,10 +4,20 @@ using System.Windows.Data;
 
 namespace ibcdatacsharp.UI.DeviceList.Converters
 {
-    // clase para cambiar el formato del atributo battery
+    /// <summary>
+    /// Clase para añadir '%' al numero
+    /// </summary>
     [ValueConversion(typeof(int), typeof(string))]
     public class BatteryConverter : IValueConverter
     {
+        /// <summary>
+        /// Añade '%' al numero
+        /// </summary>
+        /// <param name="value">Valor (tiene que ser un int o null)</param>
+        /// <param name="targetType">Type</param>
+        /// <param name="parameter">Parametro pasado</param>
+        /// <param name="culture">CultureInfo</param>
+        /// <returns>value + '%'</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
@@ -20,7 +30,14 @@ namespace ibcdatacsharp.UI.DeviceList.Converters
                 return battery.ToString()+"%";
             }
         }
-
+        /// <summary>
+        /// Quita '%' al numero
+        /// </summary>
+        /// <param name="value">Valor (tiene que ser un int o null)</param>
+        /// <param name="targetType">Type</param>
+        /// <param name="parameter">Parametro pasado</param>
+        /// <param name="culture">CultureInfo</param>
+        /// <returns>value - '%'</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string strValue = value as string;

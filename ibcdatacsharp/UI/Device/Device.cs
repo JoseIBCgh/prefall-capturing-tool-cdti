@@ -6,19 +6,29 @@ using System.Windows;
 
 namespace ibcdatacsharp.UI.Device
 {
-    // Clase que simula un IMU para hacer pruebas
+    /// <summary>
+    /// Simula un IMU, sirve para hacer pruebas
+    /// </summary>
     public class Device
     {
         private const int DEVICE_MS = 10;
         private System.Timers.Timer timer;
+        /// <summary>
+        /// Devuelve los ultimo RawArgs generados
+        /// </summary>
         public RawArgs rawData { get; set; }
+        /// <summary>
+        /// Devuelve los ultimos AngleArgs generados
+        /// </summary>
         public AngleArgs angleData { get; set; }
         public Device()
         {
             rawData = generateRandomRawData();
             angleData = generateRandomAngleData();
         }
-        // Inicializa el timer
+        /// <summary>
+        /// Inicializa el timer
+        /// </summary>
         public void initTimer()
         {
             void onStop(object sender)
@@ -55,13 +65,18 @@ namespace ibcdatacsharp.UI.Device
                 }
             }
         }
-        // Genera datos inventados
+        /// <summary>
+        /// Genera datos inventados
+        /// </summary>
         public void generateData(object sender, ElapsedEventArgs args)
         {
             rawData = generateRandomRawData();
             angleData = generateRandomAngleData();
         }
-        // Genera datos inventados para el Graph Window
+        /// <summary>
+        /// Genera datos raw (accelerometro, gyroscopio y magnetometro)
+        /// </summary>
+        /// <returns>Los datos en una estructura RawArgs</returns>
         private RawArgs generateRandomRawData()
         {
             RawArgs rawArgs = new RawArgs();
@@ -83,7 +98,10 @@ namespace ibcdatacsharp.UI.Device
 
             return rawArgs;
         }
-        // Genera datos inventados para el Angle Graph
+        /// <summary>
+        /// Genera angulos
+        /// </summary>
+        /// <returns>Los angulos en una estructura AngleArgs</returns>
         private AngleArgs generateRandomAngleData()
         {
             AngleArgs angleArgs = new AngleArgs();
