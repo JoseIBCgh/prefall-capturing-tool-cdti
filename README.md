@@ -1,4 +1,10 @@
 # IBC Capture Tool
 
 ## Version
-1.0.0_master_ivan
+1.0.0_master_ivan  
+
+Documentación en docs/  
+Guarda los ficheros en la carpeta Documents/  
+
+## Ejecutar el programa
+Abrir con VisualStudio22. Publicar proyecto en la ubicacion deseada. Ejecutar ibcdatacsharp.exe
