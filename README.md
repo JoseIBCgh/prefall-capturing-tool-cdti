@@ -7,4 +7,4 @@ Documentación en docs/
 Guarda los ficheros en la carpeta Documents/  
 
 ## Ejecutar el programa
-Abrir con VisualStudio22. Publicar proyecto en la ubicacion deseada. Ejecutar ibcdatacsharp.exe
+Abrir con VisualStudio 2022 NET6.0. Publicar proyecto en la ubicacion deseada. Ejecutar ibcdatacsharp.exe
