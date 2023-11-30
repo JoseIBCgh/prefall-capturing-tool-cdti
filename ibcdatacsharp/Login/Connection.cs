@@ -38,7 +38,7 @@ public class Connection
         port = 32817;
         user = "root";
         pass = "root";
-        db = "prefall";
+        db = "prefall_prod";
 
         _connectionStringBuilder = new MySqlConnectionStringBuilder();
         _connectionStringBuilder.Server = server;
