@@ -39,9 +39,9 @@ namespace ibcdatacsharp.UI.Pacientes
                         {
                             try
                             {
-
+                                
                                 string sql = "SELECT num_test FROM test WHERE id_paciente = @id_paciente ORDER BY num_test DESC LIMIT 1;";
-
+                                string sql2 = "SELECT id_centro FROM users WHERE id = @id_paciente LIMIT 1;";
                                 using (MySqlCommand command = new MySqlCommand(sql, connection.GetConnection()))
                                 {
                                     command.Parameters.AddWithValue("@id_paciente", id); // Replace patientId with the actual patient's ID.
@@ -58,13 +58,31 @@ namespace ibcdatacsharp.UI.Pacientes
                                     {
                                         nextNumTest = 0;
                                     }
+                                    int id_centro;
+                                    using (MySqlCommand command2 = new MySqlCommand(sql2, connection.GetConnection()))
+                                    {
+                                        command2.Parameters.AddWithValue("@id_paciente", id);
+
+                                        object result2 = command2.ExecuteScalar();
+                                        if(result2 != null)
+                                        {
+                                            id_centro = Convert.ToInt32(result2);
+                                            Trace.WriteLine("ID centro = " + id_centro);
+                                        }
+                                        else
+                                        {
+                                            id_centro = 0;
+                                            Trace.WriteLine("id centro no encontrado");
+                                        }
+                                    }
+
                                     sql = "INSERT INTO test (num_test, id_paciente, id_centro, date, model, probabilidad_caida, data) VALUES (@num_test ,@id_paciente, @id_centro, @date, NULL, NULL, NULL);";
 
                                     using (MySqlCommand insertCommand = new MySqlCommand(sql, connection.GetConnection()))
                                     {
                                         insertCommand.Parameters.AddWithValue("@num_test", nextNumTest);
                                         insertCommand.Parameters.AddWithValue("@id_paciente", id);
-                                        insertCommand.Parameters.AddWithValue("@id_centro", 1);
+                                        insertCommand.Parameters.AddWithValue("@id_centro", id_centro);
                                         DateTime date = ExtractDate(Path.GetFileNameWithoutExtension(path));
                                         insertCommand.Parameters.AddWithValue("@date", date);
                                         // Execute the INSERT statement within the transaction
